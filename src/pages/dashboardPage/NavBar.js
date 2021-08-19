@@ -6,6 +6,7 @@ import { FaCertificate, FaHandshake } from "react-icons/fa";
 import PropTypes from "prop-types";
 import styles from "./styles";
 import DashHome from "./Home";
+import CenteredGrid from "./dashboard_2";
 
 const TabPanel = (props) => {
   const { children, value, index } = props;
@@ -145,6 +146,7 @@ const NavBar = (props) => {
         </Popover>
       </AppBar>
       <TabPanel value={value} index={0}>
+        <CenteredGrid />
         <DashHome />
       </TabPanel>
       <TabPanel value={value} index={1}>
