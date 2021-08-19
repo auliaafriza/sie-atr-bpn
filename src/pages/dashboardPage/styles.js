@@ -1,4 +1,4 @@
-import { alpha, makeStyles } from '@material-ui/core/styles';
+import { alpha, makeStyles } from "@material-ui/core/styles";
 
 const styles = makeStyles((theme) => ({
   grow: {
@@ -8,87 +8,146 @@ const styles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
+    display: "none",
+    [theme.breakpoints.up("sm")]: {
+      display: "block",
     },
   },
   search: {
-    position: 'relative',
+    position: "relative",
     borderRadius: theme.shape.borderRadius,
     backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
+    "&:hover": {
       backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginRight: theme.spacing(2),
     marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(3),
-      width: 'auto',
+      width: "auto",
     },
   },
   searchIcon: {
     padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   inputRoot: {
-    color: 'inherit',
+    color: "inherit",
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("md")]: {
+      width: "20ch",
     },
   },
   sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
+    display: "none",
+    [theme.breakpoints.up("md")]: {
+      display: "flex",
     },
   },
   sectionMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
+    display: "flex",
+    [theme.breakpoints.up("md")]: {
+      display: "none",
     },
   },
   header: {
     background:
-      'linear-gradient(90deg, rgb(2, 0, 36) 0%, rgb(20, 27, 46) 34%, rgb(0, 62, 105) 100%)',
+      "linear-gradient(90deg, rgb(2, 0, 36) 0%, rgb(20, 27, 46) 34%, rgb(0, 62, 105) 100%)",
   },
   footer: {
-    display: 'block',
-    padding: '10px',
-    height: '30px',
-    width: '100%',
+    display: "block",
+    padding: "10px",
+    height: "30px",
+    width: "100%",
 
     // position: 'fixed',
     // bottom: 0,
   },
   footerStyle: {
     background:
-      'linear-gradient(90deg, rgb(2, 0, 36) 0%, rgb(20, 27, 46) 34%, rgb(0, 62, 105) 100%)',
-    fontSize: '14px',
-    color: 'white',
-    borderTop: '1px solid #E7E7E7',
-    textAlign: 'left',
-    padding: '10px',
-    paddingLeft: '20px',
-    position: 'fixed',
-    left: '0',
-    bottom: '0',
-    height: '30px',
-    width: '100%',
+      "linear-gradient(90deg, rgb(2, 0, 36) 0%, rgb(20, 27, 46) 34%, rgb(0, 62, 105) 100%)",
+    fontSize: "14px",
+    color: "white",
+    borderTop: "1px solid #E7E7E7",
+    textAlign: "left",
+    padding: "10px",
+    paddingLeft: "20px",
+    position: "fixed",
+    left: "0",
+    bottom: "0",
+    height: "30px",
+    width: "100%",
+  },
+  titleSection: {
+    margin: 10,
+    lineHeight: "1.2rem",
+    letterSpacing: 1,
+    color: "#464855",
+    fontSize: 28,
+  },
+  isiTextStyle: {
+    margin: 10,
+    letterSpacing: 1,
+    color: "#6b6f82",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  isiContentTextStyle: {
+    margin: 10,
+    letterSpacing: 1,
+    color: "#6b6f82",
+    fontSize: 16,
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: "100%",
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+  root: {
+    width: "93%",
+    padding: 20,
+    border: "1px solid rgba(0, 0, 0, 0.06)",
+    borderRadius: "10px",
+    borderWidth: 1,
+    boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
+    transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
+    "&:hover": {
+      boxShadow: "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
+    },
+  },
+  rootOdd: {
+    width: "98%",
+    margin: 20,
+    paddingTop: 20,
+    border: "1px solid rgba(0, 0, 0, 0.06)",
+    borderRadius: "10px",
+    borderWidth: 1,
+    boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
+    transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
+    "&:hover": {
+      boxShadow: "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
+    },
+  },
+  buttonGroupStyle: {
+    border: "1px solid rgba(0, 0, 0, 0.06)",
+    borderRadius: "20px",
+    borderWidth: 1,
+    borderColor: "rgba(0, 0, 0, 0.5)",
+    boxShadow: "0 0px 0px #ffffff, 0 0px 0px #ffffff!important",
   },
 }));
 export default styles;

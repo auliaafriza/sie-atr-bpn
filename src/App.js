@@ -1,8 +1,8 @@
-import React from 'react';
-import './index.css';
-import Login from './pages/loginPage/login';
-import Dashboard from './pages/dashboardPage/dashboard';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import React from "react";
+import "./index.css";
+import Login from "./pages/loginPage/login";
+import Dashboard from "./pages/dashboardPage/dashboard";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 export default function App() {
   return (

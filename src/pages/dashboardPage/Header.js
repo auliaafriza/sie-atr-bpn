@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   AppBar,
   Toolbar,
@@ -6,20 +6,20 @@ import {
   Typography,
   Menu,
   MenuItem,
-} from '@material-ui/core';
-import { MoreVert, AccountCircle, Search } from '@material-ui/icons';
-import PropTypes from 'prop-types';
-import styles from './styles';
-import Logo from '../../assets/img/fav.png';
+} from "@material-ui/core";
+import { MoreVert, AccountCircle, Search } from "@material-ui/icons";
+// import PropTypes from "prop-types";
+import styles from "./styles";
+import Logo from "../../assets/img/fav.png";
 
 const Header = (props) => {
   const classes = styles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
 
   const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  // const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -38,16 +38,16 @@ const Header = (props) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const menuId = 'primary-search-account-menu';
-  const mobileMenuId = 'primary-search-account-menu-mobile';
+  const menuId = "primary-search-account-menu";
+  const mobileMenuId = "primary-search-account-menu-mobile";
 
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
       id={menuId}
       keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
@@ -70,7 +70,7 @@ const Header = (props) => {
         </Typography>
         <div className={classes.grow} />
         <div className={classes.sectionDesktop}>
-          <div className={classes.search} style={{ marginRight: '40px' }}>
+          <div className={classes.search} style={{ marginRight: "40px" }}>
             <div className={classes.searchIcon}>
               <Search />
             </div>
@@ -85,7 +85,7 @@ const Header = (props) => {
           </div>
           <Typography
             variant="h6"
-            style={{ fontSize: '16px', marginTop: '10px', margin: '10px' }}
+            style={{ fontSize: "16px", marginTop: "10px", margin: "10px" }}
           >
             John Doe
           </Typography>
@@ -114,7 +114,7 @@ const Header = (props) => {
       </Toolbar>
       <div
         style={{
-          borderTop: '0.5px solid #fff ',
+          borderTop: "0.5px solid #fff ",
         }}
       />
       {renderMenu}

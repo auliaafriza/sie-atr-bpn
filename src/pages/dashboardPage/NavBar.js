@@ -1,20 +1,11 @@
-import React from 'react';
-import {
-  AppBar,
-  Typography,
-  MenuItem,
-  Tab,
-  Tabs,
-  Popover,
-  Box,
-  Button,
-} from '@material-ui/core';
-import { Home, SupervisorAccount, Public } from '@material-ui/icons';
-import { BiMoney, BiLineChart, BiBriefcase } from 'react-icons/bi';
-import { FaCertificate, FaHandshake } from 'react-icons/fa';
-import PropTypes from 'prop-types';
-import styles from './styles';
-import DashHome from './Home';
+import React from "react";
+import { AppBar, MenuItem, Tab, Tabs, Popover } from "@material-ui/core";
+import { Home, SupervisorAccount, Public } from "@material-ui/icons";
+import { BiMoney, BiLineChart, BiBriefcase } from "react-icons/bi";
+import { FaCertificate, FaHandshake } from "react-icons/fa";
+import PropTypes from "prop-types";
+import styles from "./styles";
+import DashHome from "./Home";
 
 const TabPanel = (props) => {
   const { children, value, index } = props;
@@ -40,7 +31,7 @@ TabPanel.propTypes = {
 const NavBar = (props) => {
   const classes = styles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  // const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(0);
 
@@ -51,28 +42,24 @@ const NavBar = (props) => {
   const a11yProps = (index) => {
     return {
       id: `simple-tab-${index}`,
-      'aria-controls': `simple-tabpanel-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
     };
   };
 
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  // const isMenuOpen = Boolean(anchorEl);
+  // const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  // const handleProfileMenuOpen = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
+  // const handleMobileMenuClose = () => {
+  //   setMobileMoreAnchorEl(null);
+  // };
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
+    // handleMobileMenuClose();
   };
 
   return (
@@ -144,12 +131,12 @@ const NavBar = (props) => {
           anchorEl={anchorEl}
           onClose={handleMenuClose}
           anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
+            vertical: "bottom",
+            horizontal: "center",
           }}
           transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
+            vertical: "top",
+            horizontal: "center",
           }}
         >
           <MenuItem onClick={() => setOpen(false)}>Three</MenuItem>

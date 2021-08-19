@@ -1,5 +1,5 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
+import React from "react";
+import { useHistory } from "react-router-dom";
 import {
   Grid,
   Paper,
@@ -11,32 +11,34 @@ import {
   Checkbox,
   InputAdornment,
   Divider,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import bgImg from '../../assets/img/bg-login.jpg';
-import { PersonOutline, VpnKeyOutlined } from '@material-ui/icons/';
-import Logo from '../../assets/img/fav.png';
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import bgImg from "../../assets/img/bg-login.jpg";
+import { PersonOutline, VpnKeyOutlined } from "@material-ui/icons/";
+import Logo from "../../assets/img/fav.png";
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import { IoKeyOutline } from "react-icons/io5";
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: "rgba(255,255,255,0.5)",
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
   layout: {
-    width: 'auto',
+    width: "auto",
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: '35%',
-      marginLeft: 'auto',
-      marginRight: 'auto',
+      width: "35%",
+      marginLeft: "auto",
+      marginRight: "auto",
     },
     paddingTop: theme.spacing(25),
   },
@@ -48,8 +50,21 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(6),
       padding: theme.spacing(3),
     },
+    backgroundColor: "rgba(255,255,255,0.5)!important",
   },
 }));
+
+const theme = createTheme({
+  typography: {
+    fontFamily: [
+      '"Quicksand"',
+      "Georgia",
+      '"Times New Roman"',
+      "Times",
+      "serif",
+    ].join(","),
+  },
+});
 export default function AddressForm() {
   const classes = useStyles();
   const history = useHistory();
@@ -57,12 +72,12 @@ export default function AddressForm() {
     <div
       style={{
         backgroundImage: `url(${bgImg})`,
-        height: '100vh',
-        width: '100wh',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        alignContent: 'center',
-        textAlign: 'center',
+        height: "100vh",
+        width: "100wh",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        alignContent: "center",
+        textAlign: "center",
         zIndex: 1,
       }}
     >
@@ -77,6 +92,8 @@ export default function AddressForm() {
           <form className={classes.form}>
             <TextField
               variant="outlined"
+              color="#6b6f82"
+              className={{ root: classes.icon }}
               margin="dense"
               required
               fullWidth
@@ -84,7 +101,10 @@ export default function AddressForm() {
               name="username"
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
+                  <InputAdornment
+                    position="start"
+                    className={{ root: classes.icon }}
+                  >
                     <PersonOutline />
                   </InputAdornment>
                 ),
@@ -96,11 +116,15 @@ export default function AddressForm() {
               required
               fullWidth
               placeholder="Password"
+              color="#6b6f82"
               name="password"
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
-                    <VpnKeyOutlined />
+                  <InputAdornment
+                    position="start"
+                    className={{ root: classes.icon }}
+                  >
+                    <IoKeyOutline />
                   </InputAdornment>
                 ),
               }}
@@ -119,7 +143,9 @@ export default function AddressForm() {
               </Grid>
               <Grid item>
                 <Link href="#" variant="body2">
-                  Forgot password?
+                  <Typography style={{ fontSize: 14 }} variant="h2">
+                    Forgot password?
+                  </Typography>
                 </Link>
               </Grid>
             </Grid>
@@ -127,7 +153,13 @@ export default function AddressForm() {
               fullWidth
               variant="outlined"
               className={classes.submit}
-              onClick={() => history.push('/Dashboard')}
+              onClick={() => history.push("/Dashboard")}
+              startIcon={<IoKeyOutline color="rgba(30,159,242,0.5)" />}
+              style={{
+                borderWidth: 1,
+                borderColor: "rgba(30,159,242,0.5)",
+                color: "rgba(30,159,242,0.5)",
+              }}
             >
               Login
             </Button>
@@ -135,12 +167,29 @@ export default function AddressForm() {
               <Grid item xs>
                 <Divider />
               </Grid>
-              <Grid item>New to SIE ATRBPN ?</Grid>
+              <Grid item color="#6b6f82">
+                <Typography
+                  style={{ color: "#6b6f82", fontSize: 14 }}
+                  variant="h2"
+                >
+                  New to SIE ATRBPN ?
+                </Typography>
+              </Grid>
               <Grid item xs>
                 <Divider />
               </Grid>
             </Grid>
-            <Button fullWidth variant="outlined" className={classes.submit}>
+            <Button
+              fullWidth
+              variant="outlined"
+              className={classes.submit}
+              startIcon={<PersonOutline color="rgba(255,73,97,0.5)" />}
+              style={{
+                borderWidth: 1,
+                borderColor: "rgba(255,73,97,0.5)",
+                color: "rgba(255,73,97,0.5)",
+              }}
+            >
               Register
             </Button>
           </form>
