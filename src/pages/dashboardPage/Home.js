@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -22,96 +22,39 @@ import {
   ButtonGroup,
   IconButton,
   Box,
+  CardContent,
 } from "@material-ui/core";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { IoEye, IoPrint } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "./styles";
+import { getPaguMp, getAnggaranRealisasi } from "../../actions/dashActions";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
-const data = [
+const dataTempAsset = [
   {
-    name: "Page A",
-    uv: 4000,
-    pv: 2400,
-    // amt: 2400,
+    tahun: "2021",
+    anggaran: 0,
+    relasisasi: 0,
   },
   {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-    // amt: 2210,
+    tahun: "2020",
+    anggaran: 0,
+    relasisasi: 0,
+  },
+];
+
+const dataTempPagu = [
+  {
+    tahun: "2021",
+    pagu: 0,
+    mp: 0,
   },
   {
-    name: "Page C",
-    uv: 2000,
-    pv: 9800,
-    // amt: 2290,
-  },
-  {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-    // amt: 2000,
-  },
-  {
-    name: "Page E",
-    uv: 1890,
-    pv: 4800,
-    // amt: 2181,
-  },
-  {
-    name: "Page F",
-    uv: 2390,
-    pv: 3800,
-    // amt: 2500,
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-    // amt: 2100,
-  },
-  {
-    name: "Page A",
-    uv: 4000,
-    pv: 2410,
-    // amt: 2400,
-  },
-  {
-    name: "Page B",
-    uv: 3000,
-    pv: 1318,
-    // amt: 2210,
-  },
-  {
-    name: "Page C",
-    uv: 2010,
-    pv: 9800,
-    // amt: 2290,
-  },
-  {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-    // amt: 2000,
-  },
-  {
-    name: "Page E",
-    uv: 1820,
-    pv: 4800,
-    // amt: 2181,
-  },
-  {
-    name: "Page F",
-    uv: 2390,
-    pv: 3890,
-    // amt: 2500,
-  },
-  {
-    name: "Page G",
-    uv: 3420,
-    pv: 4300,
-    // amt: 2100,
+    tahun: "2020",
+    pagu: 0,
+    mp: 0,
   },
 ];
 
@@ -135,12 +78,80 @@ const tahunData = [
   { id: "2017", value: 2017 },
 ];
 
+let url = "http://10.20.57.234/SIEBackEnd/";
+
 const DashHome = () => {
   const classes = styles();
   const [years, setYears] = useState("");
+  const [anggaranRealisasi, setAanggaranRealisasi] = useState(dataTempAsset);
+  const [paguMp, setPaguMp] = useState(dataTempPagu);
+  const [comment, setComment] = useState("");
+  // const dispatch = useDispatch();
+  // const paguMpRed = useSelector((state) => state.dashReducer.paguMp);
+  // const anggaranRealisasiRed = useSelector(
+  //   (state) => state.dashReducer.anggaranRealisasi
+  // );
+
+  useEffect(() => {
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .get(`${url}Aset&Keuangan/PNBP/1.1.8`)
+      .then(function (response) {
+        setPaguMp(response.data.data);
+        console.log(response);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+    axios
+      .get(`${url}Aset&Keuangan/PNBP/1.1.3`)
+      .then(function (response) {
+        setAanggaranRealisasi(response.data.data);
+        console.log(response);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+    axios
+      .get(
+        `${url}api/Comment/GetLastCommantByReportId?reportId=4169f628-00ab-4307-a715-f838eac47983`
+      )
+      .then(function (response) {
+        setComment(response.data.data);
+        console.log(response);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  }, []);
 
   const handleChange = (event) => {
     setYears(event.target.value);
+  };
+
+  const DataFormater = (number) => {
+    if (number > 1000000000) {
+      return (number / 1000000000).toString() + "M";
+    } else if (number > 1000000) {
+      return (number / 1000000).toString() + "Jt";
+    } else if (number > 1000) {
+      return (number / 1000).toString() + "Rb";
+    } else {
+      return number.toString();
+    }
   };
 
   return (
@@ -153,7 +164,7 @@ const DashHome = () => {
       >
         <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            Pemetaan (Satuan 1 Juta)
+            Anggaran & Realisasi (Satuan 1 Juta)
           </Typography>
         </Grid>
         <Grid
@@ -190,7 +201,7 @@ const DashHome = () => {
       />
       <Grid container spacing={2}>
         <Grid item xs={4}>
-          <div style={{ margin: 10 }}>
+          <div style={{ margin: 10, marginRight: 25 }}>
             <Typography className={classes.isiTextStyle} variant="h2">
               Pilih Tahun
             </Typography>
@@ -219,45 +230,43 @@ const DashHome = () => {
               variant="h2"
               wrap
             >
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
+              {comment ? comment.analisisData : ""}
             </Typography>
           </div>
         </Grid>
         <Grid item xs={8}>
           <Card className={classes.root} variant="outlined">
-            <ResponsiveContainer width="90%" height={250}>
-              <BarChart
-                width={500}
-                height={300}
-                data={data}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-                padding={{
-                  top: 15,
-                  right: 10,
-                  left: 10,
-                  bottom: 15,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="pv" fill="#8884d8" />
-                <Bar dataKey="uv" fill="#82ca9d" />
-              </BarChart>
-            </ResponsiveContainer>
+            <CardContent>
+              <div className={classes.barChart}>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart
+                    width={500}
+                    height={300}
+                    data={anggaranRealisasi}
+                    margin={{
+                      top: 5,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                    padding={{
+                      top: 15,
+                      right: 10,
+                      left: 10,
+                      bottom: 15,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="tahun" />
+                    <YAxis tickFormatter={DataFormater} />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="anggaran" fill="#8884d8" />
+                    <Bar dataKey="realisasi" fill="#82ca9d" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
           </Card>
         </Grid>
       </Grid>
@@ -279,7 +288,7 @@ const DashHome = () => {
         >
           <Grid item xs={6}>
             <Typography className={classes.titleSection} variant="h2">
-              Pemberkasaan (Satuan 1 Juta)
+              Pagu & MP PNBP (Satuan 1 Juta)
             </Typography>
           </Grid>
           <Grid
@@ -314,48 +323,57 @@ const DashHome = () => {
             margin: 10,
           }}
         />
-        <Grid container spacing={2}>
+        <Grid container>
           <Grid item xs={7}>
             <Card className={classes.rootOdd} variant="outlined">
-              <ResponsiveContainer width="90%" height={250}>
-                <LineChart
-                  width={500}
-                  height={300}
-                  data={data}
-                  margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis yAxisId="left" />
-                  <YAxis yAxisId="right" orientation="right" />
-                  <Tooltip />
-                  <Legend />
-                  <Line
-                    yAxisId="left"
-                    type="monotone"
-                    dataKey="pv"
-                    stroke="#8884d8"
-                    activeDot={{ r: 8 }}
-                    strokeWidth={3}
-                  />
-                  <Line
-                    yAxisId="right"
-                    type="monotone"
-                    dataKey="uv"
-                    stroke="#82ca9d"
-                    strokeWidth={3}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+              <CardContent>
+                <div className={classes.barChart}>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <LineChart
+                      width={500}
+                      height={300}
+                      data={paguMp}
+                      margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="tahun" />
+                      <YAxis yAxisId="left" tickFormatter={DataFormater} />
+                      <YAxis
+                        yAxisId="right"
+                        orientation="right"
+                        tickFormatter={DataFormater}
+                      />
+                      <Tooltip />
+                      <Legend />
+                      <Line
+                        yAxisId="left"
+                        type="monotone"
+                        dataKey="pagu"
+                        stroke="#8884d8"
+                        activeDot={{ strokeWidth: 3, r: 5 }}
+                        strokeWidth={3}
+                      />
+                      <Line
+                        yAxisId="right"
+                        type="monotone"
+                        dataKey="mp"
+                        stroke="#82ca9d"
+                        activeDot={{ strokeWidth: 3 }}
+                        strokeWidth={3}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
             </Card>
           </Grid>
           <Grid item xs={5}>
-            <div style={{ margin: 25 }}>
+            <div style={{ marginRight: 25 }}>
               <Typography className={classes.isiTextStyle} variant="h2">
                 Pilih Tahun
               </Typography>
@@ -384,13 +402,7 @@ const DashHome = () => {
                 variant="h2"
                 wrap
               >
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
+                {comment ? comment.analisisData : ""}
               </Typography>
             </div>
           </Grid>

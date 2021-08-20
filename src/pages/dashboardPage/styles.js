@@ -130,8 +130,9 @@ const styles = makeStyles((theme) => ({
     },
   },
   rootOdd: {
-    width: "98%",
+    width: "90%",
     margin: 20,
+    marginRight: 0,
     paddingTop: 20,
     border: "1px solid rgba(0, 0, 0, 0.06)",
     borderRadius: "10px",
@@ -148,6 +149,10 @@ const styles = makeStyles((theme) => ({
     borderWidth: 1,
     borderColor: "rgba(0, 0, 0, 0.5)",
     boxShadow: "0 0px 0px #ffffff, 0 0px 0px #ffffff!important",
+  },
+  barChart: {
+    display: "flex",
+    justifyContent: "center",
   },
 }));
 export default styles;
