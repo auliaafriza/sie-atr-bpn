@@ -154,5 +154,18 @@ const styles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
   },
+  paper: {
+    position: "absolute",
+    width: "80%",
+    backgroundColor: theme.palette.background.paper,
+    border: "1px solid rgba(0, 0, 0, 0.06)",
+    borderRadius: "10px",
+    borderWidth: 1,
+    boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
+    padding: theme.spacing(2, 4, 3),
+  },
+  table: {
+    minWidth: 700,
+  },
 }));
 export default styles;

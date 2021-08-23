@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
   LineChart,
   Line,
+  Label,
 } from "recharts";
 import {
   Typography,
@@ -23,8 +24,21 @@ import {
   IconButton,
   Box,
   CardContent,
+  Tooltip as TooltipMI,
+  Modal,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from "@material-ui/core";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import {
+  createTheme,
+  ThemeProvider,
+  withStyles,
+} from "@material-ui/core/styles";
 import { IoEye, IoPrint } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "./styles";
@@ -78,6 +92,24 @@ const tahunData = [
   { id: "2017", value: 2017 },
 ];
 
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: "#FF7E5A",
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    "&:nth-of-type(odd)": {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+}))(TableRow);
+
 let url = "http://10.20.57.234/SIEBackEnd/";
 
 const DashHome = () => {
@@ -86,6 +118,24 @@ const DashHome = () => {
   const [anggaranRealisasi, setAanggaranRealisasi] = useState(dataTempAsset);
   const [paguMp, setPaguMp] = useState(dataTempPagu);
   const [comment, setComment] = useState("");
+  const [open, setOpen] = useState(false);
+  const [dataModal, setDataModal] = useState({
+    title: "",
+    grafik: "",
+    dataTable: "",
+    analisis: "",
+    type: "",
+    nameColumn: [],
+  });
+
+  const handleOpen = (data) => {
+    setOpen(true);
+    setDataModal(data);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   // const dispatch = useDispatch();
   // const paguMpRed = useSelector((state) => state.dashReducer.paguMp);
   // const anggaranRealisasiRed = useSelector(
@@ -154,8 +204,146 @@ const DashHome = () => {
     }
   };
 
+  const body = (
+    <div className={classes.paper}>
+      <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
+        {dataModal.title}
+      </h2>
+      {dataModal.type ? (
+        <div className={classes.barChart}>
+          <ResponsiveContainer width="100%" height={250}>
+            {dataModal.type == "Bar" ? (
+              <BarChart
+                width={500}
+                height={300}
+                data={dataModal.grafik}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+                padding={{
+                  top: 15,
+                  right: 10,
+                  left: 10,
+                  bottom: 15,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="tahun" />
+                <YAxis tickFormatter={DataFormater}>
+                  <Label
+                    value="Nilai Satuan 1 Juta"
+                    angle={-90}
+                    position="insideBottomLeft"
+                    offset={-5}
+                  />
+                </YAxis>
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="anggaran" fill="#8884d8" />
+                <Bar dataKey="realisasi" fill="#82ca9d" />
+              </BarChart>
+            ) : (
+              <LineChart
+                width={500}
+                height={300}
+                data={dataModal.grafik}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="tahun" />
+                <YAxis tickFormatter={DataFormater}>
+                  <Label
+                    value="Nilai Satuan 1 Juta"
+                    angle={-90}
+                    position="insideBottomLeft"
+                    offset={-5}
+                  />
+                </YAxis>
+                <Tooltip />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="pagu"
+                  stroke="#6EB5FF"
+                  activeDot={{ r: 8 }}
+                  strokeWidth={3}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="mp"
+                  stroke="#FCB9AA"
+                  strokeWidth={3}
+                />
+              </LineChart>
+            )}
+          </ResponsiveContainer>
+        </div>
+      ) : null}
+      {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
+        <TableContainer component={Paper} style={{ marginTop: 20 }}>
+          <Table className={classes.table} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                {dataModal.nameColumn.map((item) => (
+                  <StyledTableCell align="center">{item}</StyledTableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {dataModal.grafik.map((row) => (
+                <StyledTableRow key={row.tahun}>
+                  <StyledTableCell align="center" component="th" scope="row">
+                    {row.tahun}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    Rp{" "}
+                    {row.anggaran
+                      ? row.anggaran
+                          .toFixed(2)
+                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")
+                      : row.pagu.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    Rp{" "}
+                    {row.realisasi
+                      ? row.realisasi
+                          .toFixed(2)
+                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")
+                      : row.mp.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : null}
+      <p id="simple-modal-description">{dataModal.analisis}</p>
+    </div>
+  );
+
   return (
     <div>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {body}
+      </Modal>
       <Grid
         container
         spacing={2}
@@ -180,15 +368,37 @@ const DashHome = () => {
             className={classes.buttonGroupStyle}
             variant="contained"
           >
-            <IconButton size="small">
-              <IoEye />
-            </IconButton>
-            <IconButton aria-label="delete" size="small">
-              <IoPrint />
-            </IconButton>
-            <IconButton aria-label="delete" size="small">
-              <IoMdDownload />
-            </IconButton>
+            <TooltipMI title="Lihat Detail" placement="top">
+              <IconButton
+                size="small"
+                onClick={() =>
+                  handleOpen({
+                    title: "Anggaran & Realisasi (Satuan 1 Juta)",
+                    grafik: anggaranRealisasi,
+                    dataTable: "",
+                    analisis: comment ? comment.analisisData : "",
+                    type: "Bar",
+                    nameColumn: ["Tahun", "Anggaran", "Realisasi"],
+                  })
+                }
+              >
+                <IoEye />
+              </IconButton>
+            </TooltipMI>
+            <TooltipMI
+              title="Print Data"
+              placement="top"
+              onClick={() => window.print()}
+            >
+              <IconButton aria-label="delete" size="small">
+                <IoPrint />
+              </IconButton>
+            </TooltipMI>
+            <TooltipMI title="Unduh Data" placement="top">
+              <IconButton aria-label="delete" size="small">
+                <IoMdDownload />
+              </IconButton>
+            </TooltipMI>
           </ButtonGroup>
         </Grid>
       </Grid>
@@ -258,7 +468,14 @@ const DashHome = () => {
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="tahun" />
-                    <YAxis tickFormatter={DataFormater} />
+                    <YAxis tickFormatter={DataFormater}>
+                      <Label
+                        value="Nilai Satuan 1 Juta"
+                        angle={-90}
+                        position="insideBottomLeft"
+                        offset={-5}
+                      />
+                    </YAxis>
                     <Tooltip />
                     <Legend />
                     <Bar dataKey="anggaran" fill="#8884d8" />
@@ -304,15 +521,37 @@ const DashHome = () => {
               className={classes.buttonGroupStyle}
               variant="contained"
             >
-              <IconButton size="small">
-                <IoEye />
-              </IconButton>
-              <IconButton aria-label="delete" size="small">
-                <IoPrint />
-              </IconButton>
-              <IconButton aria-label="delete" size="small">
-                <IoMdDownload />
-              </IconButton>
+              <TooltipMI title="Lihat Detail" placement="top">
+                <IconButton
+                  size="small"
+                  onClick={() =>
+                    handleOpen({
+                      title: "Pagu & MP PNBP (Satuan 1 Juta)",
+                      grafik: paguMp,
+                      dataTable: "",
+                      analisis: comment ? comment.analisisData : "",
+                      type: "Line",
+                      nameColumn: ["Tahun", "Pagu", "MP"],
+                    })
+                  }
+                >
+                  <IoEye />
+                </IconButton>
+              </TooltipMI>
+              <TooltipMI
+                title="Print Data"
+                placement="top"
+                onClick={() => window.print()}
+              >
+                <IconButton aria-label="delete" size="small">
+                  <IoPrint />
+                </IconButton>
+              </TooltipMI>
+              <TooltipMI title="Unduh Data" placement="top">
+                <IconButton aria-label="delete" size="small">
+                  <IoMdDownload />
+                </IconButton>
+              </TooltipMI>
             </ButtonGroup>
           </Grid>
         </Grid>
@@ -342,19 +581,71 @@ const DashHome = () => {
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="tahun" />
-                      <YAxis yAxisId="left" tickFormatter={DataFormater} />
+                      <YAxis tickFormatter={DataFormater}>
+                        <Label
+                          value="Nilai Satuan 1 Juta"
+                          angle={-90}
+                          position="insideBottomLeft"
+                          offset={-5}
+                        />
+                      </YAxis>
+                      <Tooltip />
+                      <Legend />
+                      <Line
+                        type="monotone"
+                        dataKey="pagu"
+                        stroke="#6EB5FF"
+                        activeDot={{ r: 8 }}
+                        strokeWidth={3}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="mp"
+                        stroke="#FCB9AA"
+                        strokeWidth={3}
+                      />
+                    </LineChart>
+                    {/* <LineChart
+                      width={500}
+                      height={300}
+                      data={paguMp}
+                      margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="tahun" />
+                      <YAxis yAxisId="left" tickFormatter={DataFormater}>
+                        <Label
+                          value="Nilai Satuan 1 Juta"
+                          angle={-90}
+                          position="insideBottomLeft"
+                          offset={-5}
+                        />
+                      </YAxis>
                       <YAxis
                         yAxisId="right"
                         orientation="right"
                         tickFormatter={DataFormater}
-                      />
+                        label="Nilai"
+                      >
+                        <Label
+                          value="Nilai Satuan 1 Juta"
+                          angle={-90}
+                          position="insideBottomLeft"
+                          offset={0}
+                        />
+                      </YAxis>
                       <Tooltip />
                       <Legend />
                       <Line
                         yAxisId="left"
                         type="monotone"
                         dataKey="pagu"
-                        stroke="#8884d8"
+                        stroke="#6EB5FF"
                         activeDot={{ strokeWidth: 3, r: 5 }}
                         strokeWidth={3}
                       />
@@ -362,11 +653,11 @@ const DashHome = () => {
                         yAxisId="right"
                         type="monotone"
                         dataKey="mp"
-                        stroke="#82ca9d"
+                        stroke="#FCB9AA"
                         activeDot={{ strokeWidth: 3 }}
                         strokeWidth={3}
                       />
-                    </LineChart>
+                    </LineChart> */}
                   </ResponsiveContainer>
                 </div>
               </CardContent>
