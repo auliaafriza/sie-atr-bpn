@@ -221,7 +221,7 @@ const DashHome = () => {
   };
 
   const body = (
-    <div className={classes.modalCover}>
+    <div className={classes.paper}>
       <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
         {dataModal.title}
       </h2>
@@ -350,7 +350,12 @@ const DashHome = () => {
           </Table>
         </TableContainer>
       ) : null}
-      <Typography className={classes.isiContentTextStyle} variant="h2" wrap>
+      <Typography
+        className={classes.isiContentTextStyle}
+        variant="h2"
+        wrap
+        style={{ paddingTop: 20 }}
+      >
         {dataModal.analisis}
       </Typography>
     </div>
@@ -511,14 +516,18 @@ const DashHome = () => {
         onClose={handleClose}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
-        className={classes.modalStyle1}
+        // className={classes.modalStyle1}
         style={{
-          display: "flex",
+          // display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          overflow: "scroll",
+          width: "90%",
+          height: "98%",
+          padding: "0 9em 0em 5em",
         }}
       >
-        <div style={{ margin: 20 }}>{body}</div>
+        {body}
       </Modal>
       <Grid
         container
