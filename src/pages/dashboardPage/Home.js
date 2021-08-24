@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createRef } from "react";
 import {
   BarChart,
   Bar,
@@ -33,6 +33,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Link,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -45,6 +46,8 @@ import styles from "./styles";
 import { getPaguMp, getAnggaranRealisasi } from "../../actions/dashActions";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { useScreenshot } from "use-react-screenshot";
+import html2canvas from "html2canvas";
 
 const dataTempAsset = [
   {
@@ -116,6 +119,7 @@ const DashHome = () => {
   const classes = styles();
   const [years, setYears] = useState("");
   const [anggaranRealisasi, setAanggaranRealisasi] = useState(dataTempAsset);
+  const [commentPagu, setCommentPagu] = useState("");
   const [paguMp, setPaguMp] = useState(dataTempPagu);
   const [comment, setComment] = useState("");
   const [open, setOpen] = useState(false);
@@ -127,7 +131,13 @@ const DashHome = () => {
     type: "",
     nameColumn: [],
   });
+  const inputRef = createRef(null);
+  const [image, takeScreenshot] = useScreenshot({
+    type: "image/jpeg",
+    quality: 1.0,
+  });
 
+  const getImage = () => takeScreenshot(ref.current);
   const handleOpen = (data) => {
     setOpen(true);
     setDataModal(data);
@@ -146,22 +156,12 @@ const DashHome = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(`${url}Aset&Keuangan/PNBP/1.1.8`)
+      .get(
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_pagu_mp?tahunAwal=2017&tahunAkhir=2021`
+      )
       .then(function (response) {
         setPaguMp(response.data.data);
-        console.log(response);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .then(function () {
-        // always executed
-      });
-    axios
-      .get(`${url}Aset&Keuangan/PNBP/1.1.3`)
-      .then(function (response) {
-        setAanggaranRealisasi(response.data.data);
+        setCommentPagu(response.data);
         console.log(response);
       })
       .catch(function (error) {
@@ -173,10 +173,11 @@ const DashHome = () => {
       });
     axios
       .get(
-        `${url}api/Comment/GetLastCommantByReportId?reportId=4169f628-00ab-4307-a715-f838eac47983`
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_realisasi_anggaran?tahunAwal=2017&tahunAkhir=2021`
       )
       .then(function (response) {
-        setComment(response.data.data);
+        setAanggaranRealisasi(response.data.data);
+        setComment(response.data);
         console.log(response);
       })
       .catch(function (error) {
@@ -186,6 +187,21 @@ const DashHome = () => {
       .then(function () {
         // always executed
       });
+    // axios
+    //   .get(
+    //     `${url}api/Comment/GetLastCommantByReportId?reportId=4169f628-00ab-4307-a715-f838eac47983`
+    //   )
+    //   .then(function (response) {
+    //     setComment(response.data.data);
+    //     console.log(response);
+    //   })
+    //   .catch(function (error) {
+    //     // handle error
+    //     console.log(error);
+    //   })
+    //   .then(function () {
+    //     // always executed
+    //   });
   }, []);
 
   const handleChange = (event) => {
@@ -205,7 +221,165 @@ const DashHome = () => {
   };
 
   const body = (
-    <div className={classes.paper}>
+    <div className={classes.modalCover}>
+      <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
+        {dataModal.title}
+      </h2>
+      {/* <Grid item xs={6}>
+        <TooltipMI title="Screenshot modal" placement="top">
+          <IconButton onClick={getImage}>
+            <IoMdDownload />
+          </IconButton>
+        </TooltipMI>
+      </Grid> */}
+
+      {dataModal.type ? (
+        <div className={classes.barChart}>
+          {/* <img width={500} src={image} /> */}
+          <ResponsiveContainer width="100%" height={250}>
+            {dataModal.type == "Bar" ? (
+              <BarChart
+                width={500}
+                height={300}
+                data={dataModal.grafik}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+                padding={{
+                  top: 15,
+                  right: 10,
+                  left: 10,
+                  bottom: 15,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="tahun"></XAxis>
+                <YAxis tickFormatter={DataFormater}>
+                  <Label
+                    value="Nilai Satuan 1 Juta"
+                    angle={-90}
+                    position="insideBottomLeft"
+                    offset={-5}
+                  />
+                </YAxis>
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="anggaran" fill="#8884d8" />
+                <Bar dataKey="realisasi" fill="#82ca9d" />
+              </BarChart>
+            ) : (
+              <LineChart
+                width={500}
+                height={300}
+                data={dataModal.grafik}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="tahun" />
+                <YAxis tickFormatter={DataFormater}>
+                  <Label
+                    value="Nilai Satuan 1 Juta"
+                    angle={-90}
+                    position="insideBottomLeft"
+                    offset={-5}
+                  />
+                </YAxis>
+                <Tooltip />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="pagu"
+                  stroke="#6EB5FF"
+                  activeDot={{ r: 8 }}
+                  strokeWidth={3}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="mp"
+                  stroke="#FCB9AA"
+                  strokeWidth={3}
+                />
+              </LineChart>
+            )}
+          </ResponsiveContainer>
+        </div>
+      ) : null}
+      {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
+        <TableContainer component={Paper} style={{ marginTop: 20 }}>
+          <Table className={classes.table} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                {dataModal.nameColumn.map((item) => (
+                  <StyledTableCell align="center">{item}</StyledTableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {dataModal.grafik.map((row) => (
+                <StyledTableRow key={row.tahun}>
+                  <StyledTableCell align="center" component="th" scope="row">
+                    {row.tahun}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    Rp{" "}
+                    {row.anggaran
+                      ? row.anggaran
+                          .toFixed(2)
+                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")
+                      : row.pagu.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    Rp{" "}
+                    {row.realisasi
+                      ? row.realisasi
+                          .toFixed(2)
+                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")
+                      : row.mp.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : null}
+      <Typography className={classes.isiContentTextStyle} variant="h2" wrap>
+        {dataModal.analisis}
+      </Typography>
+    </div>
+  );
+
+  const printData = () => {
+    html2canvas(inputRef.current).then(function (canvas) {
+      const croppedCanvas = document.createElement("canvas");
+      const croppedCanvasContext = croppedCanvas.getContext("2d");
+      // init data
+      const cropPositionTop = 0;
+      const cropPositionLeft = 0;
+      const cropWidth = canvas.width;
+      const cropHeight = canvas.height;
+
+      croppedCanvas.width = cropWidth;
+      croppedCanvas.height = cropHeight;
+
+      croppedCanvasContext.drawImage(canvas, cropPositionLeft, cropPositionTop);
+
+      const base64Image = croppedCanvas.toDataURL("image/png", "1.0");
+      let myWindow = window.open();
+      myWindow.document.write("<img src='" + base64Image + "''>");
+      myWindow.print();
+    });
+  };
+
+  const printHandle = (dataModal) => {
+    <div className={classes.paper} ref={inputRef}>
       <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
         {dataModal.title}
       </h2>
@@ -326,8 +500,9 @@ const DashHome = () => {
         </TableContainer>
       ) : null}
       <p id="simple-modal-description">{dataModal.analisis}</p>
-    </div>
-  );
+    </div>;
+    printData();
+  };
 
   return (
     <div>
@@ -336,13 +511,14 @@ const DashHome = () => {
         onClose={handleClose}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
+        className={classes.modalStyle1}
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        {body}
+        <div style={{ margin: 20 }}>{body}</div>
       </Modal>
       <Grid
         container
@@ -355,6 +531,7 @@ const DashHome = () => {
             Anggaran & Realisasi (Satuan 1 Juta)
           </Typography>
         </Grid>
+
         <Grid
           container
           direction="row"
@@ -376,7 +553,13 @@ const DashHome = () => {
                     title: "Anggaran & Realisasi (Satuan 1 Juta)",
                     grafik: anggaranRealisasi,
                     dataTable: "",
-                    analisis: comment ? comment.analisisData : "",
+                    analisis:
+                      comment && comment.lastComment
+                        ? comment.lastComment.analisisData.replace(
+                            /<[^>]+>/g,
+                            ""
+                          )
+                        : "",
                     type: "Bar",
                     nameColumn: ["Tahun", "Anggaran", "Realisasi"],
                   })
@@ -388,7 +571,17 @@ const DashHome = () => {
             <TooltipMI
               title="Print Data"
               placement="top"
-              onClick={() => window.print()}
+              onClick={
+                () => window.print()
+                // printHandle({
+                //   title: "Anggaran & Realisasi (Satuan 1 Juta)",
+                //   grafik: anggaranRealisasi,
+                //   dataTable: "",
+                //   analisis: comment ? comment.analisisData : "",
+                //   type: "Bar",
+                //   nameColumn: ["Tahun", "Anggaran", "Realisasi"],
+                // })
+              }
             >
               <IconButton aria-label="delete" size="small">
                 <IoPrint />
@@ -440,7 +633,38 @@ const DashHome = () => {
               variant="h2"
               wrap
             >
-              {comment ? comment.analisisData : ""}
+              {comment && comment.lastComment
+                ? comment.lastComment.analisisData
+                    .replace(/<[^>]+>/g, "")
+                    .slice(0, 500)
+                : ""}
+              {comment &&
+              comment.lastComment &&
+              comment.lastComment.analisisData.length > 500 ? (
+                <Link
+                  href="#"
+                  onClick={() =>
+                    handleOpen({
+                      title: "Anggaran & Realisasi (Satuan 1 Juta)",
+                      grafik: anggaranRealisasi,
+                      dataTable: "",
+                      analisis:
+                        comment && comment.lastComment
+                          ? comment.lastComment.analisisData.replace(
+                              /<[^>]+>/g,
+                              ""
+                            )
+                          : "",
+                      type: "Bar",
+                      nameColumn: ["Tahun", "Anggaran", "Realisasi"],
+                    })
+                  }
+                  variant="body2"
+                >
+                  {" "}
+                  More
+                </Link>
+              ) : null}
             </Typography>
           </div>
         </Grid>
@@ -529,7 +753,13 @@ const DashHome = () => {
                       title: "Pagu & MP PNBP (Satuan 1 Juta)",
                       grafik: paguMp,
                       dataTable: "",
-                      analisis: comment ? comment.analisisData : "",
+                      analisis:
+                        commentPagu && commentPagu.lastComment
+                          ? commentPagu.lastComment.analisisData.replace(
+                              /<[^>]+>/g,
+                              ""
+                            )
+                          : "",
                       type: "Line",
                       nameColumn: ["Tahun", "Pagu", "MP"],
                     })
@@ -541,7 +771,17 @@ const DashHome = () => {
               <TooltipMI
                 title="Print Data"
                 placement="top"
-                onClick={() => window.print()}
+                onClick={
+                  () => window.print()
+                  // printHandle({
+                  //   title: "Pagu & MP PNBP (Satuan 1 Juta)",
+                  //   grafik: paguMp,
+                  //   dataTable: "",
+                  //   analisis: comment ? comment.analisisData : "",
+                  //   type: "Line",
+                  //   nameColumn: ["Tahun", "Pagu", "MP"],
+                  // })
+                }
               >
                 <IconButton aria-label="delete" size="small">
                   <IoPrint />
@@ -605,59 +845,6 @@ const DashHome = () => {
                         strokeWidth={3}
                       />
                     </LineChart>
-                    {/* <LineChart
-                      width={500}
-                      height={300}
-                      data={paguMp}
-                      margin={{
-                        top: 5,
-                        right: 30,
-                        left: 20,
-                        bottom: 5,
-                      }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="tahun" />
-                      <YAxis yAxisId="left" tickFormatter={DataFormater}>
-                        <Label
-                          value="Nilai Satuan 1 Juta"
-                          angle={-90}
-                          position="insideBottomLeft"
-                          offset={-5}
-                        />
-                      </YAxis>
-                      <YAxis
-                        yAxisId="right"
-                        orientation="right"
-                        tickFormatter={DataFormater}
-                        label="Nilai"
-                      >
-                        <Label
-                          value="Nilai Satuan 1 Juta"
-                          angle={-90}
-                          position="insideBottomLeft"
-                          offset={0}
-                        />
-                      </YAxis>
-                      <Tooltip />
-                      <Legend />
-                      <Line
-                        yAxisId="left"
-                        type="monotone"
-                        dataKey="pagu"
-                        stroke="#6EB5FF"
-                        activeDot={{ strokeWidth: 3, r: 5 }}
-                        strokeWidth={3}
-                      />
-                      <Line
-                        yAxisId="right"
-                        type="monotone"
-                        dataKey="mp"
-                        stroke="#FCB9AA"
-                        activeDot={{ strokeWidth: 3 }}
-                        strokeWidth={3}
-                      />
-                    </LineChart> */}
                   </ResponsiveContainer>
                 </div>
               </CardContent>
@@ -693,7 +880,38 @@ const DashHome = () => {
                 variant="h2"
                 wrap
               >
-                {comment ? comment.analisisData : ""}
+                {commentPagu && commentPagu.lastComment
+                  ? commentPagu.lastComment.analisisData
+                      .replace(/<[^>]+>/g, "")
+                      .slice(0, 500)
+                  : ""}
+                {commentPagu &&
+                commentPagu.lastComment &&
+                commentPagu.lastComment.analisisData.length > 500 ? (
+                  <Link
+                    href="#"
+                    onClick={() =>
+                      handleOpen({
+                        title: "Anggaran & Realisasi (Satuan 1 Juta)",
+                        grafik: anggaranRealisasi,
+                        dataTable: "",
+                        analisis:
+                          commentPagu && commentPagu.lastComment
+                            ? commentPagu.lastComment.analisisData.replace(
+                                /<[^>]+>/g,
+                                ""
+                              )
+                            : "",
+                        type: "Bar",
+                        nameColumn: ["Tahun", "Anggaran", "Realisasi"],
+                      })
+                    }
+                    variant="body2"
+                  >
+                    {" "}
+                    More
+                  </Link>
+                ) : null}
               </Typography>
             </div>
           </Grid>

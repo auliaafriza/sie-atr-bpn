@@ -167,5 +167,19 @@ const styles = makeStyles((theme) => ({
   table: {
     minWidth: 700,
   },
+  modalStyle1: {
+    position: "absolute",
+    overflow: "scroll",
+    display: "block",
+  },
+  modalCover: {
+    width: "80%",
+    backgroundColor: theme.palette.background.paper,
+    border: "1px solid rgba(0, 0, 0, 0.06)",
+    borderRadius: "10px",
+    borderWidth: 1,
+    boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
+    padding: theme.spacing(2, 4, 3),
+  },
 }));
 export default styles;
