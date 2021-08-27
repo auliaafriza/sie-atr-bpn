@@ -188,5 +188,14 @@ const styles = makeStyles((theme) => ({
     width: "80%",
     justifyContent: "center",
   },
+  rootList: {
+    width: "100%",
+    maxHeight: "200px",
+    backgroundColor: theme.palette.background.paper,
+    overflow: "scroll",
+  },
+  inline: {
+    display: "inline",
+  },
 }));
 export default styles;

@@ -34,6 +34,12 @@ import {
   TableRow,
   Paper,
   Link,
+  List,
+  ListItem,
+  Divider,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -48,6 +54,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
+import moment from "moment";
 
 const dataTempAsset = [
   {
@@ -130,6 +137,7 @@ const DashHome = () => {
     analisis: "",
     type: "",
     nameColumn: [],
+    listTop10Comment: [],
   });
   const inputRef = createRef(null);
   const [image, takeScreenshot] = useScreenshot({
@@ -358,6 +366,40 @@ const DashHome = () => {
       >
         {dataModal.analisis}
       </Typography>
+      <Typography
+        className={classes.isiContentTextStyle}
+        variant="h2"
+        wrap
+        style={{ paddingTop: 20, fontSize: 18, fontWeight: "600" }}
+      >
+        Histori Analisis Data
+      </Typography>
+      <List className={classes.rootList}>
+        {dataModal.listTop10Comment && dataModal.listTop10Comment.length != 0
+          ? dataModal.listTop10Comment.map((history, i) => {
+              return (
+                <>
+                  <ListItem alignItems="flex-start">
+                    <ListItemText
+                      primary={moment(new Date(history.commentDate)).format(
+                        "DD MMM YYYY - HH:mm"
+                      )}
+                      secondary={
+                        <React.Fragment>
+                          {history.analisisData.replace(/<[^>]+>/g, "")}
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItem>
+                  <Divider
+                    component="li"
+                    style={{ marginLeft: 20, marginRight: 20 }}
+                  />
+                </>
+              );
+            })
+          : null}
+      </List>
     </div>
   );
 
@@ -571,6 +613,7 @@ const DashHome = () => {
                         : "",
                     type: "Bar",
                     nameColumn: ["Tahun", "Anggaran", "Realisasi"],
+                    listTop10Comment: comment.listTop10Comment,
                   })
                 }
               >
@@ -666,6 +709,7 @@ const DashHome = () => {
                           : "",
                       type: "Bar",
                       nameColumn: ["Tahun", "Anggaran", "Realisasi"],
+                      listTop10Comment: comment.listTop10Comment,
                     })
                   }
                   variant="body2"
@@ -771,6 +815,8 @@ const DashHome = () => {
                           : "",
                       type: "Line",
                       nameColumn: ["Tahun", "Pagu", "MP"],
+
+                      listTop10Comment: commentPagu.listTop10Comment,
                     })
                   }
                 >
@@ -913,6 +959,7 @@ const DashHome = () => {
                             : "",
                         type: "Bar",
                         nameColumn: ["Tahun", "Anggaran", "Realisasi"],
+                        listTop10Comment: commentPagu.listTop10Comment,
                       })
                     }
                     variant="body2"
