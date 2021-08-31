@@ -255,8 +255,8 @@ const AlokasiAnggaran = () => {
               </YAxis>
               <Tooltip content={<CustomTooltip />} />
               <Legend />
-              <Bar dataKey="alokasi_anggaran" fill="#8884d8" />
-              <Bar dataKey="anggaran" fill="#82ca9d" />
+              <Bar dataKey="alokasi_anggaran" fill="#FFA07A" />
+              <Bar dataKey="anggaran" fill="#20B2AA" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -551,8 +551,8 @@ const AlokasiAnggaran = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Bar dataKey="alokasi_anggaran" fill="#8884d8" />
-                    <Bar dataKey="anggaran" fill="#82ca9d" />
+                    <Bar dataKey="alokasi_anggaran" fill="#FFA07A" />
+                    <Bar dataKey="anggaran" fill="#20B2AA" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

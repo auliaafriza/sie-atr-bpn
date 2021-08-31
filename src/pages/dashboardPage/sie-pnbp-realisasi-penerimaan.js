@@ -313,7 +313,7 @@ const RealisasiPenerimaan = () => {
             <Line
               type="monotone"
               dataKey="persentase_realisasi"
-              stroke="#6EB5FF"
+              stroke="#9EC1CF"
               activeDot={{ r: 8 }}
               strokeWidth={3}
             />
@@ -611,7 +611,7 @@ const RealisasiPenerimaan = () => {
                     <Line
                       type="monotone"
                       dataKey="persentase_realisasi"
-                      stroke="#6EB5FF"
+                      stroke="#9EC1CF"
                       activeDot={{ r: 8 }}
                       strokeWidth={3}
                     />

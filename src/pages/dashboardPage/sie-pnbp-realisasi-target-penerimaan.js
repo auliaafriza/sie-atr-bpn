@@ -248,7 +248,7 @@ const RealisasiTargetPenerimaan = () => {
               </YAxis>
               <Tooltip content={<CustomTooltip />} />
               <Legend />
-              <Bar dataKey="targetpenerimaan" fill="#8884d8" />
+              <Bar dataKey="targetpenerimaan" fill="#FEB144" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -537,7 +537,7 @@ const RealisasiTargetPenerimaan = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Bar dataKey="targetpenerimaan" fill="#8884d8" />
+                    <Bar dataKey="targetpenerimaan" fill="#FEB144" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

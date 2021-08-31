@@ -262,7 +262,7 @@ const PengembalianPNBP = () => {
               </YAxis>
               <Tooltip content={<CustomTooltip />} />
               {/* <Legend /> */}
-              <Bar dataKey="realisasi" fill="#8884d8" />
+              <Bar dataKey="realisasi" fill="#CD5C5C" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -563,7 +563,7 @@ const PengembalianPNBP = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     {/* <Legend /> */}
-                    <Bar dataKey="realisasi" fill="#8884d8" />
+                    <Bar dataKey="realisasi" fill="#CD5C5C" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

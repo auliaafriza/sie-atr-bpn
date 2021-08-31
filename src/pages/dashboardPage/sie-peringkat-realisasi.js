@@ -264,7 +264,7 @@ const PeringkatRealisasi = () => {
               </YAxis>
               <Tooltip content={<CustomTooltip />} />
               {/* <Legend /> */}
-              <Bar dataKey="realisasi" fill="#8884d8" />
+              <Bar dataKey="realisasi" fill="#8FBC8F" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -568,7 +568,7 @@ const PeringkatRealisasi = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     {/* <Legend /> */}
-                    <Bar dataKey="realisasi" fill="#8884d8" />
+                    <Bar dataKey="realisasi" fill="#8FBC8F" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
