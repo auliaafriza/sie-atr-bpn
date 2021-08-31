@@ -38,6 +38,7 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
+  TablePagination,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -166,6 +167,17 @@ const RealisasiPenerimaan = () => {
     type: "image/jpeg",
     quality: 1.0,
   });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
 
   const getImage = () => takeScreenshot(ref.current);
   const handleOpen = (data) => {
@@ -212,6 +224,34 @@ const RealisasiPenerimaan = () => {
     } else {
       return number.toString();
     }
+  };
+
+  const CustomTooltip = ({ active, payload, label }) => {
+    let bulan = [
+      "Januari",
+      "Febuari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agustus",
+      "September",
+      "Oktober",
+      " November",
+      "Desember",
+    ];
+    if (active && payload && payload.length) {
+      return (
+        <div className={classes.tooltipCustom}>
+          <p className="label">Bulan {bulan[payload[0].payload.bulan + 1]}</p>
+          <p className="desc" style={{ color: payload[0].color }}>
+            {`Persentase Realisasi : ${payload[0].value}`}%
+          </p>
+        </div>
+      );
+    }
+    return null;
   };
 
   const CustomX = (data) => {
@@ -268,7 +308,7 @@ const RealisasiPenerimaan = () => {
                 offset={-5}
               />
             </YAxis>
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
             {/* <Legend /> */}
             <Line
               type="monotone"
@@ -283,7 +323,11 @@ const RealisasiPenerimaan = () => {
       {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
         <>
           <TableContainer component={Paper} style={{ marginTop: 20 }}>
-            <Table className={classes.table} aria-label="customized table">
+            <Table
+              stickyHeader
+              className={classes.table}
+              aria-label="customized table"
+            >
               <TableHead>
                 <TableRow>
                   {dataModal.nameColumn.map((item) => (
@@ -292,19 +336,30 @@ const RealisasiPenerimaan = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {dataModal.grafik.map((row) => (
-                  <StyledTableRow key={row.bulan}>
-                    <StyledTableCell align="left" component="th" scope="row">
-                      {NamaBulan[row.bulan + 1]}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      {row.persentase_realisasi}%
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
+                {dataModal.grafik
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => (
+                    <StyledTableRow key={row.bulan}>
+                      <StyledTableCell align="left" component="th" scope="row">
+                        {NamaBulan[row.bulan + 1]}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row.persentase_realisasi}%
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            component="div"
+            count={dataModal.grafik.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
         </>
       ) : null}
       <Typography
@@ -551,7 +606,7 @@ const RealisasiPenerimaan = () => {
                         offset={-5}
                       />
                     </YAxis>
-                    <Tooltip />
+                    <Tooltip content={<CustomTooltip />} />
                     {/* <Legend /> */}
                     <Line
                       type="monotone"

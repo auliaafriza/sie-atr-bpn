@@ -188,6 +188,24 @@ const realisasiPenggunaan = () => {
     }
   };
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className={classes.tooltipCustom}>
+          <p className="label">{label}</p>
+          <p
+            className="desc"
+            style={{ color: payload[0].color }}
+          >{`Realisasi : Rp ${payload[0].value
+            .toFixed(2)
+            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   const body = (
     <div className={classes.paper}>
       <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
@@ -238,7 +256,7 @@ const realisasiPenggunaan = () => {
                   offset={-5}
                 />
               </YAxis>
-              <Tooltip />
+              <Tooltip content={<CustomTooltip />} />
               {/* <Legend /> */}
               <Line
                 type="monotone"
@@ -253,7 +271,11 @@ const realisasiPenggunaan = () => {
       ) : null}
       {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
         <>
-          <TableContainer component={Paper} style={{ marginTop: 20 }}>
+          <TableContainer
+            stickyHeader
+            component={Paper}
+            style={{ marginTop: 20 }}
+          >
             <Table className={classes.table} aria-label="customized table">
               <TableHead>
                 <TableRow>
@@ -538,7 +560,7 @@ const realisasiPenggunaan = () => {
                         offset={-5}
                       />
                     </YAxis>
-                    <Tooltip />
+                    <Tooltip content={<CustomTooltip />} />
                     {/* <Legend /> */}
                     <Line
                       type="monotone"

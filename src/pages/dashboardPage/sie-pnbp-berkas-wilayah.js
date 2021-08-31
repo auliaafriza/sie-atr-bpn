@@ -40,6 +40,7 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
+  TablePagination,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -126,6 +127,17 @@ const PnbpBerkasWilayah = () => {
     type: "image/jpeg",
     quality: 1.0,
   });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
 
   const getImage = () => takeScreenshot(ref.current);
   const handleOpen = (data) => {
@@ -243,29 +255,46 @@ const PnbpBerkasWilayah = () => {
         </div>
       ) : null}
       {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
-        <TableContainer component={Paper} style={{ marginTop: 20 }}>
-          <Table className={classes.table} aria-label="customized table">
-            <TableHead>
-              <TableRow>
-                {dataModal.nameColumn.map((item) => (
-                  <StyledTableCell align="left">{item}</StyledTableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {dataModal.grafik.map((row) => (
-                <StyledTableRow key={row.wilayah}>
-                  <StyledTableCell align="left" component="th" scope="row">
-                    {row.wilayah}
-                  </StyledTableCell>
-                  <StyledTableCell align="left">
-                    {row.jumlahberkas}
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <>
+          <TableContainer component={Paper} style={{ marginTop: 20 }}>
+            <Table
+              stickyHeader
+              className={classes.table}
+              aria-label="customized table"
+            >
+              <TableHead>
+                <TableRow>
+                  {dataModal.nameColumn.map((item) => (
+                    <StyledTableCell align="left">{item}</StyledTableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {dataModal.grafik
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => (
+                    <StyledTableRow key={row.wilayah}>
+                      <StyledTableCell align="left" component="th" scope="row">
+                        {row.wilayah}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row.jumlahberkas}
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            component="div"
+            count={dataModal.grafik.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </>
       ) : null}
       <Typography
         className={classes.isiContentTextStyle}

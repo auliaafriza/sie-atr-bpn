@@ -40,6 +40,7 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
+  TablePagination,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -126,6 +127,17 @@ const RealisasiTargetPenerimaan = () => {
     type: "image/jpeg",
     quality: 1.0,
   });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
 
   const getImage = () => takeScreenshot(ref.current);
   const handleOpen = (data) => {
@@ -172,6 +184,24 @@ const RealisasiTargetPenerimaan = () => {
     }
   };
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className={classes.tooltipCustom}>
+          <p className="label">Tahun {label}</p>
+          <p
+            className="desc"
+            style={{ color: payload[0].color }}
+          >{`Target Penerimaan : Rp ${payload[0].value
+            .toFixed(2)
+            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   const body = (
     <div className={classes.paper}>
       <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
@@ -216,7 +246,7 @@ const RealisasiTargetPenerimaan = () => {
                   offset={-5}
                 />
               </YAxis>
-              <Tooltip />
+              <Tooltip content={<CustomTooltip />} />
               <Legend />
               <Bar dataKey="targetpenerimaan" fill="#8884d8" />
             </BarChart>
@@ -224,32 +254,49 @@ const RealisasiTargetPenerimaan = () => {
         </div>
       ) : null}
       {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
-        <TableContainer component={Paper} style={{ marginTop: 20 }}>
-          <Table className={classes.table} aria-label="customized table">
-            <TableHead>
-              <TableRow>
-                {dataModal.nameColumn.map((item) => (
-                  <StyledTableCell align="left">{item}</StyledTableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {dataModal.grafik.map((row) => (
-                <StyledTableRow key={row.tahun}>
-                  <StyledTableCell align="left" component="th" scope="row">
-                    {row.tahun}
-                  </StyledTableCell>
-                  <StyledTableCell align="left">
-                    Rp{" "}
-                    {row.targetpenerimaan
-                      .toFixed(2)
-                      .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <>
+          <TableContainer component={Paper} style={{ marginTop: 20 }}>
+            <Table
+              stickyHeader
+              className={classes.table}
+              aria-label="customized table"
+            >
+              <TableHead>
+                <TableRow>
+                  {dataModal.nameColumn.map((item) => (
+                    <StyledTableCell align="left">{item}</StyledTableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {dataModal.grafik
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => (
+                    <StyledTableRow key={row.tahun}>
+                      <StyledTableCell align="left" component="th" scope="row">
+                        {row.tahun}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        Rp{" "}
+                        {row.targetpenerimaan
+                          .toFixed(2)
+                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            component="div"
+            count={dataModal.grafik.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </>
       ) : null}
       <Typography
         className={classes.isiContentTextStyle}
@@ -488,7 +535,7 @@ const RealisasiTargetPenerimaan = () => {
                         offset={-5}
                       />
                     </YAxis>
-                    <Tooltip />
+                    <Tooltip content={<CustomTooltip />} />
                     <Legend />
                     <Bar dataKey="targetpenerimaan" fill="#8884d8" />
                   </BarChart>
