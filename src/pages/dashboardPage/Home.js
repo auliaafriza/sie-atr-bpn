@@ -55,6 +55,16 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
+import PnbpBerkasWilayah from "./sie-pnbp-berkas-wilayah";
+import BerkasWilayahPnbp from "./sie-pnbp-berkas-wilayahPNBP";
+import PnbpBerkasPeringkat from "./sie-pnbp-berkas-peringkat";
+import PnbpBerkasPeringkatWilayah from "./sie-pnbp-berkas-peringkat-wilayah";
+import RealisasiPenggunaan from "./sie-pnbp-realisasi-pengunaan";
+import RealisasiPenerimaan from "./sie-pnbp-realisasi-penerimaan";
+import RealisasiTargetPenerimaan from "./sie-pnbp-realisasi-target-penerimaan";
+import AlokasiAnggaran from "./sie-pnbp-alokasi-anggaran";
+import PengembalianPNBP from "./sie-pengembalian-pnbp";
+import PeringkatRealisasi from "./sie-peringkat-realisasi";
 
 const dataTempAsset = [
   {
@@ -571,6 +581,16 @@ const DashHome = () => {
       >
         {body}
       </Modal>
+      <PnbpBerkasWilayah />
+      <BerkasWilayahPnbp />
+      <PnbpBerkasPeringkat />
+      <PnbpBerkasPeringkatWilayah />
+      <RealisasiPenggunaan />
+      <RealisasiPenerimaan />
+      <RealisasiTargetPenerimaan />
+      <AlokasiAnggaran />
+      <PengembalianPNBP />
+      <PeringkatRealisasi />
       <Grid
         container
         spacing={2}
