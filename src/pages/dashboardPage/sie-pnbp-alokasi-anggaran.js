@@ -383,7 +383,7 @@ const AlokasiAnggaran = () => {
       >
         <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            PNBP Alokasi Anggaran
+            alokasi anggaran vs realisasi Belanja
           </Typography>
         </Grid>
 
@@ -405,7 +405,7 @@ const AlokasiAnggaran = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "PNBP Alokasi Anggaran",
+                    title: "alokasi anggaran vs realisasi Belanja ",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -491,7 +491,7 @@ const AlokasiAnggaran = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "PNBP Alokasi Anggaran",
+                      title: "alokasi anggaran vs realisasi Belanja ",
                       grafik: data,
                       dataTable: "",
                       analisis:

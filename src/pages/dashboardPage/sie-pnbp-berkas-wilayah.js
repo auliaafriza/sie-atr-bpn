@@ -56,6 +56,7 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
+import { tahunData, bulanData, semesterData } from "./globalDataAsset";
 
 const dataTemp = [
   {
@@ -81,34 +82,6 @@ const theme = createTheme({
     ].join(","),
   },
 });
-
-const tahunData = [
-  { id: "2021", value: 2021 },
-  { id: "2020", value: 2020 },
-  { id: "2019", value: 2019 },
-  { id: "2018", value: 2018 },
-  { id: "2017", value: 2017 },
-];
-
-const bulanData = [
-  { id: "Jan", value: "Jan", name: "Januari" },
-  { id: "Feb", value: "Feb", name: "Febuari" },
-  { id: "Mar", value: "Mar", name: "Maret" },
-  { id: "Apr", value: "Apr", name: "April" },
-  { id: "Mei", value: "Mei", name: "Mei" },
-  { id: "Jun", value: "Jun", name: "Juni" },
-  { id: "Jul", value: "Jul", name: "Juli" },
-  { id: "Agu", value: "Agu", name: "Agustus" },
-  { id: "Sep", value: "Sep", name: "September" },
-  { id: "Okt", value: "Okt", name: "Oktober" },
-  { id: "Nov", value: "Nov", name: "November" },
-  { id: "Des", value: "Des", name: "Desember" },
-];
-
-const semesterData = [
-  { id: 1, value: 1, name: "Semester 1" },
-  { id: 2, value: 2, name: "Semester 2" },
-];
 
 const StyledTableCell = withStyles((theme) => ({
   head: {

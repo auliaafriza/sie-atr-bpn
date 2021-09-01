@@ -367,9 +367,9 @@ const RealisasiTargetPenerimaan = () => {
         direction="row"
         style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
       >
-        <Grid item xs={6}>
+        <Grid item xs={9}>
           <Typography className={classes.titleSection} variant="h2">
-            PNBP Target Penerimaan
+            penerimaan berbanding TPNBP penerimaan dan belanja per bulan
           </Typography>
         </Grid>
 
@@ -379,7 +379,7 @@ const RealisasiTargetPenerimaan = () => {
           justifyContent="flex-end"
           alignItems="flex-end"
           item
-          xs={6}
+          xs={3}
         >
           <ButtonGroup
             aria-label="outlined button group"
@@ -391,7 +391,8 @@ const RealisasiTargetPenerimaan = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "PNBP Target Penerimaan",
+                    title:
+                      "penerimaan berbanding TPNBP  penerimaan dan belanja per bulan",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -477,7 +478,8 @@ const RealisasiTargetPenerimaan = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "PNBP Target Penerimaan",
+                      title:
+                        "penerimaan berbanding TPNBP  penerimaan dan belanja per bulan",
                       grafik: data,
                       dataTable: "",
                       analisis:

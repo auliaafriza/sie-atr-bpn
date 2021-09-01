@@ -67,6 +67,8 @@ import PengembalianPNBP from "./sie-pengembalian-pnbp";
 import PeringkatRealisasi from "./sie-peringkat-realisasi";
 import RealisasiAnggaran from "./sie-pnbp-realisasi-anggaran";
 import PaguMp from "./sie-pnbp-pagu-mp";
+import BPHTBJumlahBerkas from "./bphtb-jumlah-berkas";
+import BPHTBDaerahTerintegrasi from "./bphtb-jumlah-terintegrasi";
 
 const dataTempAsset = [
   {
@@ -587,14 +589,16 @@ const DashHome = () => {
       {/* <BerkasWilayahPnbp /> */}
       <PnbpBerkasPeringkat />
       <PnbpBerkasPeringkatWilayah />
+      <RealisasiAnggaran />
       <RealisasiPenggunaan />
       <RealisasiPenerimaan />
       <RealisasiTargetPenerimaan />
-      <AlokasiAnggaran />
-      <PengembalianPNBP />
-      <PeringkatRealisasi />
-      <RealisasiAnggaran />
       <PaguMp />
+      <AlokasiAnggaran />
+      <PeringkatRealisasi />
+      <PengembalianPNBP />
+      <BPHTBJumlahBerkas />
+      <BPHTBDaerahTerintegrasi />
     </div>
   );
 };

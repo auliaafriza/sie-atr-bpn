@@ -41,7 +41,6 @@ import {
   ListItemAvatar,
   Avatar,
   TablePagination,
-  Button,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -55,16 +54,15 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
-import { tahunData, bulanData } from "./globalDataAsset";
 
 const dataTemp = [
   {
-    wilayah: "Kantor Wilayah",
-    besarnya: 0,
+    tahun: "2010",
+    targetpenerimaan: 0,
   },
   {
-    wilayah: "Kantor Wilayah",
-    besarnya: 10,
+    tahun: "2011",
+    targetpenerimaan: 10,
   },
 ];
 
@@ -79,6 +77,14 @@ const theme = createTheme({
     ].join(","),
   },
 });
+
+const tahunData = [
+  { id: "2021", value: 2021 },
+  { id: "2020", value: 2020 },
+  { id: "2019", value: 2019 },
+  { id: "2018", value: 2018 },
+  { id: "2017", value: 2017 },
+];
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -100,7 +106,7 @@ const StyledTableRow = withStyles((theme) => ({
 
 let url = "http://10.20.57.234/SIEBackEnd/";
 
-const PnbpBerkasPeringkatWilayah = () => {
+const BPHTBDaerahTerintegrasi = () => {
   const classes = styles();
   const [years, setYears] = useState("2017");
   const [data, setData] = useState(dataTemp);
@@ -143,13 +149,11 @@ const PnbpBerkasPeringkatWilayah = () => {
     setOpen(false);
   };
 
-  const getData = () => {
+  useEffect(() => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_berkas_peringkat_per_wilayah?tahun=${years}&bulan=${bulan}`
-      )
+      .get(`${url}Aset&Keuangan/BPHTB/sie_bphtb_jumlah_daerah_terintegrasi`)
       .then(function (response) {
         setData(response.data.data);
         setComment(response.data);
@@ -162,18 +166,10 @@ const PnbpBerkasPeringkatWilayah = () => {
       .then(function () {
         // always executed
       });
-  };
-
-  useEffect(() => {
-    getData();
   }, []);
 
   const handleChange = (event) => {
     setYears(event.target.value);
-  };
-
-  const handleChangeBulan = (event) => {
-    setBulan(event.target.value);
   };
 
   const DataFormater = (number) => {
@@ -196,7 +192,7 @@ const PnbpBerkasPeringkatWilayah = () => {
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Besarnya : Rp ${payload[0].value
+          >{`Target Penerimaan : Rp ${payload[0].value
             .toFixed(2)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
         </div>
@@ -204,10 +200,6 @@ const PnbpBerkasPeringkatWilayah = () => {
     }
 
     return null;
-  };
-
-  const DataFormaterX = (value) => {
-    return value.replace("Kantor Wilayah Provinsi ", "");
   };
 
   const body = (
@@ -228,7 +220,7 @@ const PnbpBerkasPeringkatWilayah = () => {
         <ResponsiveContainer width="100%" height={250}>
           <BarChart
             width={500}
-            height={800}
+            height={300}
             data={dataModal.grafik}
             margin={{
               top: 5,
@@ -244,31 +236,18 @@ const PnbpBerkasPeringkatWilayah = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="wilayah"
-              angle={60}
-              interval={0}
-              tick={{
-                // angle: 60,
-                transform: "rotate(-35)",
-                textAnchor: "start",
-                dominantBaseline: "ideographic",
-                fontSize: 8,
-              }}
-              height={100}
-              tickFormatter={DataFormaterX}
-            ></XAxis>
+            <XAxis dataKey="tahun"></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Besarnya"
+                value="Target Penerimaan"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
               />
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
-            {/* <Legend /> */}
-            <Bar dataKey="besarnya" fill="#F08080" />
+            <Legend />
+            <Bar dataKey="targetpenerimaan" fill="#66CDAA" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -291,12 +270,13 @@ const PnbpBerkasPeringkatWilayah = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.wilayah}>
+                    <StyledTableRow key={row.tahun}>
                       <StyledTableCell align="left" component="th" scope="row">
-                        {row.wilayah}
+                        {row.tahun}
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        {row.besarnya
+                        Rp{" "}
+                        {row.targetpenerimaan
                           .toFixed(2)
                           .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                       </StyledTableCell>
@@ -387,9 +367,9 @@ const PnbpBerkasPeringkatWilayah = () => {
         direction="row"
         style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
       >
-        <Grid item xs={6}>
+        <Grid item xs={9}>
           <Typography className={classes.titleSection} variant="h2">
-            Top 5 penerimaan PNBP per Wilayah
+            Jumlah daerah terintegrasi
           </Typography>
         </Grid>
 
@@ -399,7 +379,7 @@ const PnbpBerkasPeringkatWilayah = () => {
           justifyContent="flex-end"
           alignItems="flex-end"
           item
-          xs={6}
+          xs={3}
         >
           <ButtonGroup
             aria-label="outlined button group"
@@ -411,7 +391,7 @@ const PnbpBerkasPeringkatWilayah = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Top 5 penerimaan PNBP per Wilayah",
+                    title: "Jumlah daerah terintegrasi",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -422,7 +402,7 @@ const PnbpBerkasPeringkatWilayah = () => {
                           )
                         : "",
                     type: "Bar",
-                    nameColumn: ["Wilayah", "Besarnya"],
+                    nameColumn: ["Tahun", "Target Penerimaan"],
                     listTop10Comment: comment.listTop10Comment,
                   })
                 }
@@ -457,91 +437,29 @@ const PnbpBerkasPeringkatWilayah = () => {
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <div style={{ margin: 10, marginRight: 25 }}>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={4}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Pilih Tahun
-                </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={years}
-                    onChange={handleChange}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                  >
-                    {tahunData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Pilih Bulan
-                </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Bulan
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={bulan}
-                    onChange={handleChangeBulan}
-                    label="Bulan"
-                    className={classes.selectStyle}
-                  >
-                    {bulanData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid
-                container
-                direction="row"
-                justifyContent="flex-start"
-                alignItems="center"
-                item
-                xs={4}
-                style={{ paddingTop: 40, paddingLeft: 20 }}
+            <Typography className={classes.isiTextStyle} variant="h2">
+              Pilih Tahun
+            </Typography>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="demo-simple-select-outlined-label">
+                Tahun
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-outlined-label"
+                id="demo-simple-select-outlined"
+                value={years}
+                onChange={handleChange}
+                label="Tahun"
               >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => getData()}
-                >
-                  Submit
-                </Button>
-              </Grid>
-            </Grid>
+                {tahunData.map((item, i) => {
+                  return (
+                    <MenuItem value={item.id} key={i}>
+                      {item.value}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
             <Typography
               className={classes.isiContentTextStyle}
               variant="h2"
@@ -559,7 +477,7 @@ const PnbpBerkasPeringkatWilayah = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "Top 5 penerimaan PNBP per Wilayah",
+                      title: "Jumlah daerah terintegrasi",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -570,7 +488,7 @@ const PnbpBerkasPeringkatWilayah = () => {
                             )
                           : "",
                       type: "Bar",
-                      nameColumn: ["Wilayah", "Besarnya"],
+                      nameColumn: ["Tahun", "Target Penerimaan"],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
@@ -590,7 +508,7 @@ const PnbpBerkasPeringkatWilayah = () => {
                 <ResponsiveContainer width="100%" height={250}>
                   <BarChart
                     width={500}
-                    height={800}
+                    height={300}
                     data={data}
                     margin={{
                       top: 5,
@@ -606,31 +524,18 @@ const PnbpBerkasPeringkatWilayah = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                      dataKey="wilayah"
-                      angle={60}
-                      interval={0}
-                      tick={{
-                        // angle: 90,
-                        transform: "rotate(-35)",
-                        textAnchor: "start",
-                        dominantBaseline: "ideographic",
-                        fontSize: 8,
-                      }}
-                      height={100}
-                      tickFormatter={DataFormaterX}
-                    />
+                    <XAxis dataKey="tahun" />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
-                        value="Besarnya"
+                        value="Target Penerimaan"
                         angle={-90}
                         position="insideBottomLeft"
                         offset={-5}
                       />
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
-                    {/* <Legend /> */}
-                    <Bar dataKey="besarnya" fill="#F08080" />
+                    <Legend />
+                    <Bar dataKey="targetpenerimaan" fill="#66CDAA" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -642,4 +547,4 @@ const PnbpBerkasPeringkatWilayah = () => {
   );
 };
 
-export default PnbpBerkasPeringkatWilayah;
+export default BPHTBDaerahTerintegrasi;

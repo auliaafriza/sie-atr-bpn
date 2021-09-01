@@ -41,6 +41,7 @@ import {
   ListItemAvatar,
   Avatar,
   TablePagination,
+  Button,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -80,12 +81,9 @@ const theme = createTheme({
   },
 });
 
-const tahunData = [
-  { id: "2021", value: 2021 },
-  { id: "2020", value: 2020 },
-  { id: "2019", value: 2019 },
-  { id: "2018", value: 2018 },
-  { id: "2017", value: 2017 },
+const levelData = [
+  { id: "Tertinggi", value: "Tertinggi" },
+  { id: "Terendah", value: "Terendah" },
 ];
 
 const StyledTableCell = withStyles((theme) => ({
@@ -110,7 +108,7 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 const PeringkatRealisasi = () => {
   const classes = styles();
-  const [years, setYears] = useState("2021");
+  const [level, setLevel] = useState("Tertinggi");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [bulan, setBulan] = useState("01");
@@ -151,12 +149,12 @@ const PeringkatRealisasi = () => {
     setOpen(false);
   };
 
-  useEffect(() => {
+  const getData = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_peringkat_realisasi?peringkat=Tertinggi`
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_peringkat_realisasi?peringkat=${level}`
       )
       .then(function (response) {
         setData(response.data.data);
@@ -170,10 +168,14 @@ const PeringkatRealisasi = () => {
       .then(function () {
         // always executed
       });
+  };
+
+  useEffect(() => {
+    getData();
   }, []);
 
   const handleChange = (event) => {
-    setYears(event.target.value);
+    setLevel(event.target.value);
   };
 
   const DataFormater = (number) => {
@@ -390,7 +392,7 @@ const PeringkatRealisasi = () => {
       >
         <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            Peringkat Realisasi
+            top 10 satker dengan realisasi belanja
           </Typography>
         </Grid>
 
@@ -412,7 +414,7 @@ const PeringkatRealisasi = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Peringkat Realisasi",
+                    title: "top 10 satker dengan realisasi belanja",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -458,29 +460,63 @@ const PeringkatRealisasi = () => {
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <div style={{ margin: 10, marginRight: 25 }}>
-            <Typography className={classes.isiTextStyle} variant="h2">
-              Pilih Tahun
-            </Typography>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-outlined-label">
-                Tahun
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                value={years}
-                onChange={handleChange}
-                label="Tahun"
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Urutan
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Urutan
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={level}
+                    onChange={handleChange}
+                    label="Tahun"
+                    className={classes.selectStyle}
+                  >
+                    {levelData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+                item
+                xs={6}
+                style={{ paddingTop: 40, paddingLeft: 20 }}
               >
-                {tahunData.map((item, i) => {
-                  return (
-                    <MenuItem value={item.id} key={i}>
-                      {item.value}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => getData()}
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
+
             <Typography
               className={classes.isiContentTextStyle}
               variant="h2"
@@ -498,7 +534,7 @@ const PeringkatRealisasi = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "Peringkat Realisasi",
+                      title: "top 10 satker dengan realisasi belanja",
                       grafik: data,
                       dataTable: "",
                       analisis:

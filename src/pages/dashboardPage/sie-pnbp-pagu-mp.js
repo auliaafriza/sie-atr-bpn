@@ -41,6 +41,7 @@ import {
   ListItemAvatar,
   Avatar,
   TablePagination,
+  Button,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -54,6 +55,7 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
+import { tahunData } from "./globalDataAsset";
 
 const dataTemp = [
   {
@@ -80,14 +82,6 @@ const theme = createTheme({
   },
 });
 
-const tahunData = [
-  { id: "2021", value: 2021 },
-  { id: "2020", value: 2020 },
-  { id: "2019", value: 2019 },
-  { id: "2018", value: 2018 },
-  { id: "2017", value: 2017 },
-];
-
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: "#FF7E5A",
@@ -110,7 +104,8 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 const PaguMp = () => {
   const classes = styles();
-  const [years, setYears] = useState("2017");
+  const [years, setYears] = useState("2021");
+  const [tahunAwal, setTahunAwal] = useState("2017");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [bulan, setBulan] = useState("Jan");
@@ -151,12 +146,12 @@ const PaguMp = () => {
     setOpen(false);
   };
 
-  useEffect(() => {
+  const getData = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_pagu_mp?tahunAwal=2017&tahunAkhir=2021`
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_pagu_mp?tahunAwal=${tahunAwal}&tahunAkhir=${years}`
       )
       .then(function (response) {
         setData(response.data.data);
@@ -170,10 +165,18 @@ const PaguMp = () => {
       .then(function () {
         // always executed
       });
+  };
+
+  useEffect(() => {
+    getData();
   }, []);
 
   const handleChange = (event) => {
     setYears(event.target.value);
+  };
+
+  const handleChangeAwal = (event) => {
+    setTahunAwal(event.target.value);
   };
 
   const DataFormater = (number) => {
@@ -528,29 +531,97 @@ const PaguMp = () => {
           </Grid>
           <Grid item xs={5}>
             <div style={{ marginRight: 25 }}>
-              <Typography className={classes.isiTextStyle} variant="h2">
-                Pilih Tahun
-              </Typography>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="demo-simple-select-outlined-label">
-                  Tahun
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-outlined-label"
-                  id="demo-simple-select-outlined"
-                  value={years}
-                  onChange={handleChange}
-                  label="Tahun"
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={2}
+              >
+                <Grid item xs={4}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Pilih Tahun Awal
+                  </Typography>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <InputLabel id="demo-simple-select-outlined-label">
+                      Tahun Awal
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={tahunAwal}
+                      onChange={handleChangeAwal}
+                      label="Tahun"
+                      className={classes.selectStyle}
+                    >
+                      {tahunData.map((item, i) => {
+                        return (
+                          <MenuItem value={item.id} key={i}>
+                            {item.value}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={5}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Pilih Tahun Akhir
+                  </Typography>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <InputLabel id="demo-simple-select-outlined-label">
+                      Tahun Akhir
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={years}
+                      onChange={handleChange}
+                      label="Bulan"
+                      className={classes.selectStyle}
+                    >
+                      {tahunData.map((item, i) => {
+                        return (
+                          <MenuItem value={item.id} key={i}>
+                            {item.value}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  item
+                  xs={3}
+                  style={{ paddingTop: 40, paddingLeft: 20 }}
                 >
-                  {tahunData.map((item, i) => {
-                    return (
-                      <MenuItem value={item.id} key={i}>
-                        {item.value}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => getData()}
+                  >
+                    Submit
+                  </Button>
+                </Grid>
+              </Grid>
               <Typography
                 className={classes.isiContentTextStyle}
                 variant="h2"
