@@ -1,15 +1,16 @@
 import React, { useState, useEffect, createRef } from "react";
 import {
-  BarChart,
+  ComposedChart,
+  Line,
+  Area,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
+  Scatter,
   ResponsiveContainer,
-  LineChart,
-  Line,
   Label,
 } from "recharts";
 import {
@@ -41,6 +42,7 @@ import {
   ListItemAvatar,
   Avatar,
   TablePagination,
+  Button,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -59,10 +61,12 @@ const dataTemp = [
   {
     wilayah: "Kantor Wilayah Provinsi",
     jumlahberkas: 0,
+    pnbp: 0,
   },
   {
     tahun: "Kantor Wilayah Provinsi",
     jumlahberkas: 10,
+    pnbp: 10,
   },
 ];
 
@@ -84,6 +88,26 @@ const tahunData = [
   { id: "2019", value: 2019 },
   { id: "2018", value: 2018 },
   { id: "2017", value: 2017 },
+];
+
+const bulanData = [
+  { id: "Jan", value: "Jan", name: "Januari" },
+  { id: "Feb", value: "Feb", name: "Febuari" },
+  { id: "Mar", value: "Mar", name: "Maret" },
+  { id: "Apr", value: "Apr", name: "April" },
+  { id: "Mei", value: "Mei", name: "Mei" },
+  { id: "Jun", value: "Jun", name: "Juni" },
+  { id: "Jul", value: "Jul", name: "Juli" },
+  { id: "Agu", value: "Agu", name: "Agustus" },
+  { id: "Sep", value: "Sep", name: "September" },
+  { id: "Okt", value: "Okt", name: "Oktober" },
+  { id: "Nov", value: "Nov", name: "November" },
+  { id: "Des", value: "Des", name: "Desember" },
+];
+
+const semesterData = [
+  { id: 1, value: 1, name: "Semester 1" },
+  { id: 2, value: 2, name: "Semester 2" },
 ];
 
 const StyledTableCell = withStyles((theme) => ({
@@ -108,10 +132,11 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 const PnbpBerkasWilayah = () => {
   const classes = styles();
-  const [years, setYears] = useState("2014");
+  const [years, setYears] = useState("2012");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
-  const [semester, setSemester] = useState("Semester 2");
+  const [semester, setSemester] = useState(2);
+  const [bulan, setBulan] = useState("Nov");
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -149,12 +174,12 @@ const PnbpBerkasWilayah = () => {
     setOpen(false);
   };
 
-  useEffect(() => {
+  const getData = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_berkas_jumlah_berkas_per_wilayah?tahun=${years}&semeter=${semester}`
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_berkas?tahun=${years}&semeter=${semester}&bulan=${bulan}`
       )
       .then(function (response) {
         setData(response.data.data);
@@ -168,10 +193,22 @@ const PnbpBerkasWilayah = () => {
       .then(function () {
         // always executed
       });
+  };
+
+  useEffect(() => {
+    getData();
   }, []);
 
   const handleChange = (event) => {
     setYears(event.target.value);
+  };
+
+  const handleChangeBulan = (event) => {
+    setBulan(event.target.value);
+  };
+
+  const handleChangeSemester = (event) => {
+    setSemester(event.target.value);
   };
 
   const DataFormater = (number) => {
@@ -190,6 +227,28 @@ const PnbpBerkasWilayah = () => {
     return value.replace("Kantor Wilayah Provinsi ", "");
   };
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className={classes.tooltipCustom}>
+          <p className="label">Tahun {label}</p>
+          <p
+            className="desc"
+            style={{ color: payload[0].color }}
+          >{`PNBP : Rp ${payload[0].value
+            .toFixed(2)
+            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+          <p
+            className="desc"
+            style={{ color: payload[1].color }}
+          >{`Jumlah Berkas : ${payload[1].value}`}</p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   const body = (
     <div className={classes.paper}>
       <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
@@ -203,57 +262,51 @@ const PnbpBerkasWilayah = () => {
         </TooltipMI>
       </Grid> */}
 
-      {dataModal.type ? (
-        <div className={classes.barChart}>
-          {/* <img width={500} src={image} /> */}
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart
-              width={500}
-              height={800}
-              data={dataModal.grafik}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
+      <div className={classes.barChart}>
+        {/* <img width={500} src={image} /> */}
+        <ResponsiveContainer width="100%" height={250}>
+          <ComposedChart
+            width={500}
+            height={400}
+            data={dataModal.grafik}
+            margin={{
+              top: 20,
+              right: 20,
+              bottom: 20,
+              left: 20,
+            }}
+          >
+            <CartesianGrid stroke="#f5f5f5" />
+            <XAxis
+              dataKey="wilayah"
+              scale="band"
+              angle={60}
+              interval={0}
+              tick={{
+                // angle: 90,
+                transform: "rotate(-35)",
+                textAnchor: "start",
+                dominantBaseline: "ideographic",
+                fontSize: 8,
               }}
-              padding={{
-                top: 15,
-                right: 10,
-                left: 10,
-                bottom: 15,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis
-                dataKey="wilayah"
-                angle={60}
-                interval={0}
-                tick={{
-                  // angle: 90,
-                  transform: "rotate(-35)",
-                  textAnchor: "start",
-                  dominantBaseline: "ideographic",
-                  fontSize: 8,
-                }}
-                height={100}
-                tickFormatter={DataFormaterX}
-              ></XAxis>
-              <YAxis tickFormatter={DataFormater}>
-                <Label
-                  value="Jumlah Berkas"
-                  angle={-90}
-                  position="insideBottomLeft"
-                  offset={-5}
-                />
-              </YAxis>
-              <Tooltip />
-              {/* <Legend /> */}
-              <Bar dataKey="jumlahberkas" fill="#8884d8" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      ) : null}
+              height={100}
+              tickFormatter={DataFormaterX}
+            />
+            <YAxis tickFormatter={DataFormater}>
+              <Label
+                value="Jumlah Nilai PNBP dan berkas"
+                angle={-90}
+                position="insideBottomLeft"
+                offset={-5}
+              />
+            </YAxis>
+            <Tooltip content={<CustomTooltip />} />
+            <Legend />
+            <Bar dataKey="pnbp" barSize={20} fill="#413ea0" />
+            <Line type="jumlahberkas" dataKey="jumlahberkas" stroke="#ff7300" />
+          </ComposedChart>
+        </ResponsiveContainer>
+      </div>
       {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
         <>
           <TableContainer component={Paper} style={{ marginTop: 20 }}>
@@ -276,6 +329,12 @@ const PnbpBerkasWilayah = () => {
                     <StyledTableRow key={row.wilayah}>
                       <StyledTableCell align="left" component="th" scope="row">
                         {row.wilayah}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        Rp{" "}
+                        {row.pnbp
+                          .toFixed(2)
+                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                       </StyledTableCell>
                       <StyledTableCell align="left">
                         {row.jumlahberkas}
@@ -402,7 +461,7 @@ const PnbpBerkasWilayah = () => {
                           )
                         : "",
                     type: "Bar",
-                    nameColumn: ["Wilayah", "Jumlah Berkas"],
+                    nameColumn: ["Wilayah", "PNBP", "Jumlah Berkas"],
                     listTop10Comment: comment.listTop10Comment,
                   })
                 }
@@ -437,29 +496,130 @@ const PnbpBerkasWilayah = () => {
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <div style={{ margin: 10, marginRight: 25 }}>
-            <Typography className={classes.isiTextStyle} variant="h2">
-              Pilih Tahun
-            </Typography>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-outlined-label">
-                Tahun
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                value={years}
-                onChange={handleChange}
-                label="Tahun"
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={12} sm={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Tahun
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Tahun
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={years}
+                    onChange={handleChange}
+                    label="Tahun"
+                    className={classes.selectStyle}
+                  >
+                    {tahunData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Bulan
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Bulan
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={bulan}
+                    onChange={handleChangeBulan}
+                    label="Bulan"
+                    className={classes.selectStyle}
+                  >
+                    {bulanData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Semester
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Semester
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={semester}
+                    onChange={handleChangeSemester}
+                    label="Semester"
+                    className={classes.selectStyle}
+                  >
+                    {semesterData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+                item
+                xs={6}
+                style={{ paddingTop: 40, paddingLeft: 20 }}
               >
-                {tahunData.map((item, i) => {
-                  return (
-                    <MenuItem value={item.id} key={i}>
-                      {item.value}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => getData()}
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
+
             <Typography
               className={classes.isiContentTextStyle}
               variant="h2"
@@ -488,7 +648,7 @@ const PnbpBerkasWilayah = () => {
                             )
                           : "",
                       type: "Bar",
-                      nameColumn: ["Wilayah", "Jumlah Berkas"],
+                      nameColumn: ["Wilayah", "PNBP", "Jumlah Berkas"],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
@@ -506,26 +666,21 @@ const PnbpBerkasWilayah = () => {
             <CardContent>
               <div className={classes.barChart}>
                 <ResponsiveContainer width="100%" height={250}>
-                  <BarChart
+                  <ComposedChart
                     width={500}
-                    height={800}
+                    height={400}
                     data={data}
                     margin={{
-                      top: 5,
-                      right: 30,
+                      top: 20,
+                      right: 20,
+                      bottom: 20,
                       left: 20,
-                      bottom: 5,
-                    }}
-                    padding={{
-                      top: 15,
-                      right: 10,
-                      left: 10,
-                      bottom: 15,
                     }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" />
+                    <CartesianGrid stroke="#f5f5f5" />
                     <XAxis
                       dataKey="wilayah"
+                      scale="band"
                       angle={60}
                       interval={0}
                       tick={{
@@ -540,16 +695,21 @@ const PnbpBerkasWilayah = () => {
                     />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
-                        value="Jumlah Berkas"
+                        value="Jumlah Nilai PNBP dan berkas"
                         angle={-90}
                         position="insideBottomLeft"
                         offset={-5}
                       />
                     </YAxis>
-                    <Tooltip />
-                    {/* <Legend /> */}
-                    <Bar dataKey="jumlahberkas" fill="#8884d8" />
-                  </BarChart>
+                    <Tooltip content={<CustomTooltip />} />
+                    <Legend />
+                    <Bar dataKey="pnbp" barSize={20} fill="#413ea0" />
+                    <Line
+                      type="jumlahberkas"
+                      dataKey="jumlahberkas"
+                      stroke="#ff7300"
+                    />
+                  </ComposedChart>
                 </ResponsiveContainer>
               </div>
             </CardContent>

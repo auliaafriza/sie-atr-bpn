@@ -221,57 +221,55 @@ const PnbpBerkasPeringkat = () => {
         </TooltipMI>
       </Grid> */}
 
-      {dataModal.type ? (
-        <div className={classes.barChart}>
-          {/* <img width={500} src={image} /> */}
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart
-              width={500}
-              height={800}
-              data={dataModal.grafik}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
+      <div className={classes.barChart}>
+        {/* <img width={500} src={image} /> */}
+        <ResponsiveContainer width="100%" height={250}>
+          <BarChart
+            width={500}
+            height={800}
+            data={dataModal.grafik}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+            padding={{
+              top: 15,
+              right: 10,
+              left: 10,
+              bottom: 15,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="kantor"
+              angle={60}
+              interval={0}
+              tick={{
+                // angle: 90,
+                transform: "rotate(-35)",
+                textAnchor: "start",
+                dominantBaseline: "ideographic",
+                fontSize: 8,
               }}
-              padding={{
-                top: 15,
-                right: 10,
-                left: 10,
-                bottom: 15,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis
-                dataKey="kantor"
-                angle={60}
-                interval={0}
-                tick={{
-                  // angle: 90,
-                  transform: "rotate(-35)",
-                  textAnchor: "start",
-                  dominantBaseline: "ideographic",
-                  fontSize: 8,
-                }}
-                height={100}
-                tickFormatter={DataFormaterX}
-              ></XAxis>
-              <YAxis tickFormatter={DataFormater}>
-                <Label
-                  value="Besarnya"
-                  angle={-90}
-                  position="insideBottomLeft"
-                  offset={-5}
-                />
-              </YAxis>
-              <Tooltip content={<CustomTooltip />} />
-              {/* <Legend /> */}
-              <Bar dataKey="besarnya" fill="#8884d8" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      ) : null}
+              height={100}
+              tickFormatter={DataFormaterX}
+            ></XAxis>
+            <YAxis tickFormatter={DataFormater}>
+              <Label
+                value="Besarnya"
+                angle={-90}
+                position="insideBottomLeft"
+                offset={-5}
+              />
+            </YAxis>
+            <Tooltip content={<CustomTooltip />} />
+            {/* <Legend /> */}
+            <Bar dataKey="besarnya" fill="#8884d8" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
       {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
         <>
           <TableContainer component={Paper} style={{ marginTop: 20 }}>

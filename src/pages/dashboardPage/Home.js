@@ -584,7 +584,7 @@ const DashHome = () => {
         {body}
       </Modal>
       <PnbpBerkasWilayah />
-      <BerkasWilayahPnbp />
+      {/* <BerkasWilayahPnbp /> */}
       <PnbpBerkasPeringkat />
       <PnbpBerkasPeringkatWilayah />
       <RealisasiPenggunaan />

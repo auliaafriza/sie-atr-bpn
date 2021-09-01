@@ -222,45 +222,43 @@ const AlokasiAnggaran = () => {
         </TooltipMI>
       </Grid> */}
 
-      {dataModal.type ? (
-        <div className={classes.barChart}>
-          {/* <img width={500} src={image} /> */}
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart
-              width={500}
-              height={300}
-              data={data}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-              padding={{
-                top: 15,
-                right: 10,
-                left: 10,
-                bottom: 15,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="tahun" />
-              <YAxis tickFormatter={DataFormater}>
-                <Label
-                  value="Nilai Satuan 1 Juta"
-                  angle={-90}
-                  position="insideBottomLeft"
-                  offset={-5}
-                />
-              </YAxis>
-              <Tooltip content={<CustomTooltip />} />
-              <Legend />
-              <Bar dataKey="alokasi_anggaran" fill="#FFA07A" />
-              <Bar dataKey="anggaran" fill="#20B2AA" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      ) : null}
+      <div className={classes.barChart}>
+        {/* <img width={500} src={image} /> */}
+        <ResponsiveContainer width="100%" height={250}>
+          <BarChart
+            width={500}
+            height={300}
+            data={data}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+            padding={{
+              top: 15,
+              right: 10,
+              left: 10,
+              bottom: 15,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="tahun" />
+            <YAxis tickFormatter={DataFormater}>
+              <Label
+                value="Nilai Satuan 1 Juta"
+                angle={-90}
+                position="insideBottomLeft"
+                offset={-5}
+              />
+            </YAxis>
+            <Tooltip content={<CustomTooltip />} />
+            <Legend />
+            <Bar dataKey="alokasi_anggaran" fill="#FFA07A" />
+            <Bar dataKey="anggaran" fill="#20B2AA" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
       {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
         <>
           <TableContainer component={Paper} style={{ marginTop: 20 }}>

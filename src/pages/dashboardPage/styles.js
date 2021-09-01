@@ -101,7 +101,7 @@ const styles = makeStyles((theme) => ({
     margin: 10,
     letterSpacing: 1,
     color: "#6b6f82",
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: "600",
   },
   isiContentTextStyle: {
@@ -113,6 +113,13 @@ const styles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: "100%",
+  },
+  selectStyle: {
+    height: 35,
+    marginRight: 5,
+    fontSize: 12,
+    width: "100%",
+    display: "flex",
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
