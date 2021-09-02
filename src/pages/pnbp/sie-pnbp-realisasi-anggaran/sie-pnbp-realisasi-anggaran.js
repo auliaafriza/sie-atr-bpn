@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   BarChart,
   Bar,
@@ -50,23 +50,25 @@ import {
 } from "@material-ui/core/styles";
 import { IoEye, IoPrint } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
-import styles from "./styles";
+import styles from "../../dashboardPage/styles";
 import axios from "axios";
-import { useScreenshot } from "use-react-screenshot";
-import html2canvas from "html2canvas";
-import { tahunData } from "./globalDataAsset";
+import { useReactToPrint } from "react-to-print";
+import { tahunData } from "../../../functionGlobal/globalDataAsset";
 import moment from "moment";
-import { fileExport } from "../../functionGlobal/exports";
-import { loadDataColumnTable } from "../../functionGlobal/fileExports";
+import { fileExport } from "../../../functionGlobal/exports";
+import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
+import { useHistory } from "react-router-dom";
 
 const dataTemp = [
   {
     tahun: "2010",
-    targetpenerimaan: 0,
+    anggaran: 0,
+    realisasi: 10,
   },
   {
     tahun: "2011",
-    targetpenerimaan: 10,
+    anggaran: 0,
+    realisasi: 10,
   },
 ];
 
@@ -132,11 +134,7 @@ const RealisasiAnggaran = () => {
     type: "",
     listTop10Comment: [],
   });
-  const inputRef = createRef(null);
-  const [image, takeScreenshot] = useScreenshot({
-    type: "image/jpeg",
-    quality: 1.0,
-  });
+  const inputRef = useRef();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -149,7 +147,6 @@ const RealisasiAnggaran = () => {
     setPage(0);
   };
 
-  const getImage = () => takeScreenshot(ref.current);
   const handleOpen = (data) => {
     setOpen(true);
     setDataModal(data);
@@ -237,21 +234,16 @@ const RealisasiAnggaran = () => {
     );
   };
 
+  const handlePrint = useReactToPrint({
+    content: () => inputRef.current,
+  });
+
   const body = (
     <div className={classes.paper}>
       <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
         {dataModal.title}
       </h2>
-      {/* <Grid item xs={6}>
-        <TooltipMI title="Screenshot modal" placement="top">
-          <IconButton onClick={getImage}>
-            <IoMdDownload />
-          </IconButton>
-        </TooltipMI>
-      </Grid> */}
-
       <div className={classes.barChart}>
-        {/* <img width={500} src={image} /> */}
         <ResponsiveContainer width="100%" height={250}>
           <BarChart
             width={500}
@@ -391,6 +383,168 @@ const RealisasiAnggaran = () => {
     </div>
   );
 
+  const PrintHandle = () => {
+    return (
+      <div ref={inputRef}>
+        <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
+          Anggaran & Realisasi (Satuan 1 Juta)
+        </h2>
+        <div className={classes.barChart}>
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart
+              width={500}
+              height={300}
+              data={data}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+              padding={{
+                top: 15,
+                right: 10,
+                left: 10,
+                bottom: 15,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="tahun"></XAxis>
+              <YAxis tickFormatter={DataFormater}>
+                <Label
+                  value="Nilai Satuan 1 Juta"
+                  angle={-90}
+                  position="insideBottomLeft"
+                  offset={-5}
+                />
+              </YAxis>
+              <Tooltip content={<CustomTooltip />} />
+              <Legend />
+              <Bar dataKey="anggaran" fill="#8884d8" />
+              <Bar dataKey="realisasi" fill="#82ca9d" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+        {nameColumn && nameColumn.length != 0 ? (
+          <>
+            <TableContainer component={Paper} style={{ marginTop: 20 }}>
+              <Table
+                stickyHeader
+                className={classes.table}
+                aria-label="customized table"
+              >
+                <TableHead>
+                  <TableRow>
+                    {nameColumn.map((item, i) => {
+                      return (
+                        <StyledTableCell align="center">
+                          {item.label}
+                        </StyledTableCell>
+                      );
+                    })}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {data
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => (
+                      <StyledTableRow key={row.tahun}>
+                        <StyledTableCell
+                          align="center"
+                          component="th"
+                          scope="row"
+                        >
+                          {row.tahun}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          Rp{" "}
+                          {row.anggaran
+                            .toFixed(2)
+                            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          Rp{" "}
+                          {row.realisasi
+                            .toFixed(2)
+                            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                        </StyledTableCell>
+                      </StyledTableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 100]}
+              component="div"
+              count={data.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </>
+        ) : null}
+        <Typography
+          className={classes.isiContentTextStyle}
+          variant="h2"
+          wrap
+          style={{ paddingTop: 20 }}
+        >
+          {comment && comment.lastComment
+            ? comment.lastComment.analisisData
+            : ""}
+        </Typography>
+        <Typography
+          className={classes.isiContentTextStyle}
+          variant="h2"
+          wrap
+          style={{ paddingTop: 20, fontSize: 18, fontWeight: "600" }}
+        >
+          Histori Analisis Data
+        </Typography>
+        <List className={classes.rootList}>
+          {comment.listTop10Comment && comment.listTop10Comment.length != 0
+            ? comment.listTop10Comment.map((history, i) => {
+                return (
+                  <>
+                    <ListItem alignItems="flex-start">
+                      <ListItemText
+                        primary={moment(new Date(history.commentDate)).format(
+                          "DD MMM YYYY - HH:mm"
+                        )}
+                        secondary={
+                          <React.Fragment>
+                            {history.analisisData.replace(/<[^>]+>/g, "")}
+                          </React.Fragment>
+                        }
+                      />
+                    </ListItem>
+                    <Divider
+                      component="li"
+                      style={{ marginLeft: 20, marginRight: 20 }}
+                    />
+                  </>
+                );
+              })
+            : null}
+        </List>
+      </div>
+    );
+  };
+  const history = useHistory();
+
+  const testbla = () => {
+    // window.open("/PrintPNBPAnggaranRealisasi")
+    history.push({
+      pathname: "/PrintPNBPAnggaranRealisasi",
+      state: {
+        data: data,
+        comment: comment,
+      },
+      target: "_blank",
+    });
+  };
+
   return (
     <div>
       <Modal
@@ -422,7 +576,6 @@ const RealisasiAnggaran = () => {
             Anggaran & Realisasi (Satuan 1 Juta)
           </Typography>
         </Grid>
-
         <Grid
           container
           direction="row"
@@ -431,6 +584,10 @@ const RealisasiAnggaran = () => {
           item
           xs={6}
         >
+          {/* <ReactToPrint
+            trigger={() => <button>Print this out!</button>}
+            content={() => inputRef.current}
+          /> */}
           <ButtonGroup
             aria-label="outlined button group"
             className={classes.buttonGroupStyle}
@@ -459,20 +616,20 @@ const RealisasiAnggaran = () => {
                 <IoEye />
               </IconButton>
             </TooltipMI>
+            {/* <ReactToPrint
+              trigger={() => (
+                <TooltipMI title="Print Data" placement="top">
+                  <IconButton aria-label="delete" size="small">
+                    <IoPrint />
+                  </IconButton>
+                </TooltipMI>
+              )}
+              content={inputRef.current}
+            > */}
             <TooltipMI
               title="Print Data"
               placement="top"
-              onClick={
-                () => window.print()
-                // printHandle({
-                //   title: "Anggaran & Realisasi (Satuan 1 Juta)",
-                //   grafik: anggaranRealisasi,
-                //   dataTable: "",
-                //   analisis: comment ? comment.analisisData : "",
-                //   type: "Bar",
-                //   nameColumn: ["Tahun", "Anggaran", "Realisasi"],
-                // })
-              }
+              onClick={() => testbla()}
             >
               <IconButton aria-label="delete" size="small">
                 <IoPrint />
@@ -673,6 +830,150 @@ const RealisasiAnggaran = () => {
           </Card>
         </Grid>
       </Grid>
+      {/* <div ref={inputRef} >
+        <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
+          Nilai Anggaran dan Realisasi Belanja anggaran PNBP
+        </h2>
+        <div className={classes.barChart}>
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart
+              width={500}
+              height={300}
+              data={data}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+              padding={{
+                top: 15,
+                right: 10,
+                left: 10,
+                bottom: 15,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="tahun"></XAxis>
+              <YAxis tickFormatter={DataFormater}>
+                <Label
+                  value="Nilai Satuan 1 Juta"
+                  angle={-90}
+                  position="insideBottomLeft"
+                  offset={-5}
+                />
+              </YAxis>
+              <Tooltip content={<CustomTooltip />} />
+              <Legend />
+              <Bar dataKey="anggaran" fill="#8884d8" />
+              <Bar dataKey="realisasi" fill="#82ca9d" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+        {nameColumn && nameColumn.length != 0 ? (
+          <>
+            <TableContainer component={Paper} style={{ marginTop: 20 }}>
+              <Table
+                stickyHeader
+                className={classes.table}
+                aria-label="customized table"
+              >
+                <TableHead>
+                  <TableRow>
+                    {nameColumn.map((item, i) => {
+                      return (
+                        <StyledTableCell align="center">
+                          {item.label}
+                        </StyledTableCell>
+                      );
+                    })}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {data
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => (
+                      <StyledTableRow key={row.tahun}>
+                        <StyledTableCell
+                          align="center"
+                          component="th"
+                          scope="row"
+                        >
+                          {row.tahun}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          Rp{" "}
+                          {row.anggaran
+                            .toFixed(2)
+                            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          Rp{" "}
+                          {row.realisasi
+                            .toFixed(2)
+                            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                        </StyledTableCell>
+                      </StyledTableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 100]}
+              component="div"
+              count={data.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </>
+        ) : null}
+        <Typography
+          className={classes.isiContentTextStyle}
+          variant="h2"
+          wrap
+          style={{ paddingTop: 20 }}
+        >
+          {comment && comment.lastComment
+            ? comment.lastComment.analisisData
+            : ""}
+        </Typography>
+        <Typography
+          className={classes.isiContentTextStyle}
+          variant="h2"
+          wrap
+          style={{ paddingTop: 20, fontSize: 18, fontWeight: "600" }}
+        >
+          Histori Analisis Data
+        </Typography>
+        <List className={classes.rootList}>
+          {comment.listTop10Comment && comment.listTop10Comment.length != 0
+            ? comment.listTop10Comment.map((history, i) => {
+                return (
+                  <>
+                    <ListItem alignItems="flex-start">
+                      <ListItemText
+                        primary={moment(new Date(history.commentDate)).format(
+                          "DD MMM YYYY - HH:mm"
+                        )}
+                        secondary={
+                          <React.Fragment>
+                            {history.analisisData.replace(/<[^>]+>/g, "")}
+                          </React.Fragment>
+                        }
+                      />
+                    </ListItem>
+                    <Divider
+                      component="li"
+                      style={{ marginLeft: 20, marginRight: 20 }}
+                    />
+                  </>
+                );
+              })
+            : null}
+        </List>
+      </div> */}
     </div>
   );
 };

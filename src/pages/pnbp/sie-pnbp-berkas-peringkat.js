@@ -55,16 +55,16 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
-import { tahunData, bulanDataNumberic, semesterData } from "./globalDataAsset";
+import { tahunData, bulanData } from "../../functionGlobal/globalDataAsset";
 
 const dataTemp = [
   {
-    nama_satker: "",
-    realisasi: 0,
+    kantor: "Kantor Pertanahan",
+    besarnya: 0,
   },
   {
-    nama_satker: "",
-    realisasi: 10,
+    kantor: "Kantor Pertanahan",
+    besarnya: 10,
   },
 ];
 
@@ -100,13 +100,12 @@ const StyledTableRow = withStyles((theme) => ({
 
 let url = "http://10.20.57.234/SIEBackEnd/";
 
-const BPHTBJumlahBerkas = () => {
+const PnbpBerkasPeringkat = () => {
   const classes = styles();
-  const [years, setYears] = useState("2021");
+  const [years, setYears] = useState("2017");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
-  const [semester, setSemester] = useState(2);
-  const [bulan, setBulan] = useState("04");
+  const [bulan, setBulan] = useState("Jan");
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -149,7 +148,7 @@ const BPHTBJumlahBerkas = () => {
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}Aset&Keuangan/PNBP/sie_pengembalian_pnbp?tahun=${years}&semeter=${semester}&bulan=${bulan}`
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_berkas_peringkat_per_kantor?tahun=${years}&bulan=${bulan}`
       )
       .then(function (response) {
         setData(response.data.data);
@@ -177,10 +176,6 @@ const BPHTBJumlahBerkas = () => {
     setBulan(event.target.value);
   };
 
-  const handleChangeSemester = (event) => {
-    setSemester(event.target.value);
-  };
-
   const DataFormater = (number) => {
     if (number > 1000000000) {
       return (number / 1000000000).toString() + "M";
@@ -197,11 +192,11 @@ const BPHTBJumlahBerkas = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">{label}</p>
+          <p className="label">Tahun {label}</p>
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Realisais : Rp ${payload[0].value
+          >{`Besarnya : Rp ${payload[0].value
             .toFixed(2)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
         </div>
@@ -209,6 +204,10 @@ const BPHTBJumlahBerkas = () => {
     }
 
     return null;
+  };
+
+  const DataFormaterX = (value) => {
+    return value.replace("Kantor Pertanahan ", "");
   };
 
   const body = (
@@ -229,7 +228,7 @@ const BPHTBJumlahBerkas = () => {
         <ResponsiveContainer width="100%" height={250}>
           <BarChart
             width={500}
-            height={300}
+            height={800}
             data={dataModal.grafik}
             margin={{
               top: 5,
@@ -246,8 +245,7 @@ const BPHTBJumlahBerkas = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="nama_satker"
-              scale="band"
+              dataKey="kantor"
               angle={60}
               interval={0}
               tick={{
@@ -258,11 +256,11 @@ const BPHTBJumlahBerkas = () => {
                 fontSize: 8,
               }}
               height={100}
-              // tickFormatter={DataFormaterX}
+              tickFormatter={DataFormaterX}
             ></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Realisasi"
+                value="Besarnya"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
@@ -270,7 +268,7 @@ const BPHTBJumlahBerkas = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             {/* <Legend /> */}
-            <Bar dataKey="realisasi" fill="#66CDAA" />
+            <Bar dataKey="besarnya" fill="#8884d8" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -293,13 +291,12 @@ const BPHTBJumlahBerkas = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.nama_satker}>
+                    <StyledTableRow key={row.kantor}>
                       <StyledTableCell align="left" component="th" scope="row">
-                        {row.nama_satker}
+                        {row.kantor}
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        Rp{" "}
-                        {row.realisasi
+                        {row.besarnya
                           .toFixed(2)
                           .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                       </StyledTableCell>
@@ -390,9 +387,9 @@ const BPHTBJumlahBerkas = () => {
         direction="row"
         style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
       >
-        <Grid item xs={9}>
+        <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            Jumlah daerah terintegrasi
+            Top 5 penerimaan PNBP per Kantor
           </Typography>
         </Grid>
 
@@ -402,7 +399,7 @@ const BPHTBJumlahBerkas = () => {
           justifyContent="flex-end"
           alignItems="flex-end"
           item
-          xs={3}
+          xs={6}
         >
           <ButtonGroup
             aria-label="outlined button group"
@@ -414,7 +411,7 @@ const BPHTBJumlahBerkas = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Jumlah daerah terintegrasi",
+                    title: "Top 5 penerimaan PNBP per Kantor",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -425,7 +422,7 @@ const BPHTBJumlahBerkas = () => {
                           )
                         : "",
                     type: "Bar",
-                    nameColumn: ["Nama Satker", "Realisasi"],
+                    nameColumn: ["Kantor", "Besarnya"],
                     listTop10Comment: comment.listTop10Comment,
                   })
                 }
@@ -467,7 +464,7 @@ const BPHTBJumlahBerkas = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={4}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -497,7 +494,7 @@ const BPHTBJumlahBerkas = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={4}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -517,45 +514,7 @@ const BPHTBJumlahBerkas = () => {
                     label="Bulan"
                     className={classes.selectStyle}
                   >
-                    {bulanDataNumberic.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={6}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Pilih Semester
-                </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Semester
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={semester}
-                    onChange={handleChangeSemester}
-                    label="Semester"
-                    className={classes.selectStyle}
-                  >
-                    {semesterData.map((item, i) => {
+                    {bulanData.map((item, i) => {
                       return (
                         <MenuItem value={item.id} key={i}>
                           {item.name}
@@ -571,7 +530,7 @@ const BPHTBJumlahBerkas = () => {
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={6}
+                xs={4}
                 style={{ paddingTop: 40, paddingLeft: 20 }}
               >
                 <Button
@@ -600,7 +559,7 @@ const BPHTBJumlahBerkas = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "Jumlah daerah terintegrasi",
+                      title: "Top 5 penerimaan PNBP per Kantor",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -611,7 +570,7 @@ const BPHTBJumlahBerkas = () => {
                             )
                           : "",
                       type: "Bar",
-                      nameColumn: ["Nama Satker", "Realisasi"],
+                      nameColumn: ["Kantor", "Besarnya"],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
@@ -631,7 +590,7 @@ const BPHTBJumlahBerkas = () => {
                 <ResponsiveContainer width="100%" height={250}>
                   <BarChart
                     width={500}
-                    height={300}
+                    height={800}
                     data={data}
                     margin={{
                       top: 5,
@@ -648,8 +607,7 @@ const BPHTBJumlahBerkas = () => {
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
-                      dataKey="nama_satker"
-                      scale="band"
+                      dataKey="kantor"
                       angle={60}
                       interval={0}
                       tick={{
@@ -660,11 +618,11 @@ const BPHTBJumlahBerkas = () => {
                         fontSize: 8,
                       }}
                       height={100}
-                      // tickFormatter={DataFormaterX}
+                      tickFormatter={DataFormaterX}
                     />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
-                        value="Target Penerimaan"
+                        value="Besarnya"
                         angle={-90}
                         position="insideBottomLeft"
                         offset={-5}
@@ -672,7 +630,7 @@ const BPHTBJumlahBerkas = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     {/* <Legend /> */}
-                    <Bar dataKey="realisasi" fill="#66CDAA" />
+                    <Bar dataKey="besarnya" fill="#8884d8" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -684,4 +642,4 @@ const BPHTBJumlahBerkas = () => {
   );
 };
 
-export default BPHTBJumlahBerkas;
+export default PnbpBerkasPeringkat;

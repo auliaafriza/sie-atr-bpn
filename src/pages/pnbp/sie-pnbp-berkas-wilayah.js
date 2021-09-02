@@ -56,7 +56,11 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
-import { tahunData, bulanData, semesterData } from "./globalDataAsset";
+import {
+  tahunData,
+  bulanData,
+  semesterData,
+} from "../../functionGlobal/globalDataAsset";
 
 const dataTemp = [
   {

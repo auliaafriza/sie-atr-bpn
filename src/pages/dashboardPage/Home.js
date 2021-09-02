@@ -55,20 +55,20 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
-import PnbpBerkasWilayah from "./sie-pnbp-berkas-wilayah";
-import BerkasWilayahPnbp from "./sie-pnbp-berkas-wilayahPNBP";
-import PnbpBerkasPeringkat from "./sie-pnbp-berkas-peringkat";
-import PnbpBerkasPeringkatWilayah from "./sie-pnbp-berkas-peringkat-wilayah";
-import RealisasiPenggunaan from "./sie-pnbp-realisasi-pengunaan";
-import RealisasiPenerimaan from "./sie-pnbp-realisasi-penerimaan";
-import RealisasiTargetPenerimaan from "./sie-pnbp-realisasi-target-penerimaan";
-import AlokasiAnggaran from "./sie-pnbp-alokasi-anggaran";
-import PengembalianPNBP from "./sie-pengembalian-pnbp";
-import PeringkatRealisasi from "./sie-peringkat-realisasi";
-import RealisasiAnggaran from "./sie-pnbp-realisasi-anggaran";
-import PaguMp from "./sie-pnbp-pagu-mp";
-import BPHTBJumlahBerkas from "./bphtb-jumlah-berkas";
-import BPHTBDaerahTerintegrasi from "./bphtb-jumlah-terintegrasi";
+import PnbpBerkasWilayah from "../pnbp/sie-pnbp-berkas-wilayah";
+import BerkasWilayahPnbp from "../pnbp/sie-pnbp-berkas-wilayahPNBP";
+import PnbpBerkasPeringkat from "../pnbp/sie-pnbp-berkas-peringkat";
+import PnbpBerkasPeringkatWilayah from "../pnbp/sie-pnbp-berkas-peringkat-wilayah";
+import RealisasiPenggunaan from "../pnbp/sie-pnbp-realisasi-pengunaan";
+import RealisasiPenerimaan from "../pnbp/sie-pnbp-realisasi-penerimaan";
+import RealisasiTargetPenerimaan from "../pnbp/sie-pnbp-realisasi-target-penerimaan";
+import AlokasiAnggaran from "../pnbp/sie-pnbp-alokasi-anggaran";
+import PengembalianPNBP from "../pnbp/sie-pengembalian-pnbp";
+import PeringkatRealisasi from "../pnbp/sie-peringkat-realisasi";
+import RealisasiAnggaran from "../pnbp/sie-pnbp-realisasi-anggaran/sie-pnbp-realisasi-anggaran";
+import PaguMp from "../pnbp/sie-pnbp-pagu-mp";
+import BPHTBJumlahBerkas from "../bphtb/bphtb-jumlah-berkas";
+import BPHTBDaerahTerintegrasi from "../bphtb/bphtb-jumlah-terintegrasi";
 
 const dataTempAsset = [
   {

@@ -55,15 +55,15 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
-import { tahunData, bulanData } from "./globalDataAsset";
+import { tahunData, bulanData } from "../../functionGlobal/globalDataAsset";
 
 const dataTemp = [
   {
-    kantor: "Kantor Pertanahan",
+    wilayah: "Kantor Wilayah",
     besarnya: 0,
   },
   {
-    kantor: "Kantor Pertanahan",
+    wilayah: "Kantor Wilayah",
     besarnya: 10,
   },
 ];
@@ -100,7 +100,7 @@ const StyledTableRow = withStyles((theme) => ({
 
 let url = "http://10.20.57.234/SIEBackEnd/";
 
-const PnbpBerkasPeringkat = () => {
+const PnbpBerkasPeringkatWilayah = () => {
   const classes = styles();
   const [years, setYears] = useState("2017");
   const [data, setData] = useState(dataTemp);
@@ -148,7 +148,7 @@ const PnbpBerkasPeringkat = () => {
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_berkas_peringkat_per_kantor?tahun=${years}&bulan=${bulan}`
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_berkas_peringkat_per_wilayah?tahun=${years}&bulan=${bulan}`
       )
       .then(function (response) {
         setData(response.data.data);
@@ -207,7 +207,7 @@ const PnbpBerkasPeringkat = () => {
   };
 
   const DataFormaterX = (value) => {
-    return value.replace("Kantor Pertanahan ", "");
+    return value.replace("Kantor Wilayah Provinsi ", "");
   };
 
   const body = (
@@ -245,11 +245,11 @@ const PnbpBerkasPeringkat = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="kantor"
+              dataKey="wilayah"
               angle={60}
               interval={0}
               tick={{
-                // angle: 90,
+                // angle: 60,
                 transform: "rotate(-35)",
                 textAnchor: "start",
                 dominantBaseline: "ideographic",
@@ -268,7 +268,7 @@ const PnbpBerkasPeringkat = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             {/* <Legend /> */}
-            <Bar dataKey="besarnya" fill="#8884d8" />
+            <Bar dataKey="besarnya" fill="#F08080" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -291,9 +291,9 @@ const PnbpBerkasPeringkat = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.kantor}>
+                    <StyledTableRow key={row.wilayah}>
                       <StyledTableCell align="left" component="th" scope="row">
-                        {row.kantor}
+                        {row.wilayah}
                       </StyledTableCell>
                       <StyledTableCell align="left">
                         {row.besarnya
@@ -389,7 +389,7 @@ const PnbpBerkasPeringkat = () => {
       >
         <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            Top 5 penerimaan PNBP per Kantor
+            Top 5 penerimaan PNBP per Wilayah
           </Typography>
         </Grid>
 
@@ -411,7 +411,7 @@ const PnbpBerkasPeringkat = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Top 5 penerimaan PNBP per Kantor",
+                    title: "Top 5 penerimaan PNBP per Wilayah",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -422,7 +422,7 @@ const PnbpBerkasPeringkat = () => {
                           )
                         : "",
                     type: "Bar",
-                    nameColumn: ["Kantor", "Besarnya"],
+                    nameColumn: ["Wilayah", "Besarnya"],
                     listTop10Comment: comment.listTop10Comment,
                   })
                 }
@@ -559,7 +559,7 @@ const PnbpBerkasPeringkat = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "Top 5 penerimaan PNBP per Kantor",
+                      title: "Top 5 penerimaan PNBP per Wilayah",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -570,7 +570,7 @@ const PnbpBerkasPeringkat = () => {
                             )
                           : "",
                       type: "Bar",
-                      nameColumn: ["Kantor", "Besarnya"],
+                      nameColumn: ["Wilayah", "Besarnya"],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
@@ -607,7 +607,7 @@ const PnbpBerkasPeringkat = () => {
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
-                      dataKey="kantor"
+                      dataKey="wilayah"
                       angle={60}
                       interval={0}
                       tick={{
@@ -630,7 +630,7 @@ const PnbpBerkasPeringkat = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     {/* <Legend /> */}
-                    <Bar dataKey="besarnya" fill="#8884d8" />
+                    <Bar dataKey="besarnya" fill="#F08080" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -642,4 +642,4 @@ const PnbpBerkasPeringkat = () => {
   );
 };
 
-export default PnbpBerkasPeringkat;
+export default PnbpBerkasPeringkatWilayah;

@@ -36,7 +36,6 @@ const styles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    color: "white",
   },
   inputRoot: {
     color: "inherit",
@@ -66,11 +65,9 @@ const styles = makeStyles((theme) => ({
   header: {
     background:
       "linear-gradient(90deg, rgb(2, 0, 36) 0%, rgb(20, 27, 46) 34%, rgb(0, 62, 105) 100%)",
-    // position: "fixed",
-    // top: 0,
   },
   footer: {
-    // display: "block",
+    display: "block",
     padding: "10px",
     height: "30px",
     width: "100%",
@@ -87,9 +84,9 @@ const styles = makeStyles((theme) => ({
     textAlign: "left",
     padding: "10px",
     paddingLeft: "20px",
-    // position: "fixed",
-    // left: "0",
-    // bottom: "0",
+    position: "fixed",
+    left: "0",
+    bottom: "0",
     height: "30px",
     width: "100%",
   },
@@ -206,15 +203,11 @@ const styles = makeStyles((theme) => ({
   },
   rootList: {
     width: "100%",
-    maxHeight: "200px",
     backgroundColor: theme.palette.background.paper,
     overflow: "scroll",
   },
   inline: {
     display: "inline",
-  },
-  rowMenu: {
-    margin: 15,
   },
 }));
 export default styles;

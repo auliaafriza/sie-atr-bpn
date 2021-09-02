@@ -2,11 +2,19 @@ import React from "react";
 import "./index.css";
 import Login from "./pages/loginPage/login";
 import Dashboard from "./pages/dashboardPage/dashboard";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Nav from "./pages/dashboardPage/Nav";
+import PrintPNBPAnggaranRealisasi from "./pages/pnbp/sie-pnbp-realisasi-anggaran/componentPrint";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  withRouter,
+} from "react-router-dom";
 
-export default function App() {
+const Main = withRouter(({ location }) => {
   return (
-    <Router>
+    <div>
+      {/* {location.pathname != "/Login" && <Nav />} */}
       <Switch>
         <Route path="/Login">
           <Login />
@@ -14,10 +22,21 @@ export default function App() {
         <Route path="/Dashboard">
           <Dashboard />
         </Route>
+        <Route path="/PrintPNBPAnggaranRealisasi">
+          <PrintPNBPAnggaranRealisasi />
+        </Route>
         <Route path="/">
           <Login />
         </Route>
       </Switch>
+    </div>
+  );
+});
+
+export default function App() {
+  return (
+    <Router>
+      <Main />
     </Router>
   );
 }

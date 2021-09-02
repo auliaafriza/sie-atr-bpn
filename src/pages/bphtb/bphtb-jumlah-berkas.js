@@ -41,6 +41,7 @@ import {
   ListItemAvatar,
   Avatar,
   TablePagination,
+  Button,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -49,19 +50,24 @@ import {
 } from "@material-ui/core/styles";
 import { IoEye, IoPrint } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
-import styles from "./styles";
+import styles from "../dashboardPage/styles";
 import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
+import {
+  tahunData,
+  bulanDataNumberic,
+  semesterData,
+} from "../../functionGlobal/globalDataAsset";
 
 const dataTemp = [
   {
-    nama_satker: "Direktorat",
+    nama_satker: "",
     realisasi: 0,
   },
   {
-    nama_satker: "Direktorat",
+    nama_satker: "",
     realisasi: 10,
   },
 ];
@@ -77,14 +83,6 @@ const theme = createTheme({
     ].join(","),
   },
 });
-
-const tahunData = [
-  { id: "2021", value: 2021 },
-  { id: "2020", value: 2020 },
-  { id: "2019", value: 2019 },
-  { id: "2018", value: 2018 },
-  { id: "2017", value: 2017 },
-];
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -106,12 +104,13 @@ const StyledTableRow = withStyles((theme) => ({
 
 let url = "http://10.20.57.234/SIEBackEnd/";
 
-const PengembalianPNBP = () => {
+const BPHTBJumlahBerkas = () => {
   const classes = styles();
   const [years, setYears] = useState("2021");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
-  const [bulan, setBulan] = useState("01");
+  const [semester, setSemester] = useState(2);
+  const [bulan, setBulan] = useState("04");
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -149,12 +148,12 @@ const PengembalianPNBP = () => {
     setOpen(false);
   };
 
-  useEffect(() => {
+  const getData = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}Aset&Keuangan/PNBP/sie_pengembalian_pnbp?tahun=${years}&bulan=${bulan}`
+        `${url}Aset&Keuangan/PNBP/sie_pengembalian_pnbp?tahun=${years}&semeter=${semester}&bulan=${bulan}`
       )
       .then(function (response) {
         setData(response.data.data);
@@ -168,10 +167,22 @@ const PengembalianPNBP = () => {
       .then(function () {
         // always executed
       });
+  };
+
+  useEffect(() => {
+    getData();
   }, []);
 
   const handleChange = (event) => {
     setYears(event.target.value);
+  };
+
+  const handleChangeBulan = (event) => {
+    setBulan(event.target.value);
+  };
+
+  const handleChangeSemester = (event) => {
+    setSemester(event.target.value);
   };
 
   const DataFormater = (number) => {
@@ -194,7 +205,7 @@ const PengembalianPNBP = () => {
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Realisasi : Rp ${payload[0].value
+          >{`Realisais : Rp ${payload[0].value
             .toFixed(2)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
         </div>
@@ -222,7 +233,7 @@ const PengembalianPNBP = () => {
         <ResponsiveContainer width="100%" height={250}>
           <BarChart
             width={500}
-            height={800}
+            height={300}
             data={dataModal.grafik}
             margin={{
               top: 5,
@@ -240,6 +251,7 @@ const PengembalianPNBP = () => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="nama_satker"
+              scale="band"
               angle={60}
               interval={0}
               tick={{
@@ -250,6 +262,7 @@ const PengembalianPNBP = () => {
                 fontSize: 8,
               }}
               height={100}
+              // tickFormatter={DataFormaterX}
             ></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
@@ -261,7 +274,7 @@ const PengembalianPNBP = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             {/* <Legend /> */}
-            <Bar dataKey="realisasi" fill="#CD5C5C" />
+            <Bar dataKey="realisasi" fill="#66CDAA" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -381,9 +394,9 @@ const PengembalianPNBP = () => {
         direction="row"
         style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
       >
-        <Grid item xs={6}>
+        <Grid item xs={9}>
           <Typography className={classes.titleSection} variant="h2">
-            Pengembalian PNBP
+            Jumlah daerah terintegrasi
           </Typography>
         </Grid>
 
@@ -393,7 +406,7 @@ const PengembalianPNBP = () => {
           justifyContent="flex-end"
           alignItems="flex-end"
           item
-          xs={6}
+          xs={3}
         >
           <ButtonGroup
             aria-label="outlined button group"
@@ -405,7 +418,7 @@ const PengembalianPNBP = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Pengembalian PNBP",
+                    title: "Jumlah daerah terintegrasi",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -451,29 +464,129 @@ const PengembalianPNBP = () => {
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <div style={{ margin: 10, marginRight: 25 }}>
-            <Typography className={classes.isiTextStyle} variant="h2">
-              Pilih Tahun
-            </Typography>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-outlined-label">
-                Tahun
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                value={years}
-                onChange={handleChange}
-                label="Tahun"
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={12} sm={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Tahun
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Tahun
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={years}
+                    onChange={handleChange}
+                    label="Tahun"
+                    className={classes.selectStyle}
+                  >
+                    {tahunData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Bulan
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Bulan
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={bulan}
+                    onChange={handleChangeBulan}
+                    label="Bulan"
+                    className={classes.selectStyle}
+                  >
+                    {bulanDataNumberic.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Semester
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Semester
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={semester}
+                    onChange={handleChangeSemester}
+                    label="Semester"
+                    className={classes.selectStyle}
+                  >
+                    {semesterData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+                item
+                xs={6}
+                style={{ paddingTop: 40, paddingLeft: 20 }}
               >
-                {tahunData.map((item, i) => {
-                  return (
-                    <MenuItem value={item.id} key={i}>
-                      {item.value}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => getData()}
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
             <Typography
               className={classes.isiContentTextStyle}
               variant="h2"
@@ -491,7 +604,7 @@ const PengembalianPNBP = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "Pengembalian PNBP",
+                      title: "Jumlah daerah terintegrasi",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -522,7 +635,7 @@ const PengembalianPNBP = () => {
                 <ResponsiveContainer width="100%" height={250}>
                   <BarChart
                     width={500}
-                    height={800}
+                    height={300}
                     data={data}
                     margin={{
                       top: 5,
@@ -540,6 +653,7 @@ const PengembalianPNBP = () => {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
                       dataKey="nama_satker"
+                      scale="band"
                       angle={60}
                       interval={0}
                       tick={{
@@ -550,10 +664,11 @@ const PengembalianPNBP = () => {
                         fontSize: 8,
                       }}
                       height={100}
+                      // tickFormatter={DataFormaterX}
                     />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
-                        value="Realisasi"
+                        value="Target Penerimaan"
                         angle={-90}
                         position="insideBottomLeft"
                         offset={-5}
@@ -561,7 +676,7 @@ const PengembalianPNBP = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     {/* <Legend /> */}
-                    <Bar dataKey="realisasi" fill="#CD5C5C" />
+                    <Bar dataKey="realisasi" fill="#66CDAA" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -573,4 +688,4 @@ const PengembalianPNBP = () => {
   );
 };
 
-export default PengembalianPNBP;
+export default BPHTBJumlahBerkas;
