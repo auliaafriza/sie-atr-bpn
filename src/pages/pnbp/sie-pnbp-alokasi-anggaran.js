@@ -39,7 +39,7 @@ import {
   Divider,
   ListItemText,
   ListItemAvatar,
-  Avatar,
+  Button,
   TablePagination,
 } from "@material-ui/core";
 import {
@@ -53,7 +53,10 @@ import styles from "./styles";
 import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
+import { tipeData } from "../../functionGlobal/globalDataAsset";
 import moment from "moment";
+import { fileExport } from "../../functionGlobal/exports";
+import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 
 const dataTemp = [
   {
@@ -80,14 +83,6 @@ const theme = createTheme({
   },
 });
 
-const tahunData = [
-  { id: "2021", value: 2021 },
-  { id: "2020", value: 2020 },
-  { id: "2019", value: 2019 },
-  { id: "2018", value: 2018 },
-  { id: "2017", value: 2017 },
-];
-
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: "#FF7E5A",
@@ -108,9 +103,24 @@ const StyledTableRow = withStyles((theme) => ({
 
 let url = "http://10.20.57.234/SIEBackEnd/";
 
+let nameColumn = [
+  {
+    label: "Tahun",
+    value: "tahun",
+  },
+  {
+    label: "Alokasi Anggaran",
+    value: "alokasi_anggaran",
+  },
+  {
+    label: "Anggaran",
+    value: "anggaran",
+  },
+];
+
 const AlokasiAnggaran = () => {
   const classes = styles();
-  const [years, setYears] = useState("2017");
+  const [years, setYears] = useState("OPS");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [bulan, setBulan] = useState("Jan");
@@ -151,12 +161,12 @@ const AlokasiAnggaran = () => {
     setOpen(false);
   };
 
-  useEffect(() => {
+  const getData = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_alokasi_anggaran_ops_non?tipe=OPS`
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_alokasi_anggaran_ops_non?tipe=${years}`
       )
       .then(function (response) {
         setData(response.data.data);
@@ -170,6 +180,10 @@ const AlokasiAnggaran = () => {
       .then(function () {
         // always executed
       });
+  };
+
+  useEffect(() => {
+    getData();
   }, []);
 
   const handleChange = (event) => {
@@ -207,6 +221,15 @@ const AlokasiAnggaran = () => {
       );
     }
     return null;
+  };
+
+  const exportData = () => {
+    fileExport(
+      loadDataColumnTable(nameColumn),
+      "alokasi anggaran vs realisasi Belanja ",
+      data,
+      ".xlsx"
+    );
   };
 
   const body = (
@@ -433,8 +456,16 @@ const AlokasiAnggaran = () => {
                 <IoPrint />
               </IconButton>
             </TooltipMI>
-            <TooltipMI title="Unduh Data" placement="top">
-              <IconButton aria-label="delete" size="small">
+            <TooltipMI
+              title="Unduh Data"
+              placement="top"
+              onClick={() => exportData()}
+            >
+              <IconButton
+                aria-label="delete"
+                size="small"
+                onClick={() => exportData()}
+              >
                 <IoMdDownload />
               </IconButton>
             </TooltipMI>
@@ -451,29 +482,57 @@ const AlokasiAnggaran = () => {
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <div style={{ margin: 10, marginRight: 25 }}>
-            <Typography className={classes.isiTextStyle} variant="h2">
-              Pilih Tahun
-            </Typography>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-outlined-label">
-                Tahun
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                value={years}
-                onChange={handleChange}
-                label="Tahun"
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={6}>
+                <Typography className={classes.isiTextStyle} variant="h2">
+                  Pilih Tipe
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Tipe
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={years}
+                    onChange={handleChange}
+                    label="Tipe"
+                  >
+                    {tipeData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+                item
+                xs={6}
+                style={{ paddingTop: 40, paddingLeft: 20 }}
               >
-                {tahunData.map((item, i) => {
-                  return (
-                    <MenuItem value={item.id} key={i}>
-                      {item.value}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => getData()}
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
+
             <Typography
               className={classes.isiContentTextStyle}
               variant="h2"

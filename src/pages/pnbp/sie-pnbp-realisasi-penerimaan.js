@@ -53,6 +53,8 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
+import { fileExport } from "../../functionGlobal/exports";
+import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 
 const dataTemp = [
   {
@@ -62,6 +64,17 @@ const dataTemp = [
   {
     bulan: "2",
     persentase_realisasi: 0,
+  },
+];
+
+let nameColumn = [
+  {
+    label: "Bulan",
+    value: "bulan",
+  },
+  {
+    label: "Persentase Realisasi",
+    value: "persentase_realisasi",
   },
 ];
 
@@ -229,6 +242,15 @@ const RealisasiPenerimaan = () => {
     } else {
       return number.toString();
     }
+  };
+
+  const exportData = () => {
+    fileExport(
+      loadDataColumnTable(nameColumn),
+      "Persentase Realisasi penerimaan kumulatif bulanan",
+      data,
+      ".xlsx"
+    );
   };
 
   const CustomTooltip = ({ active, payload, label }) => {
@@ -489,8 +511,16 @@ const RealisasiPenerimaan = () => {
                 <IoPrint />
               </IconButton>
             </TooltipMI>
-            <TooltipMI title="Unduh Data" placement="top">
-              <IconButton aria-label="delete" size="small">
+            <TooltipMI
+              title="Unduh Data"
+              placement="top"
+              onClick={() => exportData()}
+            >
+              <IconButton
+                aria-label="delete"
+                size="small"
+                onClick={() => exportData()}
+              >
                 <IoMdDownload />
               </IconButton>
             </TooltipMI>

@@ -41,6 +41,7 @@ import {
   ListItemAvatar,
   Avatar,
   TablePagination,
+  Button,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -54,6 +55,12 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
+import {
+  tahunData,
+  bulanDataNumberic,
+} from "../../functionGlobal/globalDataAsset";
+import { fileExport } from "../../functionGlobal/exports";
+import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 
 const dataTemp = [
   {
@@ -78,14 +85,6 @@ const theme = createTheme({
   },
 });
 
-const tahunData = [
-  { id: "2021", value: 2021 },
-  { id: "2020", value: 2020 },
-  { id: "2019", value: 2019 },
-  { id: "2018", value: 2018 },
-  { id: "2017", value: 2017 },
-];
-
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: "#FF7E5A",
@@ -105,6 +104,17 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 let url = "http://10.20.57.234/SIEBackEnd/";
+
+let nameColumn = [
+  {
+    label: "Nama Satker",
+    value: "nama_satker",
+  },
+  {
+    label: "Realisasi",
+    value: "realisasi",
+  },
+];
 
 const PengembalianPNBP = () => {
   const classes = styles();
@@ -149,7 +159,7 @@ const PengembalianPNBP = () => {
     setOpen(false);
   };
 
-  useEffect(() => {
+  const getData = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
@@ -168,10 +178,18 @@ const PengembalianPNBP = () => {
       .then(function () {
         // always executed
       });
+  };
+
+  useEffect(() => {
+    getData();
   }, []);
 
   const handleChange = (event) => {
     setYears(event.target.value);
+  };
+
+  const handleChangeBulan = (event) => {
+    setBulan(event.target.value);
   };
 
   const DataFormater = (number) => {
@@ -355,6 +373,15 @@ const PengembalianPNBP = () => {
     </div>
   );
 
+  const exportData = () => {
+    fileExport(
+      loadDataColumnTable(nameColumn),
+      "Jumlah pengembalian PNBP (refund) ",
+      data,
+      ".xlsx"
+    );
+  };
+
   return (
     <div>
       <Modal
@@ -383,7 +410,7 @@ const PengembalianPNBP = () => {
       >
         <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            Pengembalian PNBP
+            Jumlah pengembalian PNBP (refund)
           </Typography>
         </Grid>
 
@@ -405,7 +432,7 @@ const PengembalianPNBP = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Pengembalian PNBP",
+                    title: "Jumlah pengembalian PNBP (refund) ",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -433,8 +460,16 @@ const PengembalianPNBP = () => {
                 <IoPrint />
               </IconButton>
             </TooltipMI>
-            <TooltipMI title="Unduh Data" placement="top">
-              <IconButton aria-label="delete" size="small">
+            <TooltipMI
+              title="Unduh Data"
+              placement="top"
+              onClick={() => exportData()}
+            >
+              <IconButton
+                aria-label="delete"
+                size="small"
+                onClick={() => exportData()}
+              >
                 <IoMdDownload />
               </IconButton>
             </TooltipMI>
@@ -451,29 +486,91 @@ const PengembalianPNBP = () => {
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <div style={{ margin: 10, marginRight: 25 }}>
-            <Typography className={classes.isiTextStyle} variant="h2">
-              Pilih Tahun
-            </Typography>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-outlined-label">
-                Tahun
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                value={years}
-                onChange={handleChange}
-                label="Tahun"
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Tahun
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Tahun
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={years}
+                    onChange={handleChange}
+                    label="Tahun"
+                    className={classes.selectStyle}
+                  >
+                    {tahunData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Bulan
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Bulan
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={bulan}
+                    onChange={handleChangeBulan}
+                    label="Bulan"
+                    className={classes.selectStyle}
+                  >
+                    {bulanDataNumberic.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+                item
+                xs={4}
+                style={{ paddingTop: 40, paddingLeft: 20 }}
               >
-                {tahunData.map((item, i) => {
-                  return (
-                    <MenuItem value={item.id} key={i}>
-                      {item.value}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => getData()}
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
             <Typography
               className={classes.isiContentTextStyle}
               variant="h2"
@@ -491,7 +588,7 @@ const PengembalianPNBP = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "Pengembalian PNBP",
+                      title: "Jumlah pengembalian PNBP (refund) ",
                       grafik: data,
                       dataTable: "",
                       analisis:

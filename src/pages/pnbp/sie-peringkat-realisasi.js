@@ -55,6 +55,8 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
+import { fileExport } from "../../functionGlobal/exports";
+import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 
 const dataTemp = [
   {
@@ -105,6 +107,17 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 let url = "http://10.20.57.234/SIEBackEnd/";
+
+let nameColumn = [
+  {
+    label: "Nama Satker",
+    value: "nama_satker",
+  },
+  {
+    label: "Realisasi",
+    value: "realisasi",
+  },
+];
 
 const PeringkatRealisasi = () => {
   const classes = styles();
@@ -206,6 +219,15 @@ const PeringkatRealisasi = () => {
     }
 
     return null;
+  };
+
+  const exportData = () => {
+    fileExport(
+      loadDataColumnTable(nameColumn),
+      "top 10 satker dengan realisasi belanja",
+      data,
+      ".xlsx"
+    );
   };
 
   const body = (
@@ -442,8 +464,16 @@ const PeringkatRealisasi = () => {
                 <IoPrint />
               </IconButton>
             </TooltipMI>
-            <TooltipMI title="Unduh Data" placement="top">
-              <IconButton aria-label="delete" size="small">
+            <TooltipMI
+              title="Unduh Data"
+              placement="top"
+              onClick={() => exportData()}
+            >
+              <IconButton
+                aria-label="delete"
+                size="small"
+                onClick={() => exportData()}
+              >
                 <IoMdDownload />
               </IconButton>
             </TooltipMI>

@@ -56,6 +56,8 @@ import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
 import { tahunData, bulanData } from "../../functionGlobal/globalDataAsset";
+import { fileExport } from "../../functionGlobal/exports";
+import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 
 const dataTemp = [
   {
@@ -100,6 +102,17 @@ const StyledTableRow = withStyles((theme) => ({
 
 let url = "http://10.20.57.234/SIEBackEnd/";
 
+let nameColumn = [
+  {
+    label: "Wilayah",
+    value: "wilayah",
+  },
+  {
+    label: "Besarnya",
+    value: "besarnya",
+  },
+];
+
 const PnbpBerkasPeringkatWilayah = () => {
   const classes = styles();
   const [years, setYears] = useState("2017");
@@ -141,6 +154,15 @@ const PnbpBerkasPeringkatWilayah = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const exportData = () => {
+    fileExport(
+      loadDataColumnTable(nameColumn),
+      "Top 5 penerimaan PNBP per Wilayah",
+      data,
+      ".xlsx"
+    );
   };
 
   const getData = () => {
@@ -439,8 +461,16 @@ const PnbpBerkasPeringkatWilayah = () => {
                 <IoPrint />
               </IconButton>
             </TooltipMI>
-            <TooltipMI title="Unduh Data" placement="top">
-              <IconButton aria-label="delete" size="small">
+            <TooltipMI
+              title="Unduh Data"
+              placement="top"
+              onClick={() => exportData()}
+            >
+              <IconButton
+                aria-label="delete"
+                size="small"
+                onClick={() => exportData()}
+              >
                 <IoMdDownload />
               </IconButton>
             </TooltipMI>

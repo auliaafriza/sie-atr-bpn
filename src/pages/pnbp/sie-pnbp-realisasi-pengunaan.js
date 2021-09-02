@@ -59,6 +59,8 @@ import {
   tahunData,
   bulanDataNumberic,
 } from "../../functionGlobal/globalDataAsset";
+import { fileExport } from "../../functionGlobal/exports";
+import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 
 const dataTemp = [
   {
@@ -70,6 +72,21 @@ const dataTemp = [
     wilayah: "Kantor",
     realisasi: 10,
     persentase: 0,
+  },
+];
+
+let nameColumn = [
+  {
+    label: "Kantor",
+    value: "kantor",
+  },
+  {
+    label: "Realisasi",
+    value: "realisasi",
+  },
+  {
+    label: "Persentase",
+    value: "persentase",
   },
 ];
 
@@ -179,6 +196,15 @@ const realisasiPenggunaan = () => {
 
   const handleChangeBulan = (event) => {
     setBulan(event.target.value);
+  };
+
+  const exportData = () => {
+    fileExport(
+      loadDataColumnTable(nameColumn),
+      "Realisasi penggunaan PNBP",
+      data,
+      ".xlsx"
+    );
   };
 
   const DataFormater = (number) => {
@@ -443,8 +469,16 @@ const realisasiPenggunaan = () => {
                 <IoPrint />
               </IconButton>
             </TooltipMI>
-            <TooltipMI title="Unduh Data" placement="top">
-              <IconButton aria-label="delete" size="small">
+            <TooltipMI
+              title="Unduh Data"
+              placement="top"
+              onClick={() => exportData()}
+            >
+              <IconButton
+                aria-label="delete"
+                size="small"
+                onClick={() => exportData()}
+              >
                 <IoMdDownload />
               </IconButton>
             </TooltipMI>

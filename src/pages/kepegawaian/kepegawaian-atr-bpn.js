@@ -53,7 +53,7 @@ import { IoMdDownload } from "react-icons/io";
 import styles from "../../dashboardPage/styles";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
-import { tahunData } from "../../dashboardPage/globalDataAsset";
+import { tahunData } from "../../../functionGlobal/globalDataAsset";
 import moment from "moment";
 import { fileExport } from "../../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
@@ -119,7 +119,7 @@ let nameColumn = [
   },
 ];
 
-const RealisasiAnggaran = () => {
+const KepegawaianAtrBpn = () => {
   const classes = styles();
   const [years, setYears] = useState("2022");
   const [data, setData] = useState(dataTemp);
@@ -978,4 +978,4 @@ const RealisasiAnggaran = () => {
   );
 };
 
-export default RealisasiAnggaran;
+export default KepegawaianAtrBpn;

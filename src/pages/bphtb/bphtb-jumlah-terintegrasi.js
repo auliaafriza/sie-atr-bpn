@@ -54,6 +54,8 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
+import { fileExport } from "../../functionGlobal/exports";
+import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 
 const dataTemp = [
   {
@@ -63,6 +65,17 @@ const dataTemp = [
   {
     tahun: "2011",
     targetpenerimaan: 10,
+  },
+];
+
+let nameColumn = [
+  {
+    label: "Tahun",
+    value: "tahun",
+  },
+  {
+    label: "Target Penerimaan",
+    value: "targetpenerimaan",
   },
 ];
 
@@ -147,6 +160,15 @@ const BPHTBDaerahTerintegrasi = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const exportData = () => {
+    fileExport(
+      loadDataColumnTable(nameColumn),
+      "Jumlah daerah terintegrasi",
+      data,
+      ".xlsx"
+    );
   };
 
   useEffect(() => {
@@ -419,8 +441,16 @@ const BPHTBDaerahTerintegrasi = () => {
                 <IoPrint />
               </IconButton>
             </TooltipMI>
-            <TooltipMI title="Unduh Data" placement="top">
-              <IconButton aria-label="delete" size="small">
+            <TooltipMI
+              title="Unduh Data"
+              placement="top"
+              onClick={() => exportData()}
+            >
+              <IconButton
+                aria-label="delete"
+                size="small"
+                onClick={() => exportData()}
+              >
                 <IoMdDownload />
               </IconButton>
             </TooltipMI>

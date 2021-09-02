@@ -41,3 +41,8 @@ export const semesterData = [
   { id: 1, value: 1, name: "Semester 1" },
   { id: 2, value: 2, name: "Semester 2" },
 ];
+
+export const tipeData = [
+  { id: "OPS", value: "OPS", name: "OPS" },
+  { id: "NONOPS", value: "NONOPS", name: "NON OPS" },
+];

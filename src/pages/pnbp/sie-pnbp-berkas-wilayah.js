@@ -61,6 +61,8 @@ import {
   bulanData,
   semesterData,
 } from "../../functionGlobal/globalDataAsset";
+import { fileExport } from "../../functionGlobal/exports";
+import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 
 const dataTemp = [
   {
@@ -107,6 +109,21 @@ const StyledTableRow = withStyles((theme) => ({
 
 let url = "http://10.20.57.234/SIEBackEnd/";
 
+let nameColumn = [
+  {
+    label: "Wilayah",
+    value: "wilayah",
+  },
+  {
+    label: "PNBP",
+    value: "pnbp",
+  },
+  {
+    label: "Jumlah Berkas",
+    value: "jumlahberkas",
+  },
+];
+
 const PnbpBerkasWilayah = () => {
   const classes = styles();
   const [years, setYears] = useState("2012");
@@ -149,6 +166,15 @@ const PnbpBerkasWilayah = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const exportData = () => {
+    fileExport(
+      loadDataColumnTable(nameColumn),
+      "PNBP dan jumlah berkas per Kegiatan",
+      data,
+      ".xlsx"
+    );
   };
 
   const getData = () => {
@@ -455,8 +481,16 @@ const PnbpBerkasWilayah = () => {
                 <IoPrint />
               </IconButton>
             </TooltipMI>
-            <TooltipMI title="Unduh Data" placement="top">
-              <IconButton aria-label="delete" size="small">
+            <TooltipMI
+              title="Unduh Data"
+              placement="top"
+              onClick={() => exportData()}
+            >
+              <IconButton
+                aria-label="delete"
+                size="small"
+                onClick={() => exportData()}
+              >
                 <IoMdDownload />
               </IconButton>
             </TooltipMI>

@@ -56,6 +56,8 @@ import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
 import { tahunData } from "../../functionGlobal/globalDataAsset";
+import { fileExport } from "../../functionGlobal/exports";
+import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 
 const dataTemp = [
   {
@@ -67,6 +69,21 @@ const dataTemp = [
     tahun: "2011",
     pagu: 10,
     mp: 0,
+  },
+];
+
+let nameColumn = [
+  {
+    label: "Tahun",
+    value: "tahun",
+  },
+  {
+    label: "Pagu",
+    value: "pagu",
+  },
+  {
+    label: "Mp",
+    value: "mp",
   },
 ];
 
@@ -213,6 +230,15 @@ const PaguMp = () => {
     }
 
     return null;
+  };
+
+  const exportData = () => {
+    fileExport(
+      loadDataColumnTable(nameColumn),
+      "Pagu & MP PNBP (Satuan 1 Juta)",
+      data,
+      ".xlsx"
+    );
   };
 
   const body = (
@@ -466,8 +492,16 @@ const PaguMp = () => {
                   <IoPrint />
                 </IconButton>
               </TooltipMI>
-              <TooltipMI title="Unduh Data" placement="top">
-                <IconButton aria-label="delete" size="small">
+              <TooltipMI
+                title="Unduh Data"
+                placement="top"
+                onClick={() => exportData()}
+              >
+                <IconButton
+                  aria-label="delete"
+                  size="small"
+                  onClick={() => exportData()}
+                >
                   <IoMdDownload />
                 </IconButton>
               </TooltipMI>

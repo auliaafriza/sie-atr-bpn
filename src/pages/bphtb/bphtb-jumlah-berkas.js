@@ -60,6 +60,8 @@ import {
   bulanDataNumberic,
   semesterData,
 } from "../../functionGlobal/globalDataAsset";
+import { fileExport } from "../../functionGlobal/exports";
+import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 
 const dataTemp = [
   {
@@ -69,6 +71,17 @@ const dataTemp = [
   {
     nama_satker: "",
     realisasi: 10,
+  },
+];
+
+let nameColumn = [
+  {
+    label: "Nama Satker",
+    value: "nama_satker",
+  },
+  {
+    label: "Realisasi",
+    value: "realisasi",
   },
 ];
 
@@ -146,6 +159,15 @@ const BPHTBJumlahBerkas = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const exportData = () => {
+    fileExport(
+      loadDataColumnTable(nameColumn),
+      "Nilai BPHTB (Rupiah)dan jumlah berkas layanan BPHTB",
+      data,
+      ".xlsx"
+    );
   };
 
   const getData = () => {
@@ -396,7 +418,7 @@ const BPHTBJumlahBerkas = () => {
       >
         <Grid item xs={9}>
           <Typography className={classes.titleSection} variant="h2">
-            Jumlah daerah terintegrasi
+            Nilai BPHTB (Rupiah)dan jumlah berkas layanan BPHTB
           </Typography>
         </Grid>
 
@@ -418,7 +440,8 @@ const BPHTBJumlahBerkas = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Jumlah daerah terintegrasi",
+                    title:
+                      "Nilai BPHTB (Rupiah)dan jumlah berkas layanan BPHTB",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -446,8 +469,16 @@ const BPHTBJumlahBerkas = () => {
                 <IoPrint />
               </IconButton>
             </TooltipMI>
-            <TooltipMI title="Unduh Data" placement="top">
-              <IconButton aria-label="delete" size="small">
+            <TooltipMI
+              title="Unduh Data"
+              placement="top"
+              onClick={() => exportData()}
+            >
+              <IconButton
+                aria-label="delete"
+                size="small"
+                onClick={() => exportData()}
+              >
                 <IoMdDownload />
               </IconButton>
             </TooltipMI>
@@ -604,7 +635,8 @@ const BPHTBJumlahBerkas = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "Jumlah daerah terintegrasi",
+                      title:
+                        "Nilai BPHTB (Rupiah)dan jumlah berkas layanan BPHTB",
                       grafik: data,
                       dataTable: "",
                       analisis:
