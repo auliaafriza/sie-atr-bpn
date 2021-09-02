@@ -56,6 +56,8 @@ import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import { tahunData } from "./globalDataAsset";
 import moment from "moment";
+import { fileExport } from "../../functionGlobal/exports";
+import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 
 const dataTemp = [
   {
@@ -100,6 +102,21 @@ const StyledTableRow = withStyles((theme) => ({
 
 let url = "http://10.20.57.234/SIEBackEnd/";
 
+let nameColumn = [
+  {
+    label: "Tahun",
+    value: "tahun",
+  },
+  {
+    label: "Anggaran",
+    value: "anggaran",
+  },
+  {
+    label: "Realisasi",
+    value: "realisasi",
+  },
+];
+
 const RealisasiAnggaran = () => {
   const classes = styles();
   const [years, setYears] = useState("2022");
@@ -109,11 +126,10 @@ const RealisasiAnggaran = () => {
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
-    grafik: "",
+    grafik: [],
     dataTable: "",
     analisis: "",
     type: "",
-    nameColumn: [],
     listTop10Comment: [],
   });
   const inputRef = createRef(null);
@@ -212,6 +228,15 @@ const RealisasiAnggaran = () => {
     return null;
   };
 
+  const exportData = () => {
+    fileExport(
+      loadDataColumnTable(nameColumn),
+      "Nilai Anggaran dan Realisasi Belanja anggaran PNBP",
+      data,
+      ".xlsx"
+    );
+  };
+
   const body = (
     <div className={classes.paper}>
       <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
@@ -262,7 +287,7 @@ const RealisasiAnggaran = () => {
           </BarChart>
         </ResponsiveContainer>
       </div>
-      {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
+      {nameColumn && nameColumn.length != 0 ? (
         <>
           <TableContainer component={Paper} style={{ marginTop: 20 }}>
             <Table
@@ -272,9 +297,13 @@ const RealisasiAnggaran = () => {
             >
               <TableHead>
                 <TableRow>
-                  {dataModal.nameColumn.map((item) => (
-                    <StyledTableCell align="center">{item}</StyledTableCell>
-                  ))}
+                  {nameColumn.map((item, i) => {
+                    return (
+                      <StyledTableCell align="center">
+                        {item.label}
+                      </StyledTableCell>
+                    );
+                  })}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -423,7 +452,6 @@ const RealisasiAnggaran = () => {
                           )
                         : "",
                     type: "Bar",
-                    nameColumn: ["Tahun", "Anggaran", "Realisasi"],
                     listTop10Comment: comment.listTop10Comment,
                   })
                 }
@@ -450,8 +478,16 @@ const RealisasiAnggaran = () => {
                 <IoPrint />
               </IconButton>
             </TooltipMI>
-            <TooltipMI title="Unduh Data" placement="top">
-              <IconButton aria-label="delete" size="small">
+            <TooltipMI
+              title="Unduh Data"
+              placement="top"
+              onClick={() => exportData()}
+            >
+              <IconButton
+                aria-label="delete"
+                size="small"
+                onClick={() => exportData()}
+              >
                 <IoMdDownload />
               </IconButton>
             </TooltipMI>
@@ -582,7 +618,6 @@ const RealisasiAnggaran = () => {
                             )
                           : "",
                       type: "Bar",
-                      nameColumn: ["Tahun", "Anggaran", "Realisasi"],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
