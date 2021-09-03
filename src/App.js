@@ -4,6 +4,7 @@ import Login from "./pages/loginPage/login";
 import Dashboard from "./pages/dashboardPage/dashboard";
 import Nav from "./pages/dashboardPage/Nav";
 import PrintPNBPAnggaranRealisasi from "./pages/pnbp/sie-pnbp-realisasi-anggaran/componentPrint";
+import { PengadaanTanah } from "./pages/psn";
 import {
   BrowserRouter as Router,
   Switch,
@@ -24,6 +25,9 @@ const Main = withRouter(({ location }) => {
         </Route>
         <Route path="/PrintPNBPAnggaranRealisasi">
           <PrintPNBPAnggaranRealisasi />
+        </Route>
+        <Route path="/PengadaanTanah">
+          <PengadaanTanah />
         </Route>
         <Route path="/">
           <Login />
