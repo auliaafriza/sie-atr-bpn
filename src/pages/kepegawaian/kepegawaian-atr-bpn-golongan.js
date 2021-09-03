@@ -50,25 +50,25 @@ import {
 } from "@material-ui/core/styles";
 import { IoEye, IoPrint } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
-import styles from "../../dashboardPage/styles";
+import styles from "./styles";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
-import { tahunData } from "../../../functionGlobal/globalDataAsset";
+import { tahunData } from "../../functionGlobal/globalDataAsset";
 import moment from "moment";
-import { fileExport } from "../../../functionGlobal/exports";
-import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
+import { fileExport } from "../../functionGlobal/exports";
+import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
+import { getSatker } from "../../actions/globalActions";
+import { useDispatch, useSelector } from "react-redux";
 
 const dataTemp = [
   {
-    tahun: "2010",
-    anggaran: 0,
-    realisasi: 10,
+    golongan: "",
+    jml_pegawai: 0,
   },
   {
-    tahun: "2011",
-    anggaran: 0,
-    realisasi: 10,
+    golongan: "",
+    jml_pegawai: 0,
   },
 ];
 
@@ -106,25 +106,28 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {
-    label: "Tahun",
-    value: "tahun",
+    label: "Golongan",
+    value: "golongan",
   },
   {
-    label: "Anggaran",
-    value: "anggaran",
-  },
-  {
-    label: "Realisasi",
-    value: "realisasi",
+    label: "Jumlah Pegawai",
+    value: "jml_pegawai",
   },
 ];
 
-const KepegawaianAtrBpn = () => {
+const KepegawaianBpnGol = () => {
   const classes = styles();
   const [years, setYears] = useState("2022");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [tahunAwal, setTahunAwal] = useState("2017");
+  const [kanwil, setKanwil] = useState(
+    "Kementerian Agraria dan Tata Ruang/Badan Pertanahan Nasional "
+  );
+  const [kantor, setKantor] = useState("Jawa Tengah");
+  const [satker, setSatker] = useState(
+    "Kantor Pertanahan Kabupaten Purbalingga "
+  );
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -137,6 +140,9 @@ const KepegawaianAtrBpn = () => {
   const inputRef = useRef();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const dispatch = useDispatch();
+  const satkerRed = useSelector((state) => state.globalReducer.satker);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -161,7 +167,7 @@ const KepegawaianAtrBpn = () => {
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_realisasi_anggaran?tahunAwal=${tahunAwal}&tahunAkhir=${years}`
+        `${url}Kepegawaian/Pegawai/sie_pegawai_atr_bpn_golongan?tahunAwal=${tahunAwal}&tahunAkhir=${years}&kantor=&kanwil=&satker=`
       )
       .then(function (response) {
         setData(response.data.data);
@@ -178,6 +184,7 @@ const KepegawaianAtrBpn = () => {
   };
 
   useEffect(() => {
+    dispatch(getSatker());
     getData();
   }, []);
 
@@ -205,19 +212,11 @@ const KepegawaianAtrBpn = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">Tahun {label}</p>
+          <p className="label">Golongan {label}</p>
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Anggaran : Rp ${payload[0].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
-          <p
-            className="desc"
-            style={{ color: payload[1].color }}
-          >{`Realisasi : Rp ${payload[1].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+          >{`Jumlah Pegawai : ${payload[0].value}`}</p>
         </div>
       );
     }
@@ -228,7 +227,7 @@ const KepegawaianAtrBpn = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Nilai Anggaran dan Realisasi Belanja anggaran PNBP",
+      "Jumlah Pegawai berdasarkan Golongan ",
       data,
       ".xlsx"
     );
@@ -263,7 +262,7 @@ const KepegawaianAtrBpn = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="tahun"></XAxis>
+            <XAxis dataKey="golongan"></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value="Nilai Satuan 1 Juta"
@@ -274,8 +273,7 @@ const KepegawaianAtrBpn = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="anggaran" fill="#8884d8" />
-            <Bar dataKey="realisasi" fill="#82ca9d" />
+            <Bar dataKey="jml_pegawai" fill="#C71585" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -302,25 +300,16 @@ const KepegawaianAtrBpn = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.tahun}>
+                    <StyledTableRow key={row.golongan}>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.tahun}
+                        {row.golongan}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        Rp{" "}
-                        {row.anggaran
-                          .toFixed(2)
-                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Rp{" "}
-                        {row.realisasi
-                          .toFixed(2)
-                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                        {row.jml_pegawai}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
@@ -383,160 +372,12 @@ const KepegawaianAtrBpn = () => {
     </div>
   );
 
-  const PrintHandle = () => {
-    return (
-      <div ref={inputRef}>
-        <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
-          Anggaran & Realisasi (Satuan 1 Juta)
-        </h2>
-        <div className={classes.barChart}>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart
-              width={500}
-              height={300}
-              data={data}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-              padding={{
-                top: 15,
-                right: 10,
-                left: 10,
-                bottom: 15,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="tahun"></XAxis>
-              <YAxis tickFormatter={DataFormater}>
-                <Label
-                  value="Nilai Satuan 1 Juta"
-                  angle={-90}
-                  position="insideBottomLeft"
-                  offset={-5}
-                />
-              </YAxis>
-              <Tooltip content={<CustomTooltip />} />
-              <Legend />
-              <Bar dataKey="anggaran" fill="#8884d8" />
-              <Bar dataKey="realisasi" fill="#82ca9d" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-        {nameColumn && nameColumn.length != 0 ? (
-          <>
-            <TableContainer component={Paper} style={{ marginTop: 20 }}>
-              <Table
-                stickyHeader
-                className={classes.table}
-                aria-label="customized table"
-              >
-                <TableHead>
-                  <TableRow>
-                    {nameColumn.map((item, i) => {
-                      return (
-                        <StyledTableCell align="center">
-                          {item.label}
-                        </StyledTableCell>
-                      );
-                    })}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => (
-                      <StyledTableRow key={row.tahun}>
-                        <StyledTableCell
-                          align="center"
-                          component="th"
-                          scope="row"
-                        >
-                          {row.tahun}
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Rp{" "}
-                          {row.anggaran
-                            .toFixed(2)
-                            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Rp{" "}
-                          {row.realisasi
-                            .toFixed(2)
-                            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                        </StyledTableCell>
-                      </StyledTableRow>
-                    ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 100]}
-              component="div"
-              count={data.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </>
-        ) : null}
-        <Typography
-          className={classes.isiContentTextStyle}
-          variant="h2"
-          wrap
-          style={{ paddingTop: 20 }}
-        >
-          {comment && comment.lastComment
-            ? comment.lastComment.analisisData
-            : ""}
-        </Typography>
-        <Typography
-          className={classes.isiContentTextStyle}
-          variant="h2"
-          wrap
-          style={{ paddingTop: 20, fontSize: 18, fontWeight: "600" }}
-        >
-          Histori Analisis Data
-        </Typography>
-        <List className={classes.rootList}>
-          {comment.listTop10Comment && comment.listTop10Comment.length != 0
-            ? comment.listTop10Comment.map((history, i) => {
-                return (
-                  <>
-                    <ListItem alignItems="flex-start">
-                      <ListItemText
-                        primary={moment(new Date(history.commentDate)).format(
-                          "DD MMM YYYY - HH:mm"
-                        )}
-                        secondary={
-                          <React.Fragment>
-                            {history.analisisData.replace(/<[^>]+>/g, "")}
-                          </React.Fragment>
-                        }
-                      />
-                    </ListItem>
-                    <Divider
-                      component="li"
-                      style={{ marginLeft: 20, marginRight: 20 }}
-                    />
-                  </>
-                );
-              })
-            : null}
-        </List>
-      </div>
-    );
-  };
   const history = useHistory();
 
   const testbla = () => {
-    // window.open("/PrintPNBPAnggaranRealisasi")
+    // window.open("/PrintPNBPJumlah PegawaiRealisasi")
     history.push({
-      pathname: "/PrintPNBPAnggaranRealisasi",
+      pathname: "/PrintPNBPJumlah PegawaiRealisasi",
       state: {
         data: data,
         comment: comment,
@@ -573,7 +414,7 @@ const KepegawaianAtrBpn = () => {
       >
         <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            Anggaran & Realisasi (Satuan 1 Juta)
+            Jumlah Pegawai berdasarkan Golongan
           </Typography>
         </Grid>
         <Grid
@@ -598,7 +439,7 @@ const KepegawaianAtrBpn = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Anggaran & Realisasi (Satuan 1 Juta)",
+                    title: "Jumlah Pegawai berdasarkan Golongan ",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -764,7 +605,7 @@ const KepegawaianAtrBpn = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "Anggaran & Realisasi (Satuan 1 Juta)",
+                      title: "Jumlah Pegawai berdasarkan Golongan ",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -810,7 +651,7 @@ const KepegawaianAtrBpn = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="tahun" />
+                    <XAxis dataKey="golongan" />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
                         value="Nilai Satuan 1 Juta"
@@ -821,8 +662,7 @@ const KepegawaianAtrBpn = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Bar dataKey="anggaran" fill="#8884d8" />
-                    <Bar dataKey="realisasi" fill="#82ca9d" />
+                    <Bar dataKey="jml_pegawai" fill="#C71585" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -830,152 +670,8 @@ const KepegawaianAtrBpn = () => {
           </Card>
         </Grid>
       </Grid>
-      {/* <div ref={inputRef} >
-        <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
-          Nilai Anggaran dan Realisasi Belanja anggaran PNBP
-        </h2>
-        <div className={classes.barChart}>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart
-              width={500}
-              height={300}
-              data={data}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-              padding={{
-                top: 15,
-                right: 10,
-                left: 10,
-                bottom: 15,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="tahun"></XAxis>
-              <YAxis tickFormatter={DataFormater}>
-                <Label
-                  value="Nilai Satuan 1 Juta"
-                  angle={-90}
-                  position="insideBottomLeft"
-                  offset={-5}
-                />
-              </YAxis>
-              <Tooltip content={<CustomTooltip />} />
-              <Legend />
-              <Bar dataKey="anggaran" fill="#8884d8" />
-              <Bar dataKey="realisasi" fill="#82ca9d" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-        {nameColumn && nameColumn.length != 0 ? (
-          <>
-            <TableContainer component={Paper} style={{ marginTop: 20 }}>
-              <Table
-                stickyHeader
-                className={classes.table}
-                aria-label="customized table"
-              >
-                <TableHead>
-                  <TableRow>
-                    {nameColumn.map((item, i) => {
-                      return (
-                        <StyledTableCell align="center">
-                          {item.label}
-                        </StyledTableCell>
-                      );
-                    })}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => (
-                      <StyledTableRow key={row.tahun}>
-                        <StyledTableCell
-                          align="center"
-                          component="th"
-                          scope="row"
-                        >
-                          {row.tahun}
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Rp{" "}
-                          {row.anggaran
-                            .toFixed(2)
-                            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Rp{" "}
-                          {row.realisasi
-                            .toFixed(2)
-                            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                        </StyledTableCell>
-                      </StyledTableRow>
-                    ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 100]}
-              component="div"
-              count={data.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </>
-        ) : null}
-        <Typography
-          className={classes.isiContentTextStyle}
-          variant="h2"
-          wrap
-          style={{ paddingTop: 20 }}
-        >
-          {comment && comment.lastComment
-            ? comment.lastComment.analisisData
-            : ""}
-        </Typography>
-        <Typography
-          className={classes.isiContentTextStyle}
-          variant="h2"
-          wrap
-          style={{ paddingTop: 20, fontSize: 18, fontWeight: "600" }}
-        >
-          Histori Analisis Data
-        </Typography>
-        <List className={classes.rootList}>
-          {comment.listTop10Comment && comment.listTop10Comment.length != 0
-            ? comment.listTop10Comment.map((history, i) => {
-                return (
-                  <>
-                    <ListItem alignItems="flex-start">
-                      <ListItemText
-                        primary={moment(new Date(history.commentDate)).format(
-                          "DD MMM YYYY - HH:mm"
-                        )}
-                        secondary={
-                          <React.Fragment>
-                            {history.analisisData.replace(/<[^>]+>/g, "")}
-                          </React.Fragment>
-                        }
-                      />
-                    </ListItem>
-                    <Divider
-                      component="li"
-                      style={{ marginLeft: 20, marginRight: 20 }}
-                    />
-                  </>
-                );
-              })
-            : null}
-        </List>
-      </div> */}
     </div>
   );
 };
 
-export default KepegawaianAtrBpn;
+export default KepegawaianBpnGol;

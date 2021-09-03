@@ -69,6 +69,11 @@ import RealisasiAnggaran from "../pnbp/sie-pnbp-realisasi-anggaran/sie-pnbp-real
 import PaguMp from "../pnbp/sie-pnbp-pagu-mp";
 import BPHTBJumlahBerkas from "../bphtb/bphtb-jumlah-berkas";
 import BPHTBDaerahTerintegrasi from "../bphtb/bphtb-jumlah-terintegrasi";
+import KepegawaianBpnGol from "../kepegawaian/kepegawaian-atr-bpn-golongan";
+import KepegawaianBpnJabatan from "../kepegawaian/kepegawaian-atr-bpn-jabatan";
+import KepegawaianBpnJK from "../kepegawaian/kepegawaian-atr-bpn-JK";
+import KepegawaianBpnPendidikan from "../kepegawaian/kepegawaian-atr-bpn-pendidikan";
+import KepegawaianBpnUsia from "../kepegawaian/kepegawaian-atr-bpn-usia";
 
 const dataTempAsset = [
   {
@@ -586,8 +591,7 @@ const DashHome = () => {
         {body}
       </Modal>
       <PnbpBerkasWilayah />
-      {/* <BerkasWilayahPnbp /> */}
-      <PnbpBerkasPeringkat />
+      {/* <PnbpBerkasPeringkat />
       <PnbpBerkasPeringkatWilayah />
       <RealisasiAnggaran />
       <RealisasiPenggunaan />
@@ -596,9 +600,14 @@ const DashHome = () => {
       <PaguMp />
       <AlokasiAnggaran />
       <PeringkatRealisasi />
-      <PengembalianPNBP />
+      <PengembalianPNBP /> */}
       <BPHTBJumlahBerkas />
       <BPHTBDaerahTerintegrasi />
+      <KepegawaianBpnGol />
+      <KepegawaianBpnJabatan />
+      <KepegawaianBpnJK />
+      <KepegawaianBpnPendidikan />
+      <KepegawaianBpnUsia />
     </div>
   );
 };
