@@ -50,14 +50,14 @@ import {
 } from "@material-ui/core/styles";
 import { IoEye, IoPrint } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
-import styles from "../../dashboardPage/styles";
+import styles from "../dashboardPage/styles";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
-import { tahunData } from "../../../functionGlobal/globalDataAsset";
+import { tahunData } from "../../functionGlobal/globalDataAsset";
 import moment from "moment";
-import { fileExport } from "../../../functionGlobal/exports";
-import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
-import { useHistory } from "react-router-dom";
+import { fileExport } from "../../functionGlobal/exports";
+import { loadDataColumnTable } from "../../functionGlobal/fileExports";
+import { useHistory, Link as LinkPrint } from "react-router-dom";
 
 const dataTemp = [
   {
@@ -108,16 +108,53 @@ let nameColumn = [
   {
     label: "Tahun",
     value: "tahun",
+    isFixed: false,
+    isLabel: true,
   },
   {
     label: "Anggaran",
     value: "anggaran",
+    isFixed: true,
+    isLabel: false,
   },
   {
     label: "Realisasi",
     value: "realisasi",
+    isFixed: true,
+    isLabel: false,
   },
 ];
+
+let columnTable = [
+  {
+    label: "tahun",
+    isFixed: false,
+  },
+  {
+    label: "anggaran",
+    isFixed: true,
+  },
+  {
+    label: "realisasi",
+    isFixed: true,
+  },
+];
+
+let grafikView = [
+  {
+    dataKey: "anggaran",
+    fill: "#8884d8",
+  },
+  {
+    dataKey: "realisasi",
+    fill: "#82ca9d",
+  },
+];
+
+let axis = {
+  xAxis: "tahun",
+  yAxis: "Nilai Satuan 1 Juta",
+};
 
 const RealisasiAnggaran = () => {
   const classes = styles();
@@ -234,51 +271,49 @@ const RealisasiAnggaran = () => {
     );
   };
 
-  const handlePrint = useReactToPrint({
-    content: () => inputRef.current,
-  });
+  const grafik = (
+    <ResponsiveContainer width="100%" height={250}>
+      <BarChart
+        width={500}
+        height={300}
+        data={data}
+        margin={{
+          top: 5,
+          right: 30,
+          left: 20,
+          bottom: 5,
+        }}
+        padding={{
+          top: 15,
+          right: 10,
+          left: 10,
+          bottom: 15,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="tahun"></XAxis>
+        <YAxis tickFormatter={DataFormater}>
+          <Label
+            value="Nilai Satuan 1 Juta"
+            angle={-90}
+            position="insideBottomLeft"
+            offset={-5}
+          />
+        </YAxis>
+        <Tooltip content={<CustomTooltip />} />
+        <Legend />
+        <Bar dataKey="anggaran" fill="#8884d8" />
+        <Bar dataKey="realisasi" fill="#82ca9d" />
+      </BarChart>
+    </ResponsiveContainer>
+  );
 
   const body = (
     <div className={classes.paper}>
       <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
         {dataModal.title}
       </h2>
-      <div className={classes.barChart}>
-        <ResponsiveContainer width="100%" height={250}>
-          <BarChart
-            width={500}
-            height={300}
-            data={dataModal.grafik}
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-            padding={{
-              top: 15,
-              right: 10,
-              left: 10,
-              bottom: 15,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="tahun"></XAxis>
-            <YAxis tickFormatter={DataFormater}>
-              <Label
-                value="Nilai Satuan 1 Juta"
-                angle={-90}
-                position="insideBottomLeft"
-                offset={-5}
-              />
-            </YAxis>
-            <Tooltip content={<CustomTooltip />} />
-            <Legend />
-            <Bar dataKey="anggaran" fill="#8884d8" />
-            <Bar dataKey="realisasi" fill="#82ca9d" />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+      <div className={classes.barChart}>{grafik}</div>
       {nameColumn && nameColumn.length != 0 ? (
         <>
           <TableContainer component={Paper} style={{ marginTop: 20 }}>
@@ -383,163 +418,36 @@ const RealisasiAnggaran = () => {
     </div>
   );
 
-  const PrintHandle = () => {
-    return (
-      <div ref={inputRef}>
-        <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
-          Anggaran & Realisasi (Satuan 1 Juta)
-        </h2>
-        <div className={classes.barChart}>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart
-              width={500}
-              height={300}
-              data={data}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-              padding={{
-                top: 15,
-                right: 10,
-                left: 10,
-                bottom: 15,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="tahun"></XAxis>
-              <YAxis tickFormatter={DataFormater}>
-                <Label
-                  value="Nilai Satuan 1 Juta"
-                  angle={-90}
-                  position="insideBottomLeft"
-                  offset={-5}
-                />
-              </YAxis>
-              <Tooltip content={<CustomTooltip />} />
-              <Legend />
-              <Bar dataKey="anggaran" fill="#8884d8" />
-              <Bar dataKey="realisasi" fill="#82ca9d" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-        {nameColumn && nameColumn.length != 0 ? (
-          <>
-            <TableContainer component={Paper} style={{ marginTop: 20 }}>
-              <Table
-                stickyHeader
-                className={classes.table}
-                aria-label="customized table"
-              >
-                <TableHead>
-                  <TableRow>
-                    {nameColumn.map((item, i) => {
-                      return (
-                        <StyledTableCell align="center">
-                          {item.label}
-                        </StyledTableCell>
-                      );
-                    })}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => (
-                      <StyledTableRow key={row.tahun}>
-                        <StyledTableCell
-                          align="center"
-                          component="th"
-                          scope="row"
-                        >
-                          {row.tahun}
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Rp{" "}
-                          {row.anggaran
-                            .toFixed(2)
-                            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          Rp{" "}
-                          {row.realisasi
-                            .toFixed(2)
-                            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                        </StyledTableCell>
-                      </StyledTableRow>
-                    ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 100]}
-              component="div"
-              count={data.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </>
-        ) : null}
-        <Typography
-          className={classes.isiContentTextStyle}
-          variant="h2"
-          wrap
-          style={{ paddingTop: 20 }}
-        >
-          {comment && comment.lastComment
-            ? comment.lastComment.analisisData
-            : ""}
-        </Typography>
-        <Typography
-          className={classes.isiContentTextStyle}
-          variant="h2"
-          wrap
-          style={{ paddingTop: 20, fontSize: 18, fontWeight: "600" }}
-        >
-          Histori Analisis Data
-        </Typography>
-        <List className={classes.rootList}>
-          {comment.listTop10Comment && comment.listTop10Comment.length != 0
-            ? comment.listTop10Comment.map((history, i) => {
-                return (
-                  <>
-                    <ListItem alignItems="flex-start">
-                      <ListItemText
-                        primary={moment(new Date(history.commentDate)).format(
-                          "DD MMM YYYY - HH:mm"
-                        )}
-                        secondary={
-                          <React.Fragment>
-                            {history.analisisData.replace(/<[^>]+>/g, "")}
-                          </React.Fragment>
-                        }
-                      />
-                    </ListItem>
-                    <Divider
-                      component="li"
-                      style={{ marginLeft: 20, marginRight: 20 }}
-                    />
-                  </>
-                );
-              })
-            : null}
-        </List>
-      </div>
-    );
-  };
   const history = useHistory();
 
-  const testbla = () => {
-    // window.open("/PrintPNBPAnggaranRealisasi")
+  const testbla = (title, columnTable) => {
+    // <LinkPrint
+    //   to={{
+    //     pathname: "/PrintData",
+    //     state: {
+    //       data: data,
+    //       comment: comment,
+    //       columnTable: columnTable,
+    //       title: title,
+    //       grafik: "bar",
+    //       nameColumn: nameColumn,
+    //       grafikView: grafikView,
+    //       axis: axis,
+    //     },
+    //     target: "_blank",
+    //   }}
+    // />;
     history.push({
-      pathname: "/PrintPNBPAnggaranRealisasi",
+      pathname: "/PrintData",
       state: {
         data: data,
         comment: comment,
+        columnTable: columnTable,
+        title: title,
+        grafik: "bar",
+        nameColumn: nameColumn,
+        grafikView: grafikView,
+        axis: axis,
       },
       target: "_blank",
     });
@@ -616,20 +524,12 @@ const RealisasiAnggaran = () => {
                 <IoEye />
               </IconButton>
             </TooltipMI>
-            {/* <ReactToPrint
-              trigger={() => (
-                <TooltipMI title="Print Data" placement="top">
-                  <IconButton aria-label="delete" size="small">
-                    <IoPrint />
-                  </IconButton>
-                </TooltipMI>
-              )}
-              content={inputRef.current}
-            > */}
             <TooltipMI
               title="Print Data"
               placement="top"
-              onClick={() => testbla()}
+              onClick={() =>
+                testbla("Anggaran & Realisasi (Satuan 1 Juta)", columnTable)
+              }
             >
               <IconButton aria-label="delete" size="small">
                 <IoPrint />

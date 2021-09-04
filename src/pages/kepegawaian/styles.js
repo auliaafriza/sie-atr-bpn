@@ -122,7 +122,6 @@ const styles = makeStyles((theme) => ({
     marginRight: 5,
     fontSize: 12,
     width: "100%",
-    display: "flex",
   },
   selectEmpty: {
     marginTop: theme.spacing(2),

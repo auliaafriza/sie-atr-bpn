@@ -3,7 +3,7 @@ import "./index.css";
 import Login from "./pages/loginPage/login";
 import Dashboard from "./pages/dashboardPage/dashboard";
 import Nav from "./pages/dashboardPage/Nav";
-import PrintPNBPAnggaranRealisasi from "./pages/pnbp/sie-pnbp-realisasi-anggaran/componentPrint";
+import PrintData from "./pages/pnbp/printData/componentPrint";
 import { PengadaanTanah } from "./pages/psn";
 import {
   BrowserRouter as Router,
@@ -23,8 +23,8 @@ const Main = withRouter(({ location }) => {
         <Route path="/Dashboard">
           <Dashboard />
         </Route>
-        <Route path="/PrintPNBPAnggaranRealisasi">
-          <PrintPNBPAnggaranRealisasi />
+        <Route path="/PrintData">
+          <PrintData />
         </Route>
         <Route path="/PengadaanTanah">
           <PengadaanTanah />
