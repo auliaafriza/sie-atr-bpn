@@ -108,6 +108,7 @@ let nameColumn = [
   {
     label: "Kota",
     value: "kota",
+    isLabel: true,
   },
   {
     label: "Jumlah Sertifikat",
@@ -115,6 +116,28 @@ let nameColumn = [
   },
 ];
 
+let columnTable = [
+  {
+    label: "kota",
+    isFixed: false,
+  },
+  {
+    label: "jumlah_sertifikat",
+    isFixed: false,
+  },
+];
+
+let grafikView = [
+  {
+    dataKey: "jumlah_sertifikat",
+    fill: "#C71585",
+  },
+];
+
+let axis = {
+  xAxis: "Kota",
+  yAxis: "Jumlah Sertifikat",
+};
 const title = "Jumlah Sertifikat Konsolidasi Tanah berdasarkan Kota/Kabupaten";
 const SieSertifikatKonsolidasiKota = () => {
   const classes = styles();
@@ -173,7 +196,6 @@ const SieSertifikatKonsolidasiKota = () => {
       .then(function (response) {
         setData(response.data.data);
         setComment(response.data);
-        console.log(response);
       })
       .catch(function (error) {
         // handle error
@@ -217,7 +239,9 @@ const SieSertifikatKonsolidasiKota = () => {
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Jumlah Sertifikat : ${payload[0].value}`}</p>
+          >{`Jumlah Sertifikat : ${payload[0].value
+            .toFixed(2)
+            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
         </div>
       );
     }
@@ -228,10 +252,6 @@ const SieSertifikatKonsolidasiKota = () => {
   const exportData = () => {
     fileExport(loadDataColumnTable(nameColumn), title, data, ".xlsx");
   };
-
-  const handlePrint = useReactToPrint({
-    content: () => inputRef.current,
-  });
 
   const body = (
     <div className={classes.paper}>
@@ -261,7 +281,7 @@ const SieSertifikatKonsolidasiKota = () => {
             <XAxis dataKey="kota"></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Jumlah Sertifikat"
+                value={axis.yAxis}
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
@@ -269,7 +289,7 @@ const SieSertifikatKonsolidasiKota = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="jumlah_sertifikat" fill="#C71585" />
+            <Bar dataKey="jumlah_sertifikat" fill="#C71585"></Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -370,12 +390,18 @@ const SieSertifikatKonsolidasiKota = () => {
 
   const history = useHistory();
 
-  const testbla = () => {
+  const handlePrint = () => {
     history.push({
-      pathname: "/PrintPNBPJumlah PegawaiRealisasi",
+      pathname: "/PrintData",
       state: {
         data: data,
         comment: comment,
+        columnTable: columnTable,
+        title: title,
+        grafik: "bar",
+        nameColumn: nameColumn,
+        grafikView: grafikView,
+        axis: axis,
       },
       target: "_blank",
     });
@@ -462,11 +488,7 @@ const SieSertifikatKonsolidasiKota = () => {
               )}
               content={inputRef.current}
             > */}
-            <TooltipMI
-              title="Print Data"
-              placement="top"
-              onClick={() => testbla()}
-            >
+            <TooltipMI title="Print Data" placement="top" onClick={handlePrint}>
               <IconButton aria-label="delete" size="small">
                 <IoPrint />
               </IconButton>
@@ -571,7 +593,7 @@ const SieSertifikatKonsolidasiKota = () => {
                 alignItems="center"
                 item
                 xs={12}
-                // style={{ paddingTop: 40, paddingLeft: 20 }}
+                style={{ paddingLeft: 20 }}
               >
                 <Button
                   variant="contained"
@@ -646,10 +668,10 @@ const SieSertifikatKonsolidasiKota = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="kota" />
+                    <XAxis dataKey="kota"></XAxis>
                     <YAxis tickFormatter={DataFormater}>
                       <Label
-                        value="Jumlah Sertifikat"
+                        value={axis.yAxis}
                         angle={-90}
                         position="insideBottomLeft"
                         offset={-5}
