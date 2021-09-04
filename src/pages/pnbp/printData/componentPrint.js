@@ -1,6 +1,10 @@
 import React, { useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
+  ComposedChart,
+  Line,
+  Area,
+  Scatter,
   BarChart,
   Bar,
   XAxis,
@@ -62,6 +66,21 @@ const ComponentPrint = () => {
     };
   }, []);
 
+  let NamaBulan = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "Mei",
+    "Jun",
+    "Jul",
+    "Agu",
+    "Sep",
+    "Okt",
+    "Nov",
+    "Des",
+  ];
+
   const DataFormater = (number) => {
     if (number > 1000000000) {
       return (number / 1000000000).toString() + "M";
@@ -117,6 +136,10 @@ const ComponentPrint = () => {
     return null;
   };
 
+  const CustomX = (data) => {
+    return axis.xAxis == bulan && isFinite(data) ? NamaBulan[data + 1] : data;
+  };
+
   return (
     <div ref={inputRef}>
       <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
@@ -161,7 +184,100 @@ const ComponentPrint = () => {
                 );
               })}
             </BarChart>
-          ) : null}
+          ) : grafik == "line" ? (
+            <LineChart
+              width={500}
+              height={800}
+              data={data}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey={axis.xAxis}
+                angle={60}
+                interval={0}
+                tick={{
+                  // angle: 90,
+                  transform: "rotate(-35)",
+                  textAnchor: "start",
+                  dominantBaseline: "ideographic",
+                  fontSize: 14,
+                }}
+                height={100}
+                tickFormatter={CustomX}
+              />
+              <YAxis tickFormatter={DataFormater}>
+                <Label
+                  value={axis.yAxis}
+                  angle={-90}
+                  position="insideBottomLeft"
+                  offset={-5}
+                />
+              </YAxis>
+              <Tooltip content={<CustomTooltip />} />
+              {grafikView.map((grafikItem, i) => {
+                return (
+                  <Line
+                    type="monotone"
+                    dataKey={grafikItem.dataKey}
+                    stroke={grafikItem.fill}
+                    activeDot={{ r: 8 }}
+                    strokeWidth={3}
+                  />
+                );
+              })}
+            </LineChart>
+          ) : (
+            <ComposedChart
+              width={500}
+              height={400}
+              data={data}
+              margin={{
+                top: 20,
+                right: 20,
+                bottom: 20,
+                left: 20,
+              }}
+            >
+              <CartesianGrid stroke="#f5f5f5" />
+              <XAxis
+                dataKey="wilayah"
+                scale="band"
+                angle={60}
+                interval={0}
+                tick={{
+                  // angle: 90,
+                  transform: "rotate(-35)",
+                  textAnchor: "start",
+                  dominantBaseline: "ideographic",
+                  fontSize: 8,
+                }}
+                height={100}
+                tickFormatter={DataFormaterX}
+              />
+              <YAxis tickFormatter={DataFormater}>
+                <Label
+                  value="Jumlah Nilai PNBP dan berkas"
+                  angle={-90}
+                  position="insideBottomLeft"
+                  offset={-5}
+                />
+              </YAxis>
+              <Tooltip content={<CustomTooltip />} />
+              <Legend />
+              <Bar dataKey="pnbp" barSize={20} fill="#413ea0" />
+              <Line
+                type="jumlahberkas"
+                dataKey="jumlahberkas"
+                stroke="#ff7300"
+              />
+            </ComposedChart>
+          )}
         </ResponsiveContainer>
       </div>
       {nameColumn && nameColumn.length != 0 ? (
@@ -193,6 +309,14 @@ const ComponentPrint = () => {
                           {row[item.label]
                             .toFixed(2)
                             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                        </StyledTableCell>
+                      ) : axis.xAxis == bulan && isFinite(item.label) ? (
+                        <StyledTableCell
+                          align="center"
+                          component="th"
+                          scope="row"
+                        >
+                          {NamaBulan[row[item.label] + 1]}
                         </StyledTableCell>
                       ) : (
                         <StyledTableCell
