@@ -14,6 +14,7 @@ import {
   Legend,
   ResponsiveContainer,
   Label,
+  LineChart,
 } from "recharts";
 import {
   Typography,
@@ -137,7 +138,7 @@ const ComponentPrint = () => {
   };
 
   const CustomX = (data) => {
-    return axis.xAxis == bulan && isFinite(data) ? NamaBulan[data + 1] : data;
+    return axis.xAxis == "bulan" && isFinite(data) ? NamaBulan[data + 1] : data;
   };
 
   return (
@@ -310,7 +311,7 @@ const ComponentPrint = () => {
                             .toFixed(2)
                             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                         </StyledTableCell>
-                      ) : axis.xAxis == bulan && isFinite(item.label) ? (
+                      ) : axis.xAxis == "bulan" && isFinite(item.label) ? (
                         <StyledTableCell
                           align="center"
                           component="th"

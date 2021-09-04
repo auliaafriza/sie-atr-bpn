@@ -55,69 +55,86 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
-import { tahunData } from "../../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
-import { useHistory } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { generateOptions } from "../../../functionGlobal/generateOptionSelect";
+import { getKanwil, getTipeHak } from "../../../actions/sertifikasiAction";
+
+import { useHistory } from "react-router-dom";
 // Pagu & MP PNBP (Satuan 1 Juta)
 const dataTemp = [
   {
-    kanwil: "kanwil",
-    jumlah_bidang: 0,
-    luas_psn: 0,
+    kantah: "kantah",
+    nol: 0,
+    satutiga: 0,
+    tiga: 0,
   },
   {
-    kanwil: "kanwil 2",
-    jumlah_bidang: 0,
-    luas_psn: 0,
+    kantah: "kantah 2",
+    nol: 0,
+    satutiga: 0,
+    tiga: 0,
   },
 ];
 
 let nameColumn = [
   {
-    label: "Kanwil",
-    value: "kanwil",
+    label: "Kantah",
+    value: "kantah",
     isLabel: true,
   },
   {
-    label: "Jumlah bidang",
-    value: "jumlah_bidang",
+    label: "Kurang dari 1 tahun",
+    value: "nol",
   },
   {
-    label: "Luas PSN",
-    value: "luas_psn",
+    label: "1 sampai 3 tahun",
+    value: "satutiga",
+  },
+  {
+    label: "lebih dari 3 tahun",
+    value: "tiga",
   },
 ];
 
 let columnTable = [
   {
-    label: "kanwil",
+    label: "katah",
     isFixed: false,
   },
   {
-    label: "jumlah_bidang",
-    isFixed: true,
+    label: "nol",
+    isFixed: false,
   },
   {
-    label: "luas_psn",
-    isFixed: true,
+    label: "satutiga",
+    isFixed: false,
+  },
+  {
+    label: "tiga",
+    isFixed: false,
   },
 ];
 
 let grafikView = [
   {
-    dataKey: "jumlah_bidang",
+    dataKey: "nol",
     fill: "#FFA07A",
   },
   {
-    dataKey: "luas_psn",
+    dataKey: "satutiga",
     fill: "#20B2AA",
+  },
+  {
+    dataKey: "tiga",
+    fill: "#E54F6E",
   },
 ];
 
 let axis = {
-  xAxis: "Kanwil",
-  yAxis: "Nilai Satuan 1 Juta",
+  xAxis: "Katah",
+  yAxis: "Jumlah Sertifikat",
 };
 
 const theme = createTheme({
@@ -152,12 +169,13 @@ const StyledTableRow = withStyles((theme) => ({
 
 let url = "http://10.20.57.234/SIEBackEnd/";
 
-const title =
-  "Jumlah bidang dan luas pengadaan tanah PSN per wilayah per waktu";
-const PengadaanTanah = () => {
+const title = "Jangka waktu hak sertifikat";
+const Sie_sertifikat_jangka_waktu_hak = () => {
   const classes = styles();
-  const [years, setYears] = useState("2022");
-  const [tahunAwal, setTahunAwal] = useState("2017");
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const [kanwil, setKanwil] = useState("Jatim");
+  const [tipeHak, setTipeHak] = useState("Hak Wakaf");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [open, setOpen] = useState(false);
@@ -177,6 +195,13 @@ const PengadaanTanah = () => {
   });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const kanwilList = useSelector((state) =>
+    generateOptions({ data: state.sertifikasi.kanwil.data, keyVal: "kanwil" })
+  );
+  const tipeHakList = useSelector((state) =>
+    generateOptions({ data: state.sertifikasi.tipeHak.data, keyVal: "tipehak" })
+  );
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -206,7 +231,7 @@ const PengadaanTanah = () => {
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}ProgramStrategisNasional/PengadaanTanah/sie_psn_ptsl?tahunAwal=${tahunAwal}&tahunAkhir=${years}`
+        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_jangka_waktu_hak?kanwil=${kanwil}&tipehak=${tipeHak}`
       )
       .then(function (response) {
         setData(response.data.data);
@@ -222,15 +247,17 @@ const PengadaanTanah = () => {
   };
 
   useEffect(() => {
+    dispatch(getKanwil());
+    dispatch(getTipeHak());
     getData();
   }, []);
 
-  const handleChange = (event) => {
-    setYears(event.target.value);
+  const handleChangeKanwil = (event) => {
+    setKanwil(event.target.value);
   };
 
-  const handleChangeTahunAwal = (event) => {
-    setTahunAwal(event.target.value);
+  const handleChangeTipeHak = (event) => {
+    setTipeHak(event.target.value);
   };
 
   const DataFormater = (number) => {
@@ -249,17 +276,23 @@ const PengadaanTanah = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">Kanwil {label}</p>
+          <p className="label">Kantah {label}</p>
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Jumlah Bidang : ${payload[0].value
+          >{`Kurang dari 1 tahun : ${payload[0].value
             .toFixed(2)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
           <p
             className="desc"
             style={{ color: payload[1].color }}
-          >{`Luas PSN : ${payload[1].value
+          >{`1 sampai 3 tahun : ${payload[1].value
+            .toFixed(2)
+            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+          <p
+            className="desc"
+            style={{ color: payload[2].color }}
+          >{`lebih dari 3 tahun : ${payload[2].value
             .toFixed(2)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
         </div>
@@ -268,7 +301,6 @@ const PengadaanTanah = () => {
 
     return null;
   };
-  const history = useHistory();
   const handlePrint = () => {
     history.push({
       pathname: "/PrintData",
@@ -277,7 +309,7 @@ const PengadaanTanah = () => {
         comment: comment,
         columnTable: columnTable,
         title: title,
-        grafik: "bar",
+        grafik: "line",
         nameColumn: nameColumn,
         grafikView: grafikView,
         axis: axis,
@@ -285,7 +317,6 @@ const PengadaanTanah = () => {
       target: "_blank",
     });
   };
-
   const body = (
     <div className={classes.paper}>
       <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
@@ -302,7 +333,7 @@ const PengadaanTanah = () => {
       <div className={classes.barChart}>
         {/* <img width={500} src={image} /> */}
         <ResponsiveContainer width="100%" height={250}>
-          <BarChart
+          <LineChart
             width={500}
             height={300}
             data={dataModal.grafik}
@@ -312,18 +343,12 @@ const PengadaanTanah = () => {
               left: 20,
               bottom: 5,
             }}
-            padding={{
-              top: 15,
-              right: 10,
-              left: 10,
-              bottom: 15,
-            }}
           >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="kanwil" />
+            <CartesianGrid strokeDasharray="3 3 3" />
+            <XAxis dataKey="kantah" />
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Nilai Satuan 1 Juta"
+                value="Jumlah sertifikat"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
@@ -331,10 +356,29 @@ const PengadaanTanah = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="jumlah_bidang" fill="#FFA07A" />
-            20B2AA
-            <Bar dataKey="luas_psn" fill="#20B2AA" />
-          </BarChart>
+            <Line
+              type="monotone"
+              dataKey="nol"
+              stroke="#FFA07A"
+              activeDot={{ r: 8 }}
+              strokeWidth={3}
+              label="kurang dari 1 tahun"
+            />
+            <Line
+              type="monotone"
+              dataKey="satutiga"
+              stroke="#20B2AA"
+              activeDot={{ r: 8 }}
+              strokeWidth={3}
+            />
+            <Line
+              type="monotone"
+              dataKey="tiga"
+              stroke="#E54F6E"
+              activeDot={{ r: 8 }}
+              strokeWidth={3}
+            />
+          </LineChart>
         </ResponsiveContainer>
       </div>
       {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
@@ -347,8 +391,10 @@ const PengadaanTanah = () => {
             >
               <TableHead>
                 <TableRow>
-                  {dataModal.nameColumn.map((item) => (
-                    <StyledTableCell align="left">{item}</StyledTableCell>
+                  {dataModal.nameColumn.map((item, i) => (
+                    <StyledTableCell align="left" key={i}>
+                      {item}
+                    </StyledTableCell>
                   ))}
                 </TableRow>
               </TableHead>
@@ -356,17 +402,20 @@ const PengadaanTanah = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.kanwil}>
+                    <StyledTableRow key={row.kantah}>
                       <StyledTableCell align="left" component="th" scope="row">
-                        {row.kanwil}
+                        {row.kantah}
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        {row.jumlah_bidang
+                        {row.nol.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row.satutiga
                           .toFixed(2)
                           .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        {row.luas_psn
+                        {row.tiga
                           .toFixed(2)
                           .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                       </StyledTableCell>
@@ -492,7 +541,12 @@ const PengadaanTanah = () => {
                           )
                         : "",
                     type: "Bar",
-                    nameColumn: ["Kanwil", "Jumlah Bidang", "Luas PSN"],
+                    nameColumn: [
+                      "Kantah",
+                      "Kurang dari 1 tahun",
+                      "1 sampai 3 tahun",
+                      "Lebih dari 3 tahun",
+                    ],
                     listTop10Comment: comment.listTop10Comment,
                   })
                 }
@@ -538,27 +592,27 @@ const PengadaanTanah = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={4}>
+              <Grid item xs={12}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Tahun Awal
+                  Pilih Kanwil
                 </Typography>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun Awal
+                    Kanwil
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    value={tahunAwal}
-                    onChange={handleChangeTahunAwal}
-                    label="Tahun"
+                    value={kanwil}
+                    onChange={handleChangeKanwil}
+                    label="Kanwil"
                     className={classes.selectStyle}
                   >
-                    {tahunData.map((item, i) => {
+                    {kanwilList.map((item, i) => {
                       return (
                         <MenuItem value={item.id} key={i}>
                           {item.value}
@@ -568,27 +622,27 @@ const PengadaanTanah = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={12}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Tahun Akhir
+                  Pilih Tipe Hak
                 </Typography>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun Akhir
+                    Tipe Hak
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    value={years}
-                    onChange={handleChange}
-                    label="Tahun"
+                    value={tipeHak}
+                    onChange={handleChangeTipeHak}
+                    label="Tipe Hak"
                     className={classes.selectStyle}
                   >
-                    {tahunData.map((item, i) => {
+                    {tipeHakList.map((item, i) => {
                       return (
                         <MenuItem value={item.id} key={i}>
                           {item.value}
@@ -604,8 +658,8 @@ const PengadaanTanah = () => {
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={4}
-                style={{ paddingTop: 40, paddingLeft: 20 }}
+                xs={12}
+                style={{ paddingLeft: 20 }}
               >
                 <Button
                   variant="contained"
@@ -644,7 +698,12 @@ const PengadaanTanah = () => {
                             )
                           : "",
                       type: "Bar",
-                      nameColumn: ["Kanwil", "Jumlah Bidang", "Luas PSN"],
+                      nameColumn: [
+                        "Kantah",
+                        "Kurang dari 1 tahun",
+                        "1 sampai 3 tahun",
+                        "Lebih dari 3 tahun",
+                      ],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
@@ -662,7 +721,7 @@ const PengadaanTanah = () => {
             <CardContent>
               <div className={classes.barChart}>
                 <ResponsiveContainer width="100%" height={250}>
-                  <BarChart
+                  <LineChart
                     width={500}
                     height={300}
                     data={data}
@@ -672,18 +731,12 @@ const PengadaanTanah = () => {
                       left: 20,
                       bottom: 5,
                     }}
-                    padding={{
-                      top: 15,
-                      right: 10,
-                      left: 10,
-                      bottom: 15,
-                    }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="kanwil" />
+                    <CartesianGrid strokeDasharray="3 3 3" />
+                    <XAxis dataKey="kantah" />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
-                        value="Nilai Satuan 1 Juta"
+                        value="Jumlah sertifikat"
                         angle={-90}
                         position="insideBottomLeft"
                         offset={-5}
@@ -691,9 +744,28 @@ const PengadaanTanah = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Bar dataKey="jumlah_bidang" fill="#FFA07A" />
-                    <Bar dataKey="luas_psn" fill="#20B2AA" />
-                  </BarChart>
+                    <Line
+                      type="monotone"
+                      dataKey="nol"
+                      stroke="#FFA07A"
+                      activeDot={{ r: 8 }}
+                      strokeWidth={3}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="satutiga"
+                      stroke="#20B2AA"
+                      activeDot={{ r: 8 }}
+                      strokeWidth={3}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="tiga"
+                      stroke="#E54F6E"
+                      activeDot={{ r: 8 }}
+                      strokeWidth={3}
+                    />
+                  </LineChart>
                 </ResponsiveContainer>
               </div>
             </CardContent>
@@ -704,4 +776,4 @@ const PengadaanTanah = () => {
   );
 };
 
-export default PengadaanTanah;
+export default Sie_sertifikat_jangka_waktu_hak;
