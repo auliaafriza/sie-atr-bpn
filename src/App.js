@@ -5,7 +5,6 @@ import Dashboard from "./pages/dashboardPage/dashboard";
 import Nav from "./pages/dashboardPage/Nav";
 import PrintData from "./pages/pnbp/printData/componentPrint";
 import { PengadaanTanah } from "./pages/psn";
-import PrintPNBPAnggaranRealisasi from "./pages/pnbp/sie-pnbp-realisasi-anggaran/componentPrint";
 import { SiePsnLuasPengadaanTanah } from "./pages/psn";
 import { StatistikSertifikat } from "./pages/sertifikasi";
 import {
