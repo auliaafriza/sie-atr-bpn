@@ -4,7 +4,8 @@ import Login from "./pages/loginPage/login";
 import Dashboard from "./pages/dashboardPage/dashboard";
 import Nav from "./pages/dashboardPage/Nav";
 import PrintPNBPAnggaranRealisasi from "./pages/pnbp/sie-pnbp-realisasi-anggaran/componentPrint";
-import { PengadaanTanah } from "./pages/psn";
+import { SiePsnLuasPengadaanTanah } from "./pages/psn";
+import { StatistikSertifikat } from "./pages/sertifikasi";
 import {
   BrowserRouter as Router,
   Switch,
@@ -27,7 +28,10 @@ const Main = withRouter(({ location }) => {
           <PrintPNBPAnggaranRealisasi />
         </Route>
         <Route path="/PengadaanTanah">
-          <PengadaanTanah />
+          <SiePsnLuasPengadaanTanah />
+        </Route>
+        <Route path="/Sertifikasi/StatistikSertifikat">
+          <StatistikSertifikat />
         </Route>
         <Route path="/">
           <Login />

@@ -173,7 +173,7 @@ const PengadaanTanah = () => {
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}ProgramStrategisNasional/PengadaanTanah/sie_psn_ptsl?tahunAwal=${tahunAwal}&tahunAkhir=${years}`
+        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_konsolidasi_kota?tahunAwal=2015&tahunAkhir=2015`
       )
       .then(function (response) {
         setData(response.data.data);
