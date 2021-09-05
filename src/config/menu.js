@@ -4,6 +4,7 @@ import { FaCertificate, FaHandshake } from "react-icons/fa";
 
 // *****************************************************************************
 // * silahkan ubah attribute link sesuai dengan yang ada initial pada file app.js
+// * dan isi juga parent link. contoh dapat dilihat pada menu sertifikasi
 // *****************************************************************************
 // * Jika ingin menambahkan menu tanpa subMenu silahkan tambahkan object dibawah
 // * !!!!!! CATATAN ID HARUS URUT !!!!!!
@@ -35,11 +36,13 @@ export const MENU_LIST = [
     icon: <Home />,
     name: "Dashboard",
     link: "/Dashboard",
+    parentLink: "/Dashboard",
   },
   {
     id: 1,
     icon: <BiMoney size={24} />,
     name: "Aset & Keuangan",
+    parentLink: "null",
     subMenus: [
       {
         icon: null,
@@ -57,6 +60,8 @@ export const MENU_LIST = [
     id: 2,
     icon: <SupervisorAccount />,
     name: "Kepegawaian",
+
+    parentLink: "null",
     subMenus: [
       {
         icon: null,
@@ -74,6 +79,8 @@ export const MENU_LIST = [
     id: 3,
     icon: <FaHandshake size={24} />,
     name: "Mitra",
+
+    parentLink: "null",
     subMenus: [
       {
         icon: null,
@@ -86,6 +93,8 @@ export const MENU_LIST = [
     id: 4,
     icon: <BiLineChart size={24} />,
     name: "Kinerja Layanan",
+
+    parentLink: "null",
     subMenus: [
       {
         icon: null,
@@ -113,6 +122,7 @@ export const MENU_LIST = [
     id: 5,
     icon: <BiBriefcase size={24} />,
     name: "PSN",
+    parentLink: "PSN",
     subMenus: [
       {
         icon: null,
@@ -132,7 +142,7 @@ export const MENU_LIST = [
       {
         icon: null,
         name: "Pengadaan Tanah",
-        link: null,
+        link: "/PSN/PengadaanTanah",
       },
       {
         icon: null,
@@ -150,6 +160,7 @@ export const MENU_LIST = [
     id: 6,
     icon: <FaCertificate size={24} />,
     name: "Sertifikasi",
+    parentLink: "Sertifikasi",
     subMenus: [
       {
         icon: null,
@@ -164,7 +175,7 @@ export const MENU_LIST = [
       {
         icon: null,
         name: "Hak Tanggungan Elektronik",
-        link: null,
+        link: "/Sertifikasi/HakTanggunganElektronik",
       },
       {
         icon: null,
@@ -177,6 +188,8 @@ export const MENU_LIST = [
     id: 7,
     icon: <Public />,
     name: "Info Geo-spasial",
+
+    parentLink: "null",
     subMenus: [
       {
         icon: null,
