@@ -10,7 +10,7 @@ import {
 import { MoreVert, AccountCircle, Search } from "@material-ui/icons";
 // import PropTypes from "prop-types";
 import styles from "./styles";
-import Logo from "../../assets/img/fav.png";
+import Logo from "../assets/img/fav.png";
 
 const Header = (props) => {
   const classes = styles();
