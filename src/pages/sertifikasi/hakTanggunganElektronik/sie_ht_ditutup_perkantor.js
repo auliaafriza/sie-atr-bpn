@@ -53,10 +53,7 @@ import { IoMdDownload } from "react-icons/io";
 import styles from "./../styles";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
-import {
-  bulanDataNumberic,
-  tahunData,
-} from "../../../functionGlobal/globalDataAsset";
+import { tahunData } from "../../../functionGlobal/globalDataAsset";
 import moment from "moment";
 import { fileExport } from "../../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
@@ -66,8 +63,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 const dataTemp = [
   {
-    nama: "",
-    jumlah_upload: 0,
+    nama_kantor: "",
+    nilai: 0,
   },
 ];
 
@@ -106,29 +103,29 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 let nameColumn = [
   {
     label: "Nama Kantor",
-    value: "nama",
+    value: "nama_kantor",
     isLabel: true,
   },
   {
     label: "Jumlah Upload",
-    value: "jumlah_upload",
+    value: "nilai",
   },
 ];
 
 let columnTable = [
   {
-    label: "nama",
+    label: "nama_kantor",
     isFixed: false,
   },
   {
-    label: "jumlah_upload",
+    label: "nilai",
     isFixed: false,
   },
 ];
 
 let grafikView = [
   {
-    dataKey: "jumlah_upload",
+    dataKey: "nilai",
     fill: "#C71585",
   },
 ];
@@ -137,12 +134,11 @@ let axis = {
   xAxis: "Nama Kantor",
   yAxis: "Jumlah Upload",
 };
-const title =
-  "Hak Tanggungan Elektronik Diupload oleh PPAT dan Didaftarkan Kreditor melalui IP yang Sama";
-const SieHTUploadPpatIpSama = () => {
+const title = "Hak Tanggungan Elektronik Ditutup per Kantor";
+const SieHtDitutupPerkantor = () => {
   const classes = styles();
-  const [years, setYears] = useState("2021");
-  const [bulan, setBulan] = useState("04");
+  const [years, setYears] = useState("2019");
+  const [tahunAkhir, setTahunAkhir] = useState("2020");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   // const [kanwil, setKanwil] = useState(
@@ -191,7 +187,7 @@ const SieHTUploadPpatIpSama = () => {
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}Sertifikasi/HakTanggunganElektronik/sie_ht_upload_ppat_ipsama?tahun=${years}&bulan=${bulan}`
+        `${url}Sertifikasi/HakTanggunganElektronik/sie_ht_ditutup_perkantor?tahunAwal=${years}&tahunAkhir=${tahunAkhir}`
       )
       .then(function (response) {
         setData(response.data.data);
@@ -216,8 +212,8 @@ const SieHTUploadPpatIpSama = () => {
     setYears(event.target.value);
   };
 
-  const handleChangeBulan = (event) => {
-    setBulan(event.target.value);
+  const handleChangeTahunAkhir = (event) => {
+    setTahunAkhir(event.target.value);
   };
 
   const DataFormater = (number) => {
@@ -279,7 +275,7 @@ const SieHTUploadPpatIpSama = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="nama"></XAxis>
+            <XAxis dataKey="nama_kantor"></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value={axis.yAxis}
@@ -319,16 +315,18 @@ const SieHTUploadPpatIpSama = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.nama}>
+                    <StyledTableRow key={row.nama_kantor}>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.nama}
+                        {row.nama_kantor}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {row.jumlah_upload}
+                        {row.nilai
+                          .toFixed(2)
+                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
@@ -535,11 +533,11 @@ const SieHTUploadPpatIpSama = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Tahun
+                  Pilih Tahun Awal
                 </Typography>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun
+                    Tahun Awal
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-outlined-label"
@@ -565,21 +563,21 @@ const SieHTUploadPpatIpSama = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Bulan
+                  Pilih Tahun Akhir
                 </Typography>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
-                    Bulan
+                    Tahun Akhir
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    value={bulan}
-                    onChange={handleChangeBulan}
-                    label="Bulan"
+                    value={tahunAkhir}
+                    onChange={handleChangeTahunAkhir}
+                    label="Tahun Akhir"
                     className={classes.selectStyle}
                   >
-                    {bulanDataNumberic.map((item, i) => {
+                    {tahunData.map((item, i) => {
                       return (
                         <MenuItem value={item.id} key={i}>
                           {item.value}
@@ -671,7 +669,7 @@ const SieHTUploadPpatIpSama = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="nama"></XAxis>
+                    <XAxis dataKey="nama_kantor"></XAxis>
                     <YAxis tickFormatter={DataFormater}>
                       <Label
                         value={axis.yAxis}
@@ -696,4 +694,4 @@ const SieHTUploadPpatIpSama = () => {
   );
 };
 
-export default SieHTUploadPpatIpSama;
+export default SieHtDitutupPerkantor;
