@@ -2,9 +2,7 @@ import React from "react";
 import "./index.css";
 import Login from "./pages/loginPage/login";
 import Dashboard from "./pages/dashboardPage/dashboard";
-import Nav from "./pages/dashboardPage/Nav";
 import PrintData from "./pages/pnbp/printData/componentPrint";
-import { PengadaanTanah } from "./pages/psn";
 import { SiePsnLuasPengadaanTanah } from "./pages/psn";
 import { StatistikSertifikat } from "./pages/sertifikasi";
 import {
@@ -13,11 +11,29 @@ import {
   Route,
   withRouter,
 } from "react-router-dom";
+// ****** untuk menu *******
+import Header from "./component/Header";
+import ElevationScroll from "./component/ElevationScroll";
+import NavBar from "./component/NavBar";
+import Footer from "./component/Footer";
+import { HIDE_HEADER, HIDE_FOOTER } from "./config/menu";
+// ****** untuk menu *******
 
 const Main = withRouter(({ location }) => {
+  const noNavbar = HIDE_HEADER.find((e) => e === location.pathname);
+  const noFooter = HIDE_FOOTER.find((e) => e === location.pathname);
   return (
     <div>
-      {/* {location.pathname != "/Login" && <Nav />} */}
+      {/* ******************* MENU ******************* */}
+      {!noNavbar && (
+        <>
+          <Header />
+          <ElevationScroll>
+            <NavBar />
+          </ElevationScroll>
+        </>
+      )}
+      {/* ******************* MENU ******************* */}
       <Switch>
         <Route path="/Login">
           <Login />
@@ -38,6 +54,7 @@ const Main = withRouter(({ location }) => {
           <Login />
         </Route>
       </Switch>
+      {!noFooter && <Footer />}
     </div>
   );
 });
