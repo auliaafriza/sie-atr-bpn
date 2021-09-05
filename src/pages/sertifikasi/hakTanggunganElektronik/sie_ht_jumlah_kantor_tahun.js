@@ -53,10 +53,7 @@ import { IoMdDownload } from "react-icons/io";
 import styles from "./../styles";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
-import {
-  bulanDataNumberic,
-  tahunData,
-} from "../../../functionGlobal/globalDataAsset";
+import { tahunData } from "../../../functionGlobal/globalDataAsset";
 import moment from "moment";
 import { fileExport } from "../../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
@@ -66,8 +63,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 const dataTemp = [
   {
-    nama: "",
-    jumlah_upload: 0,
+    kantor_wilayah: "",
+    jumlah_ht: 0,
   },
 ];
 
@@ -105,44 +102,43 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {
-    label: "Nama Kantor",
-    value: "nama",
+    label: "Kantor Wilayah",
+    value: "kantor_wilayah",
     isLabel: true,
   },
   {
     label: "Jumlah Upload",
-    value: "jumlah_upload",
+    value: "jumlah Hak Tanggungan",
   },
 ];
 
 let columnTable = [
   {
-    label: "nama",
+    label: "kantor_wilayah",
     isFixed: false,
   },
   {
-    label: "jumlah_upload",
+    label: "jumlah_ht",
     isFixed: false,
   },
 ];
 
 let grafikView = [
   {
-    dataKey: "jumlah_upload",
+    dataKey: "jumlah_ht",
     fill: "#C71585",
   },
 ];
 
 let axis = {
-  xAxis: "Nama Kantor",
+  xAxis: "Kantor Wilayah",
   yAxis: "Jumlah Upload",
 };
-const title =
-  "Hak Tanggungan Elektronik Diupload oleh PPAT dan Didaftarkan Kreditor melalui IP yang Sama";
-const SieHTUploadPpatIpSama = () => {
+const title = "Jumlah dan Nilai Hak Tanggungan Elektronik per Kantor";
+const SieHtJumlahKantorTahun = () => {
   const classes = styles();
-  const [years, setYears] = useState("2021");
-  const [bulan, setBulan] = useState("04");
+  const [years, setYears] = useState("2019");
+  const [tahunAkhir, setTahunAkhir] = useState("2020");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   // const [kanwil, setKanwil] = useState(
@@ -191,7 +187,7 @@ const SieHTUploadPpatIpSama = () => {
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}Sertifikasi/HakTanggunganElektronik/sie_ht_upload_ppat_ipsama?tahun=${years}&bulan=${bulan}`
+        `${url}Sertifikasi/HakTanggunganElektronik/sie_ht_jumlah_kantor_tahun?tahunAwal=${years}&tahunAkhir=${tahunAkhir}`
       )
       .then(function (response) {
         setData(response.data.data);
@@ -216,8 +212,8 @@ const SieHTUploadPpatIpSama = () => {
     setYears(event.target.value);
   };
 
-  const handleChangeBulan = (event) => {
-    setBulan(event.target.value);
+  const handleChangeTahunAkhir = (event) => {
+    setTahunAkhir(event.target.value);
   };
 
   const DataFormater = (number) => {
@@ -236,7 +232,7 @@ const SieHTUploadPpatIpSama = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">Nama Kantor {label}</p>
+          <p className="label">Kantor Wilayah {label}</p>
           <p
             className="desc"
             style={{ color: payload[0].color }}
@@ -279,7 +275,7 @@ const SieHTUploadPpatIpSama = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="nama"></XAxis>
+            <XAxis dataKey="kantor_wilayah"></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value={axis.yAxis}
@@ -319,16 +315,18 @@ const SieHTUploadPpatIpSama = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.nama}>
+                    <StyledTableRow key={row.kantor_wilayah}>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.nama}
+                        {row.kantor_wilayah}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {row.jumlah_upload}
+                        {row.jumlah_ht
+                          .toFixed(2)
+                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
@@ -535,11 +533,11 @@ const SieHTUploadPpatIpSama = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Tahun
+                  Pilih Tahun Awal
                 </Typography>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun
+                    Tahun Awal
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-outlined-label"
@@ -565,21 +563,21 @@ const SieHTUploadPpatIpSama = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Bulan
+                  Pilih Tahun Akhir
                 </Typography>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
-                    Bulan
+                    Tahun Akhir
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    value={bulan}
-                    onChange={handleChangeBulan}
-                    label="Bulan"
+                    value={tahunAkhir}
+                    onChange={handleChangeTahunAkhir}
+                    label="Tahun Akhir"
                     className={classes.selectStyle}
                   >
-                    {bulanDataNumberic.map((item, i) => {
+                    {tahunData.map((item, i) => {
                       return (
                         <MenuItem value={item.id} key={i}>
                           {item.value}
@@ -671,7 +669,7 @@ const SieHTUploadPpatIpSama = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="nama"></XAxis>
+                    <XAxis dataKey="kantor_wilayah"></XAxis>
                     <YAxis tickFormatter={DataFormater}>
                       <Label
                         value={axis.yAxis}
@@ -696,4 +694,4 @@ const SieHTUploadPpatIpSama = () => {
   );
 };
 
-export default SieHTUploadPpatIpSama;
+export default SieHtJumlahKantorTahun;
