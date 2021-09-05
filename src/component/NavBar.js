@@ -163,6 +163,7 @@ const NavBar = (props) => {
                     : handleOpenSubMenu(event)
                 }
                 {...a11yProps(menu.id)}
+                selected={location.pathname.search(menu.parentLink) !== -1}
               />
               {menu.subMenus && (
                 <Menu
