@@ -1,11 +1,26 @@
 import { Home, SupervisorAccount, Public } from "@material-ui/icons";
-import { BiMoney, BiLineChart, BiBriefcase } from "react-icons/bi";
-import { FaCertificate, FaHandshake } from "react-icons/fa";
-import { GrMoney, GrBarChart } from "react-icons/gr";
-import { RiHandCoinFill } from "react-icons/ri";
-import { MdPeople } from "react-icons/md";
-import { GiOrganigram } from "react-icons/gi";
+import {
+  BiMoney,
+  BiLineChart,
+  BiBriefcase,
+  BiBuildingHouse,
+  BiBuildings,
+} from "react-icons/bi";
+import { FaCertificate, FaHandshake, FaCalendarCheck } from "react-icons/fa";
+import { GrMoney, GrBarChart, GrLineChart, GrTableAdd } from "react-icons/gr";
+import { RiHandCoinFill, RiServiceFill } from "react-icons/ri";
+import {
+  MdPeople,
+  MdAddShoppingCart,
+  MdTransform,
+  MdSettingsRemote,
+  MdInsertChart,
+  MdLandscape,
+} from "react-icons/md";
+import { GiOrganigram, GiMoneyStack, GiEarthAsiaOceania } from "react-icons/gi";
 import { BsNewspaper } from "react-icons/bs";
+import { FcDebt } from "react-icons/fc";
+import { IoMdMap } from "react-icons/io";
 
 // *****************************************************************************
 // * silahkan ubah attribute link sesuai dengan yang ada initial pada file app.js
@@ -50,14 +65,14 @@ export const MENU_LIST = [
     parentLink: "null",
     subMenus: [
       {
-        icon: <GrMoney />,
+        icon: <GrMoney size={24} />,
         name: "PNBP",
-        link: null,
+        link: "/PNBP",
       },
       {
-        icon: <RiHandCoinFill />,
+        icon: <RiHandCoinFill size={24} />,
         name: "BPHTB",
-        link: null,
+        link: "./BPHTB",
       },
     ],
   },
@@ -69,12 +84,12 @@ export const MENU_LIST = [
     parentLink: "null",
     subMenus: [
       {
-        icon: <MdPeople />,
+        icon: <MdPeople size={24} />,
         name: "Pegawai ATR/BPN",
-        link: null,
+        link: "/PegawaiAtr",
       },
       {
-        icon: <GiOrganigram />,
+        icon: <GiOrganigram size={24} />,
         name: "Organisasi",
         link: null,
       },
@@ -88,7 +103,7 @@ export const MENU_LIST = [
     parentLink: "null",
     subMenus: [
       {
-        icon: <GrBarChart />,
+        icon: <GrBarChart size={24} />,
         name: "Statistik Kemitraan",
         link: null,
       },
@@ -101,22 +116,22 @@ export const MENU_LIST = [
     parentLink: "KinerjaLayanan",
     subMenus: [
       {
-        icon: <BsNewspaper />,
+        icon: <BsNewspaper size={22} />,
         name: "IKPA",
         link: null,
       },
       {
-        icon: null,
+        icon: <GrLineChart size={24} />,
         name: "IKK/IKU",
         link: null,
       },
       {
-        icon: null,
+        icon: <FcDebt size={24} />,
         name: "Tunggakan",
         link: null,
       },
       {
-        icon: null,
+        icon: <RiServiceFill size={24} />,
         name: "Layanan Umum",
         link: "/KinerjaLayanan/LayananUmum",
       },
@@ -129,32 +144,32 @@ export const MENU_LIST = [
     parentLink: "PSN",
     subMenus: [
       {
-        icon: null,
+        icon: <FaCalendarCheck size={22} />,
         name: "Percepatan Rencana Detail Tata Ruang",
         link: null,
       },
       {
-        icon: null,
+        icon: <GrTableAdd size={22} />,
         name: "Pendaftaran Tanah Sistematis Lengkap",
         link: "/PSN/PTSL",
       },
       {
-        icon: null,
+        icon: <BiBuildingHouse size={24} />,
         name: "Reforma Agraria",
         link: null,
       },
       {
-        icon: null,
+        icon: <MdAddShoppingCart size={24} />,
         name: "Pengadaan Tanah",
         link: "/PSN/PengadaanTanah",
       },
       {
-        icon: null,
+        icon: <MdTransform size={24} />,
         name: "Transformasi Digital & Layanan Elektronik",
         link: null,
       },
       {
-        icon: null,
+        icon: <MdSettingsRemote size={24} />,
         name: "Pengendalian dan Penanganan Sengketa",
         link: null,
       },
@@ -167,22 +182,22 @@ export const MENU_LIST = [
     parentLink: "Sertifikasi",
     subMenus: [
       {
-        icon: null,
+        icon: <MdInsertChart size={24} />,
         name: "Statistik Sertifikat",
         link: "/Sertifikasi/StatistikSertifikat",
       },
       {
-        icon: null,
+        icon: <FaCertificate size={24} />,
         name: "Tanah Aset Pemerintah",
         link: null,
       },
       {
-        icon: null,
+        icon: <BiBuildings size={24} />,
         name: "Hak Tanggungan Elektronik",
         link: "/Sertifikasi/HakTanggunganElektronik",
       },
       {
-        icon: null,
+        icon: <IoMdMap size={24} />,
         name: "Peta Pendaftaran Tanah",
         link: null,
       },
@@ -196,17 +211,17 @@ export const MENU_LIST = [
     parentLink: "null",
     subMenus: [
       {
-        icon: null,
+        icon: <MdLandscape size={24} />,
         name: "Tanah Terlantar",
         link: null,
       },
       {
-        icon: null,
+        icon: <GiMoneyStack size={24} />,
         name: "Nilai Tanah",
         link: null,
       },
       {
-        icon: null,
+        icon: <GiEarthAsiaOceania size={24} />,
         name: "Peta Lainnya",
         link: null,
       },

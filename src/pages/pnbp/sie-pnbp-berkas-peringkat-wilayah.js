@@ -52,8 +52,6 @@ import { IoEye, IoPrint } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "./styles";
 import axios from "axios";
-import { useScreenshot } from "use-react-screenshot";
-import html2canvas from "html2canvas";
 import moment from "moment";
 import { tahunData, bulanData } from "../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../functionGlobal/exports";
@@ -129,11 +127,7 @@ const PnbpBerkasPeringkatWilayah = () => {
     nameColumn: [],
     listTop10Comment: [],
   });
-  const inputRef = createRef(null);
-  const [image, takeScreenshot] = useScreenshot({
-    type: "image/jpeg",
-    quality: 1.0,
-  });
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -146,7 +140,6 @@ const PnbpBerkasPeringkatWilayah = () => {
     setPage(0);
   };
 
-  const getImage = () => takeScreenshot(ref.current);
   const handleOpen = (data) => {
     setOpen(true);
     setDataModal(data);
@@ -229,7 +222,7 @@ const PnbpBerkasPeringkatWilayah = () => {
   };
 
   const DataFormaterX = (value) => {
-    return value.replace("Kantor Wilayah Provinsi ", "");
+    return value ? value.replace("Kantor Wilayah Provinsi ", "") : value;
   };
 
   const body = (
@@ -237,16 +230,8 @@ const PnbpBerkasPeringkatWilayah = () => {
       <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
         {dataModal.title}
       </h2>
-      {/* <Grid item xs={6}>
-        <TooltipMI title="Screenshot modal" placement="top">
-          <IconButton onClick={getImage}>
-            <IoMdDownload />
-          </IconButton>
-        </TooltipMI>
-      </Grid> */}
 
       <div className={classes.barChart}>
-        {/* <img width={500} src={image} /> */}
         <ResponsiveContainer width="100%" height={250}>
           <BarChart
             width={500}

@@ -229,7 +229,7 @@ const PnbpBerkasPeringkat = () => {
   };
 
   const DataFormaterX = (value) => {
-    return value.replace("Kantor Pertanahan ", "");
+    return value ? value.replace("Kantor Pertanahan ", "") : value;
   };
 
   const body = (

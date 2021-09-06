@@ -383,128 +383,41 @@ const BPHTBDaerahTerintegrasi = () => {
       >
         {body}
       </Modal>
-      <Grid
-        container
-        spacing={2}
-        direction="row"
-        style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
+      <Box
+        style={{
+          backgroundColor: "rgba(107,111,130,0.2)",
+          marginTop: 20,
+          paddingBottom: 20,
+        }}
       >
-        <Grid item xs={9}>
-          <Typography className={classes.titleSection} variant="h2">
-            Jumlah daerah terintegrasi
-          </Typography>
-        </Grid>
-
         <Grid
           container
+          spacing={2}
           direction="row"
-          justifyContent="flex-end"
-          alignItems="flex-end"
-          item
-          xs={3}
+          style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
         >
-          <ButtonGroup
-            aria-label="outlined button group"
-            className={classes.buttonGroupStyle}
-            variant="contained"
-          >
-            <TooltipMI title="Lihat Detail" placement="top">
-              <IconButton
-                size="small"
-                onClick={() =>
-                  handleOpen({
-                    title: "Jumlah daerah terintegrasi",
-                    grafik: data,
-                    dataTable: "",
-                    analisis:
-                      comment && comment.lastComment
-                        ? comment.lastComment.analisisData.replace(
-                            /<[^>]+>/g,
-                            ""
-                          )
-                        : "",
-                    type: "Bar",
-                    nameColumn: ["Tahun", "Target Penerimaan"],
-                    listTop10Comment: comment.listTop10Comment,
-                  })
-                }
-              >
-                <IoEye />
-              </IconButton>
-            </TooltipMI>
-            <TooltipMI
-              title="Print Data"
-              placement="top"
-              onClick={() => window.print()}
-            >
-              <IconButton aria-label="delete" size="small">
-                <IoPrint />
-              </IconButton>
-            </TooltipMI>
-            <TooltipMI
-              title="Unduh Data"
-              placement="top"
-              onClick={() => exportData()}
-            >
-              <IconButton
-                aria-label="delete"
-                size="small"
-                onClick={() => exportData()}
-              >
-                <IoMdDownload />
-              </IconButton>
-            </TooltipMI>
-          </ButtonGroup>
-        </Grid>
-      </Grid>
-      <div
-        style={{
-          borderTop: "0.5px solid #626e8261 ",
-          width: "98%",
-          margin: 10,
-        }}
-      />
-      <Grid container spacing={2}>
-        <Grid item xs={4}>
-          <div style={{ margin: 10, marginRight: 25 }}>
-            <Typography className={classes.isiTextStyle} variant="h2">
-              Pilih Tahun
+          <Grid item xs={9}>
+            <Typography className={classes.titleSection} variant="h2">
+              Jumlah daerah terintegrasi
             </Typography>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-outlined-label">
-                Tahun
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                value={years}
-                onChange={handleChange}
-                label="Tahun"
-              >
-                {tahunData.map((item, i) => {
-                  return (
-                    <MenuItem value={item.id} key={i}>
-                      {item.value}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
-            <Typography
-              className={classes.isiContentTextStyle}
-              variant="h2"
-              wrap
+          </Grid>
+
+          <Grid
+            container
+            direction="row"
+            justifyContent="flex-end"
+            alignItems="flex-end"
+            item
+            xs={3}
+          >
+            <ButtonGroup
+              aria-label="outlined button group"
+              className={classes.buttonGroupStyle}
+              variant="contained"
             >
-              {comment && comment.lastComment
-                ? comment.lastComment.analisisData
-                    .replace(/<[^>]+>/g, "")
-                    .slice(0, 500)
-                : ""}
-              {comment &&
-              comment.lastComment &&
-              comment.lastComment.analisisData.length > 500 ? (
-                <Link
-                  href="#"
+              <TooltipMI title="Lihat Detail" placement="top">
+                <IconButton
+                  size="small"
                   onClick={() =>
                     handleOpen({
                       title: "Jumlah daerah terintegrasi",
@@ -522,57 +435,152 @@ const BPHTBDaerahTerintegrasi = () => {
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
-                  variant="body2"
                 >
-                  {" "}
-                  More
-                </Link>
-              ) : null}
-            </Typography>
-          </div>
+                  <IoEye />
+                </IconButton>
+              </TooltipMI>
+              <TooltipMI
+                title="Print Data"
+                placement="top"
+                onClick={() => window.print()}
+              >
+                <IconButton aria-label="delete" size="small">
+                  <IoPrint />
+                </IconButton>
+              </TooltipMI>
+              <TooltipMI
+                title="Unduh Data"
+                placement="top"
+                onClick={() => exportData()}
+              >
+                <IconButton
+                  aria-label="delete"
+                  size="small"
+                  onClick={() => exportData()}
+                >
+                  <IoMdDownload />
+                </IconButton>
+              </TooltipMI>
+            </ButtonGroup>
+          </Grid>
         </Grid>
-        <Grid item xs={8}>
-          <Card className={classes.root} variant="outlined">
-            <CardContent>
-              <div className={classes.barChart}>
-                <ResponsiveContainer width="100%" height={250}>
-                  <BarChart
-                    width={500}
-                    height={300}
-                    data={data}
-                    margin={{
-                      top: 5,
-                      right: 30,
-                      left: 20,
-                      bottom: 5,
-                    }}
-                    padding={{
-                      top: 15,
-                      right: 10,
-                      left: 10,
-                      bottom: 15,
-                    }}
+        <div
+          style={{
+            borderTop: "0.5px solid #626e8261 ",
+            width: "98%",
+            margin: 10,
+          }}
+        />
+        <Grid container spacing={2}>
+          <Grid item xs={8}>
+            <Card className={classes.root} variant="outlined">
+              <CardContent>
+                <div className={classes.barChart}>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <BarChart
+                      width={500}
+                      height={300}
+                      data={data}
+                      margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                      }}
+                      padding={{
+                        top: 15,
+                        right: 10,
+                        left: 10,
+                        bottom: 15,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="tahun" />
+                      <YAxis tickFormatter={DataFormater}>
+                        <Label
+                          value="Target Penerimaan"
+                          angle={-90}
+                          position="insideBottomLeft"
+                          offset={-5}
+                        />
+                      </YAxis>
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Bar dataKey="targetpenerimaan" fill="#66CDAA" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={4}>
+            <div style={{ margin: 10, marginRight: 25 }}>
+              <Typography className={classes.isiTextStyle} variant="h2">
+                Pilih Tahun
+              </Typography>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="demo-simple-select-outlined-label">
+                  Tahun
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-outlined-label"
+                  id="demo-simple-select-outlined"
+                  value={years}
+                  onChange={handleChange}
+                  label="Tahun"
+                >
+                  {tahunData.map((item, i) => {
+                    return (
+                      <MenuItem value={item.id} key={i}>
+                        {item.value}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+              <Typography
+                className={classes.isiContentTextStyle}
+                variant="h2"
+                wrap
+              >
+                {comment && comment.lastComment
+                  ? comment.lastComment.analisisData
+                      .replace(/<[^>]+>/g, "")
+                      .slice(0, 500)
+                  : ""}
+                {comment &&
+                comment.lastComment &&
+                comment.lastComment.analisisData.length > 500 ? (
+                  <Link
+                    href="#"
+                    onClick={() =>
+                      handleOpen({
+                        title: "Jumlah daerah terintegrasi",
+                        grafik: data,
+                        dataTable: "",
+                        analisis:
+                          comment && comment.lastComment
+                            ? comment.lastComment.analisisData.replace(
+                                /<[^>]+>/g,
+                                ""
+                              )
+                            : "",
+                        type: "Bar",
+                        nameColumn: ["Tahun", "Target Penerimaan"],
+                        listTop10Comment: comment.listTop10Comment,
+                      })
+                    }
+                    variant="body2"
                   >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="tahun" />
-                    <YAxis tickFormatter={DataFormater}>
-                      <Label
-                        value="Target Penerimaan"
-                        angle={-90}
-                        position="insideBottomLeft"
-                        offset={-5}
-                      />
-                    </YAxis>
-                    <Tooltip content={<CustomTooltip />} />
-                    <Legend />
-                    <Bar dataKey="targetpenerimaan" fill="#66CDAA" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
+                    {" "}
+                    More
+                  </Link>
+                ) : null}
+              </Typography>
+            </div>
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </div>
   );
 };

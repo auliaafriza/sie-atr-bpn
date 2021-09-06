@@ -740,7 +740,7 @@ const KepegawaianBpnUsia = () => {
                 : ""}
               {comment &&
               comment.lastComment &&
-              comment.lastComment.analisisData.length > 500 ? (
+              comment.lastComment.analisisData.length > 100 ? (
                 <Link
                   href="#"
                   onClick={() =>

@@ -227,7 +227,7 @@ const PnbpBerkasWilayah = () => {
   };
 
   const DataFormaterX = (value) => {
-    return value.replace("Kantor Wilayah Provinsi ", "");
+    return value ? value.replace("Kantor Wilayah Provinsi ", "") : value;
   };
 
   const CustomTooltip = ({ active, payload, label }) => {

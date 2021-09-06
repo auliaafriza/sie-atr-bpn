@@ -226,7 +226,7 @@ const KepegawaianBpnJabatan = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Jumlah Pegawai berdasarkan Jabaatan",
+      "Jumlah Pegawai berdasarkan Jabatan",
       data,
       ".xlsx"
     );
@@ -440,7 +440,7 @@ const KepegawaianBpnJabatan = () => {
       >
         <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            Jumlah Pegawai berdasarkan Jabaatan
+            Jumlah Pegawai berdasarkan Jabatan
           </Typography>
         </Grid>
         <Grid
@@ -465,7 +465,7 @@ const KepegawaianBpnJabatan = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Jumlah Pegawai berdasarkan Jabaatan ",
+                    title: "Jumlah Pegawai berdasarkan Jabatan ",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -740,12 +740,12 @@ const KepegawaianBpnJabatan = () => {
                 : ""}
               {comment &&
               comment.lastComment &&
-              comment.lastComment.analisisData.length > 500 ? (
+              comment.lastComment.analisisData.length > 100 ? (
                 <Link
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "Jumlah Pegawai berdasarkan Jabaatan ",
+                      title: "Jumlah Pegawai berdasarkan Jabatan ",
                       grafik: data,
                       dataTable: "",
                       analisis:

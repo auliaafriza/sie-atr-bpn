@@ -209,7 +209,7 @@ const BerkasWilayahPnbp = () => {
     }
   };
   const DataFormaterX = (value) => {
-    return value.replace("Kantor Wilayah Provinsi ", "");
+    return value ? value.replace("Kantor Wilayah Provinsi ", "") : value;
   };
 
   const body = (
