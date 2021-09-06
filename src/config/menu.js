@@ -214,10 +214,22 @@ export const MENU_LIST = [
 // * seluruh link yang tidak ingin memiliki header ataupun
 // * navbar silahkan masukkan ke dalam array
 // *****************************************************
-export const HIDE_HEADER = ["/", "/Login", "/PrintData"];
+export const HIDE_HEADER = [
+  "/",
+  "/Login",
+  "/PrintData",
+  "/embed/sie-pnbp-pagu-mp",
+  "/embed/sie-pnbp-realisasi-anggaran",
+];
 
 // *****************************************************
 // * seluruh link yang tidak ingin memiliki footer silahkan
 // * masukkan ke dalam array
 // *****************************************************
-export const HIDE_FOOTER = ["/", "/Login", "/PrintData"];
+export const HIDE_FOOTER = [
+  "/",
+  "/Login",
+  "/PrintData",
+  "/embed/sie-pnbp-pagu-mp",
+  "/embed/sie-pnbp-realisasi-anggaran",
+];

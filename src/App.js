@@ -23,6 +23,8 @@ import Footer from "./component/Footer";
 import { HIDE_HEADER, HIDE_FOOTER } from "./config/menu";
 // ****** untuk menu *******
 
+import IframeGenerator from "./embed/IframeGenerator";
+
 const Main = withRouter(({ location }) => {
   const noNavbar = HIDE_HEADER.find((e) => e === location.pathname);
   const noFooter = HIDE_FOOTER.find((e) => e === location.pathname);
@@ -63,7 +65,8 @@ const Main = withRouter(({ location }) => {
         <Route path="/PNBP/PaguMp">
           <PaguMp />
         </Route>
-        <Route path="/">
+        <Route path="/embed/:view" component={IframeGenerator} />
+        <Route path="/" exact>
           <Login />
         </Route>
       </Switch>

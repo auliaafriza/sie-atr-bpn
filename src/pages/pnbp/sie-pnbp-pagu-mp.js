@@ -48,7 +48,7 @@ import {
   ThemeProvider,
   withStyles,
 } from "@material-ui/core/styles";
-import { IoEye, IoPrint } from "react-icons/io5";
+import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "./styles";
 import axios from "axios";
@@ -58,6 +58,7 @@ import moment from "moment";
 import { tahunData } from "../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
+import { BASE_URL } from "../../config/embed_conf";
 
 const dataTemp = [
   {
@@ -448,6 +449,24 @@ const PaguMp = () => {
               className={classes.buttonGroupStyle}
               variant="contained"
             >
+              <TooltipMI title="Embed Iframe" placement="top">
+                <IconButton
+                  size="small"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      '<iframe width="500" height="500"' +
+                        ' src="' +
+                        BASE_URL.domain +
+                        "/embed/" +
+                        BASE_URL.path.pnbp_pagu_mp +
+                        '"></iframe>'
+                    );
+                    alert("code embeded berhasil dicopy");
+                  }}
+                >
+                  <IoCopySharp />
+                </IconButton>
+              </TooltipMI>
               <TooltipMI title="Lihat Detail" placement="top">
                 <IconButton
                   size="small"
