@@ -47,12 +47,12 @@ import { useHistory } from "react-router-dom";
 import { BASE_URL } from "../../../config/embed_conf";
 const dataTemp = [
   {
-    nama: "",
-    jumlah_berkas: 0,
+    nama_layanan: "",
+    jumlah_layanan: 0,
   },
   {
-    nama: "",
-    jumlah_berkas: 0,
+    nama_layanan: "",
+    jumlah_layanan: 0,
   },
 ];
 
@@ -90,40 +90,40 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {
-    label: "Nama",
-    value: "nama",
+    label: "Nama Layanan",
+    value: "nama_layanan",
     isLabel: true,
   },
   {
-    label: "Jumlah Berkas",
-    value: "jumlah_berkas",
+    label: "Jumlah Layanan",
+    value: "jumlah_layanan",
   },
 ];
 
 let columnTable = [
   {
-    label: "nama",
+    label: "nama_layanan",
     isFixed: false,
   },
   {
-    label: "jumlah_berkas",
+    label: "jumlah_layanan",
     isFixed: false,
   },
 ];
 
 let grafikView = [
   {
-    dataKey: "jumlah_berkas",
+    dataKey: "jumlah_layanan",
     fill: "#C71585",
   },
 ];
 
 let axis = {
-  xAxis: "Nama",
-  yAxis: "Jumlah Berkas",
+  xAxis: "Nama Layanan",
+  yAxis: "Jumlah Layanan",
 };
-const title = "TOP 5 Jumlah Berkas PTSL";
-const SiePsnPtsl5Peringkat = () => {
+const title = "Jumlah layanan berdasarkan jenis layanan";
+const SieLayananJumlahPerjenis = () => {
   const classes = styles();
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
@@ -161,7 +161,7 @@ const SiePsnPtsl5Peringkat = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(`${url}ProgramStrategisNasional/PTSL/sie_psn_ptsl_5_peringkat`)
+      .get(`${url}KinerjaLayanan/LayananUmum/sie_layanan_jumlah_perjenis`)
       .then(function (response) {
         setData(response.data.data);
         setComment(response.data);
@@ -246,7 +246,7 @@ const SiePsnPtsl5Peringkat = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="nama"></XAxis>
+            <XAxis dataKey="nama_layanan"></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value={axis.yAxis}
@@ -257,7 +257,7 @@ const SiePsnPtsl5Peringkat = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="jumlah_berkas" fill="#C71585"></Bar>
+            <Bar dataKey="jumlah_layanan" fill="#C71585"></Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -284,16 +284,16 @@ const SiePsnPtsl5Peringkat = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.nama}>
+                    <StyledTableRow key={row.nama_layanan}>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.nama}
+                        {row.nama_layanan}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {row.jumlah_berkas
+                        {row.jumlah_layanan
                           .toFixed(2)
                           .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                       </StyledTableCell>
@@ -434,7 +434,7 @@ const SiePsnPtsl5Peringkat = () => {
                       ' src="' +
                       BASE_URL.domain +
                       "/embed/" +
-                      BASE_URL.path.psn_ptls_5peringkat +
+                      BASE_URL.path.KL_LU_Layanan_Jumlah_Perjenis +
                       '"></iframe>'
                   );
                   alert("code embeded berhasil dicopy");
@@ -570,7 +570,7 @@ const SiePsnPtsl5Peringkat = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="nama"></XAxis>
+                    <XAxis dataKey="nama_layanan"></XAxis>
                     <YAxis tickFormatter={DataFormater}>
                       <Label
                         value={axis.yAxis}
@@ -581,7 +581,7 @@ const SiePsnPtsl5Peringkat = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Bar dataKey="jumlah_berkas" fill="#C71585" />
+                    <Bar dataKey="jumlah_layanan" fill="#C71585" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -593,4 +593,4 @@ const SiePsnPtsl5Peringkat = () => {
   );
 };
 
-export default SiePsnPtsl5Peringkat;
+export default SieLayananJumlahPerjenis;
