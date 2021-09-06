@@ -9,6 +9,7 @@ import {
   StatistikSertifikat,
   HakTanggunganElektronik,
 } from "./pages/sertifikasi";
+import { LayananUmum } from "./pages/kinerjaLayanan";
 import {
   BrowserRouter as Router,
   Switch,
@@ -67,6 +68,9 @@ const Main = withRouter(({ location }) => {
         </Route>
         <Route path="/PNBP/PaguMp">
           <PaguMp />
+        </Route>
+        <Route path="/KinerjaLayanan/LayananUmum">
+          <LayananUmum />
         </Route>
         <Route path="/embed/:view" component={IframeGenerator} />
         <Route path="/" exact>

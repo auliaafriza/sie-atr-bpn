@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import RealisasiAnggaran from "../pages/pnbp/sie-pnbp-realisasi-anggaran";
 import PaguMp from "../pages/pnbp/sie-pnbp-pagu-mp.js";
 import SiePsnPtsl5Peringkat from "../pages/psn/PTSL/sie_psn_ptsl_5peringkat";
+import SieLayananJumlahPerjenis from "../pages/kinerjaLayanan/layananUmum/sie_layanan_jumlah_perjenis";
 
 class IframeGenerator extends React.Component {
   constructor(props) {
@@ -26,6 +27,12 @@ class IframeGenerator extends React.Component {
       case "sie-psn-ptsl-5peringkat":
         ReactDOM.render(
           <SiePsnPtsl5Peringkat />,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-layanan-jumlah-perjenis":
+        ReactDOM.render(
+          <SieLayananJumlahPerjenis />,
           document.getElementById("replace-tag")
         );
         break;

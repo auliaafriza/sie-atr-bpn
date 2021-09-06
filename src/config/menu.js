@@ -93,8 +93,7 @@ export const MENU_LIST = [
     id: 4,
     icon: <BiLineChart size={24} />,
     name: "Kinerja Layanan",
-
-    parentLink: "null",
+    parentLink: "KinerjaLayanan",
     subMenus: [
       {
         icon: null,
@@ -114,7 +113,7 @@ export const MENU_LIST = [
       {
         icon: null,
         name: "Layanan Umum",
-        link: null,
+        link: "/KinerjaLayanan/LayananUmum",
       },
     ],
   },
@@ -221,6 +220,7 @@ export const HIDE_HEADER = [
   "/embed/sie-pnbp-pagu-mp",
   "/embed/sie-pnbp-realisasi-anggaran",
   "/embed/sie-psn-ptsl-5peringkat",
+  "/embed/sie-layanan-jumlah-perjenis",
 ];
 
 // *****************************************************
@@ -234,4 +234,5 @@ export const HIDE_FOOTER = [
   "/embed/sie-pnbp-pagu-mp",
   "/embed/sie-pnbp-realisasi-anggaran",
   "/embed/sie-psn-ptsl-5peringkat",
+  "/embed/sie-layanan-jumlah-perjenis",
 ];
