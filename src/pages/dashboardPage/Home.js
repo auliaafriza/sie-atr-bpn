@@ -34,26 +34,27 @@ const DashHome = () => {
 
   return (
     <div>
-      <Sie_sertifikat_jangka_waktu_hak />
-      <PaguMpOpsNon />
+      <RealisasiAnggaran />
+      <PaguMp />
+      {/* <Sie_sertifikat_jangka_waktu_hak /> */}
+      {/* <PaguMpOpsNon /> */}
       {/* <PnbpBerkasWilayah />
       <PnbpBerkasPeringkat />
       <PnbpBerkasPeringkatWilayah />
-      <RealisasiAnggaran /> */}
-      <RealisasiPenggunaan />
+       */}
+      {/* <RealisasiPenggunaan /> */}
       {/* <RealisasiPenerimaan />
       <RealisasiTargetPenerimaan />
-      <PaguMp />
       <AlokasiAnggaran />
       <PeringkatRealisasi />
       <PengembalianPNBP /> */}
-      <BPHTBJumlahBerkas />
+      {/* <BPHTBJumlahBerkas />
       <BPHTBDaerahTerintegrasi />
       <KepegawaianBpnGol />
       <KepegawaianBpnJabatan />
       <KepegawaianBpnJK />
       <KepegawaianBpnPendidikan />
-      <KepegawaianBpnUsia />
+      <KepegawaianBpnUsia /> */}
     </div>
   );
 };
