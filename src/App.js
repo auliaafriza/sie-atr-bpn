@@ -3,12 +3,13 @@ import "./index.css";
 import Login from "./pages/loginPage/login";
 import Dashboard from "./pages/dashboardPage/dashboard";
 import PrintData from "./pages/pnbp/printData/componentPrint";
-import { SiePsnLuasPengadaanTanah } from "./pages/psn";
+import { PTSL, SiePsnLuasPengadaanTanah } from "./pages/psn";
 import { RealisasiAnggaran, PaguMp } from "./pages/pnbp";
 import {
   StatistikSertifikat,
   HakTanggunganElektronik,
 } from "./pages/sertifikasi";
+import { LayananUmum } from "./pages/kinerjaLayanan";
 import {
   BrowserRouter as Router,
   Switch,
@@ -53,6 +54,9 @@ const Main = withRouter(({ location }) => {
         <Route path="/PSN/PengadaanTanah">
           <SiePsnLuasPengadaanTanah />
         </Route>
+        <Route path="/PSN/PTSL">
+          <PTSL />
+        </Route>
         <Route path="/Sertifikasi/StatistikSertifikat">
           <StatistikSertifikat />
         </Route>
@@ -64,6 +68,9 @@ const Main = withRouter(({ location }) => {
         </Route>
         <Route path="/PNBP/PaguMp">
           <PaguMp />
+        </Route>
+        <Route path="/KinerjaLayanan/LayananUmum">
+          <LayananUmum />
         </Route>
         <Route path="/embed/:view" component={IframeGenerator} />
         <Route path="/" exact>

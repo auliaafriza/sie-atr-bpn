@@ -98,8 +98,7 @@ export const MENU_LIST = [
     id: 4,
     icon: <BiLineChart size={24} />,
     name: "Kinerja Layanan",
-
-    parentLink: "null",
+    parentLink: "KinerjaLayanan",
     subMenus: [
       {
         icon: <BsNewspaper />,
@@ -119,7 +118,7 @@ export const MENU_LIST = [
       {
         icon: null,
         name: "Layanan Umum",
-        link: null,
+        link: "/KinerjaLayanan/LayananUmum",
       },
     ],
   },
@@ -137,7 +136,7 @@ export const MENU_LIST = [
       {
         icon: null,
         name: "Pendaftaran Tanah Sistematis Lengkap",
-        link: null,
+        link: "/PSN/PTSL",
       },
       {
         icon: null,
@@ -225,6 +224,8 @@ export const HIDE_HEADER = [
   "/PrintData",
   "/embed/sie-pnbp-pagu-mp",
   "/embed/sie-pnbp-realisasi-anggaran",
+  "/embed/sie-psn-ptsl-5peringkat",
+  "/embed/sie-layanan-jumlah-perjenis",
 ];
 
 // *****************************************************
@@ -237,4 +238,6 @@ export const HIDE_FOOTER = [
   "/PrintData",
   "/embed/sie-pnbp-pagu-mp",
   "/embed/sie-pnbp-realisasi-anggaran",
+  "/embed/sie-psn-ptsl-5peringkat",
+  "/embed/sie-layanan-jumlah-perjenis",
 ];
