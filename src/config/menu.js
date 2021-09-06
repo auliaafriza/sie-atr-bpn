@@ -132,7 +132,7 @@ export const MENU_LIST = [
       {
         icon: null,
         name: "Pendaftaran Tanah Sistematis Lengkap",
-        link: null,
+        link: "/PSN/PTSL",
       },
       {
         icon: null,
@@ -220,6 +220,7 @@ export const HIDE_HEADER = [
   "/PrintData",
   "/embed/sie-pnbp-pagu-mp",
   "/embed/sie-pnbp-realisasi-anggaran",
+  "/embed/sie-psn-ptsl-5peringkat",
 ];
 
 // *****************************************************
@@ -232,4 +233,5 @@ export const HIDE_FOOTER = [
   "/PrintData",
   "/embed/sie-pnbp-pagu-mp",
   "/embed/sie-pnbp-realisasi-anggaran",
+  "/embed/sie-psn-ptsl-5peringkat",
 ];
