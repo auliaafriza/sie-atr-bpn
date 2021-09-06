@@ -55,20 +55,20 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
-import { tahunData } from "../../functionGlobal/globalDataAsset";
+import { tipeData } from "../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 
 const dataTemp = [
   {
     tahun: "2010",
-    pagu: 0,
-    mp: 0,
+    alokasi_anggaran: 0,
+    anggaran: 0,
   },
   {
     tahun: "2011",
-    pagu: 10,
-    mp: 0,
+    alokasi_anggaran: 10,
+    anggaran: 0,
   },
 ];
 
@@ -78,12 +78,12 @@ let nameColumn = [
     value: "tahun",
   },
   {
-    label: "Pagu",
-    value: "pagu",
+    label: "Alokasi Anggaran",
+    value: "alokasi_anggaran",
   },
   {
-    label: "Mp",
-    value: "mp",
+    label: "Anggaran",
+    value: "anggaran",
   },
 ];
 
@@ -119,13 +119,11 @@ const StyledTableRow = withStyles((theme) => ({
 
 let url = "http://10.20.57.234/SIEBackEnd/";
 
-const PaguMp = () => {
+const PaguMpOpsNon = () => {
   const classes = styles();
-  const [years, setYears] = useState("2021");
-  const [tahunAwal, setTahunAwal] = useState("2017");
+  const [tipe, setTipe] = useState("OPS");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
-  const [bulan, setBulan] = useState("Jan");
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -167,9 +165,7 @@ const PaguMp = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_pagu_mp?tahunAwal=${tahunAwal}&tahunAkhir=${years}`
-      )
+      .get(`${url}Aset&Keuangan/PNBP/sie_pnbp_pagu_mp_ops_non?tipe=${tipe}`)
       .then(function (response) {
         setData(response.data.data);
         setComment(response.data);
@@ -193,7 +189,7 @@ const PaguMp = () => {
   };
 
   const handleChangeAwal = (event) => {
-    setTahunAwal(event.target.value);
+    setTipe(event.target.value);
   };
 
   const DataFormater = (number) => {
@@ -216,13 +212,13 @@ const PaguMp = () => {
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Pagu : Rp ${payload[0].value
+          >{`Alokasi Anggaran : Rp ${payload[0].value
             .toFixed(2)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
           <p
             className="desc"
             style={{ color: payload[1].color }}
-          >{`Mp : Rp ${payload[1].value
+          >{`Anggaran : Rp ${payload[1].value
             .toFixed(2)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
         </div>
@@ -235,7 +231,7 @@ const PaguMp = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Pagu & MP PNBP (Satuan 1 Juta)",
+      "MP dana PNBP vs Realisasi Belanja",
       data,
       ".xlsx"
     );
@@ -282,14 +278,14 @@ const PaguMp = () => {
             <Legend />
             <Line
               type="monotone"
-              dataKey="pagu"
+              dataKey="alokasi_anggaran"
               stroke="#6EB5FF"
               activeDot={{ r: 8 }}
               strokeWidth={3}
             />
             <Line
               type="monotone"
-              dataKey="mp"
+              dataKey="anggaran"
               stroke="#FCB9AA"
               strokeWidth={3}
             />
@@ -325,13 +321,15 @@ const PaguMp = () => {
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         Rp{" "}
-                        {row.pagu
+                        {row.alokasi_anggaran
                           .toFixed(2)
                           .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         Rp{" "}
-                        {row.mp.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                        {row.anggaran
+                          .toFixed(2)
+                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
@@ -432,7 +430,7 @@ const PaguMp = () => {
         >
           <Grid item xs={6}>
             <Typography className={classes.titleSection} variant="h2">
-              Pagu & MP PNBP (Satuan 1 Juta)
+              MP dana PNBP vs Realisasi Belanja
             </Typography>
           </Grid>
           <Grid
@@ -453,7 +451,7 @@ const PaguMp = () => {
                   size="small"
                   onClick={() =>
                     handleOpen({
-                      title: "Pagu & MP PNBP (Satuan 1 Juta)",
+                      title: "MP dana PNBP vs Realisasi Belanja",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -464,7 +462,7 @@ const PaguMp = () => {
                             )
                           : "",
                       type: "Line",
-                      nameColumn: ["Tahun", "Pagu", "MP"],
+                      nameColumn: ["Tahun", "Alokasi Anggaran", "Anggaran"],
 
                       listTop10Comment: comment.listTop10Comment,
                     })
@@ -479,12 +477,12 @@ const PaguMp = () => {
                 onClick={
                   () => window.print()
                   // printHandle({
-                  //   title: "Pagu & MP PNBP (Satuan 1 Juta)",
+                  //   title: "MP dana PNBP vs Realisasi Belanja",
                   //   grafik: data,
                   //   dataTable: "",
                   //   analisis: comment ? comment.analisisData : "",
                   //   type: "Line",
-                  //   nameColumn: ["Tahun", "Pagu", "MP"],
+                  //   nameColumn: ["Tahun", "Alokasi Anggaran", "MP"],
                   // })
                 }
               >
@@ -546,14 +544,14 @@ const PaguMp = () => {
                       <Legend />
                       <Line
                         type="monotone"
-                        dataKey="pagu"
+                        dataKey="alokasi_anggaran"
                         stroke="#6EB5FF"
                         activeDot={{ r: 8 }}
                         strokeWidth={3}
                       />
                       <Line
                         type="monotone"
-                        dataKey="mp"
+                        dataKey="anggaran"
                         stroke="#FCB9AA"
                         strokeWidth={3}
                       />
@@ -572,66 +570,33 @@ const PaguMp = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
-                    Tahun Awal
+                    Pilih Tipe
                   </Typography>
                   <FormControl
                     variant="outlined"
                     className={classes.formControl}
                   >
                     <InputLabel id="demo-simple-select-outlined-label">
-                      Tahun Awal
+                      Tipe
                     </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
-                      value={tahunAwal}
+                      value={tipe}
                       onChange={handleChangeAwal}
-                      label="Tahun"
+                      label="Tipe"
                       className={classes.selectStyle}
                     >
-                      {tahunData.map((item, i) => {
+                      {tipeData.map((item, i) => {
                         return (
                           <MenuItem value={item.id} key={i}>
-                            {item.value}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={5}>
-                  <Typography
-                    className={classes.isiTextStyle}
-                    variant="h2"
-                    style={{ fontSize: 12 }}
-                  >
-                    Tahun Akhir
-                  </Typography>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Tahun Akhir
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={years}
-                      onChange={handleChange}
-                      label="Bulan"
-                      className={classes.selectStyle}
-                    >
-                      {tahunData.map((item, i) => {
-                        return (
-                          <MenuItem value={item.id} key={i}>
-                            {item.value}
+                            {item.name}
                           </MenuItem>
                         );
                       })}
@@ -644,7 +609,7 @@ const PaguMp = () => {
                   justifyContent="flex-start"
                   alignItems="center"
                   item
-                  xs={3}
+                  xs={6}
                   style={{ paddingTop: 40, paddingLeft: 20 }}
                 >
                   <Button
@@ -674,7 +639,7 @@ const PaguMp = () => {
                     href="#"
                     onClick={() =>
                       handleOpen({
-                        title: "Pagu & Mp (Satuan 1 Juta)",
+                        title: "MP dana PNBP vs Realisasi Belanja",
                         grafik: data,
                         dataTable: "",
                         analisis:
@@ -685,7 +650,7 @@ const PaguMp = () => {
                               )
                             : "",
                         type: "Line",
-                        nameColumn: ["Tahun", "Pagu", "Mp"],
+                        nameColumn: ["Tahun", "Alokasi Anggaran", "Anggaran"],
                         listTop10Comment: comment.listTop10Comment,
                       })
                     }
@@ -704,4 +669,4 @@ const PaguMp = () => {
   );
 };
 
-export default PaguMp;
+export default PaguMpOpsNon;

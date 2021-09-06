@@ -574,7 +574,7 @@ const RealisasiAnggaran = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Tahun Awal
+                  Tahun Awal
                 </Typography>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
@@ -604,7 +604,7 @@ const RealisasiAnggaran = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Tahun Akhir
+                  Tahun Akhir
                 </Typography>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
@@ -641,6 +641,7 @@ const RealisasiAnggaran = () => {
                   variant="contained"
                   color="primary"
                   onClick={() => getData()}
+                  style={{ height: 57, width: "100%" }}
                 >
                   Submit
                 </Button>

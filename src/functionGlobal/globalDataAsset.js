@@ -1,11 +1,20 @@
-export const tahunData = [
-  { id: "2022", value: 2022 },
-  { id: "2021", value: 2021 },
-  { id: "2020", value: 2020 },
-  { id: "2019", value: 2019 },
-  { id: "2018", value: 2018 },
-  { id: "2017", value: 2017 },
-];
+export const generateArrayOfYears = () => {
+  let max = new Date().getFullYear();
+  let minYears = max - 5;
+  let years = [];
+  for (let i = minYears; i <= max; i++) {
+    let temp = { id: i.toString(), value: i };
+    years.push(temp);
+  }
+  for (let j = 1; j <= 5; j++) {
+    let tahun = max + j;
+    years.push({ id: tahun.toString(), value: tahun });
+  }
+  return years;
+};
+
+let temp = generateArrayOfYears();
+export const tahunData = temp;
 
 export const bulanDataNumberic = [
   { id: "01", value: "01", name: "Januari" },

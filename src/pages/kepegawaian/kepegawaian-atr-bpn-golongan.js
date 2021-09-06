@@ -542,7 +542,7 @@ const KepegawaianBpnGol = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Tahun Awal
+                  Tahun Awal
                 </Typography>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
@@ -572,7 +572,7 @@ const KepegawaianBpnGol = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Tahun Akhir
+                  Tahun Akhir
                 </Typography>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
@@ -645,18 +645,14 @@ const KepegawaianBpnGol = () => {
                   Pilih Kantor
                 </Typography>
                 {/* <Autocomplete
-                    id="combo-box-demo"
-                    options={kantorRed}
-                    getOptionLabel={(option) => option.kantor}
-                    style={{ width: 60 }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Kantor"
-                        variant="outlined"
-                      />
-                    )}
-                  /> */}
+                  id="combo-box-demo"
+                  options={kantorRed}
+                  getOptionLabel={(option) => option.kantor}
+                  className={classes.selectStyle}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Kantor" variant="outlined" />
+                  )}
+                /> */}
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
                     Kantor
@@ -681,7 +677,7 @@ const KepegawaianBpnGol = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={5}>
+              <Grid item xs={4}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -719,13 +715,14 @@ const KepegawaianBpnGol = () => {
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={3}
+                xs={4}
                 style={{ paddingTop: 40, paddingLeft: 20 }}
               >
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => getData()}
+                  style={{ height: 57, width: "100%" }}
                 >
                   Submit
                 </Button>

@@ -533,7 +533,7 @@ const SieHtJumlahKantorTahun = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Tahun Awal
+                  Tahun Awal
                 </Typography>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
@@ -563,7 +563,7 @@ const SieHtJumlahKantorTahun = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Tahun Akhir
+                  Tahun Akhir
                 </Typography>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">

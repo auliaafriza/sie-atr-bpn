@@ -625,6 +625,7 @@ const PnbpBerkasWilayah = () => {
                   variant="contained"
                   color="primary"
                   onClick={() => getData()}
+                  style={{ height: 57, width: "100%" }}
                 >
                   Submit
                 </Button>

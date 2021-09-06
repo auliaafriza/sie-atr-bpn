@@ -20,6 +20,8 @@ import KepegawaianBpnJabatan from "../kepegawaian/kepegawaian-atr-bpn-jabatan";
 import KepegawaianBpnJK from "../kepegawaian/kepegawaian-atr-bpn-JK";
 import KepegawaianBpnPendidikan from "../kepegawaian/kepegawaian-atr-bpn-pendidikan";
 import KepegawaianBpnUsia from "../kepegawaian/kepegawaian-atr-bpn-usia";
+import Sie_sertifikat_jangka_waktu_hak from "../sertifikasi/statistikSertifikat/sie_sertifikat_jangka_waktu_hak";
+import PaguMpOpsNon from "../pnbp/sie_pnbp_pagu_mp_ops_non";
 
 const DashHome = () => {
   const dispatch = useDispatch();
@@ -32,17 +34,19 @@ const DashHome = () => {
 
   return (
     <div>
-      {/* <PnbpBerkasWilayah /> */}
-      {/* <PnbpBerkasPeringkat /> */}
-      {/* <PnbpBerkasPeringkatWilayah /> */}
-      <RealisasiAnggaran />
-      {/* <RealisasiPenggunaan /> */}
-      {/* <RealisasiPenerimaan /> */}
-      {/* <RealisasiTargetPenerimaan /> */}
-      {/* <PaguMp /> */}
-      {/* <AlokasiAnggaran /> */}
-      {/* <PeringkatRealisasi /> */}
-      {/* <PengembalianPNBP /> */}
+      <Sie_sertifikat_jangka_waktu_hak />
+      <PaguMpOpsNon />
+      {/* <PnbpBerkasWilayah />
+      <PnbpBerkasPeringkat />
+      <PnbpBerkasPeringkatWilayah />
+      <RealisasiAnggaran /> */}
+      <RealisasiPenggunaan />
+      {/* <RealisasiPenerimaan />
+      <RealisasiTargetPenerimaan />
+      <PaguMp />
+      <AlokasiAnggaran />
+      <PeringkatRealisasi />
+      <PengembalianPNBP /> */}
       <BPHTBJumlahBerkas />
       <BPHTBDaerahTerintegrasi />
       <KepegawaianBpnGol />

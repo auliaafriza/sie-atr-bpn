@@ -58,6 +58,7 @@ import moment from "moment";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const dataTemp = [
   {
@@ -119,13 +120,13 @@ const KepegawaianBpnJK = () => {
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [tahunAwal, setTahunAwal] = useState("2017");
-  const [kanwil, setKanwil] = useState(
-    "Kementerian Agraria dan Tata Ruang/Badan Pertanahan Nasional "
-  );
-  const [kantor, setKantor] = useState("Jawa Tengah");
-  const [satker, setSatker] = useState(
-    "Kantor Pertanahan Kabupaten Purbalingga "
-  );
+  const [kanwil, setKanwil] = useState("");
+  const [kantor, setKantor] = useState("");
+  const [satker, setSatker] = useState("");
+  const [kanwilDis, setKanwilDis] = useState("");
+  const [kantorDis, setKantorDis] = useState("");
+  const [satkerDis, setSatkerDis] = useState("");
+
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -142,6 +143,10 @@ const KepegawaianBpnJK = () => {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
+
+  const satkerRed = useSelector((state) => state.globalReducer.satker);
+  const kantorRed = useSelector((state) => state.globalReducer.kantor);
+  const kanwilRed = useSelector((state) => state.globalReducer.kanwil);
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
@@ -162,7 +167,7 @@ const KepegawaianBpnJK = () => {
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}Kepegawaian/Pegawai/sie_pegawai_atr_bpn_jenis_kelamin?tahunAwal=${tahunAwal}&tahunAkhir=${years}&kantor=&kanwil=&satker=`
+        `${url}Kepegawaian/Pegawai/sie_pegawai_atr_bpn_jenis_kelamin?tahunAwal=${tahunAwal}&tahunAkhir=${years}&kantor=${kantor}&kanwil=${kanwil}&satker=${satker}`
       )
       .then(function (response) {
         setData(response.data.data);
@@ -371,13 +376,40 @@ const KepegawaianBpnJK = () => {
   const testbla = () => {
     // window.open("/PrintPNBPJumlah PegawaiRealisasi")
     history.push({
-      pathname: "/PrintPNBPJumlah PegawaiRealisasi",
+      pathname: "/PrintData",
       state: {
         data: data,
         comment: comment,
       },
       target: "_blank",
     });
+  };
+
+  const handleChangeKantor = (event) => {
+    let temp =
+      event.target.value.length > 10
+        ? event.target.value.slice(0, 10)
+        : event.target.value;
+    setKantorDis(temp);
+    setKantor(event.target.value);
+  };
+
+  const handleChangeKanwil = (event) => {
+    setKanwilDis(
+      event.target.value.length > 10
+        ? event.target.value.slice(0, 10)
+        : event.target.value
+    );
+    setKanwil(event.target.value);
+  };
+
+  const handleChangeSatket = (event) => {
+    setSatkerDis(
+      event.target.value.length > 10
+        ? event.target.value.slice(0, 10)
+        : event.target.value
+    );
+    setSatker(event.target.value);
   };
 
   return (
@@ -509,7 +541,7 @@ const KepegawaianBpnJK = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Tahun Awal
+                  Tahun Awal
                 </Typography>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
@@ -533,13 +565,13 @@ const KepegawaianBpnJK = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={5}>
+              <Grid item xs={4}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Tahun Akhir
+                  Tahun Akhir
                 </Typography>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
@@ -563,19 +595,133 @@ const KepegawaianBpnJK = () => {
                   </Select>
                 </FormControl>
               </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Satker
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Satker
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={satkerDis}
+                    onChange={handleChangeSatket}
+                    label="Satker"
+                    className={classes.selectStyle}
+                  >
+                    {satkerRed && satkerRed.length != 0
+                      ? satkerRed.map((item, i) => {
+                          return (
+                            <MenuItem value={item.satker} key={i}>
+                              {item.satker}
+                            </MenuItem>
+                          );
+                        })
+                      : null}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Kantor
+                </Typography>
+                {/* <Autocomplete
+                  id="combo-box-demo"
+                  options={kantorRed}
+                  getOptionLabel={(option) => option.kantor}
+                  className={classes.selectStyle}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Kantor" variant="outlined" />
+                  )}
+                /> */}
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Kantor
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={kantorDis}
+                    onChange={handleChangeKantor}
+                    label="Kantor"
+                    className={classes.selectStyle}
+                  >
+                    {kantorRed && kantorRed.length != 0
+                      ? kantorRed.map((item, i) => {
+                          return (
+                            <MenuItem value={item.kantor} key={i}>
+                              {item.kantor}
+                            </MenuItem>
+                          );
+                        })
+                      : null}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Kanwil
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Kanwil
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={kanwilDis}
+                    onChange={handleChangeKanwil}
+                    label="Kanwil"
+                    className={classes.selectStyle}
+                  >
+                    {kanwilRed && kanwilRed.length != 0
+                      ? kanwilRed.map((item, i) => {
+                          return (
+                            <MenuItem value={item.kanwil} key={i}>
+                              {item.kanwil}
+                            </MenuItem>
+                          );
+                        })
+                      : null}
+                  </Select>
+                </FormControl>
+              </Grid>
               <Grid
                 container
                 direction="row"
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={3}
+                xs={4}
                 style={{ paddingTop: 40, paddingLeft: 20 }}
               >
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => getData()}
+                  style={{ height: 57, width: "100%" }}
                 >
                   Submit
                 </Button>
