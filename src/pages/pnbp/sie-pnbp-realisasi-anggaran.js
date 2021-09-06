@@ -421,23 +421,7 @@ const RealisasiAnggaran = () => {
 
   const history = useHistory();
 
-  const testbla = (title, columnTable) => {
-    // <LinkPrint
-    //   to={{
-    //     pathname: "/PrintData",
-    //     state: {
-    //       data: data,
-    //       comment: comment,
-    //       columnTable: columnTable,
-    //       title: title,
-    //       grafik: "bar",
-    //       nameColumn: nameColumn,
-    //       grafikView: grafikView,
-    //       axis: axis,
-    //     },
-    //     target: "_blank",
-    //   }}
-    // />;
+  const handlePrintData = (title, columnTable) => {
     history.push({
       pathname: "/PrintData",
       state: {
@@ -547,7 +531,10 @@ const RealisasiAnggaran = () => {
               title="Print Data"
               placement="top"
               onClick={() =>
-                testbla("Anggaran & Realisasi (Satuan 1 Juta)", columnTable)
+                handlePrintData(
+                  "Anggaran & Realisasi (Satuan 1 Juta)",
+                  columnTable
+                )
               }
             >
               <IconButton aria-label="delete" size="small">

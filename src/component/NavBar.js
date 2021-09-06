@@ -185,7 +185,7 @@ const NavBar = (props) => {
                       key={idx}
                     >
                       {subMenu.icon}
-                      {subMenu.name}
+                      <span style={{ marginLeft: 10 }}>{subMenu.name}</span>
                     </MenuItem>
                   ))}
                 </Menu>

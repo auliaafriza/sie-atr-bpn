@@ -401,7 +401,7 @@ const KepegawaianBpnGol = () => {
 
   const history = useHistory();
 
-  const testbla = () => {
+  const handlePrintData = () => {
     // window.open("/PrintPNBPJumlah PegawaiRealisasi")
     history.push({
       pathname: "/PrintPNBPJumlah PegawaiRealisasi",
@@ -497,7 +497,7 @@ const KepegawaianBpnGol = () => {
             <TooltipMI
               title="Print Data"
               placement="top"
-              onClick={() => testbla()}
+              onClick={() => handlePrintData()}
             >
               <IconButton aria-label="delete" size="small">
                 <IoPrint />

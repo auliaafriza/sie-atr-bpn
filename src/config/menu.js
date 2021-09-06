@@ -1,6 +1,11 @@
 import { Home, SupervisorAccount, Public } from "@material-ui/icons";
 import { BiMoney, BiLineChart, BiBriefcase } from "react-icons/bi";
 import { FaCertificate, FaHandshake } from "react-icons/fa";
+import { GrMoney, GrBarChart } from "react-icons/gr";
+import { RiHandCoinFill } from "react-icons/ri";
+import { MdPeople } from "react-icons/md";
+import { GiOrganigram } from "react-icons/gi";
+import { BsNewspaper } from "react-icons/bs";
 
 // *****************************************************************************
 // * silahkan ubah attribute link sesuai dengan yang ada initial pada file app.js
@@ -45,12 +50,12 @@ export const MENU_LIST = [
     parentLink: "null",
     subMenus: [
       {
-        icon: null,
+        icon: <GrMoney />,
         name: "PNBP",
         link: null,
       },
       {
-        icon: null,
+        icon: <RiHandCoinFill />,
         name: "BPHTB",
         link: null,
       },
@@ -64,12 +69,12 @@ export const MENU_LIST = [
     parentLink: "null",
     subMenus: [
       {
-        icon: null,
+        icon: <MdPeople />,
         name: "Pegawai ATR/BPN",
         link: null,
       },
       {
-        icon: null,
+        icon: <GiOrganigram />,
         name: "Organisasi",
         link: null,
       },
@@ -83,7 +88,7 @@ export const MENU_LIST = [
     parentLink: "null",
     subMenus: [
       {
-        icon: null,
+        icon: <GrBarChart />,
         name: "Statistik Kemitraan",
         link: null,
       },
@@ -97,7 +102,7 @@ export const MENU_LIST = [
     parentLink: "null",
     subMenus: [
       {
-        icon: null,
+        icon: <BsNewspaper />,
         name: "IKPA",
         link: null,
       },
