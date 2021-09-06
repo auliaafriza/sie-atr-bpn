@@ -3,5 +3,6 @@ export const BASE_URL = {
   path: {
     pnbp_realisasi_anggaran: "sie-pnbp-realisasi-anggaran",
     pnbp_pagu_mp: "sie-pnbp-pagu-mp",
+    psn_ptls_5peringkat: "sie-psn-ptsl-5peringkat",
   },
 };
