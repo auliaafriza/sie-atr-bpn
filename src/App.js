@@ -4,6 +4,7 @@ import Login from "./pages/loginPage/login";
 import Dashboard from "./pages/dashboardPage/dashboard";
 import PrintData from "./pages/pnbp/printData/componentPrint";
 import { SiePsnLuasPengadaanTanah } from "./pages/psn";
+import { RealisasiAnggaran, PaguMp } from "./pages/pnbp";
 import {
   StatistikSertifikat,
   HakTanggunganElektronik,
@@ -55,6 +56,12 @@ const Main = withRouter(({ location }) => {
         </Route>
         <Route path="/Sertifikasi/HakTanggunganElektronik">
           <HakTanggunganElektronik />
+        </Route>
+        <Route path="/PNBP/RealisasiAnggaran">
+          <RealisasiAnggaran />
+        </Route>
+        <Route path="/PNBP/PaguMp">
+          <PaguMp />
         </Route>
         <Route path="/">
           <Login />
