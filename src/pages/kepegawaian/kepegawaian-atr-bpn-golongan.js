@@ -109,12 +109,39 @@ let nameColumn = [
   {
     label: "Golongan",
     value: "golongan",
+    isFixed: false,
+    isLabel: false,
   },
   {
     label: "Jumlah Pegawai",
     value: "jml_pegawai",
+    isFixed: false,
+    isLabel: false,
   },
 ];
+
+let columnTable = [
+  {
+    label: "golongan",
+    isFixed: false,
+  },
+  {
+    label: "jml_pegawai",
+    isFixed: false,
+  },
+];
+
+let grafikView = [
+  {
+    dataKey: "jml_pegawai",
+    fill: "#C71585",
+  },
+];
+
+let axis = {
+  xAxis: "golongan",
+  yAxis: "Jumlah Pegawai",
+};
 
 const KepegawaianBpnGol = () => {
   const classes = styles();
@@ -400,14 +427,18 @@ const KepegawaianBpnGol = () => {
   );
 
   const history = useHistory();
-
-  const handlePrintData = () => {
-    // window.open("/PrintPNBPJumlah PegawaiRealisasi")
+  const handlePrintData = (title, columnTable) => {
     history.push({
-      pathname: "/PrintPNBPJumlah PegawaiRealisasi",
+      pathname: "/PrintData",
       state: {
         data: data,
         comment: comment,
+        columnTable: columnTable,
+        title: title,
+        grafik: "bar",
+        nameColumn: nameColumn,
+        grafikView: grafikView,
+        axis: axis,
       },
       target: "_blank",
     });
@@ -497,7 +528,12 @@ const KepegawaianBpnGol = () => {
             <TooltipMI
               title="Print Data"
               placement="top"
-              onClick={() => handlePrintData()}
+              onClick={() =>
+                handlePrintData(
+                  "Jumlah Pegawai berdasarkan Golongan",
+                  columnTable
+                )
+              }
             >
               <IconButton aria-label="delete" size="small">
                 <IoPrint />

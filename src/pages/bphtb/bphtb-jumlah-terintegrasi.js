@@ -56,6 +56,7 @@ import html2canvas from "html2canvas";
 import moment from "moment";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
+import { useHistory, Link as LinkPrint } from "react-router-dom";
 
 const dataTemp = [
   {
@@ -72,12 +73,39 @@ let nameColumn = [
   {
     label: "Tahun",
     value: "tahun",
+    isFixed: false,
+    isLabel: true,
   },
   {
     label: "Target Penerimaan",
     value: "targetpenerimaan",
+    isFixed: true,
+    isLabel: false,
   },
 ];
+
+let columnTable = [
+  {
+    label: "tahun",
+    isFixed: false,
+  },
+  {
+    label: "targetpenerimaan",
+    isFixed: true,
+  },
+];
+
+let grafikView = [
+  {
+    dataKey: "targetpenerimaan",
+    fill: "#C71585",
+  },
+];
+
+let axis = {
+  xAxis: "tahun",
+  yAxis: "Target Penerimaan",
+};
 
 const theme = createTheme({
   typography: {
@@ -194,6 +222,24 @@ const BPHTBDaerahTerintegrasi = () => {
     setYears(event.target.value);
   };
 
+  const history = useHistory();
+  const handlePrintData = (title, columnTable) => {
+    history.push({
+      pathname: "/PrintData",
+      state: {
+        data: data,
+        comment: comment,
+        columnTable: columnTable,
+        title: title,
+        grafik: "bar",
+        nameColumn: nameColumn,
+        grafikView: grafikView,
+        axis: axis,
+      },
+      target: "_blank",
+    });
+  };
+
   const DataFormater = (number) => {
     if (number > 1000000000) {
       return (number / 1000000000).toString() + "M";
@@ -269,7 +315,7 @@ const BPHTBDaerahTerintegrasi = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="targetpenerimaan" fill="#66CDAA" />
+            <Bar dataKey="targetpenerimaan" fill="#C71585" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -442,7 +488,9 @@ const BPHTBDaerahTerintegrasi = () => {
               <TooltipMI
                 title="Print Data"
                 placement="top"
-                onClick={() => window.print()}
+                onClick={() =>
+                  handlePrintData("Jumlah daerah terintegrasi", columnTable)
+                }
               >
                 <IconButton aria-label="delete" size="small">
                   <IoPrint />
@@ -506,7 +554,7 @@ const BPHTBDaerahTerintegrasi = () => {
                       </YAxis>
                       <Tooltip content={<CustomTooltip />} />
                       <Legend />
-                      <Bar dataKey="targetpenerimaan" fill="#66CDAA" />
+                      <Bar dataKey="targetpenerimaan" fill="#C71585" />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>

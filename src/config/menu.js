@@ -62,17 +62,17 @@ export const MENU_LIST = [
     id: 1,
     icon: <BiMoney size={24} />,
     name: "Aset & Keuangan",
-    parentLink: "null",
+    parentLink: "/AssetKeuangan/",
     subMenus: [
       {
         icon: <GrMoney size={24} />,
         name: "PNBP",
-        link: "/PNBP",
+        link: "/AssetKeuangan/PNBP",
       },
       {
         icon: <RiHandCoinFill size={24} />,
         name: "BPHTB",
-        link: "./BPHTB",
+        link: "/AssetKeuangan/BPHTB",
       },
     ],
   },
@@ -80,13 +80,12 @@ export const MENU_LIST = [
     id: 2,
     icon: <SupervisorAccount />,
     name: "Kepegawaian",
-
-    parentLink: "null",
+    parentLink: "/Kepegawaian",
     subMenus: [
       {
         icon: <MdPeople size={24} />,
         name: "Pegawai ATR/BPN",
-        link: "/PegawaiAtr",
+        link: "/Kepegawaian/PegawaiAtr",
       },
       {
         icon: <GiOrganigram size={24} />,

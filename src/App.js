@@ -91,74 +91,74 @@ const Main = withRouter(({ location }) => {
           <HakTanggunganElektronik />
         </Route>
         {/* Start Route PNBP */}
-        <Route path="/PNBP/RealisasiAnggaran">
+        <Route path="/AssetKeuangan/PNBP/RealisasiAnggaran">
           <RealisasiAnggaran />
         </Route>
-        <Route path="/PNBP/PagudanMp">
+        <Route path="/AssetKeuangan//PNBP/PagudanMp">
           <PaguMp />
         </Route>
-        <Route path="/PNBP/PnbpPaguMpOpsNon">
+        <Route path="/AssetKeuangan//PNBP/PnbpPaguMpOpsNon">
           <PnbpPaguMpOpsNon />
         </Route>
-        <Route path="/PNBP/RealisasiTargetPenerimaan">
+        <Route path="/AssetKeuangan//PNBP/RealisasiTargetPenerimaan">
           <RealisasiTargetPenerimaan />
         </Route>
-        <Route path="/PNBP/RealisasiPengunaan">
+        <Route path="/AssetKeuangan//PNBP/RealisasiPengunaan">
           <RealisasiPengunaan />
         </Route>
-        <Route path="/PNBP/RealisasiPenerimaan">
+        <Route path="/AssetKeuangan//PNBP/RealisasiPenerimaan">
           <RealisasiPenerimaan />
         </Route>
-        <Route path="/PNBP/PnbpBerkasWilayah">
+        <Route path="/AssetKeuangan//PNBP/PnbpBerkasWilayah">
           <PnbpBerkasWilayah />
         </Route>
-        <Route path="/PNBP/PnbpBerkasPeringkat">
+        <Route path="/AssetKeuangan//PNBP/PnbpBerkasPeringkat">
           <PnbpBerkasPeringkat />
         </Route>
-        <Route path="/PNBP/PnbpBerkasPeringkatWilayah">
+        <Route path="/AssetKeuangan//PNBP/PnbpBerkasPeringkatWilayah">
           <PnbpBerkasPeringkatWilayah />
         </Route>
-        <Route path="/PNBP/AlokasiAnggaran">
+        <Route path="/AssetKeuangan//PNBP/AlokasiAnggaran">
           <AlokasiAnggaran />
         </Route>
-        <Route path="/PNBP/PeringkatRealisasi">
+        <Route path="/AssetKeuangan//PNBP/PeringkatRealisasi">
           <PeringkatRealisasi />
         </Route>
-        <Route path="/PNBP/PengembalianPNBP">
+        <Route path="/AssetKeuangan//PNBP/PengembalianPNBP">
           <PengembalianPNBP />
         </Route>
-        <Route path="/PNBP">
+        <Route path="/AssetKeuangan/PNBP">
           <PnbpPage />
         </Route>
         {/* End Route PNBP */}
         {/* Start Route BPHTB */}
-        <Route path="/BPHTB/BPHTBJumlahBerkas">
+        <Route path="/AssetKeuangan//BPHTB/BPHTBJumlahBerkas">
           <BPHTBJumlahBerkas />
         </Route>
-        <Route path="/BPHTB/BPHTBJumlahIntegrasi">
+        <Route path="/AssetKeuangan//BPHTB/BPHTBJumlahIntegrasi">
           <BPHTBJumlahIntegrasi />
         </Route>
-        <Route path="/BPHTB">
+        <Route path="/AssetKeuangan/BPHTB">
           <BPHTBPage />
         </Route>
         {/* End Route BPHTB */}
         {/* start route pegawai atr */}
-        <Route path="/PegawaiAtr/KepegawaianBPNPendidikan">
+        <Route path="/Kepegawaian/PegawaiAtr/KepegawaianBPNPendidikan">
           <BPHTBPage />
         </Route>
-        <Route path="/PegawaiAtr/KepegawaianBPNUsia">
+        <Route path="/Kepegawaian/PegawaiAtr/KepegawaianBPNUsia">
           <BPHTBPage />
         </Route>
-        <Route path="/PegawaiAtr/KepegawaianBPNJK">
+        <Route path="/Kepegawaian/PegawaiAtr/KepegawaianBPNJK">
           <BPHTBPage />
         </Route>
-        <Route path="/PegawaiAtr/KepegawaianBPNGol">
+        <Route path="/Kepegawaian/PegawaiAtr/KepegawaianBPNGol">
           <BPHTBPage />
         </Route>
-        <Route path="/PegawaiAtr/KepegawaianBPNJabatan">
+        <Route path="/Kepegawaian/PegawaiAtr/KepegawaianBPNJabatan">
           <KepegawaianBPNJabatan />
         </Route>
-        <Route path="/PegawaiAtr">
+        <Route path="/Kepegawaian/PegawaiAtr">
           <PegawaiAtr />
         </Route>
         {/* end route pegawai atr */}

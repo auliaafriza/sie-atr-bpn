@@ -62,6 +62,7 @@ import {
 } from "../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
+import { useHistory, Link as LinkPrint } from "react-router-dom";
 
 const dataTemp = [
   {
@@ -78,12 +79,39 @@ let nameColumn = [
   {
     label: "Nama Satker",
     value: "nama_satker",
+    isFixed: false,
+    isLabel: false,
   },
   {
     label: "Realisasi",
     value: "realisasi",
+    isFixed: true,
+    isLabel: false,
   },
 ];
+
+let columnTable = [
+  {
+    label: "nama_satker",
+    isFixed: false,
+  },
+  {
+    label: "realisasi",
+    isFixed: true,
+  },
+];
+
+let grafikView = [
+  {
+    dataKey: "realisasi",
+    fill: "#66CDAA",
+  },
+];
+
+let axis = {
+  xAxis: "nama_satker",
+  yAxis: "Target Penerimaan",
+};
 
 const theme = createTheme({
   typography: {
@@ -235,6 +263,24 @@ const BPHTBJumlahBerkas = () => {
     }
 
     return null;
+  };
+
+  const history = useHistory();
+  const handlePrintData = (title, columnTable) => {
+    history.push({
+      pathname: "/PrintData",
+      state: {
+        data: data,
+        comment: comment,
+        columnTable: columnTable,
+        title: title,
+        grafik: "bar",
+        nameColumn: nameColumn,
+        grafikView: grafikView,
+        axis: axis,
+      },
+      target: "_blank",
+    });
   };
 
   const body = (
@@ -463,7 +509,12 @@ const BPHTBJumlahBerkas = () => {
             <TooltipMI
               title="Print Data"
               placement="top"
-              onClick={() => window.print()}
+              onClick={() =>
+                handlePrintData(
+                  "Nilai BPHTB (Rupiah)dan jumlah berkas layanan BPHTB",
+                  columnTable
+                )
+              }
             >
               <IconButton aria-label="delete" size="small">
                 <IoPrint />
