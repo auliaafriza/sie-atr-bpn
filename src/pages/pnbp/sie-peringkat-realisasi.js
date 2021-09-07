@@ -58,6 +58,11 @@ import moment from "moment";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
+import { BASE_URL } from "../../config/embed_conf";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const dataTemp = [
   {
     ranking: 1,
@@ -439,8 +444,250 @@ const PeringkatRealisasi = () => {
     });
   };
 
+  const [iframeIsOpen, setOpenIframe] = useState(false);
+  const [iframeWidth, setIframeWidth] = useState(600);
+  const [iframeHeight, setIframeHeight] = useState(600);
+
+  function handleIframe(status) {
+    setOpenIframe(status);
+  }
+
+  function handleIframeWidth(e) {
+    // alert(e.target.value + "");
+    setIframeWidth(e.target.value);
+  }
+
   return (
     <div>
+      <Modal
+        open={iframeIsOpen}
+        // onClose={handleClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        // className={classes.modalStyle1}
+        style={{
+          // display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "scroll",
+          width: "90%",
+          height: "98%",
+          padding: "0 9em 0em 5em",
+        }}
+      >
+        <div className={classes.paper}>
+          <Grid
+            container
+            spacing={2}
+            direction="row"
+            style={
+              {
+                // padding: 10,
+                // paddingTop: 20,
+                // paddingBottom: 5,
+              }
+            }
+          >
+            <Grid
+              container
+              direction="row"
+              // justifyContent="flex-center"
+              alignItems="flex-start"
+              item
+              xs={10}
+            >
+              <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
+                Embeded Code Generator
+              </h2>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              // justifyContent="flex-center"
+              alignItems="flex-start"
+              item
+              xs={1}
+            >
+              <CopyToClipboard
+                text={
+                  '<iframe width="' +
+                  iframeWidth +
+                  '" height="' +
+                  iframeHeight +
+                  '"' +
+                  ' src="' +
+                  BASE_URL.domain +
+                  "/embed/" +
+                  BASE_URL.path.peringkat_realisasi +
+                  '"></iframe>'
+                }
+                onCopy={() => toast.success("success copied to clipboard!")}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ height: 30, width: "100%" }}
+                >
+                  Copy
+                </Button>
+              </CopyToClipboard>
+              <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              // justifyContent="flex-center"
+              alignItems="flex-start"
+              item
+              xs={1}
+            >
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => setOpenIframe(false)}
+                style={{ height: 30, width: "100%" }}
+              >
+                Close
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            spacing={2}
+            direction="row"
+            style={{
+              // padding: 10,
+              // paddingTop: 20,
+              paddingBottom: 5,
+            }}
+          >
+            <Grid
+              container
+              direction="row"
+              // justifyContent="flex-center"
+              alignItems="flex-start"
+              item
+              xs={10}
+            >
+              <textarea
+                style={{ width: "100%" }}
+                rows={3}
+                value={
+                  '<iframe width="' +
+                  iframeWidth +
+                  '" height="' +
+                  iframeHeight +
+                  '"' +
+                  ' src="' +
+                  BASE_URL.domain +
+                  "/embed/" +
+                  BASE_URL.path.peringkat_realisasi +
+                  '"></iframe>'
+                }
+              />
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              // justifyContent="flex-start"
+              alignItems="flex-start"
+              item
+              xs={2}
+            >
+              <Grid
+                container
+                direction="row"
+                // justifyContent="flex-start"
+                alignItems="flex-start"
+                item
+              >
+                <Grid
+                  direction="row"
+                  // justifyContent="flex-end"
+                  alignItems="flex-center"
+                  item
+                  xs={4}
+                >
+                  width
+                </Grid>
+                <Grid
+                  direction="row"
+                  // justifyContent="flex-end"
+                  alignItems="flex-center"
+                  item
+                  xs={8}
+                >
+                  <input
+                    type="number"
+                    value={iframeWidth}
+                    style={{ width: "100%" }}
+                    onChange={(e) => setIframeWidth(e.target.value)}
+                  />
+                </Grid>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                // justifyContent="flex-start"
+                alignItems="flex-start"
+                item
+              >
+                <Grid
+                  direction="row"
+                  // justifyContent="flex-end"
+                  alignItems="flex-center"
+                  item
+                  xs={4}
+                >
+                  height
+                </Grid>
+                <Grid
+                  direction="row"
+                  // justifyContent="flex-end"
+                  alignItems="flex-center"
+                  item
+                  xs={8}
+                >
+                  <input
+                    type="number"
+                    value={iframeHeight}
+                    style={{ width: "100%" }}
+                    onChange={(e) => setIframeHeight(e.target.value)}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            spacing={2}
+            direction="row"
+            style={{
+              // padding: 10,
+              // paddingTop: 20,
+              paddingBottom: 5,
+            }}
+          >
+            <iframe
+              width={iframeWidth}
+              height={iframeHeight}
+              src={
+                BASE_URL.domain + "/embed/" + BASE_URL.path.peringkat_realisasi
+              }
+            ></iframe>
+          </Grid>
+        </div>
+      </Modal>
       <Modal
         open={open}
         onClose={handleClose}
@@ -488,15 +735,7 @@ const PeringkatRealisasi = () => {
               <IconButton
                 size="small"
                 onClick={() => {
-                  navigator.clipboard.writeText(
-                    '<iframe width="500" height="500"' +
-                      ' src="' +
-                      BASE_URL.domain +
-                      "/embed/" +
-                      BASE_URL.path.peringkat_realisasi +
-                      '"></iframe>'
-                  );
-                  alert("code embeded berhasil dicopy");
+                  handleIframe(true);
                 }}
               >
                 <IoCopySharp />
