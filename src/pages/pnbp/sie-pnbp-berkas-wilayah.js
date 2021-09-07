@@ -40,7 +40,7 @@ import {
   Divider,
   ListItemText,
   ListItemAvatar,
-  Avatar,
+  Checkbox,
   TablePagination,
   Button,
 } from "@material-ui/core";
@@ -64,16 +64,22 @@ import {
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getBerkasPnbpWilayahFilter,
+  getBerkasPnbpKantorFilter,
+} from "../../actions/pnbpAction";
+
 const dataTemp = [
   {
-    wilayah: "Kantor Wilayah Provinsi",
-    jumlahberkas: 0,
-    pnbp: 0,
-  },
-  {
-    tahun: "Kantor Wilayah Provinsi",
+    wilayah: "Kantor Wilayah Provinsi Jabar",
     jumlahberkas: 10,
     pnbp: 10,
+  },
+  {
+    wilayah: "Kantor Wilayah Provinsi Jateng",
+    jumlahberkas: 20,
+    pnbp: 20,
   },
 ];
 
@@ -132,7 +138,12 @@ let nameColumn = [
 
 const PnbpBerkasWilayah = () => {
   const classes = styles();
-  const [years, setYears] = useState("2012");
+  const dispatch = useDispatch();
+  const berkasPnbpWilayah = useSelector(
+    (state) => state.pnbp.berkasPnbpWilayah
+  );
+  const berkasPnbpKantor = useSelector((state) => state.pnbp.berkasPnbpKantor);
+  const [years, setYears] = useState("2017");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [semester, setSemester] = useState(2);
@@ -147,6 +158,13 @@ const PnbpBerkasWilayah = () => {
     nameColumn: [],
     listTop10Comment: [],
   });
+  const [dataFilter, setDataFilter] = useState([
+    "Kantor Wilayah Provinsi Jawa Barat",
+    "Kantor Wilayah Provinsi Jambi",
+  ]);
+  const [dataFilterKantor, setDataFilterKantor] = useState([
+    "Kantor Pertanahan Kabupaten Bandung",
+  ]);
   const inputRef = createRef(null);
   const [image, takeScreenshot] = useScreenshot({
     type: "image/jpeg",
@@ -174,6 +192,14 @@ const PnbpBerkasWilayah = () => {
     setOpen(false);
   };
 
+  const handleChangeFilter = (event) => {
+    setDataFilter(event.target.value);
+  };
+
+  const handleChangeFilterKantor = (event) => {
+    setDataFilterKantor(event.target.value);
+  };
+
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
@@ -184,14 +210,18 @@ const PnbpBerkasWilayah = () => {
   };
 
   const getData = () => {
+    let temp = { kantor: [], wilayah: [] };
+    temp.kantor = dataFilterKantor;
+    temp.wilayah = dataFilter;
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_berkas?tahun=${years}&semeter=${semester}&bulan=${bulan}`
+      .post(
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_berkas?tahun=${years}&semeter=${semester}&bulan=${bulan}`,
+        temp
       )
       .then(function (response) {
-        setData(response.data.data);
+        setData(response.data.data.length != 0 ? response.data.data : dataTemp);
         setComment(response.data);
         console.log(response);
       })
@@ -205,6 +235,8 @@ const PnbpBerkasWilayah = () => {
   };
 
   useEffect(() => {
+    dispatch(getBerkasPnbpWilayahFilter());
+    dispatch(getBerkasPnbpKantorFilter());
     getData();
   }, []);
 
@@ -233,14 +265,16 @@ const PnbpBerkasWilayah = () => {
   };
 
   const DataFormaterX = (value) => {
-    return value.replace("Kantor Wilayah Provinsi ", "");
+    return value.includes("Kantor Pertanahan")
+      ? value.replace("Kantor Pertanahan ", "")
+      : value.replace("Kantor Wilayah Provinsi ", "");
   };
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">Tahun {label}</p>
+          <p className="label">{label}</p>
           <p
             className="desc"
             style={{ color: payload[0].color }}
@@ -289,13 +323,13 @@ const PnbpBerkasWilayah = () => {
             <XAxis
               dataKey="wilayah"
               scale="band"
-              angle={60}
+              // angle={60}
               interval={0}
               tick={{
                 // angle: 90,
-                transform: "rotate(-35)",
-                textAnchor: "start",
-                dominantBaseline: "ideographic",
+                // transform: "rotate(-35)",
+                // textAnchor: "start",
+                // dominantBaseline: "ideographic",
                 fontSize: 8,
               }}
               height={100}
@@ -303,7 +337,7 @@ const PnbpBerkasWilayah = () => {
             />
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Jumlah Nilai PNBP dan berkas"
+                value="Jumlah Nilai"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
@@ -578,7 +612,7 @@ const PnbpBerkasWilayah = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -608,7 +642,7 @@ const PnbpBerkasWilayah = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -638,15 +672,7 @@ const PnbpBerkasWilayah = () => {
                   </Select>
                 </FormControl>
               </Grid>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -676,13 +702,97 @@ const PnbpBerkasWilayah = () => {
                   </Select>
                 </FormControl>
               </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Kantor
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel
+                    id="demo-simple-select-outlined-label"
+                    htmlFor="outlined-Name"
+                  >
+                    Kantor
+                  </InputLabel>
+                  <Select
+                    multiple
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={dataFilterKantor}
+                    onChange={handleChangeFilterKantor}
+                    label="Kantor"
+                    className={classes.selectStyle}
+                    renderValue={(selected) => `${selected.length} Terpilih`}
+                  >
+                    {berkasPnbpKantor.map((item, i) => {
+                      return (
+                        <MenuItem value={item.kantor} key={i}>
+                          <Checkbox
+                            checked={dataFilterKantor.indexOf(item.kantor) > -1}
+                          />
+                          <ListItemText primary={item.kantor} />
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Wilayah
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel
+                    id="demo-simple-select-outlined-label"
+                    htmlFor="outlined-Name"
+                  >
+                    Wilayah
+                  </InputLabel>
+                  <Select
+                    multiple
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={dataFilter}
+                    onChange={handleChangeFilter}
+                    label="Wilayah"
+                    className={classes.selectStyle}
+                    renderValue={(selected) => `${selected.length} Terpilih`}
+                  >
+                    {berkasPnbpWilayah.map((item, i) => {
+                      return (
+                        <MenuItem value={item.wilayah} key={i}>
+                          <Checkbox
+                            checked={dataFilter.indexOf(item.wilayah) > -1}
+                          />
+                          <ListItemText primary={item.wilayah} />
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
               <Grid
                 container
                 direction="row"
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={6}
+                xs={4}
                 style={{ paddingTop: 40, paddingLeft: 20 }}
               >
                 <Button
@@ -757,13 +867,13 @@ const PnbpBerkasWilayah = () => {
                     <XAxis
                       dataKey="wilayah"
                       scale="band"
-                      angle={60}
-                      interval={0}
+                      // angle={60}
+                      // interval={0}
                       tick={{
                         // angle: 90,
-                        transform: "rotate(-35)",
-                        textAnchor: "start",
-                        dominantBaseline: "ideographic",
+                        // transform: "rotate(-35)",
+                        // textAnchor: "start",
+                        // dominantBaseline: "ideographic",
                         fontSize: 8,
                       }}
                       height={100}
@@ -771,7 +881,7 @@ const PnbpBerkasWilayah = () => {
                     />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
-                        value="Jumlah Nilai PNBP dan berkas"
+                        value="Jumlah Nilai"
                         angle={-90}
                         position="insideBottomLeft"
                         offset={-5}

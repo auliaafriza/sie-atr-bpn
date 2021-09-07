@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   BarChart,
   Bar,
@@ -42,7 +42,6 @@ import {
   Avatar,
   TablePagination,
   Button,
-  Checkbox,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -51,70 +50,26 @@ import {
 } from "@material-ui/core/styles";
 import { IoEye, IoPrint } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
-import styles from "../dashboardPage/styles";
+import styles from "./styles";
 import axios from "axios";
-import { useScreenshot } from "use-react-screenshot";
-import html2canvas from "html2canvas";
+import { useReactToPrint } from "react-to-print";
+import { tahunData } from "../../functionGlobal/globalDataAsset";
 import moment from "moment";
-import {
-  tahunData,
-  bulanDataNumberic,
-  semesterData,
-} from "../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
-import { useHistory, Link as LinkPrint } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getBphtbBerkasFilter } from "../../actions/bphtbAction";
+import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const dataTemp = [
   {
-    nama_satker: "",
-    realisasi: 0,
+    pendidikan: "",
+    jml_pegawai: 0,
   },
   {
-    nama_satker: "",
-    realisasi: 10,
+    pendidikan: "",
+    jml_pegawai: 0,
   },
 ];
-
-let nameColumn = [
-  {
-    label: "Nama Satker",
-    value: "nama_satker",
-    isFixed: false,
-    isLabel: false,
-  },
-  {
-    label: "Realisasi",
-    value: "realisasi",
-    isFixed: true,
-    isLabel: false,
-  },
-];
-
-let columnTable = [
-  {
-    label: "nama_satker",
-    isFixed: false,
-  },
-  {
-    label: "realisasi",
-    isFixed: true,
-  },
-];
-
-let grafikView = [
-  {
-    dataKey: "realisasi",
-    fill: "#66CDAA",
-  },
-];
-
-let axis = {
-  xAxis: "nama_satker",
-  yAxis: "Target Penerimaan",
-};
 
 const theme = createTheme({
   typography: {
@@ -148,44 +103,67 @@ const StyledTableRow = withStyles((theme) => ({
 
 let url = "http://10.20.57.234/SIEBackEnd/";
 
-const BPHTBJumlahBerkas = () => {
-  const classes = styles();
-  const dispatch = useDispatch();
-  const bphtbBerkasFilter = useSelector(
-    (state) => state.bphtb.bphtbBerkasFilter
-  );
+let nameColumn = [
+  {
+    label: "Pendidikan",
+    value: "pendidikan",
+    isFixed: false,
+    isLabel: false,
+  },
+  {
+    label: "Jumlah Pegawai",
+    value: "jml_pegawai",
+    isFixed: false,
+    isLabel: false,
+  },
+];
 
-  const [years, setYears] = useState("2021");
+let columnTable = [
+  {
+    label: "pendidikan",
+    isFixed: false,
+  },
+  {
+    label: "jml_pegawai",
+    isFixed: false,
+  },
+];
+
+let grafikView = [
+  {
+    dataKey: "jml_pegawai",
+    fill: "#FFA07A",
+  },
+];
+
+let axis = {
+  xAxis: "pendidikan",
+  yAxis: "Jumlah Pegawai",
+};
+
+const KepegawaianOrganisasi = () => {
+  const classes = styles();
+  const [years, setYears] = useState("2022");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
-  const [semester, setSemester] = useState(2);
-  const [bulan, setBulan] = useState("04");
+  const [tahunAwal, setTahunAwal] = useState("2017");
+  const [kanwil, setKanwil] = useState("");
+  const [kantor, setKantor] = useState("");
+  const [satker, setSatker] = useState("");
+  const [kanwilDis, setKanwilDis] = useState("");
+  const [kantorDis, setKantorDis] = useState("");
+  const [satkerDis, setSatkerDis] = useState("");
+
   const [open, setOpen] = useState(false);
-  const [dataFilter, setDataFilter] = useState([
-    "Kantor Pertanahan Kabupaten Kampar",
-  ]);
-
-  const DataFormaterX = (value) => {
-    return (
-      value.replace("Kantor Pertanahan ", "") ||
-      value.replace("Kantor Wilayah ", "")
-    );
-  };
-
   const [dataModal, setDataModal] = useState({
     title: "",
-    grafik: "",
+    grafik: [],
     dataTable: "",
     analisis: "",
     type: "",
-    nameColumn: [],
     listTop10Comment: [],
   });
-  const inputRef = createRef(null);
-  const [image, takeScreenshot] = useScreenshot({
-    type: "image/jpeg",
-    quality: 1.0,
-  });
+  const inputRef = useRef();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -198,7 +176,10 @@ const BPHTBJumlahBerkas = () => {
     setPage(0);
   };
 
-  const getImage = () => takeScreenshot(ref.current);
+  const satkerRed = useSelector((state) => state.globalReducer.satker);
+  const kantorRed = useSelector((state) => state.globalReducer.kantor);
+  const kanwilRed = useSelector((state) => state.globalReducer.kanwil);
+
   const handleOpen = (data) => {
     setOpen(true);
     setDataModal(data);
@@ -208,29 +189,12 @@ const BPHTBJumlahBerkas = () => {
     setOpen(false);
   };
 
-  const exportData = () => {
-    fileExport(
-      loadDataColumnTable(nameColumn),
-      "Nilai BPHTB (Rupiah)dan jumlah berkas layanan BPHTB",
-      data,
-      ".xlsx"
-    );
-  };
-
-  const handleChangeFilter = (event) => {
-    setDataFilter(event.target.value);
-  };
-
   const getData = () => {
-    let temp = { satker: [] };
-    temp.satker = dataFilter;
-
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .post(
-        `${url}Aset&Keuangan/PNBP/sie_pengembalian_pnbp?tahun=${years}&semeter=${semester}&bulan=${bulan}`,
-        temp
+      .get(
+        `${url}Kepegawaian/Organisasi/sie_organisasi_jumlah_unit?tahunAwal=${tahunAwal}&tahunAkhir=${years}&kantor=${kantor}&kanwil=${kanwil}&satker=${satker}`
       )
       .then(function (response) {
         setData(response.data.data);
@@ -247,7 +211,6 @@ const BPHTBJumlahBerkas = () => {
   };
 
   useEffect(() => {
-    dispatch(getBphtbBerkasFilter());
     getData();
   }, []);
 
@@ -255,12 +218,8 @@ const BPHTBJumlahBerkas = () => {
     setYears(event.target.value);
   };
 
-  const handleChangeBulan = (event) => {
-    setBulan(event.target.value);
-  };
-
-  const handleChangeSemester = (event) => {
-    setSemester(event.target.value);
+  const handleChangeAwal = (event) => {
+    setTahunAwal(event.target.value);
   };
 
   const DataFormater = (number) => {
@@ -283,9 +242,7 @@ const BPHTBJumlahBerkas = () => {
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Realisasi : Rp ${payload[0].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+          >{`Jumlah Pegawai : ${payload[0].value}`}</p>
         </div>
       );
     }
@@ -293,39 +250,25 @@ const BPHTBJumlahBerkas = () => {
     return null;
   };
 
-  const history = useHistory();
-  const handlePrintData = (title, columnTable) => {
-    history.push({
-      pathname: "/PrintData",
-      state: {
-        data: data,
-        comment: comment,
-        columnTable: columnTable,
-        title: title,
-        grafik: "bar",
-        nameColumn: nameColumn,
-        grafikView: grafikView,
-        axis: axis,
-      },
-      target: "_blank",
-    });
+  const exportData = () => {
+    fileExport(
+      loadDataColumnTable(nameColumn),
+      "Jumlah unit organisasi ",
+      data,
+      ".xlsx"
+    );
   };
+
+  const handlePrint = useReactToPrint({
+    content: () => inputRef.current,
+  });
 
   const body = (
     <div className={classes.paper}>
       <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
         {dataModal.title}
       </h2>
-      {/* <Grid item xs={6}>
-        <TooltipMI title="Screenshot modal" placement="top">
-          <IconButton onClick={getImage}>
-            <IoMdDownload />
-          </IconButton>
-        </TooltipMI>
-      </Grid> */}
-
       <div className={classes.barChart}>
-        {/* <img width={500} src={image} /> */}
         <ResponsiveContainer width="100%" height={250}>
           <BarChart
             width={500}
@@ -345,36 +288,22 @@ const BPHTBJumlahBerkas = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="nama_satker"
-              scale="band"
-              // angle={60}
-              // interval={0}
-              tick={{
-                // angle: 90,
-                // transform: "rotate(-35)",
-                // textAnchor: "start",
-                // dominantBaseline: "ideographic",
-                fontSize: 8,
-              }}
-              height={100}
-              tickFormatter={DataFormaterX}
-            ></XAxis>
+            <XAxis dataKey="pendidikan"></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Realisasi"
+                value="Nilai Satuan 1 Juta"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
               />
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
-            {/* <Legend /> */}
-            <Bar dataKey="realisasi" fill="#66CDAA" />
+            <Legend />
+            <Bar dataKey="jml_pegawai" fill="#FFA07A" />
           </BarChart>
         </ResponsiveContainer>
       </div>
-      {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
+      {nameColumn && nameColumn.length != 0 ? (
         <>
           <TableContainer component={Paper} style={{ marginTop: 20 }}>
             <Table
@@ -384,24 +313,29 @@ const BPHTBJumlahBerkas = () => {
             >
               <TableHead>
                 <TableRow>
-                  {dataModal.nameColumn.map((item) => (
-                    <StyledTableCell align="left">{item}</StyledTableCell>
-                  ))}
+                  {nameColumn.map((item, i) => {
+                    return (
+                      <StyledTableCell align="center">
+                        {item.label}
+                      </StyledTableCell>
+                    );
+                  })}
                 </TableRow>
               </TableHead>
               <TableBody>
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.nama_satker}>
-                      <StyledTableCell align="left" component="th" scope="row">
-                        {row.nama_satker}
+                    <StyledTableRow key={row.pendidikan}>
+                      <StyledTableCell
+                        align="center"
+                        component="th"
+                        scope="row"
+                      >
+                        {row.pendidikan}
                       </StyledTableCell>
-                      <StyledTableCell align="left">
-                        Rp{" "}
-                        {row.realisasi
-                          .toFixed(2)
-                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                      <StyledTableCell align="center">
+                        {row.jml_pegawai}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
@@ -464,8 +398,60 @@ const BPHTBJumlahBerkas = () => {
     </div>
   );
 
+  const history = useHistory();
+
+  const handlePrintData = (title, columnTable) => {
+    history.push({
+      pathname: "/PrintData",
+      state: {
+        data: data,
+        comment: comment,
+        columnTable: columnTable,
+        title: title,
+        grafik: "bar",
+        nameColumn: nameColumn,
+        grafikView: grafikView,
+        axis: axis,
+      },
+      target: "_blank",
+    });
+  };
+
+  const handleChangeKantor = (event) => {
+    let temp =
+      event.target.value.length > 10
+        ? event.target.value.slice(0, 10)
+        : event.target.value;
+    setKantorDis(temp);
+    setKantor(event.target.value);
+  };
+
+  const handleChangeKanwil = (event) => {
+    setKanwilDis(
+      event.target.value.length > 10
+        ? event.target.value.slice(0, 10)
+        : event.target.value
+    );
+    setKanwil(event.target.value);
+  };
+
+  const handleChangeSatket = (event) => {
+    setSatkerDis(
+      event.target.value.length > 10
+        ? event.target.value.slice(0, 10)
+        : event.target.value
+    );
+    setSatker(event.target.value);
+  };
+
   return (
-    <div>
+    <div
+      style={{
+        paddingLeft: 20,
+        paddingBottom: 20,
+        height: "90%",
+      }}
+    >
       <Modal
         open={open}
         onClose={handleClose}
@@ -484,26 +470,30 @@ const BPHTBJumlahBerkas = () => {
       >
         {body}
       </Modal>
+
       <Grid
         container
         spacing={2}
         direction="row"
         style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
       >
-        <Grid item xs={9}>
+        <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            Nilai BPHTB (Rupiah)dan jumlah berkas layanan BPHTB
+            Jumlah unit organisasi
           </Typography>
         </Grid>
-
         <Grid
           container
           direction="row"
           justifyContent="flex-end"
           alignItems="flex-end"
           item
-          xs={3}
+          xs={6}
         >
+          {/* <ReactToPrint
+            trigger={() => <button>Print this out!</button>}
+            content={() => inputRef.current}
+          /> */}
           <ButtonGroup
             aria-label="outlined button group"
             className={classes.buttonGroupStyle}
@@ -514,8 +504,7 @@ const BPHTBJumlahBerkas = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title:
-                      "Nilai BPHTB (Rupiah)dan jumlah berkas layanan BPHTB",
+                    title: "Jumlah unit organisasi  ",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -526,7 +515,6 @@ const BPHTBJumlahBerkas = () => {
                           )
                         : "",
                     type: "Bar",
-                    nameColumn: ["Nama Satker", "Realisasi"],
                     listTop10Comment: comment.listTop10Comment,
                   })
                 }
@@ -534,14 +522,21 @@ const BPHTBJumlahBerkas = () => {
                 <IoEye />
               </IconButton>
             </TooltipMI>
+            {/* <ReactToPrint
+              trigger={() => (
+                <TooltipMI title="Print Data" placement="top">
+                  <IconButton aria-label="delete" size="small">
+                    <IoPrint />
+                  </IconButton>
+                </TooltipMI>
+              )}
+              content={inputRef.current}
+            > */}
             <TooltipMI
               title="Print Data"
               placement="top"
               onClick={() =>
-                handlePrintData(
-                  "Nilai BPHTB (Rupiah)dan jumlah berkas layanan BPHTB",
-                  columnTable
-                )
+                handlePrintData("Jumlah unit organisasi ", columnTable)
               }
             >
               <IconButton aria-label="delete" size="small">
@@ -572,213 +567,6 @@ const BPHTBJumlahBerkas = () => {
         }}
       />
       <Grid container spacing={2}>
-        <Grid item xs={4}>
-          <div style={{ margin: 10, marginRight: 25 }}>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={12} sm={4}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Pilih Tahun
-                </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={years}
-                    onChange={handleChange}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                  >
-                    {tahunData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Pilih Bulan
-                </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Bulan
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={bulan}
-                    onChange={handleChangeBulan}
-                    label="Bulan"
-                    className={classes.selectStyle}
-                  >
-                    {bulanDataNumberic.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Pilih Semester
-                </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Semester
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={semester}
-                    onChange={handleChangeSemester}
-                    label="Semester"
-                    className={classes.selectStyle}
-                  >
-                    {semesterData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={6}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Pilih Kantor
-                </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel
-                    id="demo-simple-select-outlined-label"
-                    htmlFor="outlined-Name"
-                  >
-                    Kantor
-                  </InputLabel>
-                  <Select
-                    multiple
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={dataFilter}
-                    onChange={handleChangeFilter}
-                    label="Kantor"
-                    className={classes.selectStyle}
-                    renderValue={(selected) => `${selected.length} Terpilih`}
-                  >
-                    {bphtbBerkasFilter.map((item, i) => {
-                      return (
-                        <MenuItem value={item.kantor} key={i}>
-                          <Checkbox
-                            checked={dataFilter.indexOf(item.kantor) > -1}
-                          />
-                          <ListItemText primary={item.kantor} />
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid
-                container
-                direction="row"
-                justifyContent="flex-start"
-                alignItems="center"
-                item
-                xs={6}
-                style={{ paddingTop: 40, paddingLeft: 20 }}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => getData()}
-                  style={{ height: 57, width: "100%" }}
-                >
-                  Submit
-                </Button>
-              </Grid>
-            </Grid>
-
-            <Typography
-              className={classes.isiContentTextStyle}
-              variant="h2"
-              wrap
-            >
-              {comment && comment.lastComment
-                ? comment.lastComment.analisisData
-                    .replace(/<[^>]+>/g, "")
-                    .slice(0, 100)
-                : ""}
-              {comment &&
-              comment.lastComment &&
-              comment.lastComment.analisisData.length > 100 ? (
-                <Link
-                  href="#"
-                  onClick={() =>
-                    handleOpen({
-                      title:
-                        "Nilai BPHTB (Rupiah)dan jumlah berkas layanan BPHTB",
-                      grafik: data,
-                      dataTable: "",
-                      analisis:
-                        comment && comment.lastComment
-                          ? comment.lastComment.analisisData.replace(
-                              /<[^>]+>/g,
-                              ""
-                            )
-                          : "",
-                      type: "Bar",
-                      nameColumn: ["Nama Satker", "Realisasi"],
-                      listTop10Comment: comment.listTop10Comment,
-                    })
-                  }
-                  variant="body2"
-                >
-                  {" "}
-                  More
-                </Link>
-              ) : null}
-            </Typography>
-          </div>
-        </Grid>
         <Grid item xs={8}>
           <Card className={classes.root} variant="outlined">
             <CardContent>
@@ -802,41 +590,276 @@ const BPHTBJumlahBerkas = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                      dataKey="nama_satker"
-                      scale="band"
-                      // angle={60}
-                      // interval={0}
-                      tick={{
-                        // angle: 90,
-                        // transform: "rotate(-35)",
-                        // textAnchor: "start",
-                        // dominantBaseline: "ideographic",
-                        fontSize: 8,
-                      }}
-                      height={100}
-                      tickFormatter={DataFormaterX}
-                    />
+                    <XAxis dataKey="pendidikan" />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
-                        value="Target Penerimaan"
+                        value="Nilai Satuan 1 Juta"
                         angle={-90}
                         position="insideBottomLeft"
                         offset={-5}
                       />
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
-                    {/* <Legend /> */}
-                    <Bar dataKey="realisasi" fill="#66CDAA" />
+                    <Legend />
+                    <Bar dataKey="jml_pegawai" fill="#FFA07A" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
         </Grid>
+        <Grid item xs={4}>
+          <div style={{ margin: 10, marginRight: 25 }}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Tahun Awal
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Tahun Awal
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={tahunAwal}
+                    onChange={handleChangeAwal}
+                    label="Tahun"
+                    className={classes.selectStyle}
+                  >
+                    {tahunData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Tahun Akhir
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Tahun Akhir
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={years}
+                    onChange={handleChange}
+                    label="Bulan"
+                    className={classes.selectStyle}
+                  >
+                    {tahunData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Satker
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Satker
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={satker}
+                    onChange={handleChangeSatket}
+                    label="Satker"
+                    className={classes.selectStyle}
+                    renderValue={(selected) =>
+                      selected.length > 8
+                        ? `${selected.slice(0, 8)}...`
+                        : selected
+                    }
+                  >
+                    {satkerRed && satkerRed.length != 0
+                      ? satkerRed.map((item, i) => {
+                          return (
+                            <MenuItem value={item.satker} key={i}>
+                              {item.satker}
+                            </MenuItem>
+                          );
+                        })
+                      : null}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Kantor
+                </Typography>
+                {/* <Autocomplete
+                  id="combo-box-demo"
+                  options={kantorRed}
+                  getOptionLabel={(option) => option.kantor}
+                  className={classes.selectStyle}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Kantor" variant="outlined" />
+                  )}
+                /> */}
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Kantor
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={kantor}
+                    onChange={handleChangeKantor}
+                    label="Kantor"
+                    className={classes.selectStyle}
+                    renderValue={(selected) =>
+                      selected.length > 8
+                        ? `${selected.slice(0, 8)}...`
+                        : selected
+                    }
+                  >
+                    {kantorRed && kantorRed.length != 0
+                      ? kantorRed.map((item, i) => {
+                          return (
+                            <MenuItem value={item.kantor} key={i}>
+                              {item.kantor}
+                            </MenuItem>
+                          );
+                        })
+                      : null}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Kanwil
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Kanwil
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={kanwil}
+                    onChange={handleChangeKanwil}
+                    label="Kanwil"
+                    className={classes.selectStyle}
+                    renderValue={(selected) =>
+                      selected.length > 8
+                        ? `${selected.slice(0, 8)}...`
+                        : selected
+                    }
+                  >
+                    {kanwilRed && kanwilRed.length != 0
+                      ? kanwilRed.map((item, i) => {
+                          return (
+                            <MenuItem value={item.kanwil} key={i}>
+                              {item.kanwil}
+                            </MenuItem>
+                          );
+                        })
+                      : null}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+                item
+                xs={4}
+                style={{ paddingTop: 40, paddingLeft: 20 }}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => getData()}
+                  style={{ height: 57, width: "100%" }}
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
+          </div>
+        </Grid>
       </Grid>
+      <Typography className={classes.isiContentTextStyle} variant="h2" wrap>
+        {comment && comment.lastComment
+          ? comment.lastComment.analisisData
+              .replace(/<[^>]+>/g, "")
+              .slice(0, 500)
+          : ""}
+        {comment &&
+        comment.lastComment &&
+        comment.lastComment.analisisData.length > 100 ? (
+          <Link
+            href="#"
+            onClick={() =>
+              handleOpen({
+                title: "Jumlah unit organisasi  ",
+                grafik: data,
+                dataTable: "",
+                analisis:
+                  comment && comment.lastComment
+                    ? comment.lastComment.analisisData.replace(/<[^>]+>/g, "")
+                    : "",
+                type: "Bar",
+                listTop10Comment: comment.listTop10Comment,
+              })
+            }
+            variant="body2"
+          >
+            {" "}
+            More
+          </Link>
+        ) : null}
+      </Typography>
     </div>
   );
 };
 
-export default BPHTBJumlahBerkas;
+export default KepegawaianOrganisasi;

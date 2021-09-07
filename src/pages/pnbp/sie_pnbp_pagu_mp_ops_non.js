@@ -286,14 +286,14 @@ const PaguMpOpsNon = () => {
             <Line
               type="monotone"
               dataKey="alokasi_anggaran"
-              stroke="#6EB5FF"
+              stroke="#FFDEAD"
               activeDot={{ r: 8 }}
               strokeWidth={3}
             />
             <Line
               type="monotone"
               dataKey="anggaran"
-              stroke="#FCB9AA"
+              stroke="#4B0082"
               strokeWidth={3}
             />
           </LineChart>
@@ -419,11 +419,11 @@ const PaguMpOpsNon = () => {
   let grafikView = [
     {
       dataKey: "alokasi_anggaran",
-      fill: "#6EB5FF",
+      fill: "#FFDEAD",
     },
     {
       dataKey: "anggaran",
-      fill: "#FCB9AA",
+      fill: "#4B0082",
     },
   ];
 
@@ -612,14 +612,14 @@ const PaguMpOpsNon = () => {
                       <Line
                         type="monotone"
                         dataKey="alokasi_anggaran"
-                        stroke="#6EB5FF"
+                        stroke="#FFDEAD"
                         activeDot={{ r: 8 }}
                         strokeWidth={3}
                       />
                       <Line
                         type="monotone"
                         dataKey="anggaran"
-                        stroke="#FCB9AA"
+                        stroke="#4B0082"
                         strokeWidth={3}
                       />
                     </LineChart>

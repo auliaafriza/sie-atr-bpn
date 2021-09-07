@@ -143,6 +143,8 @@ const realisasiPenggunaan = () => {
   const [open, setOpen] = useState(false);
   const [dataFilter, setDataFilter] = useState([
     "Kantor Pertanahan Kabupaten Kampar",
+    "Kantor Pertanahan Kabupaten Kupang",
+    "Kantor Pertanahan Kabupaten Sumba Barat",
   ]);
 
   const [dataModal, setDataModal] = useState({
@@ -299,13 +301,13 @@ const realisasiPenggunaan = () => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="kantor"
-              angle={60}
-              interval={0}
+              // angle={60}
+              // interval={0}
               tick={{
                 // angle: 90,
-                transform: "rotate(-35)",
-                textAnchor: "start",
-                dominantBaseline: "ideographic",
+                // transform: "rotate(-35)",
+                // textAnchor: "start",
+                // dominantBaseline: "ideographic",
                 fontSize: 8,
               }}
               height={100}
@@ -470,7 +472,14 @@ const realisasiPenggunaan = () => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        backgroundColor: "rgba(107,111,130,0.2)",
+        paddingTop: 20,
+        paddingBottom: 20,
+        paddingLeft: 20,
+      }}
+    >
       <Modal
         open={open}
         onClose={handleClose}
@@ -489,13 +498,7 @@ const realisasiPenggunaan = () => {
       >
         {body}
       </Modal>
-      <Box
-        style={{
-          backgroundColor: "rgba(107,111,130,0.2)",
-          paddingTop: 20,
-          paddingBottom: 20,
-        }}
-      >
+      <Box>
         <Grid
           container
           spacing={2}
@@ -615,13 +618,13 @@ const realisasiPenggunaan = () => {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis
                         dataKey="kantor"
-                        angle={60}
-                        interval={0}
+                        // angle={60}
+                        // interval={0}
                         tick={{
                           // angle: 90,
-                          transform: "rotate(-35)",
-                          textAnchor: "start",
-                          dominantBaseline: "ideographic",
+                          // transform: "rotate(-35)",
+                          // textAnchor: "start",
+                          // dominantBaseline: "ideographic",
                           fontSize: 8,
                         }}
                         height={100}

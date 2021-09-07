@@ -90,7 +90,7 @@ export const MENU_LIST = [
       {
         icon: <GiOrganigram size={24} />,
         name: "Organisasi",
-        link: null,
+        link: "/Kepegawaian/Organisasi",
       },
     ],
   },

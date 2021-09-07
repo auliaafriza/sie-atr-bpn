@@ -439,7 +439,15 @@ const RealisasiAnggaran = () => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        backgroundColor: "rgba(107,111,130,0.2)",
+        paddingTop: 20,
+        paddingBottom: 20,
+        paddingLeft: 20,
+        marginTop: 20,
+      }}
+    >
       <Modal
         open={open}
         onClose={handleClose}
@@ -458,13 +466,7 @@ const RealisasiAnggaran = () => {
       >
         {body}
       </Modal>
-      <Box
-        style={{
-          backgroundColor: "rgba(107,111,130,0.2)",
-          paddingTop: 20,
-          paddingBottom: 20,
-        }}
-      >
+      <Box>
         <Grid
           container
           spacing={2}

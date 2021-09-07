@@ -283,13 +283,13 @@ const PengembalianPNBP = () => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="nama_satker"
-              angle={60}
-              interval={0}
+              // angle={60}
+              // interval={0}
               tick={{
                 // angle: 90,
-                transform: "rotate(-35)",
-                textAnchor: "start",
-                dominantBaseline: "ideographic",
+                // transform: "rotate(-35)",
+                // textAnchor: "start",
+                // dominantBaseline: "ideographic",
                 fontSize: 8,
               }}
               height={100}
@@ -769,13 +769,13 @@ const PengembalianPNBP = () => {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
                       dataKey="nama_satker"
-                      angle={60}
-                      interval={0}
+                      // angle={60}
+                      // interval={0}
                       tick={{
                         // angle: 90,
-                        transform: "rotate(-35)",
-                        textAnchor: "start",
-                        dominantBaseline: "ideographic",
+                        // transform: "rotate(-35)",
+                        // textAnchor: "start",
+                        // dominantBaseline: "ideographic",
                         fontSize: 8,
                       }}
                       height={100}
