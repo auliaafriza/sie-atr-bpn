@@ -114,21 +114,21 @@ export const MENU_LIST = [
     name: "Kinerja Layanan",
     parentLink: "KinerjaLayanan",
     subMenus: [
-      {
-        icon: <BsNewspaper size={22} />,
-        name: "IKPA",
-        link: null,
-      },
-      {
-        icon: <GrLineChart size={24} />,
-        name: "IKK/IKU",
-        link: null,
-      },
-      {
-        icon: <FcDebt size={24} />,
-        name: "Tunggakan",
-        link: null,
-      },
+      // {
+      //   icon: <BsNewspaper size={22} />,
+      //   name: "IKPA",
+      //   link: null,
+      // },
+      // {
+      //   icon: <GrLineChart size={24} />,
+      //   name: "IKK/IKU",
+      //   link: null,
+      // },
+      // {
+      //   icon: <FcDebt size={24} />,
+      //   name: "Tunggakan",
+      //   link: null,
+      // },
       {
         icon: <RiServiceFill size={24} />,
         name: "Layanan Umum",
