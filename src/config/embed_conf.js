@@ -1,8 +1,10 @@
 export const BASE_URL = {
-  domain: "http://10.20.57.234:3000",
+  // domain: "http://10.20.57.234:3000",
+  domain: "http://localhost:3000",
   path: {
     pnbp_realisasi_anggaran: "sie-pnbp-realisasi-anggaran",
     pnbp_pagu_mp: "sie-pnbp-pagu-mp",
+    pnbp_pagu_mp_ops_non: "sie-pnbp-pagu-mp-ops-non",
     psn_ptls_5peringkat: "sie-psn-ptsl-5peringkat",
     KL_LU_Layanan_Jumlah_Perjenis: "sie-layanan-jumlah-perjenis",
   },
