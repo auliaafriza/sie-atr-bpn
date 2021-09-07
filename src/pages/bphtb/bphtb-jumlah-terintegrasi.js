@@ -563,7 +563,7 @@ const BPHTBDaerahTerintegrasi = () => {
           </Grid>
           <Grid item xs={4}>
             <div style={{ margin: 10, marginRight: 25 }}>
-              <Typography className={classes.isiTextStyle} variant="h2">
+              {/* <Typography className={classes.isiTextStyle} variant="h2">
                 Pilih Tahun
               </Typography>
               <FormControl variant="outlined" className={classes.formControl}>
@@ -585,7 +585,7 @@ const BPHTBDaerahTerintegrasi = () => {
                     );
                   })}
                 </Select>
-              </FormControl>
+              </FormControl> */}
               <Typography
                 className={classes.isiContentTextStyle}
                 variant="h2"

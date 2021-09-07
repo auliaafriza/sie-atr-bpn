@@ -409,7 +409,7 @@ const RealisasiTargetPenerimaan = () => {
   };
 
   return (
-    <div>
+    <div style={{ paddingBottom: 10 }}>
       <Modal
         open={open}
         onClose={handleClose}
@@ -527,7 +527,7 @@ const RealisasiTargetPenerimaan = () => {
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <div style={{ margin: 10, marginRight: 25 }}>
-            <Typography className={classes.isiTextStyle} variant="h2">
+            {/* <Typography className={classes.isiTextStyle} variant="h2">
               Pilih Tahun
             </Typography>
             <FormControl variant="outlined" className={classes.formControl}>
@@ -549,7 +549,7 @@ const RealisasiTargetPenerimaan = () => {
                   );
                 })}
               </Select>
-            </FormControl>
+            </FormControl> */}
             <Typography
               className={classes.isiContentTextStyle}
               variant="h2"

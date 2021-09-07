@@ -429,7 +429,7 @@ const PnbpBerkasPeringkatWilayah = () => {
     });
   };
   return (
-    <div>
+    <div style={{ paddingBottom: 20 }}>
       <Modal
         open={open}
         onClose={handleClose}

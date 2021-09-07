@@ -472,7 +472,8 @@ const PaguMpOpsNon = () => {
       <Box
         style={{
           backgroundColor: "rgba(107,111,130,0.2)",
-          marginTop: 20,
+          paddingTop: 20,
+          paddingBottom: 20,
         }}
       >
         <Grid
