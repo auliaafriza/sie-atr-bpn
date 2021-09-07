@@ -59,9 +59,10 @@ import { fileExport } from "../../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
 import { useDispatch, useSelector } from "react-redux";
 import { generateOptions } from "../../../functionGlobal/generateOptionSelect";
-import { getKanwil, getTipeHak } from "../../../actions/sertifikasiAction";
-
+import { getNamaProfile } from "../../../actions/sertifikasiAction";
+import { tahunData } from "../../../functionGlobal/globalDataAsset";
 import { useHistory } from "react-router-dom";
+
 // Pagu & MP PNBP (Satuan 1 Juta)
 const dataTemp = [
   {
@@ -169,16 +170,18 @@ const StyledTableRow = withStyles((theme) => ({
 
 let url = "http://10.20.57.234/SIEBackEnd/";
 
-const title = "Jangka waktu hak sertifikat";
-const Sie_sertifikat_jangka_waktu_hak = () => {
+const title = "Target dan realisasi sertifikasi";
+
+const Sie_sertifikasi_target_realisasi = () => {
   const classes = styles();
   const dispatch = useDispatch();
   const history = useHistory();
-  const [kanwil, setKanwil] = useState("DKI");
-  const [tipeHak, setTipeHak] = useState("Hak Wakaf");
+  const [tahunAwal, setTahunAwal] = useState("2016");
+  const [tahunAkhir, setTahunAkhir] = useState("2017");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [open, setOpen] = useState(false);
+  const [namaProgramFil, setNamaProgram] = useState([]);
   const [dataModal, setDataModal] = useState({
     title: "",
     grafik: "",
@@ -196,11 +199,11 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const kanwilList = useSelector((state) =>
-    generateOptions({ data: state.sertifikasi.kanwil.data, keyVal: "kanwil" })
-  );
-  const tipeHakList = useSelector((state) =>
-    generateOptions({ data: state.sertifikasi.tipeHak.data, keyVal: "tipehak" })
+  const namaProfile = useSelector((state) =>
+    generateOptions({
+      data: state.sertifikasi.namaProfile.data,
+      keyVal: "namaProfile",
+    })
   );
 
   const handleChangePage = (event, newPage) => {
@@ -227,11 +230,18 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
   };
 
   const getData = () => {
+    let temp = {
+      nama_program: [
+        "Konsolidasi Tanah Swadaya Massal tahun 2020",
+        "Sertipikasi BMN Tahun 2020 < 25.000 m2",
+      ],
+    };
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(
-        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_jangka_waktu_hak?kanwil=${kanwil}&tipehak=${tipeHak}`
+      .post(
+        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikasi_target_realisasi?tahunAwal=${tahunAwal}&tahunAkhir=${tahunAkhir}`,
+        temp
       )
       .then(function (response) {
         setData(response.data.data);
@@ -247,19 +257,21 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
   };
 
   useEffect(() => {
-    dispatch(getKanwil());
-    dispatch(getTipeHak());
+    dispatch(getNamaProfile());
     getData();
   }, []);
 
-  const handleChangeKanwil = (event) => {
-    setKanwil(event.target.value);
+  const handleChangeTahunAwal = (event) => {
+    setTahunAwal(event.target.value);
   };
 
-  const handleChangeTipeHak = (event) => {
-    setTipeHak(event.target.value);
+  const handleChangeTahunAkhir = (event) => {
+    setTahunAkhir(event.target.value);
   };
 
+  const handleChangeNamaProgram = (event) => {
+    setNamaProgram(event.target.value);
+  };
   const DataFormater = (number) => {
     if (number > 1000000000) {
       return (number / 1000000000).toString() + "M";
@@ -659,30 +671,30 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
-                    Pilih Kanwil
+                    Tahun Awal
                   </Typography>
                   <FormControl
                     variant="outlined"
                     className={classes.formControl}
                   >
                     <InputLabel id="demo-simple-select-outlined-label">
-                      Kanwil
+                      Tahun Awal
                     </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
-                      value={kanwil}
-                      onChange={handleChangeKanwil}
-                      label="Kanwil"
+                      value={tahunAwal}
+                      onChange={handleChangeTahunAwal}
+                      label="Tahun"
                       className={classes.selectStyle}
                     >
-                      {kanwilList.map((item, i) => {
+                      {tahunData.map((item, i) => {
                         return (
                           <MenuItem value={item.id} key={i}>
                             {item.value}
@@ -692,30 +704,72 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
-                    Pilih Tipe Hak
+                    Tahun Akhir
                   </Typography>
                   <FormControl
                     variant="outlined"
                     className={classes.formControl}
                   >
                     <InputLabel id="demo-simple-select-outlined-label">
-                      Tipe Hak
+                      Tahun Akhir
                     </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
-                      value={tipeHak}
-                      onChange={handleChangeTipeHak}
-                      label="Tipe Hak"
+                      value={tahunAkhir}
+                      onChange={handleChangeTahunAkhir}
+                      label="Bulan"
                       className={classes.selectStyle}
                     >
-                      {tipeHakList.map((item, i) => {
+                      {tahunData.map((item, i) => {
+                        return (
+                          <MenuItem value={item.id} key={i}>
+                            {item.value}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={2}
+              >
+                <Grid item xs={6}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Nama Program
+                  </Typography>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <InputLabel id="demo-simple-select-outlined-label">
+                      Nama Program
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={namaProgramFil}
+                      onChange={handleChangeNamaProgram}
+                      label="Nama Program"
+                      className={classes.selectStyle}
+                    >
+                      {namaProfile.map((item, i) => {
                         return (
                           <MenuItem value={item.id} key={i}>
                             {item.value}
@@ -731,7 +785,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                   justifyContent="flex-start"
                   alignItems="center"
                   item
-                  xs={4}
+                  xs={6}
                   style={{ paddingTop: 40, paddingLeft: 20 }}
                 >
                   <Button
@@ -795,4 +849,4 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
   );
 };
 
-export default Sie_sertifikat_jangka_waktu_hak;
+export default Sie_sertifikasi_target_realisasi;

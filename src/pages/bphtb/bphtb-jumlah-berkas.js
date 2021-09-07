@@ -229,7 +229,7 @@ const BPHTBJumlahBerkas = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}Aset&Keuangan/PNBP/sie_pengembalian_pnbp?tahun=${years}&semeter=${semester}&bulan=${bulan}`,
+        `${url}Aset&Keuangan/BPHTB/sie_pengembalian_pnbp?tahun=${years}&bulan=${bulan}`,
         temp
       )
       .then(function (response) {
@@ -581,7 +581,7 @@ const BPHTBJumlahBerkas = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -611,7 +611,7 @@ const BPHTBJumlahBerkas = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -632,36 +632,6 @@ const BPHTBJumlahBerkas = () => {
                     className={classes.selectStyle}
                   >
                     {bulanDataNumberic.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Pilih Semester
-                </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Semester
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={semester}
-                    onChange={handleChangeSemester}
-                    label="Semester"
-                    className={classes.selectStyle}
-                  >
-                    {semesterData.map((item, i) => {
                       return (
                         <MenuItem value={item.id} key={i}>
                           {item.name}

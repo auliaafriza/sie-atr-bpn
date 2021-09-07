@@ -7,6 +7,10 @@ import {
   GET_TIPE_HAK_SERTIFIKASI_PENDING,
   GET_TIPE_HAK_SERTIFIKASI_FULFILLED,
   GET_TIPE_HAK_SERTIFIKASI_REJECTED,
+  GET_NAMA_PROFILE,
+  GET_NAMA_PROFILE_PENDING,
+  GET_NAMA_PROFILE_FULFILLED,
+  GET_NAMA_PROFILE_REJECTED,
 } from "../actions/actionTypes";
 
 const initialstate = {
@@ -16,6 +20,11 @@ const initialstate = {
     error: "",
   },
   tipeHak: {
+    loading: false,
+    data: [],
+    error: "",
+  },
+  namaProfile: {
     loading: false,
     data: [],
     error: "",
@@ -72,6 +81,33 @@ const reducer = (state = initialstate, action) => {
         ...state,
         tipeHak: {
           ...state.tipeHak,
+          data: [],
+          loading: false,
+          error: "Gagal mengambil tipe hak",
+        },
+      };
+    }
+    case GET_NAMA_PROFILE: {
+      return { ...state };
+    }
+    case GET_NAMA_PROFILE_PENDING: {
+      return { ...state, namaProfile: { ...state.namaProfile, loading: true } };
+    }
+    case GET_NAMA_PROFILE_FULFILLED: {
+      return {
+        ...state,
+        namaProfile: {
+          ...state.namaProfile,
+          data: action.payload.data.data,
+          loading: false,
+        },
+      };
+    }
+    case GET_NAMA_PROFILE_REJECTED: {
+      return {
+        ...state,
+        namaProfile: {
+          ...state.namaProfile,
           data: [],
           loading: false,
           error: "Gagal mengambil tipe hak",

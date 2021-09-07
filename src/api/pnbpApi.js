@@ -20,3 +20,15 @@ export const getBerkasPnbpWilayahFilterApi = () => {
 export const getBerkasPnbpKantorFilterApi = () => {
   return apiClient.get(`Aset&Keuangan/PNBP/sie_pnbp_berkas_filter_kantor`);
 };
+
+export const getPersentasePnbpBelanjaFilterApi = () => {
+  return apiClient.get(
+    `Aset&Keuangan/PNBP/sie_pnbp_persentase_realisasi_belanja_filter_satker`
+  );
+};
+
+export const getPnbpKinerjaBerkasFilterApi = () => {
+  return apiClient.get(
+    `Aset&Keuangan/PNBP/sie_pnbp_kinerja_peny_berkas_per_jabatan_filter_namaprofile`
+  );
+};

@@ -39,8 +39,9 @@ import {
   Divider,
   ListItemText,
   ListItemAvatar,
-  Avatar,
+  Checkbox,
   TablePagination,
+  Button,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -57,14 +58,19 @@ import moment from "moment";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
+import { getPersentasePnbpBelanjaFilter } from "../../actions/pnbpAction";
+import { useDispatch, useSelector } from "react-redux";
+
 const dataTemp = [
   {
     wilayah: "Kantor Wilayah Provinsi",
     pnbp: 0,
+    jumlahberkas: 0,
   },
   {
     wilayah: "Kantor Wilayah Provinsi",
     pnbp: 10,
+    jumlahberkas: 10,
   },
 ];
 
@@ -117,16 +123,32 @@ let nameColumn = [
     label: "PNBP",
     value: "pnbp",
   },
+  {
+    label: "Jumlah Berkas",
+    value: "jumlahberkas",
+  },
 ];
 
-const BerkasWilayahPnbp = () => {
+const PersentaseRealisasiBelanja = () => {
   const classes = styles();
+  const persentaseBelanjaFilter = useSelector(
+    (state) => state.pnbp.persentaseBelanjaFilter
+  );
+  const berkasPnbpWilayah = useSelector(
+    (state) => state.pnbp.berkasPnbpWilayah
+  );
+  const dispatch = useDispatch();
+  const [dataFilter, setDataFilter] = useState([]);
   const [years, setYears] = useState("2014");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [semester, setSemester] = useState("2");
   const [bulan, setBulan] = useState("Jan");
   const [open, setOpen] = useState(false);
+  const [dataFilterWilayah, setDataFilterWilayah] = useState([
+    "Kantor Wilayah Provinsi Jawa Barat",
+    "Kantor Wilayah Provinsi Jambi",
+  ]);
   const [dataModal, setDataModal] = useState({
     title: "",
     grafik: "",
@@ -148,6 +170,14 @@ const BerkasWilayahPnbp = () => {
     setPage(newPage);
   };
 
+  const handleChangeFilter = (event) => {
+    setDataFilter(event.target.value);
+  };
+
+  const handleChangeFilterWilayah = (event) => {
+    setDataFilterWilayah(event.target.value);
+  };
+
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
@@ -166,18 +196,25 @@ const BerkasWilayahPnbp = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Jumlah PNBP per Wilayah",
+      "Persentase Realisasi Belanja",
       data,
       ".xlsx"
     );
   };
 
-  useEffect(() => {
+  const getData = () => {
+    let temp = {
+      wilayah: [],
+      kantor: [],
+    };
+    temp.wilayah = dataFilterWilayah;
+    temp.kantor = dataFilter;
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_berkas_jumlah_PNBP_per_wilayah?tahun=${years}&semeter=${semester}&bulan=${bulan}`
+      .post(
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_berkas_jumlah_PNBP_per_wilayah?tahun=${years}&semeter=${semester}&bulan=${bulan}`,
+        temp
       )
       .then(function (response) {
         setData(response.data.data);
@@ -191,6 +228,11 @@ const BerkasWilayahPnbp = () => {
       .then(function () {
         // always executed
       });
+  };
+
+  useEffect(() => {
+    dispatch(getPersentasePnbpBelanjaFilter());
+    getData();
   }, []);
 
   const handleChange = (event) => {
@@ -271,6 +313,7 @@ const BerkasWilayahPnbp = () => {
             <Tooltip />
             {/* <Legend /> */}
             <Bar dataKey="pnbp" fill="#8884d8" />
+            <Bar dataKey="jumlahberkas" fill="#808000" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -302,6 +345,9 @@ const BerkasWilayahPnbp = () => {
                         {row.pnbp
                           .toFixed(2)
                           .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row.jumlahberkas}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
@@ -372,6 +418,10 @@ const BerkasWilayahPnbp = () => {
     },
     {
       label: "pnbp",
+      isFixed: true,
+    },
+    {
+      label: "jumlahberkas",
       isFixed: false,
     },
   ];
@@ -381,13 +431,17 @@ const BerkasWilayahPnbp = () => {
       dataKey: "pnbp",
       fill: "#8884d8",
     },
+    {
+      dataKey: "jumlahberkas",
+      fill: "#808000",
+    },
   ];
 
   let axis = {
     xAxis: "wilayah",
-    yAxis: "PNBP",
+    yAxis: "Nilai Realisasi",
   };
-  const title = "Jumlah PNBP per Wilayah";
+  const title = "Persentase Realisasi Belanja";
   const handlePrint = () => {
     history.push({
       pathname: "/PrintData",
@@ -432,7 +486,7 @@ const BerkasWilayahPnbp = () => {
       >
         <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            Jumlah PNBP per Wilayah
+            Persentase Realisasi Belanja
           </Typography>
         </Grid>
 
@@ -472,7 +526,7 @@ const BerkasWilayahPnbp = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Jumlah PNBP per Wilayah",
+                    title: "Persentase Realisasi Belanja",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -522,29 +576,109 @@ const BerkasWilayahPnbp = () => {
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <div style={{ margin: 10, marginRight: 25 }}>
-            <Typography className={classes.isiTextStyle} variant="h2">
-              Pilih Tahun
-            </Typography>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-outlined-label">
-                Tahun
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                value={years}
-                onChange={handleChange}
-                label="Tahun"
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Wilayah
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel
+                    id="demo-simple-select-outlined-label"
+                    htmlFor="outlined-Name"
+                  >
+                    Wilayah
+                  </InputLabel>
+                  <Select
+                    multiple
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={dataFilterWilayah}
+                    onChange={handleChangeFilterWilayah}
+                    label="Wilayah"
+                    className={classes.selectStyle}
+                    renderValue={(selected) => `${selected.length} Terpilih`}
+                  >
+                    {berkasPnbpWilayah.map((item, i) => {
+                      return (
+                        <MenuItem value={item.wilayah} key={i}>
+                          <Checkbox
+                            checked={dataFilter.indexOf(item.wilayah) > -1}
+                          />
+                          <ListItemText primary={item.wilayah} />
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Kantor
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel
+                    id="demo-simple-select-outlined-label"
+                    htmlFor="outlined-Name"
+                  >
+                    Kantor
+                  </InputLabel>
+                  <Select
+                    multiple
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={dataFilter}
+                    onChange={handleChangeFilter}
+                    label="Kantor"
+                    className={classes.selectStyle}
+                    renderValue={(selected) => `${selected.length} Terpilih`}
+                  >
+                    {persentaseBelanjaFilter.map((item, i) => {
+                      return (
+                        <MenuItem value={item.kantor} key={i}>
+                          <Checkbox
+                            checked={dataFilter.indexOf(item.kantor) > -1}
+                          />
+                          <ListItemText primary={item.kantor} />
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+                item
+                xs={4}
+                style={{ paddingTop: 40, paddingLeft: 20 }}
               >
-                {tahunData.map((item, i) => {
-                  return (
-                    <MenuItem value={item.id} key={i}>
-                      {item.value}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => getData()}
+                  style={{ height: 57, width: "100%" }}
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
+
             <Typography
               className={classes.isiContentTextStyle}
               variant="h2"
@@ -562,7 +696,7 @@ const BerkasWilayahPnbp = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "Jumlah PNBP per Wilayah",
+                      title: "Persentase Realisasi Belanja",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -634,6 +768,7 @@ const BerkasWilayahPnbp = () => {
                     <Tooltip />
                     {/* <Legend /> */}
                     <Bar dataKey="pnbp" fill="#8884d8" />
+                    <Bar dataKey="jumlahberkas" fill="#808000" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -645,4 +780,4 @@ const BerkasWilayahPnbp = () => {
   );
 };
 
-export default BerkasWilayahPnbp;
+export default PersentaseRealisasiBelanja;

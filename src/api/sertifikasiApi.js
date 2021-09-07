@@ -8,3 +8,9 @@ export const getKanwilApi = () => {
 export const getTipeHakApi = () => {
   return apiClient.get(`Sertifikasi/StatistikSertifikat/get_tipehak`);
 };
+
+export const getNamaProfileApi = () => {
+  return apiClient.get(
+    `Sertifikasi/StatistikSertifikat/sie_pnbp_kinerja_peny_berkas_per_jabatan_filter_namaprofile`
+  );
+};

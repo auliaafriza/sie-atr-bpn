@@ -17,6 +17,8 @@ import {
   RealisasiPenerimaan,
   RealisasiPengunaan,
   RealisasiTargetPenerimaan,
+  PersentaseRealisasiBelanja,
+  KinerjaBerkasPnbp,
   PnbpPage,
 } from "./pages/pnbp";
 import {
@@ -129,6 +131,12 @@ const Main = withRouter(({ location }) => {
         </Route>
         <Route path="/AssetKeuangan//PNBP/PengembalianPNBP">
           <PengembalianPNBP />
+        </Route>
+        <Route path="/AssetKeuangan/PNBP/PersentaseRealisasiBelanja">
+          <PersentaseRealisasiBelanja />
+        </Route>
+        <Route path="/AssetKeuangan/PNBP/KinerjaBerkasPnbp">
+          <KinerjaBerkasPnbp />
         </Route>
         <Route path="/AssetKeuangan/PNBP">
           <PnbpPage />

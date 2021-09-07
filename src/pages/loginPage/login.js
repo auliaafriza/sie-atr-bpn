@@ -129,7 +129,7 @@ export default function AddressForm() {
                 ),
               }}
             />
-            <Grid
+            {/* <Grid
               container
               direction="row"
               justifyContent="space-between"
@@ -148,7 +148,7 @@ export default function AddressForm() {
                   </Typography>
                 </Link>
               </Grid>
-            </Grid>
+            </Grid> */}
             <Button
               fullWidth
               variant="outlined"
@@ -163,7 +163,7 @@ export default function AddressForm() {
             >
               Login
             </Button>
-            <Grid container alignItems="center" spacing={3}>
+            {/* <Grid container alignItems="center" spacing={3}>
               <Grid item xs>
                 <Divider />
               </Grid>
@@ -191,7 +191,7 @@ export default function AddressForm() {
               }}
             >
               Register
-            </Button>
+            </Button> */}
           </form>
         </Paper>
       </main>
