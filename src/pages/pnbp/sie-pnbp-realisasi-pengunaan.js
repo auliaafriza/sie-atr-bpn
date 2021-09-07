@@ -182,6 +182,13 @@ const realisasiPenggunaan = () => {
     setOpen(false);
   };
 
+  const DataFormaterX = (value) => {
+    return (
+      value.replace("Kantor Pertanahan ", "") ||
+      value.replace("Kantor Wilayah ", "")
+    );
+  };
+
   const getData = () => {
     let temp = { kantor: [] };
     temp.kantor = dataFilter;
@@ -302,6 +309,7 @@ const realisasiPenggunaan = () => {
                 fontSize: 8,
               }}
               height={100}
+              tickFormatter={DataFormaterX}
             />
             <YAxis tickFormatter={DataFormater}>
               <Label
@@ -617,6 +625,7 @@ const realisasiPenggunaan = () => {
                           fontSize: 8,
                         }}
                         height={100}
+                        tickFormatter={DataFormaterX}
                       />
                       <YAxis tickFormatter={DataFormater}>
                         <Label

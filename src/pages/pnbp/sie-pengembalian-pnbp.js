@@ -210,6 +210,13 @@ const PengembalianPNBP = () => {
     setBulan(event.target.value);
   };
 
+  const DataFormaterX = (value) => {
+    return (
+      value.replace("Kantor Pertanahan ", "") ||
+      value.replace("Kantor Wilayah ", "")
+    );
+  };
+
   const DataFormater = (number) => {
     if (number > 1000000000) {
       return (number / 1000000000).toString() + "M";
@@ -286,6 +293,7 @@ const PengembalianPNBP = () => {
                 fontSize: 8,
               }}
               height={100}
+              tickFormatter={DataFormaterX}
             ></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
@@ -771,6 +779,7 @@ const PengembalianPNBP = () => {
                         fontSize: 8,
                       }}
                       height={100}
+                      tickFormatter={DataFormaterX}
                     />
                     <YAxis tickFormatter={DataFormater}>
                       <Label

@@ -165,6 +165,13 @@ const BPHTBJumlahBerkas = () => {
     "Kantor Pertanahan Kabupaten Kampar",
   ]);
 
+  const DataFormaterX = (value) => {
+    return (
+      value.replace("Kantor Pertanahan ", "") ||
+      value.replace("Kantor Wilayah ", "")
+    );
+  };
+
   const [dataModal, setDataModal] = useState({
     title: "",
     grafik: "",
@@ -351,7 +358,7 @@ const BPHTBJumlahBerkas = () => {
                 fontSize: 8,
               }}
               height={100}
-              // tickFormatter={DataFormaterX}
+              tickFormatter={DataFormaterX}
             ></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
@@ -808,7 +815,7 @@ const BPHTBJumlahBerkas = () => {
                         fontSize: 8,
                       }}
                       height={100}
-                      // tickFormatter={DataFormaterX}
+                      tickFormatter={DataFormaterX}
                     />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
