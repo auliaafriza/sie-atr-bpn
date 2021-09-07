@@ -162,16 +162,16 @@ export const MENU_LIST = [
         name: "Pengadaan Tanah",
         link: "/PSN/PengadaanTanah",
       },
-      {
-        icon: <MdTransform size={24} />,
-        name: "Transformasi Digital & Layanan Elektronik",
-        link: null,
-      },
-      {
-        icon: <MdSettingsRemote size={24} />,
-        name: "Pengendalian dan Penanganan Sengketa",
-        link: null,
-      },
+      // {
+      //   icon: <MdTransform size={24} />,
+      //   name: "Transformasi Digital & Layanan Elektronik",
+      //   link: null,
+      // },
+      // {
+      //   icon: <MdSettingsRemote size={24} />,
+      //   name: "Pengendalian dan Penanganan Sengketa",
+      //   link: null,
+      // },
     ],
   },
   {
@@ -195,37 +195,37 @@ export const MENU_LIST = [
         name: "Hak Tanggungan Elektronik",
         link: "/Sertifikasi/HakTanggunganElektronik",
       },
-      {
-        icon: <IoMdMap size={24} />,
-        name: "Peta Pendaftaran Tanah",
-        link: null,
-      },
+      // {
+      //   icon: <IoMdMap size={24} />,
+      //   name: "Peta Pendaftaran Tanah",
+      //   link: null,
+      // },
     ],
   },
-  {
-    id: 7,
-    icon: <Public />,
-    name: "Info Geo-spasial",
+  // {
+  //   id: 7,
+  //   icon: <Public />,
+  //   name: "Info Geo-spasial",
 
-    parentLink: "null",
-    subMenus: [
-      {
-        icon: <MdLandscape size={24} />,
-        name: "Tanah Terlantar",
-        link: null,
-      },
-      {
-        icon: <GiMoneyStack size={24} />,
-        name: "Nilai Tanah",
-        link: null,
-      },
-      {
-        icon: <GiEarthAsiaOceania size={24} />,
-        name: "Peta Lainnya",
-        link: null,
-      },
-    ],
-  },
+  //   parentLink: "null",
+  //   subMenus: [
+  //     {
+  //       icon: <MdLandscape size={24} />,
+  //       name: "Tanah Terlantar",
+  //       link: null,
+  //     },
+  //     {
+  //       icon: <GiMoneyStack size={24} />,
+  //       name: "Nilai Tanah",
+  //       link: null,
+  //     },
+  //     {
+  //       icon: <GiEarthAsiaOceania size={24} />,
+  //       name: "Peta Lainnya",
+  //       link: null,
+  //     },
+  //   ],
+  // },
 ];
 
 // *****************************************************
