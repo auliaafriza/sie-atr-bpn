@@ -60,6 +60,9 @@ import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
 import { BASE_URL } from "../../config/embed_conf";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const dataTemp = [
   {
@@ -482,9 +485,91 @@ const PaguMpOpsNon = () => {
         }}
       >
         <div className={classes.paper}>
-          <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
-            Embeded Code Generator
-          </h2>
+          <Grid
+            container
+            spacing={2}
+            direction="row"
+            style={
+              {
+                // padding: 10,
+                // paddingTop: 20,
+                // paddingBottom: 5,
+              }
+            }
+          >
+            <Grid
+              container
+              direction="row"
+              // justifyContent="flex-center"
+              alignItems="flex-start"
+              item
+              xs={10}
+            >
+              <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
+                Embeded Code Generator
+              </h2>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              // justifyContent="flex-center"
+              alignItems="flex-start"
+              item
+              xs={1}
+            >
+              <CopyToClipboard
+                text={
+                  '<iframe width="' +
+                  iframeWidth +
+                  '" height="' +
+                  iframeHeight +
+                  '"' +
+                  ' src="' +
+                  BASE_URL.domain +
+                  "/embed/" +
+                  BASE_URL.path.pnbp_pagu_mp_ops_non +
+                  '"></iframe>'
+                }
+                onCopy={() => toast.success("success copied to clipboard!")}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ height: 30, width: "100%" }}
+                >
+                  Copy
+                </Button>
+              </CopyToClipboard>
+              <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              // justifyContent="flex-center"
+              alignItems="flex-start"
+              item
+              xs={1}
+            >
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => setOpenIframe(false)}
+                style={{ height: 30, width: "100%" }}
+              >
+                Close
+              </Button>
+            </Grid>
+          </Grid>
           <Grid
             container
             spacing={2}
