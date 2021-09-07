@@ -126,7 +126,7 @@ let columnTable = [
 let grafikView = [
   {
     dataKey: "jumlah_ht",
-    fill: "#C71585",
+    fill: "#065535",
   },
 ];
 
@@ -527,7 +527,7 @@ const SieHtJumlahKantorTahun = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={12}>
+              <Grid item xs={4}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -557,7 +557,7 @@ const SieHtJumlahKantorTahun = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={4}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -593,8 +593,8 @@ const SieHtJumlahKantorTahun = () => {
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={12}
-                style={{ paddingLeft: 20 }}
+                xs={4}
+                style={{ paddingLeft: 20, paddingTop: 40 }}
               >
                 <Button
                   variant="contained"

@@ -528,7 +528,7 @@ const PengadaanTanah = () => {
           margin: 10,
         }}
       />
-      <Grid container spacing={2}>
+      <Grid container spacing={2} style={{ marginBottom: "10px" }}>
         <Grid item xs={4}>
           <div style={{ margin: 10, marginRight: 25 }}>
             <Grid

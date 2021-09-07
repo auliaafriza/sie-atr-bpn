@@ -129,7 +129,7 @@ let columnTable = [
 let grafikView = [
   {
     dataKey: "jumlah_upload",
-    fill: "#C71585",
+    fill: "#0ff1ce",
   },
 ];
 
@@ -141,8 +141,8 @@ const title =
   "Hak Tanggungan Elektronik Diupload oleh PPAT dan Didaftarkan Kreditor melalui IP yang Sama";
 const SieHTUploadPpatIpSama = () => {
   const classes = styles();
-  const [years, setYears] = useState("2021");
-  const [bulan, setBulan] = useState("04");
+  const [years, setYears] = useState("2017");
+  const [bulan, setBulan] = useState("02");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   // const [kanwil, setKanwil] = useState(
@@ -529,7 +529,7 @@ const SieHTUploadPpatIpSama = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={12}>
+              <Grid item xs={4}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -559,7 +559,7 @@ const SieHTUploadPpatIpSama = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={4}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -595,8 +595,8 @@ const SieHTUploadPpatIpSama = () => {
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={12}
-                style={{ paddingLeft: 20 }}
+                xs={4}
+                style={{ paddingLeft: 20, paddingTop: 40 }}
               >
                 <Button
                   variant="contained"

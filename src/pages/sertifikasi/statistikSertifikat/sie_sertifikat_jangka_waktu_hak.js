@@ -174,7 +174,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
   const classes = styles();
   const dispatch = useDispatch();
   const history = useHistory();
-  const [kanwil, setKanwil] = useState("Jatim");
+  const [kanwil, setKanwil] = useState("DKI");
   const [tipeHak, setTipeHak] = useState("Hak Wakaf");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
@@ -500,191 +500,41 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
       >
         {body}
       </Modal>
-      <Grid
-        container
-        spacing={2}
-        direction="row"
-        style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
+      <Box
+        style={{
+          backgroundColor: "rgba(107,111,130,0.2)",
+          marginTop: 20,
+          paddingBottom: 20,
+        }}
       >
-        <Grid item xs={6}>
-          <Typography className={classes.titleSection} variant="h2">
-            {title}
-          </Typography>
-        </Grid>
-
         <Grid
           container
+          spacing={2}
           direction="row"
-          justifyContent="flex-end"
-          alignItems="flex-end"
-          item
-          xs={6}
+          style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
         >
-          <ButtonGroup
-            aria-label="outlined button group"
-            className={classes.buttonGroupStyle}
-            variant="contained"
+          <Grid item xs={6}>
+            <Typography className={classes.titleSection} variant="h2">
+              {title}
+            </Typography>
+          </Grid>
+
+          <Grid
+            container
+            direction="row"
+            justifyContent="flex-end"
+            alignItems="flex-end"
+            item
+            xs={6}
           >
-            <TooltipMI title="Lihat Detail" placement="top">
-              <IconButton
-                size="small"
-                onClick={() =>
-                  handleOpen({
-                    title: title,
-                    grafik: data,
-                    dataTable: "",
-                    analisis:
-                      comment && comment.lastComment
-                        ? comment.lastComment.analisisData.replace(
-                            /<[^>]+>/g,
-                            ""
-                          )
-                        : "",
-                    type: "Bar",
-                    nameColumn: [
-                      "Kantah",
-                      "Kurang dari 1 tahun",
-                      "1 sampai 3 tahun",
-                      "Lebih dari 3 tahun",
-                    ],
-                    listTop10Comment: comment.listTop10Comment,
-                  })
-                }
-              >
-                <IoEye />
-              </IconButton>
-            </TooltipMI>
-            <TooltipMI title="Print Data" placement="top" onClick={handlePrint}>
-              <IconButton aria-label="delete" size="small">
-                <IoPrint />
-              </IconButton>
-            </TooltipMI>
-            <TooltipMI
-              title="Unduh Data"
-              placement="top"
-              onClick={() => exportData()}
+            <ButtonGroup
+              aria-label="outlined button group"
+              className={classes.buttonGroupStyle}
+              variant="contained"
             >
-              <IconButton
-                aria-label="delete"
-                size="small"
-                onClick={() => exportData()}
-              >
-                <IoMdDownload />
-              </IconButton>
-            </TooltipMI>
-          </ButtonGroup>
-        </Grid>
-      </Grid>
-      <div
-        style={{
-          borderTop: "0.5px solid #626e8261 ",
-          width: "98%",
-          margin: 10,
-        }}
-      />
-      <Grid container spacing={2}>
-        <Grid item xs={4}>
-          <div style={{ margin: 10, marginRight: 25 }}>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={12}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Pilih Kanwil
-                </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Kanwil
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={kanwil}
-                    onChange={handleChangeKanwil}
-                    label="Kanwil"
-                    className={classes.selectStyle}
-                  >
-                    {kanwilList.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Pilih Tipe Hak
-                </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tipe Hak
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={tipeHak}
-                    onChange={handleChangeTipeHak}
-                    label="Tipe Hak"
-                    className={classes.selectStyle}
-                  >
-                    {tipeHakList.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid
-                container
-                direction="row"
-                justifyContent="flex-start"
-                alignItems="center"
-                item
-                xs={12}
-                style={{ paddingLeft: 20 }}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => getData()}
-                >
-                  Submit
-                </Button>
-              </Grid>
-            </Grid>
-            <Typography
-              className={classes.isiContentTextStyle}
-              variant="h2"
-              wrap
-            >
-              {comment && comment.lastComment
-                ? comment.lastComment.analisisData
-                    .replace(/<[^>]+>/g, "")
-                    .slice(0, 500)
-                : ""}
-              {comment &&
-              comment.lastComment &&
-              comment.lastComment.analisisData.length > 500 ? (
-                <Link
-                  href="#"
+              <TooltipMI title="Lihat Detail" placement="top">
+                <IconButton
+                  size="small"
                   onClick={() =>
                     handleOpen({
                       title: title,
@@ -707,71 +557,239 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
-                  variant="body2"
                 >
-                  {" "}
-                  More
-                </Link>
-              ) : null}
-            </Typography>
-          </div>
+                  <IoEye />
+                </IconButton>
+              </TooltipMI>
+              <TooltipMI
+                title="Print Data"
+                placement="top"
+                onClick={handlePrint}
+              >
+                <IconButton aria-label="delete" size="small">
+                  <IoPrint />
+                </IconButton>
+              </TooltipMI>
+              <TooltipMI
+                title="Unduh Data"
+                placement="top"
+                onClick={() => exportData()}
+              >
+                <IconButton
+                  aria-label="delete"
+                  size="small"
+                  onClick={() => exportData()}
+                >
+                  <IoMdDownload />
+                </IconButton>
+              </TooltipMI>
+            </ButtonGroup>
+          </Grid>
         </Grid>
-        <Grid item xs={8}>
-          <Card className={classes.root} variant="outlined">
-            <CardContent>
-              <div className={classes.barChart}>
-                <ResponsiveContainer width="100%" height={250}>
-                  <LineChart
-                    width={500}
-                    height={300}
-                    data={data}
-                    margin={{
-                      top: 5,
-                      right: 30,
-                      left: 20,
-                      bottom: 5,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3 3" />
-                    <XAxis dataKey="kantah" />
-                    <YAxis tickFormatter={DataFormater}>
-                      <Label
-                        value="Jumlah sertifikat"
-                        angle={-90}
-                        position="insideBottomLeft"
-                        offset={-5}
+        <div
+          style={{
+            borderTop: "0.5px solid #626e8261 ",
+            width: "98%",
+            margin: 10,
+          }}
+        />
+        <Grid container spacing={2}>
+          <Grid item xs={8}>
+            <Card className={classes.root} variant="outlined">
+              <CardContent>
+                <div className={classes.barChart}>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <LineChart
+                      width={500}
+                      height={300}
+                      data={data}
+                      margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3 3" />
+                      <XAxis dataKey="kantah" />
+                      <YAxis tickFormatter={DataFormater}>
+                        <Label
+                          value="Jumlah sertifikat"
+                          angle={-90}
+                          position="insideBottomLeft"
+                          offset={-5}
+                        />
+                      </YAxis>
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Line
+                        type="monotone"
+                        dataKey="nol"
+                        stroke="#FFA07A"
+                        activeDot={{ r: 8 }}
+                        strokeWidth={3}
                       />
-                    </YAxis>
-                    <Tooltip content={<CustomTooltip />} />
-                    <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="nol"
-                      stroke="#FFA07A"
-                      activeDot={{ r: 8 }}
-                      strokeWidth={3}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="satutiga"
-                      stroke="#20B2AA"
-                      activeDot={{ r: 8 }}
-                      strokeWidth={3}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="tiga"
-                      stroke="#E54F6E"
-                      activeDot={{ r: 8 }}
-                      strokeWidth={3}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
+                      <Line
+                        type="monotone"
+                        dataKey="satutiga"
+                        stroke="#20B2AA"
+                        activeDot={{ r: 8 }}
+                        strokeWidth={3}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="tiga"
+                        stroke="#E54F6E"
+                        activeDot={{ r: 8 }}
+                        strokeWidth={3}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={4}>
+            <div style={{ margin: 10, marginRight: 25 }}>
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={2}
+              >
+                <Grid item xs={4}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Pilih Kanwil
+                  </Typography>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <InputLabel id="demo-simple-select-outlined-label">
+                      Kanwil
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={kanwil}
+                      onChange={handleChangeKanwil}
+                      label="Kanwil"
+                      className={classes.selectStyle}
+                    >
+                      {kanwilList.map((item, i) => {
+                        return (
+                          <MenuItem value={item.id} key={i}>
+                            {item.value}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Pilih Tipe Hak
+                  </Typography>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <InputLabel id="demo-simple-select-outlined-label">
+                      Tipe Hak
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={tipeHak}
+                      onChange={handleChangeTipeHak}
+                      label="Tipe Hak"
+                      className={classes.selectStyle}
+                    >
+                      {tipeHakList.map((item, i) => {
+                        return (
+                          <MenuItem value={item.id} key={i}>
+                            {item.value}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  item
+                  xs={4}
+                  style={{ paddingTop: 40, paddingLeft: 20 }}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => getData()}
+                  >
+                    Submit
+                  </Button>
+                </Grid>
+              </Grid>
+              <Typography
+                className={classes.isiContentTextStyle}
+                variant="h2"
+                wrap
+              >
+                {comment && comment.lastComment
+                  ? comment.lastComment.analisisData
+                      .replace(/<[^>]+>/g, "")
+                      .slice(0, 500)
+                  : ""}
+                {comment &&
+                comment.lastComment &&
+                comment.lastComment.analisisData.length > 500 ? (
+                  <Link
+                    href="#"
+                    onClick={() =>
+                      handleOpen({
+                        title: title,
+                        grafik: data,
+                        dataTable: "",
+                        analisis:
+                          comment && comment.lastComment
+                            ? comment.lastComment.analisisData.replace(
+                                /<[^>]+>/g,
+                                ""
+                              )
+                            : "",
+                        type: "Bar",
+                        nameColumn: [
+                          "Kantah",
+                          "Kurang dari 1 tahun",
+                          "1 sampai 3 tahun",
+                          "Lebih dari 3 tahun",
+                        ],
+                        listTop10Comment: comment.listTop10Comment,
+                      })
+                    }
+                    variant="body2"
+                  >
+                    {" "}
+                    More
+                  </Link>
+                ) : null}
+              </Typography>
+            </div>
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </div>
   );
 };
