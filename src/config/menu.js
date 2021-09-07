@@ -90,7 +90,7 @@ export const MENU_LIST = [
       {
         icon: <GiOrganigram size={24} />,
         name: "Organisasi",
-        link: null,
+        link: "/Kepegawaian/Organisasi",
       },
     ],
   },
@@ -114,21 +114,21 @@ export const MENU_LIST = [
     name: "Kinerja Layanan",
     parentLink: "KinerjaLayanan",
     subMenus: [
-      {
-        icon: <BsNewspaper size={22} />,
-        name: "IKPA",
-        link: null,
-      },
-      {
-        icon: <GrLineChart size={24} />,
-        name: "IKK/IKU",
-        link: null,
-      },
-      {
-        icon: <FcDebt size={24} />,
-        name: "Tunggakan",
-        link: null,
-      },
+      // {
+      //   icon: <BsNewspaper size={22} />,
+      //   name: "IKPA",
+      //   link: null,
+      // },
+      // {
+      //   icon: <GrLineChart size={24} />,
+      //   name: "IKK/IKU",
+      //   link: null,
+      // },
+      // {
+      //   icon: <FcDebt size={24} />,
+      //   name: "Tunggakan",
+      //   link: null,
+      // },
       {
         icon: <RiServiceFill size={24} />,
         name: "Layanan Umum",
@@ -142,36 +142,36 @@ export const MENU_LIST = [
     name: "PSN",
     parentLink: "PSN",
     subMenus: [
-      {
-        icon: <FaCalendarCheck size={22} />,
-        name: "Percepatan Rencana Detail Tata Ruang",
-        link: null,
-      },
+      // {
+      //   icon: <FaCalendarCheck size={22} />,
+      //   name: "Percepatan Rencana Detail Tata Ruang",
+      //   link: null,
+      // },
       {
         icon: <GrTableAdd size={22} />,
-        name: "Pendaftaran Tanah Sistematis Lengkap",
+        name: "Pendaftaran Tanah Sistematis Lengkap (PTSL)",
         link: "/PSN/PTSL",
       },
-      {
-        icon: <BiBuildingHouse size={24} />,
-        name: "Reforma Agraria",
-        link: null,
-      },
+      // {
+      //   icon: <BiBuildingHouse size={24} />,
+      //   name: "Reforma Agraria",
+      //   link: null,
+      // },
       {
         icon: <MdAddShoppingCart size={24} />,
         name: "Pengadaan Tanah",
         link: "/PSN/PengadaanTanah",
       },
-      {
-        icon: <MdTransform size={24} />,
-        name: "Transformasi Digital & Layanan Elektronik",
-        link: null,
-      },
-      {
-        icon: <MdSettingsRemote size={24} />,
-        name: "Pengendalian dan Penanganan Sengketa",
-        link: null,
-      },
+      // {
+      //   icon: <MdTransform size={24} />,
+      //   name: "Transformasi Digital & Layanan Elektronik",
+      //   link: null,
+      // },
+      // {
+      //   icon: <MdSettingsRemote size={24} />,
+      //   name: "Pengendalian dan Penanganan Sengketa",
+      //   link: null,
+      // },
     ],
   },
   {
@@ -195,37 +195,37 @@ export const MENU_LIST = [
         name: "Hak Tanggungan Elektronik",
         link: "/Sertifikasi/HakTanggunganElektronik",
       },
-      {
-        icon: <IoMdMap size={24} />,
-        name: "Peta Pendaftaran Tanah",
-        link: null,
-      },
+      // {
+      //   icon: <IoMdMap size={24} />,
+      //   name: "Peta Pendaftaran Tanah",
+      //   link: null,
+      // },
     ],
   },
-  {
-    id: 7,
-    icon: <Public />,
-    name: "Info Geo-spasial",
+  // {
+  //   id: 7,
+  //   icon: <Public />,
+  //   name: "Info Geo-spasial",
 
-    parentLink: "null",
-    subMenus: [
-      {
-        icon: <MdLandscape size={24} />,
-        name: "Tanah Terlantar",
-        link: null,
-      },
-      {
-        icon: <GiMoneyStack size={24} />,
-        name: "Nilai Tanah",
-        link: null,
-      },
-      {
-        icon: <GiEarthAsiaOceania size={24} />,
-        name: "Peta Lainnya",
-        link: null,
-      },
-    ],
-  },
+  //   parentLink: "null",
+  //   subMenus: [
+  //     {
+  //       icon: <MdLandscape size={24} />,
+  //       name: "Tanah Terlantar",
+  //       link: null,
+  //     },
+  //     {
+  //       icon: <GiMoneyStack size={24} />,
+  //       name: "Nilai Tanah",
+  //       link: null,
+  //     },
+  //     {
+  //       icon: <GiEarthAsiaOceania size={24} />,
+  //       name: "Peta Lainnya",
+  //       link: null,
+  //     },
+  //   ],
+  // },
 ];
 
 // *****************************************************

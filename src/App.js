@@ -31,7 +31,9 @@ import {
   KepegawaianBPNPendidikan,
   KepegawaianBPNJabatan,
   KepegawaianBPNMutasi,
+  KepegawaianOrganisasi,
   PegawaiAtr,
+  Organisasi,
 } from "./pages/kepegawaian";
 import {
   StatistikSertifikat,
@@ -164,6 +166,12 @@ const Main = withRouter(({ location }) => {
         </Route>
         <Route path="/Kepegawaian/PegawaiAtr">
           <PegawaiAtr />
+        </Route>
+        <Route path="/Kepegawaian/Organisasi">
+          <Organisasi />
+        </Route>
+        <Route path="/Kepegawaian/Organisasi/KepegawaianOrganisasi">
+          <KepegawaianOrganisasi />
         </Route>
         {/* end route pegawai atr */}
         <Route path="/KinerjaLayanan/LayananUmum">

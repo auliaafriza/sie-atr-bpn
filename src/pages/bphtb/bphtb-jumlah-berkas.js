@@ -42,6 +42,7 @@ import {
   Avatar,
   TablePagination,
   Button,
+  Checkbox,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -63,6 +64,8 @@ import {
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { useHistory, Link as LinkPrint } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getBphtbBerkasFilter } from "../../actions/bphtbAction";
 
 const dataTemp = [
   {
@@ -147,12 +150,28 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 const BPHTBJumlahBerkas = () => {
   const classes = styles();
+  const dispatch = useDispatch();
+  const bphtbBerkasFilter = useSelector(
+    (state) => state.bphtb.bphtbBerkasFilter
+  );
+
   const [years, setYears] = useState("2021");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [semester, setSemester] = useState(2);
   const [bulan, setBulan] = useState("04");
   const [open, setOpen] = useState(false);
+  const [dataFilter, setDataFilter] = useState([
+    "Kantor Pertanahan Kabupaten Kampar",
+  ]);
+
+  const DataFormaterX = (value) => {
+    return (
+      value.replace("Kantor Pertanahan ", "") ||
+      value.replace("Kantor Wilayah ", "")
+    );
+  };
+
   const [dataModal, setDataModal] = useState({
     title: "",
     grafik: "",
@@ -198,12 +217,20 @@ const BPHTBJumlahBerkas = () => {
     );
   };
 
+  const handleChangeFilter = (event) => {
+    setDataFilter(event.target.value);
+  };
+
   const getData = () => {
+    let temp = { satker: [] };
+    temp.satker = dataFilter;
+
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(
-        `${url}Aset&Keuangan/PNBP/sie_pengembalian_pnbp?tahun=${years}&semeter=${semester}&bulan=${bulan}`
+      .post(
+        `${url}Aset&Keuangan/PNBP/sie_pengembalian_pnbp?tahun=${years}&semeter=${semester}&bulan=${bulan}`,
+        temp
       )
       .then(function (response) {
         setData(response.data.data);
@@ -220,6 +247,7 @@ const BPHTBJumlahBerkas = () => {
   };
 
   useEffect(() => {
+    dispatch(getBphtbBerkasFilter());
     getData();
   }, []);
 
@@ -255,7 +283,7 @@ const BPHTBJumlahBerkas = () => {
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Realisais : Rp ${payload[0].value
+          >{`Realisasi : Rp ${payload[0].value
             .toFixed(2)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
         </div>
@@ -320,17 +348,17 @@ const BPHTBJumlahBerkas = () => {
             <XAxis
               dataKey="nama_satker"
               scale="band"
-              angle={60}
-              interval={0}
+              // angle={60}
+              // interval={0}
               tick={{
                 // angle: 90,
-                transform: "rotate(-35)",
-                textAnchor: "start",
-                dominantBaseline: "ideographic",
+                // transform: "rotate(-35)",
+                // textAnchor: "start",
+                // dominantBaseline: "ideographic",
                 fontSize: 8,
               }}
               height={100}
-              // tickFormatter={DataFormaterX}
+              tickFormatter={DataFormaterX}
             ></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
@@ -553,7 +581,7 @@ const BPHTBJumlahBerkas = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -583,7 +611,7 @@ const BPHTBJumlahBerkas = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -613,15 +641,7 @@ const BPHTBJumlahBerkas = () => {
                   </Select>
                 </FormControl>
               </Grid>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -651,6 +671,52 @@ const BPHTBJumlahBerkas = () => {
                   </Select>
                 </FormControl>
               </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Kantor
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel
+                    id="demo-simple-select-outlined-label"
+                    htmlFor="outlined-Name"
+                  >
+                    Kantor
+                  </InputLabel>
+                  <Select
+                    multiple
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={dataFilter}
+                    onChange={handleChangeFilter}
+                    label="Kantor"
+                    className={classes.selectStyle}
+                    renderValue={(selected) => `${selected.length} Terpilih`}
+                  >
+                    {bphtbBerkasFilter.map((item, i) => {
+                      return (
+                        <MenuItem value={item.kantor} key={i}>
+                          <Checkbox
+                            checked={dataFilter.indexOf(item.kantor) > -1}
+                          />
+                          <ListItemText primary={item.kantor} />
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
               <Grid
                 container
                 direction="row"
@@ -664,11 +730,13 @@ const BPHTBJumlahBerkas = () => {
                   variant="contained"
                   color="primary"
                   onClick={() => getData()}
+                  style={{ height: 57, width: "100%" }}
                 >
                   Submit
                 </Button>
               </Grid>
             </Grid>
+
             <Typography
               className={classes.isiContentTextStyle}
               variant="h2"
@@ -677,11 +745,11 @@ const BPHTBJumlahBerkas = () => {
               {comment && comment.lastComment
                 ? comment.lastComment.analisisData
                     .replace(/<[^>]+>/g, "")
-                    .slice(0, 500)
+                    .slice(0, 100)
                 : ""}
               {comment &&
               comment.lastComment &&
-              comment.lastComment.analisisData.length > 500 ? (
+              comment.lastComment.analisisData.length > 100 ? (
                 <Link
                   href="#"
                   onClick={() =>
@@ -737,17 +805,17 @@ const BPHTBJumlahBerkas = () => {
                     <XAxis
                       dataKey="nama_satker"
                       scale="band"
-                      angle={60}
-                      interval={0}
+                      // angle={60}
+                      // interval={0}
                       tick={{
                         // angle: 90,
-                        transform: "rotate(-35)",
-                        textAnchor: "start",
-                        dominantBaseline: "ideographic",
+                        // transform: "rotate(-35)",
+                        // textAnchor: "start",
+                        // dominantBaseline: "ideographic",
                         fontSize: 8,
                       }}
                       height={100}
-                      // tickFormatter={DataFormaterX}
+                      tickFormatter={DataFormaterX}
                     />
                     <YAxis tickFormatter={DataFormater}>
                       <Label

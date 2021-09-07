@@ -3,5 +3,11 @@
     "typescript.preferences.quoteStyle": "single",
     "editor.tabSize": 2,
     "editor.detectIndentation": false,
-		"editor.insertSpaces": false
+		"editor.insertSpaces": false,
+		"editor.formatOnSave": true,
+		"files.autoSave": "onFocusChange",
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": true
+		},
+		"eslint.validate": ["javascript"]
 }

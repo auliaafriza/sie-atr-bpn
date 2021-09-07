@@ -4,11 +4,11 @@ import SieHtJumlahKantorTahun from "./sie_ht_jumlah_kantor_tahun";
 import SieHTUploadPpatIpSama from "./sie_ht_upload_ppat_ipsama ";
 const HakTanggunganElektronik = () => {
   return (
-    <>
+    <div style={{ marginBottom: 20 }}>
       <SieHtJumlahKantorTahun />
       <SieHtDitutupPerkantor />
       <SieHTUploadPpatIpSama />
-    </>
+    </div>
   );
 };
 

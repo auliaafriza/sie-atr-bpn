@@ -62,11 +62,11 @@ import { useSelector } from "react-redux";
 
 const dataTemp = [
   {
-    namajabatan: "",
+    pendidikan: "",
     jml_pegawai: 0,
   },
   {
-    namajabatan: "",
+    pendidikan: "",
     jml_pegawai: 0,
   },
 ];
@@ -105,8 +105,8 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {
-    label: "Nama Jabatan",
-    value: "namajabatan",
+    label: "Pendidikan",
+    value: "pendidikan",
     isFixed: false,
     isLabel: false,
   },
@@ -120,7 +120,7 @@ let nameColumn = [
 
 let columnTable = [
   {
-    label: "namajabatan",
+    label: "pendidikan",
     isFixed: false,
   },
   {
@@ -132,16 +132,16 @@ let columnTable = [
 let grafikView = [
   {
     dataKey: "jml_pegawai",
-    fill: "#8884d8",
+    fill: "#FFA07A",
   },
 ];
 
 let axis = {
-  xAxis: "namajabatan",
+  xAxis: "pendidikan",
   yAxis: "Jumlah Pegawai",
 };
 
-const KepegawaianBpnJabatan = () => {
+const KepegawaianOrganisasi = () => {
   const classes = styles();
   const [years, setYears] = useState("2022");
   const [data, setData] = useState(dataTemp);
@@ -167,10 +167,6 @@ const KepegawaianBpnJabatan = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const satkerRed = useSelector((state) => state.globalReducer.satker);
-  const kantorRed = useSelector((state) => state.globalReducer.kantor);
-  const kanwilRed = useSelector((state) => state.globalReducer.kanwil);
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -179,6 +175,10 @@ const KepegawaianBpnJabatan = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  const satkerRed = useSelector((state) => state.globalReducer.satker);
+  const kantorRed = useSelector((state) => state.globalReducer.kantor);
+  const kanwilRed = useSelector((state) => state.globalReducer.kanwil);
 
   const handleOpen = (data) => {
     setOpen(true);
@@ -194,7 +194,7 @@ const KepegawaianBpnJabatan = () => {
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}Kepegawaian/Pegawai/sie_pegawai_atr_bpn_jabatan?tahunAwal=${tahunAwal}&tahunAkhir=${years}&kantor=${kantor}&kanwil=${kanwil}&satker=${satker}`
+        `${url}Kepegawaian/Organisasi/sie_organisasi_jumlah_unit?tahunAwal=${tahunAwal}&tahunAkhir=${years}&kantor=${kantor}&kanwil=${kanwil}&satker=${satker}`
       )
       .then(function (response) {
         setData(response.data.data);
@@ -253,7 +253,7 @@ const KepegawaianBpnJabatan = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Jumlah Pegawai berdasarkan Jabatan",
+      "Jumlah unit organisasi ",
       data,
       ".xlsx"
     );
@@ -288,7 +288,7 @@ const KepegawaianBpnJabatan = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="namajabatan"></XAxis>
+            <XAxis dataKey="pendidikan"></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value="Nilai Satuan 1 Juta"
@@ -299,7 +299,7 @@ const KepegawaianBpnJabatan = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="jml_pegawai" fill="#8884d8" />
+            <Bar dataKey="jml_pegawai" fill="#FFA07A" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -326,13 +326,13 @@ const KepegawaianBpnJabatan = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.namajabatan}>
+                    <StyledTableRow key={row.pendidikan}>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.namajabatan}
+                        {row.pendidikan}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {row.jml_pegawai}
@@ -445,7 +445,13 @@ const KepegawaianBpnJabatan = () => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        paddingLeft: 20,
+        paddingBottom: 20,
+        height: "90%",
+      }}
+    >
       <Modal
         open={open}
         onClose={handleClose}
@@ -464,6 +470,7 @@ const KepegawaianBpnJabatan = () => {
       >
         {body}
       </Modal>
+
       <Grid
         container
         spacing={2}
@@ -472,7 +479,7 @@ const KepegawaianBpnJabatan = () => {
       >
         <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            Jumlah Pegawai berdasarkan Jabatan
+            Jumlah unit organisasi
           </Typography>
         </Grid>
         <Grid
@@ -497,7 +504,7 @@ const KepegawaianBpnJabatan = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Jumlah Pegawai berdasarkan Jabatan ",
+                    title: "Jumlah unit organisasi  ",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -529,10 +536,7 @@ const KepegawaianBpnJabatan = () => {
               title="Print Data"
               placement="top"
               onClick={() =>
-                handlePrintData(
-                  "Jumlah Pegawai berdasarkan Jabatan",
-                  columnTable
-                )
+                handlePrintData("Jumlah unit organisasi ", columnTable)
               }
             >
               <IconButton aria-label="delete" size="small">
@@ -563,6 +567,47 @@ const KepegawaianBpnJabatan = () => {
         }}
       />
       <Grid container spacing={2}>
+        <Grid item xs={8}>
+          <Card className={classes.root} variant="outlined">
+            <CardContent>
+              <div className={classes.barChart}>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart
+                    width={500}
+                    height={300}
+                    data={data}
+                    margin={{
+                      top: 5,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                    padding={{
+                      top: 15,
+                      right: 10,
+                      left: 10,
+                      bottom: 15,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="pendidikan" />
+                    <YAxis tickFormatter={DataFormater}>
+                      <Label
+                        value="Nilai Satuan 1 Juta"
+                        angle={-90}
+                        position="insideBottomLeft"
+                        offset={-5}
+                      />
+                    </YAxis>
+                    <Tooltip content={<CustomTooltip />} />
+                    <Legend />
+                    <Bar dataKey="jml_pegawai" fill="#FFA07A" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </Grid>
         <Grid item xs={4}>
           <div style={{ margin: 10, marginRight: 25 }}>
             <Grid
@@ -779,91 +824,42 @@ const KepegawaianBpnJabatan = () => {
                 </Button>
               </Grid>
             </Grid>
-
-            <Typography
-              className={classes.isiContentTextStyle}
-              variant="h2"
-              wrap
-            >
-              {comment && comment.lastComment
-                ? comment.lastComment.analisisData
-                    .replace(/<[^>]+>/g, "")
-                    .slice(0, 500)
-                : ""}
-              {comment &&
-              comment.lastComment &&
-              comment.lastComment.analisisData.length > 100 ? (
-                <Link
-                  href="#"
-                  onClick={() =>
-                    handleOpen({
-                      title: "Jumlah Pegawai berdasarkan Jabatan ",
-                      grafik: data,
-                      dataTable: "",
-                      analisis:
-                        comment && comment.lastComment
-                          ? comment.lastComment.analisisData.replace(
-                              /<[^>]+>/g,
-                              ""
-                            )
-                          : "",
-                      type: "Bar",
-                      listTop10Comment: comment.listTop10Comment,
-                    })
-                  }
-                  variant="body2"
-                >
-                  {" "}
-                  More
-                </Link>
-              ) : null}
-            </Typography>
           </div>
         </Grid>
-        <Grid item xs={8}>
-          <Card className={classes.root} variant="outlined">
-            <CardContent>
-              <div className={classes.barChart}>
-                <ResponsiveContainer width="100%" height={250}>
-                  <BarChart
-                    width={500}
-                    height={300}
-                    data={data}
-                    margin={{
-                      top: 5,
-                      right: 30,
-                      left: 20,
-                      bottom: 5,
-                    }}
-                    padding={{
-                      top: 15,
-                      right: 10,
-                      left: 10,
-                      bottom: 15,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="namajabatan" />
-                    <YAxis tickFormatter={DataFormater}>
-                      <Label
-                        value="Nilai Satuan 1 Juta"
-                        angle={-90}
-                        position="insideBottomLeft"
-                        offset={-5}
-                      />
-                    </YAxis>
-                    <Tooltip content={<CustomTooltip />} />
-                    <Legend />
-                    <Bar dataKey="jml_pegawai" fill="#8884d8" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-        </Grid>
       </Grid>
+      <Typography className={classes.isiContentTextStyle} variant="h2" wrap>
+        {comment && comment.lastComment
+          ? comment.lastComment.analisisData
+              .replace(/<[^>]+>/g, "")
+              .slice(0, 500)
+          : ""}
+        {comment &&
+        comment.lastComment &&
+        comment.lastComment.analisisData.length > 100 ? (
+          <Link
+            href="#"
+            onClick={() =>
+              handleOpen({
+                title: "Jumlah unit organisasi  ",
+                grafik: data,
+                dataTable: "",
+                analisis:
+                  comment && comment.lastComment
+                    ? comment.lastComment.analisisData.replace(/<[^>]+>/g, "")
+                    : "",
+                type: "Bar",
+                listTop10Comment: comment.listTop10Comment,
+              })
+            }
+            variant="body2"
+          >
+            {" "}
+            More
+          </Link>
+        ) : null}
+      </Typography>
     </div>
   );
 };
 
-export default KepegawaianBpnJabatan;
+export default KepegawaianOrganisasi;

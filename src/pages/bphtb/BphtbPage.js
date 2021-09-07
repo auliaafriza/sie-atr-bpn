@@ -4,7 +4,7 @@ import BPHTBJumlahIntegrasi from "./bphtb-jumlah-terintegrasi";
 
 const BPHTBPage = () => {
   return (
-    <div>
+    <div style={{ paddingTop: 20 }}>
       <BPHTBJumlahBerkas />
       <BPHTBJumlahIntegrasi />
     </div>

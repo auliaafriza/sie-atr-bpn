@@ -704,10 +704,15 @@ const KepegawaianBpnPendidikan = () => {
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
-                      value={satkerDis}
+                      value={satker}
                       onChange={handleChangeSatket}
                       label="Satker"
                       className={classes.selectStyle}
+                      renderValue={(selected) =>
+                        selected.length > 8
+                          ? `${selected.slice(0, 8)}...`
+                          : selected
+                      }
                     >
                       {satkerRed && satkerRed.length != 0
                         ? satkerRed.map((item, i) => {
@@ -756,10 +761,15 @@ const KepegawaianBpnPendidikan = () => {
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
-                      value={kantorDis}
+                      value={kantor}
                       onChange={handleChangeKantor}
                       label="Kantor"
                       className={classes.selectStyle}
+                      renderValue={(selected) =>
+                        selected.length > 8
+                          ? `${selected.slice(0, 8)}...`
+                          : selected
+                      }
                     >
                       {kantorRed && kantorRed.length != 0
                         ? kantorRed.map((item, i) => {
@@ -791,10 +801,15 @@ const KepegawaianBpnPendidikan = () => {
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
-                      value={kanwilDis}
+                      value={kanwil}
                       onChange={handleChangeKanwil}
                       label="Kanwil"
                       className={classes.selectStyle}
+                      renderValue={(selected) =>
+                        selected.length > 8
+                          ? `${selected.slice(0, 8)}...`
+                          : selected
+                      }
                     >
                       {kanwilRed && kanwilRed.length != 0
                         ? kanwilRed.map((item, i) => {

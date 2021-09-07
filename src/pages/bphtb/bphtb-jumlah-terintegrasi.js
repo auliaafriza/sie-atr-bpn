@@ -410,7 +410,15 @@ const BPHTBDaerahTerintegrasi = () => {
   );
 
   return (
-    <div>
+    <div
+      style={{
+        backgroundColor: "rgba(107,111,130,0.2)",
+        paddingTop: 20,
+        paddingBottom: 20,
+        paddingLeft: 20,
+        marginTop: 20,
+      }}
+    >
       <Modal
         open={open}
         onClose={handleClose}
@@ -429,13 +437,7 @@ const BPHTBDaerahTerintegrasi = () => {
       >
         {body}
       </Modal>
-      <Box
-        style={{
-          backgroundColor: "rgba(107,111,130,0.2)",
-          marginTop: 20,
-          paddingBottom: 20,
-        }}
-      >
+      <Box>
         <Grid
           container
           spacing={2}
@@ -563,7 +565,7 @@ const BPHTBDaerahTerintegrasi = () => {
           </Grid>
           <Grid item xs={4}>
             <div style={{ margin: 10, marginRight: 25 }}>
-              <Typography className={classes.isiTextStyle} variant="h2">
+              {/* <Typography className={classes.isiTextStyle} variant="h2">
                 Pilih Tahun
               </Typography>
               <FormControl variant="outlined" className={classes.formControl}>
@@ -585,7 +587,14 @@ const BPHTBDaerahTerintegrasi = () => {
                     );
                   })}
                 </Select>
-              </FormControl>
+              </FormControl> */}
+              <Typography
+                className={classes.isiContentTextStyle}
+                variant="h2"
+                wrap
+              >
+                Analisis Data
+              </Typography>
               <Typography
                 className={classes.isiContentTextStyle}
                 variant="h2"

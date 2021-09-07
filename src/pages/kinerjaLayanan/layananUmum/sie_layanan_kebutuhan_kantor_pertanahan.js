@@ -8,21 +8,14 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  LineChart,
-  Line,
   Label,
 } from "recharts";
 import {
   Typography,
   Grid,
-  FormControl,
-  Select,
-  InputLabel,
-  MenuItem,
   Card,
   ButtonGroup,
   IconButton,
-  Box,
   CardContent,
   Tooltip as TooltipMI,
   Modal,
@@ -38,37 +31,29 @@ import {
   ListItem,
   Divider,
   ListItemText,
-  ListItemAvatar,
-  Avatar,
   TablePagination,
-  Button,
+  Box,
 } from "@material-ui/core";
-import {
-  createTheme,
-  ThemeProvider,
-  withStyles,
-} from "@material-ui/core/styles";
-import { IoEye, IoPrint } from "react-icons/io5";
+import { createTheme, withStyles } from "@material-ui/core/styles";
+import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "./../styles";
 import axios from "axios";
-import { useReactToPrint } from "react-to-print";
-import { tahunData } from "../../../functionGlobal/globalDataAsset";
 import moment from "moment";
 import { fileExport } from "../../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
 // import { getSatker } from "../../actions/globalActions";
-import { useDispatch, useSelector } from "react-redux";
 
+import { BASE_URL } from "../../../config/embed_conf";
 const dataTemp = [
   {
-    kota: "",
-    jumlah_sertifikat: 0,
+    nama_kantor: "",
+    jumlah: 0,
   },
   {
-    kota: "",
-    jumlah_sertifikat: 0,
+    nama_kantor: "",
+    jumlah: 0,
   },
 ];
 
@@ -106,52 +91,43 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {
-    label: "Kota",
-    value: "kota",
+    label: "Nama Kantor",
+    value: "nama_kantor",
     isLabel: true,
   },
   {
-    label: "Jumlah Sertifikat",
-    value: "jumlah_sertifikat",
+    label: "Jumlah",
+    value: "jumlah",
   },
 ];
 
 let columnTable = [
   {
-    label: "kota",
+    label: "nama_kantor",
     isFixed: false,
   },
   {
-    label: "jumlah_sertifikat",
+    label: "jumlah",
     isFixed: false,
   },
 ];
 
 let grafikView = [
   {
-    dataKey: "jumlah_sertifikat",
-    fill: "#C71585",
+    dataKey: "jumlah",
+    fill: "#065535",
   },
 ];
 
 let axis = {
-  xAxis: "Kota",
-  yAxis: "Jumlah Sertifikat",
+  xAxis: "Nama Kantor",
+  yAxis: "Jumlah Kebutuhan",
 };
-const title = "Jumlah Sertifikat Konsolidasi Tanah berdasarkan Kota/Kabupaten";
-const SieSertifikatKonsolidasiKota = () => {
+const title = "Jumlah kebutuhan kantor pertanahan";
+const SieLayananKebutuhanKantorPertanahan = () => {
   const classes = styles();
-  const [years, setYears] = useState("2022");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
-  const [tahunAwal, setTahunAwal] = useState("2021");
-  const [kanwil, setKanwil] = useState(
-    "Kementerian Agraria dan Tata Ruang/Badan Pertanahan Nasional "
-  );
-  const [kantor, setKantor] = useState("Jawa Tengah");
-  const [satker, setSatker] = useState(
-    "Kantor Pertanahan Kabupaten Purbalingga "
-  );
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -161,12 +137,8 @@ const SieSertifikatKonsolidasiKota = () => {
     type: "",
     listTop10Comment: [],
   });
-  const inputRef = useRef();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  const dispatch = useDispatch();
-  const satkerRed = useSelector((state) => state.globalReducer.satker);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -191,7 +163,7 @@ const SieSertifikatKonsolidasiKota = () => {
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_konsolidasi_kota?tahunAwal=${tahunAwal}&tahunAkhir=${years}`
+        `${url}KinerjaLayanan/LayananUmum/sie_layanan_kebutuhan_kantor_pertanahan`
       )
       .then(function (response) {
         setData(response.data.data);
@@ -207,7 +179,6 @@ const SieSertifikatKonsolidasiKota = () => {
   };
 
   useEffect(() => {
-    // dispatch(getSatker());
     getData();
   }, []);
 
@@ -235,7 +206,7 @@ const SieSertifikatKonsolidasiKota = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">Kota {label}</p>
+          <p className="label">{label}</p>
           <p
             className="desc"
             style={{ color: payload[0].color }}
@@ -278,7 +249,7 @@ const SieSertifikatKonsolidasiKota = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="kota"></XAxis>
+            <XAxis dataKey="nama_kantor"></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value={axis.yAxis}
@@ -289,7 +260,7 @@ const SieSertifikatKonsolidasiKota = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="jumlah_sertifikat" fill="#C71585"></Bar>
+            <Bar dataKey="jumlah" fill="#065535"></Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -316,16 +287,18 @@ const SieSertifikatKonsolidasiKota = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.kota}>
+                    <StyledTableRow key={row.nama_kantor}>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.kota}
+                        {row.nama_kantor}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {row.jumlah_sertifikat}
+                        {row.jumlah
+                          .toFixed(2)
+                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
@@ -427,199 +400,44 @@ const SieSertifikatKonsolidasiKota = () => {
       >
         {body}
       </Modal>
-      <Grid
-        container
-        spacing={2}
-        direction="row"
-        style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
+      <Box
+        style={{
+          backgroundColor: "rgba(107,111,130,0.2)",
+          marginTop: 20,
+          paddingBottom: 20,
+        }}
       >
-        <Grid item xs={10}>
-          <Typography className={classes.titleSection} variant="h2">
-            {title}
-          </Typography>
-        </Grid>
         <Grid
           container
+          spacing={2}
           direction="row"
-          justifyContent="flex-end"
-          alignItems="flex-end"
-          item
-          xs={2}
+          style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
         >
-          {/* <ReactToPrint
+          <Grid item xs={10}>
+            <Typography className={classes.titleSection} variant="h2">
+              {title}
+            </Typography>
+          </Grid>
+          <Grid
+            container
+            direction="row"
+            justifyContent="flex-end"
+            alignItems="flex-end"
+            item
+            xs={2}
+          >
+            {/* <ReactToPrint
             trigger={() => <button>Print this out!</button>}
             content={() => inputRef.current}
           /> */}
-          <ButtonGroup
-            aria-label="outlined button group"
-            className={classes.buttonGroupStyle}
-            variant="contained"
-          >
-            <TooltipMI title="Lihat Detail" placement="top">
-              <IconButton
-                size="small"
-                onClick={() =>
-                  handleOpen({
-                    title,
-                    grafik: data,
-                    dataTable: "",
-                    analisis:
-                      comment && comment.lastComment
-                        ? comment.lastComment.analisisData.replace(
-                            /<[^>]+>/g,
-                            ""
-                          )
-                        : "",
-                    type: "Bar",
-                    listTop10Comment: comment.listTop10Comment,
-                  })
-                }
-              >
-                <IoEye />
-              </IconButton>
-            </TooltipMI>
-            {/* <ReactToPrint
-              trigger={() => (
-                <TooltipMI title="Print Data" placement="top">
-                  <IconButton aria-label="delete" size="small">
-                    <IoPrint />
-                  </IconButton>
-                </TooltipMI>
-              )}
-              content={inputRef.current}
-            > */}
-            <TooltipMI title="Print Data" placement="top" onClick={handlePrint}>
-              <IconButton aria-label="delete" size="small">
-                <IoPrint />
-              </IconButton>
-            </TooltipMI>
-            <TooltipMI
-              title="Unduh Data"
-              placement="top"
-              onClick={() => exportData()}
+            <ButtonGroup
+              aria-label="outlined button group"
+              className={classes.buttonGroupStyle}
+              variant="contained"
             >
-              <IconButton
-                aria-label="delete"
-                size="small"
-                onClick={() => exportData()}
-              >
-                <IoMdDownload />
-              </IconButton>
-            </TooltipMI>
-          </ButtonGroup>
-        </Grid>
-      </Grid>
-      <div
-        style={{
-          borderTop: "0.5px solid #626e8261 ",
-          width: "98%",
-          margin: 10,
-        }}
-      />
-      <Grid container spacing={2}>
-        <Grid item xs={4}>
-          <div style={{ margin: 10, marginRight: 25 }}>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={4}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Tahun Awal
-                </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun Awal
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={tahunAwal}
-                    onChange={handleChangeAwal}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                  >
-                    {tahunData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Tahun Akhir
-                </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun Akhir
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={years}
-                    onChange={handleChange}
-                    label="Bulan"
-                    className={classes.selectStyle}
-                  >
-                    {tahunData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid
-                container
-                direction="row"
-                justifyContent="flex-start"
-                alignItems="center"
-                item
-                xs={4}
-                style={{ paddingTop: 40, paddingLeft: 20 }}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => getData()}
-                >
-                  Submit
-                </Button>
-              </Grid>
-            </Grid>
-
-            <Typography
-              className={classes.isiContentTextStyle}
-              variant="h2"
-              wrap
-            >
-              {comment && comment.lastComment
-                ? comment.lastComment.analisisData
-                    .replace(/<[^>]+>/g, "")
-                    .slice(0, 500)
-                : ""}
-              {comment &&
-              comment.lastComment &&
-              comment.lastComment.analisisData.length > 500 ? (
-                <Link
-                  href="#"
+              <TooltipMI title="Lihat Detail" placement="top">
+                <IconButton
+                  size="small"
                   onClick={() =>
                     handleOpen({
                       title,
@@ -636,59 +454,140 @@ const SieSertifikatKonsolidasiKota = () => {
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
-                  variant="body2"
                 >
-                  {" "}
-                  More
-                </Link>
-              ) : null}
-            </Typography>
-          </div>
+                  <IoEye />
+                </IconButton>
+              </TooltipMI>
+              {/* <ReactToPrint
+              trigger={() => (
+                <TooltipMI title="Print Data" placement="top">
+                  <IconButton aria-label="delete" size="small">
+                    <IoPrint />
+                  </IconButton>
+                </TooltipMI>
+              )}
+              content={inputRef.current}
+            > */}
+              <TooltipMI
+                title="Print Data"
+                placement="top"
+                onClick={handlePrint}
+              >
+                <IconButton aria-label="delete" size="small">
+                  <IoPrint />
+                </IconButton>
+              </TooltipMI>
+              <TooltipMI
+                title="Unduh Data"
+                placement="top"
+                onClick={() => exportData()}
+              >
+                <IconButton
+                  aria-label="delete"
+                  size="small"
+                  onClick={() => exportData()}
+                >
+                  <IoMdDownload />
+                </IconButton>
+              </TooltipMI>
+            </ButtonGroup>
+          </Grid>
         </Grid>
-        <Grid item xs={8}>
-          <Card className={classes.root} variant="outlined">
-            <CardContent>
-              <div className={classes.barChart}>
-                <ResponsiveContainer width="100%" height={250}>
-                  <BarChart
-                    width={500}
-                    height={300}
-                    data={data}
-                    margin={{
-                      top: 5,
-                      right: 30,
-                      left: 20,
-                      bottom: 5,
-                    }}
-                    padding={{
-                      top: 15,
-                      right: 10,
-                      left: 10,
-                      bottom: 15,
-                    }}
+        <div
+          style={{
+            borderTop: "0.5px solid #626e8261 ",
+            width: "98%",
+            margin: 10,
+          }}
+        />
+        <Grid container spacing={2} style={{ marginBottom: "10px" }}>
+          <Grid item xs={comment && comment.lastComment ? 4 : 0}>
+            <div style={{ margin: 10, marginRight: 25 }}>
+              <Typography
+                className={classes.isiContentTextStyle}
+                variant="h2"
+                wrap
+              >
+                {comment && comment.lastComment
+                  ? comment.lastComment.analisisData
+                      .replace(/<[^>]+>/g, "")
+                      .slice(0, 500)
+                  : ""}
+                {comment &&
+                comment.lastComment &&
+                comment.lastComment.analisisData.length > 500 ? (
+                  <Link
+                    href="#"
+                    onClick={() =>
+                      handleOpen({
+                        title,
+                        grafik: data,
+                        dataTable: "",
+                        analisis:
+                          comment && comment.lastComment
+                            ? comment.lastComment.analisisData.replace(
+                                /<[^>]+>/g,
+                                ""
+                              )
+                            : "",
+                        type: "Bar",
+                        listTop10Comment: comment.listTop10Comment,
+                      })
+                    }
+                    variant="body2"
                   >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="kota"></XAxis>
-                    <YAxis tickFormatter={DataFormater}>
-                      <Label
-                        value={axis.yAxis}
-                        angle={-90}
-                        position="insideBottomLeft"
-                        offset={-5}
-                      />
-                    </YAxis>
-                    <Tooltip content={<CustomTooltip />} />
-                    <Legend />
-                    <Bar dataKey="jumlah_sertifikat" fill="#C71585" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
+                    {" "}
+                    More
+                  </Link>
+                ) : null}
+              </Typography>
+            </div>
+          </Grid>
+          <Grid item xs={comment && comment.lastComment ? 8 : 11}>
+            <Card className={classes.root} variant="outlined">
+              <CardContent>
+                <div className={classes.barChart}>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <BarChart
+                      width={500}
+                      height={300}
+                      data={data}
+                      margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                      }}
+                      padding={{
+                        top: 15,
+                        right: 10,
+                        left: 10,
+                        bottom: 15,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="nama_kantor"></XAxis>
+                      <YAxis tickFormatter={DataFormater}>
+                        <Label
+                          value={axis.yAxis}
+                          angle={-90}
+                          position="insideBottomLeft"
+                          offset={-5}
+                        />
+                      </YAxis>
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Bar dataKey="jumlah" fill="#065535" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </div>
   );
 };
 
-export default SieSertifikatKonsolidasiKota;
+export default SieLayananKebutuhanKantorPertanahan;

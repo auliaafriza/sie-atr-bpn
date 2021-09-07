@@ -319,13 +319,13 @@ const RealisasiPenerimaan = () => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="bulan"
-              angle={60}
-              interval={0}
+              // angle={60}
+              // interval={0}
               tick={{
                 // angle: 90,
-                transform: "rotate(-35)",
-                textAnchor: "start",
-                dominantBaseline: "ideographic",
+                // transform: "rotate(-35)",
+                // textAnchor: "start",
+                // dominantBaseline: "ideographic",
                 fontSize: 14,
               }}
               height={100}
@@ -715,13 +715,13 @@ const RealisasiPenerimaan = () => {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
                       dataKey="bulan"
-                      angle={60}
-                      interval={0}
+                      // angle={60}
+                      // interval={0}
                       tick={{
                         // angle: 90,
-                        transform: "rotate(-35)",
-                        textAnchor: "start",
-                        dominantBaseline: "ideographic",
+                        // transform: "rotate(-35)",
+                        // textAnchor: "start",
+                        // dominantBaseline: "ideographic",
                         fontSize: 14,
                       }}
                       height={100}

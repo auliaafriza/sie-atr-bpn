@@ -191,6 +191,16 @@ const PeringkatRealisasi = () => {
     setLevel(event.target.value);
   };
 
+  const DataFormaterX = (value) => {
+    return value.includes("Kantor Pertanahan")
+      ? value.replace("Kantor Pertanahan ", "")
+      : value.includes("Kantor Wilayah")
+      ? value.replace("Kantor Wilayah Bpn Provinsi ", "")
+      : value.includes("Kantor Badan Pertanahan")
+      ? value.replace("Kantor Badan Pertanahan", "")
+      : value.replace("Kantor Badan ", "");
+  };
+
   const DataFormater = (number) => {
     if (number > 1000000000) {
       return (number / 1000000000).toString() + "M";
@@ -277,6 +287,7 @@ const PeringkatRealisasi = () => {
                   fontSize: 8,
                 }}
                 height={100}
+                tickFormatter={DataFormaterX}
               ></XAxis>
               <YAxis tickFormatter={DataFormater}>
                 <Label
@@ -680,6 +691,7 @@ const PeringkatRealisasi = () => {
                         fontSize: 8,
                       }}
                       height={100}
+                      tickFormatter={DataFormaterX}
                     />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
