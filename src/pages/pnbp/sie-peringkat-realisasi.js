@@ -48,7 +48,7 @@ import {
   ThemeProvider,
   withStyles,
 } from "@material-ui/core/styles";
-import { IoEye, IoPrint } from "react-icons/io5";
+import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "./styles";
 import axios from "axios";
@@ -57,7 +57,7 @@ import html2canvas from "html2canvas";
 import moment from "moment";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
-
+import { useHistory } from "react-router-dom";
 const dataTemp = [
   {
     ranking: 1,
@@ -386,6 +386,48 @@ const PeringkatRealisasi = () => {
     </div>
   );
 
+  const history = useHistory();
+
+  let columnTable = [
+    {
+      label: "nama_satker",
+      isFixed: false,
+    },
+    {
+      label: "realisasi",
+      isFixed: true,
+    },
+  ];
+
+  let grafikView = [
+    {
+      dataKey: "realisasi",
+      fill: "#8FBC8F",
+    },
+  ];
+
+  let axis = {
+    xAxis: "nama_satker",
+    yAxis: "Realisasi",
+  };
+  const title = "   Top 10 satker dengan realisasi belanja";
+  const handlePrint = () => {
+    history.push({
+      pathname: "/PrintData",
+      state: {
+        data: data,
+        comment: comment,
+        columnTable: columnTable,
+        title: title,
+        grafik: "bar",
+        nameColumn: nameColumn,
+        grafikView: grafikView,
+        axis: axis,
+      },
+      target: "_blank",
+    });
+  };
+
   return (
     <div>
       <Modal
@@ -414,7 +456,7 @@ const PeringkatRealisasi = () => {
       >
         <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            top 10 satker dengan realisasi belanja
+            Top 10 satker dengan realisasi belanja
           </Typography>
         </Grid>
 
@@ -431,6 +473,24 @@ const PeringkatRealisasi = () => {
             className={classes.buttonGroupStyle}
             variant="contained"
           >
+            <TooltipMI title="Embed Iframe" placement="top">
+              <IconButton
+                size="small"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    '<iframe width="500" height="500"' +
+                      ' src="' +
+                      BASE_URL.domain +
+                      "/embed/" +
+                      BASE_URL.path.peringkat_realisasi +
+                      '"></iframe>'
+                  );
+                  alert("code embeded berhasil dicopy");
+                }}
+              >
+                <IoCopySharp />
+              </IconButton>
+            </TooltipMI>
             <TooltipMI title="Lihat Detail" placement="top">
               <IconButton
                 size="small"
@@ -455,11 +515,7 @@ const PeringkatRealisasi = () => {
                 <IoEye />
               </IconButton>
             </TooltipMI>
-            <TooltipMI
-              title="Print Data"
-              placement="top"
-              onClick={() => window.print()}
-            >
+            <TooltipMI title="Print Data" placement="top" onClick={handlePrint}>
               <IconButton aria-label="delete" size="small">
                 <IoPrint />
               </IconButton>

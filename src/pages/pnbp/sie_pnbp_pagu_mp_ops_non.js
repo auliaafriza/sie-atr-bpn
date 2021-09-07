@@ -48,7 +48,7 @@ import {
   ThemeProvider,
   withStyles,
 } from "@material-ui/core/styles";
-import { IoEye, IoPrint } from "react-icons/io5";
+import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "./styles";
 import axios from "axios";
@@ -58,6 +58,7 @@ import moment from "moment";
 import { tipeData } from "../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
+import { useHistory } from "react-router-dom";
 
 const dataTemp = [
   {
@@ -76,14 +77,20 @@ let nameColumn = [
   {
     label: "Tahun",
     value: "tahun",
+    isFixed: false,
+    isLabel: true,
   },
   {
     label: "Alokasi Anggaran",
     value: "alokasi_anggaran",
+    isFixed: true,
+    isLabel: true,
   },
   {
     label: "Anggaran",
     value: "anggaran",
+    isFixed: true,
+    isLabel: true,
   },
 ];
 
@@ -392,6 +399,56 @@ const PaguMpOpsNon = () => {
     </div>
   );
 
+  const history = useHistory();
+
+  let columnTable = [
+    {
+      label: "tahun",
+      isFixed: false,
+    },
+    {
+      label: "anggaran",
+      isFixed: true,
+    },
+    {
+      label: "alokasi_anggaran",
+      isFixed: true,
+    },
+  ];
+
+  let grafikView = [
+    {
+      dataKey: "alokasi_anggaran",
+      fill: "#6EB5FF",
+    },
+    {
+      dataKey: "anggaran",
+      fill: "#FCB9AA",
+    },
+  ];
+
+  let axis = {
+    xAxis: "tahun",
+    yAxis: "Nilai Satuan 1 Juta",
+  };
+  const title = "MP dana PNBP vs Realisasi Belanja";
+  const handlePrint = () => {
+    history.push({
+      pathname: "/PrintData",
+      state: {
+        data: data,
+        comment: comment,
+        columnTable: columnTable,
+        title: title,
+        grafik: "line",
+        nameColumn: nameColumn,
+        grafikView: grafikView,
+        axis: axis,
+      },
+      target: "_blank",
+    });
+  };
+
   return (
     <div>
       <Modal
@@ -430,7 +487,7 @@ const PaguMpOpsNon = () => {
         >
           <Grid item xs={6}>
             <Typography className={classes.titleSection} variant="h2">
-              MP dana PNBP vs Realisasi Belanja
+              {title}
             </Typography>
           </Grid>
           <Grid
@@ -446,6 +503,24 @@ const PaguMpOpsNon = () => {
               className={classes.buttonGroupStyle}
               variant="contained"
             >
+              <TooltipMI title="Embed Iframe" placement="top">
+                <IconButton
+                  size="small"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      '<iframe width="500" height="500"' +
+                        ' src="' +
+                        BASE_URL.domain +
+                        "/embed/" +
+                        BASE_URL.path.pnbp_pagu_mp_ops_non +
+                        '"></iframe>'
+                    );
+                    alert("code embeded berhasil dicopy");
+                  }}
+                >
+                  <IoCopySharp />
+                </IconButton>
+              </TooltipMI>
               <TooltipMI title="Lihat Detail" placement="top">
                 <IconButton
                   size="small"
@@ -471,20 +546,11 @@ const PaguMpOpsNon = () => {
                   <IoEye />
                 </IconButton>
               </TooltipMI>
+
               <TooltipMI
                 title="Print Data"
                 placement="top"
-                onClick={
-                  () => window.print()
-                  // printHandle({
-                  //   title: "MP dana PNBP vs Realisasi Belanja",
-                  //   grafik: data,
-                  //   dataTable: "",
-                  //   analisis: comment ? comment.analisisData : "",
-                  //   type: "Line",
-                  //   nameColumn: ["Tahun", "Alokasi Anggaran", "MP"],
-                  // })
-                }
+                onClick={handlePrint}
               >
                 <IconButton aria-label="delete" size="small">
                   <IoPrint />

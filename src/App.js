@@ -30,6 +30,7 @@ import {
   KepegawaianBPNUsia,
   KepegawaianBPNPendidikan,
   KepegawaianBPNJabatan,
+  KepegawaianBPNMutasi,
   PegawaiAtr,
 } from "./pages/kepegawaian";
 import {
@@ -157,6 +158,9 @@ const Main = withRouter(({ location }) => {
         </Route>
         <Route path="/Kepegawaian/PegawaiAtr/KepegawaianBPNJabatan">
           <KepegawaianBPNJabatan />
+        </Route>
+        <Route path="/Kepegawaian/PegawaiAtr/KepegawaianBPNMutasi">
+          <KepegawaianBPNMutasi />
         </Route>
         <Route path="/Kepegawaian/PegawaiAtr">
           <PegawaiAtr />

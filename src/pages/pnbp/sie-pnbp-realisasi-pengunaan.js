@@ -48,7 +48,7 @@ import {
   ThemeProvider,
   withStyles,
 } from "@material-ui/core/styles";
-import { IoEye, IoPrint } from "react-icons/io5";
+import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "./styles";
 import axios from "axios";
@@ -61,7 +61,7 @@ import {
 } from "../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
-
+import { useHistory } from "react-router-dom";
 const dataTemp = [
   {
     kantor: "Kantor",
@@ -79,14 +79,20 @@ let nameColumn = [
   {
     label: "Kantor",
     value: "kantor",
+    isFixed: false,
+    isLabel: true,
   },
   {
     label: "Realisasi",
     value: "realisasi",
+    isFixed: true,
+    isLabel: true,
   },
   {
     label: "Persentase",
     value: "persentase",
+    isFixed: false,
+    isLabel: true,
   },
 ];
 
@@ -390,6 +396,51 @@ const realisasiPenggunaan = () => {
       </List>
     </div>
   );
+  const history = useHistory();
+
+  let columnTable = [
+    {
+      label: "kantor",
+      isFixed: false,
+    },
+    {
+      label: "realisasi",
+      isFixed: false,
+    },
+    {
+      label: "persentase",
+      isFixed: true,
+    },
+  ];
+
+  let grafikView = [
+    {
+      dataKey: "realisasi",
+      fill: "#6EB5FF",
+    },
+  ];
+
+  let axis = {
+    xAxis: "kantor",
+    yAxis: "Realisasi",
+  };
+  const title = " Realisasi penggunaan PNBP";
+  const handlePrint = () => {
+    history.push({
+      pathname: "/PrintData",
+      state: {
+        data: data,
+        comment: comment,
+        columnTable: columnTable,
+        title: title,
+        grafik: "line",
+        nameColumn: nameColumn,
+        grafikView: grafikView,
+        axis: axis,
+      },
+      target: "_blank",
+    });
+  };
 
   return (
     <div>
@@ -436,6 +487,24 @@ const realisasiPenggunaan = () => {
             className={classes.buttonGroupStyle}
             variant="contained"
           >
+            <TooltipMI title="Embed Iframe" placement="top">
+              <IconButton
+                size="small"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    '<iframe width="500" height="500"' +
+                      ' src="' +
+                      BASE_URL.domain +
+                      "/embed/" +
+                      BASE_URL.path.pnbp_realisasi_anggaran +
+                      '"></iframe>'
+                  );
+                  alert("code embeded berhasil dicopy");
+                }}
+              >
+                <IoCopySharp />
+              </IconButton>
+            </TooltipMI>
             <TooltipMI title="Lihat Detail" placement="top">
               <IconButton
                 size="small"
@@ -460,11 +529,7 @@ const realisasiPenggunaan = () => {
                 <IoEye />
               </IconButton>
             </TooltipMI>
-            <TooltipMI
-              title="Print Data"
-              placement="top"
-              onClick={() => window.print()}
-            >
+            <TooltipMI title="Print Data" placement="top" onClick={handlePrint}>
               <IconButton aria-label="delete" size="small">
                 <IoPrint />
               </IconButton>

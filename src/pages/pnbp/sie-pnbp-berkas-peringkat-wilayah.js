@@ -48,15 +48,17 @@ import {
   ThemeProvider,
   withStyles,
 } from "@material-ui/core/styles";
-import { IoEye, IoPrint } from "react-icons/io5";
+import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "./styles";
 import axios from "axios";
+import { useScreenshot } from "use-react-screenshot";
+import html2canvas from "html2canvas";
 import moment from "moment";
 import { tahunData, bulanData } from "../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
-
+import { useHistory } from "react-router-dom";
 const dataTemp = [
   {
     wilayah: "Kantor Wilayah",
@@ -104,10 +106,14 @@ let nameColumn = [
   {
     label: "Wilayah",
     value: "wilayah",
+    isFixed: false,
+    isLabel: true,
   },
   {
     label: "Besarnya",
     value: "besarnya",
+    isFixed: true,
+    isLabel: true,
   },
 ];
 
@@ -127,7 +133,11 @@ const PnbpBerkasPeringkatWilayah = () => {
     nameColumn: [],
     listTop10Comment: [],
   });
-
+  const inputRef = createRef(null);
+  const [image, takeScreenshot] = useScreenshot({
+    type: "image/jpeg",
+    quality: 1.0,
+  });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -140,6 +150,7 @@ const PnbpBerkasPeringkatWilayah = () => {
     setPage(0);
   };
 
+  const getImage = () => takeScreenshot(ref.current);
   const handleOpen = (data) => {
     setOpen(true);
     setDataModal(data);
@@ -222,7 +233,7 @@ const PnbpBerkasPeringkatWilayah = () => {
   };
 
   const DataFormaterX = (value) => {
-    return value ? value.replace("Kantor Wilayah Provinsi ", "") : value;
+    return value.replace("Kantor Wilayah Provinsi ", "");
   };
 
   const body = (
@@ -230,8 +241,16 @@ const PnbpBerkasPeringkatWilayah = () => {
       <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
         {dataModal.title}
       </h2>
+      {/* <Grid item xs={6}>
+        <TooltipMI title="Screenshot modal" placement="top">
+          <IconButton onClick={getImage}>
+            <IoMdDownload />
+          </IconButton>
+        </TooltipMI>
+      </Grid> */}
 
       <div className={classes.barChart}>
+        {/* <img width={500} src={image} /> */}
         <ResponsiveContainer width="100%" height={250}>
           <BarChart
             width={500}
@@ -368,6 +387,47 @@ const PnbpBerkasPeringkatWilayah = () => {
     </div>
   );
 
+  const history = useHistory();
+
+  let columnTable = [
+    {
+      label: "wilayah",
+      isFixed: false,
+    },
+    {
+      label: "besarnya",
+      isFixed: true,
+    },
+  ];
+
+  let grafikView = [
+    {
+      dataKey: "besarnya",
+      fill: "#F08080",
+    },
+  ];
+
+  let axis = {
+    xAxis: "wilayah",
+    yAxis: "Besarnya",
+  };
+  const title = " Top 5 penerimaan PNBP per Wilayah";
+  const handlePrint = () => {
+    history.push({
+      pathname: "/PrintData",
+      state: {
+        data: data,
+        comment: comment,
+        columnTable: columnTable,
+        title: title,
+        grafik: "bar",
+        nameColumn: nameColumn,
+        grafikView: grafikView,
+        axis: axis,
+      },
+      target: "_blank",
+    });
+  };
   return (
     <div>
       <Modal
@@ -413,6 +473,24 @@ const PnbpBerkasPeringkatWilayah = () => {
             className={classes.buttonGroupStyle}
             variant="contained"
           >
+            <TooltipMI title="Embed Iframe" placement="top">
+              <IconButton
+                size="small"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    '<iframe width="500" height="500"' +
+                      ' src="' +
+                      BASE_URL.domain +
+                      "/embed/" +
+                      BASE_URL.path.pnbp_alokasi_anggaran +
+                      '"></iframe>'
+                  );
+                  alert("code embeded berhasil dicopy");
+                }}
+              >
+                <IoCopySharp />
+              </IconButton>
+            </TooltipMI>
             <TooltipMI title="Lihat Detail" placement="top">
               <IconButton
                 size="small"
@@ -437,11 +515,7 @@ const PnbpBerkasPeringkatWilayah = () => {
                 <IoEye />
               </IconButton>
             </TooltipMI>
-            <TooltipMI
-              title="Print Data"
-              placement="top"
-              onClick={() => window.print()}
-            >
+            <TooltipMI title="Print Data" placement="top" onClick={handlePrint}>
               <IconButton aria-label="delete" size="small">
                 <IoPrint />
               </IconButton>

@@ -47,7 +47,7 @@ import {
   ThemeProvider,
   withStyles,
 } from "@material-ui/core/styles";
-import { IoEye, IoPrint } from "react-icons/io5";
+import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "./styles";
 import axios from "axios";
@@ -56,7 +56,7 @@ import html2canvas from "html2canvas";
 import moment from "moment";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
-
+import { useHistory } from "react-router-dom";
 const dataTemp = [
   {
     tahun: "2010",
@@ -72,10 +72,14 @@ let nameColumn = [
   {
     label: "Tahun",
     value: "tahun",
+    isFixed: false,
+    isLabel: true,
   },
   {
     label: "Target Penerimaan",
     value: "targetpenerimaan",
+    isFixed: false,
+    isLabel: true,
   },
 ];
 
@@ -362,6 +366,47 @@ const RealisasiTargetPenerimaan = () => {
       </List>
     </div>
   );
+  const history = useHistory();
+
+  let columnTable = [
+    {
+      label: "tahun",
+      isFixed: false,
+    },
+    {
+      label: "targetpenerimaan",
+      isFixed: false,
+    },
+  ];
+
+  let grafikView = [
+    {
+      dataKey: "targetpenerimaan",
+      fill: "#FEB144",
+    },
+  ];
+
+  let axis = {
+    xAxis: "tahun",
+    yAxis: "Target Penerimaan",
+  };
+  const title = "Penerimaan berbanding TPNBP penerimaan dan belanja per bulan";
+  const handlePrint = () => {
+    history.push({
+      pathname: "/PrintData",
+      state: {
+        data: data,
+        comment: comment,
+        columnTable: columnTable,
+        title: title,
+        grafik: "bar",
+        nameColumn: nameColumn,
+        grafikView: grafikView,
+        axis: axis,
+      },
+      target: "_blank",
+    });
+  };
 
   return (
     <div>
@@ -391,7 +436,7 @@ const RealisasiTargetPenerimaan = () => {
       >
         <Grid item xs={9}>
           <Typography className={classes.titleSection} variant="h2">
-            penerimaan berbanding TPNBP penerimaan dan belanja per bulan
+            Penerimaan berbanding TPNBP penerimaan dan belanja per bulan
           </Typography>
         </Grid>
 
@@ -408,6 +453,24 @@ const RealisasiTargetPenerimaan = () => {
             className={classes.buttonGroupStyle}
             variant="contained"
           >
+            <TooltipMI title="Embed Iframe" placement="top">
+              <IconButton
+                size="small"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    '<iframe width="500" height="500"' +
+                      ' src="' +
+                      BASE_URL.domain +
+                      "/embed/" +
+                      BASE_URL.path.pnbp_realisasi_anggaran +
+                      '"></iframe>'
+                  );
+                  alert("code embeded berhasil dicopy");
+                }}
+              >
+                <IoCopySharp />
+              </IconButton>
+            </TooltipMI>
             <TooltipMI title="Lihat Detail" placement="top">
               <IconButton
                 size="small"
@@ -433,11 +496,7 @@ const RealisasiTargetPenerimaan = () => {
                 <IoEye />
               </IconButton>
             </TooltipMI>
-            <TooltipMI
-              title="Print Data"
-              placement="top"
-              onClick={() => window.print()}
-            >
+            <TooltipMI title="Print Data" placement="top" onClick={handlePrint}>
               <IconButton aria-label="delete" size="small">
                 <IoPrint />
               </IconButton>

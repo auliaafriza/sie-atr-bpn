@@ -49,7 +49,7 @@ import {
   ThemeProvider,
   withStyles,
 } from "@material-ui/core/styles";
-import { IoEye, IoPrint } from "react-icons/io5";
+import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "./styles";
 import axios from "axios";
@@ -63,7 +63,7 @@ import {
 } from "../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
-
+import { useHistory } from "react-router-dom";
 const dataTemp = [
   {
     wilayah: "Kantor Wilayah Provinsi",
@@ -113,14 +113,20 @@ let nameColumn = [
   {
     label: "Wilayah",
     value: "wilayah",
+    isFixed: false,
+    isLabel: true,
   },
   {
     label: "PNBP",
     value: "pnbp",
+    isFixed: true,
+    isLabel: true,
   },
   {
     label: "Jumlah Berkas",
     value: "jumlahberkas",
+    isFixed: false,
+    isLabel: true,
   },
 ];
 
@@ -227,7 +233,7 @@ const PnbpBerkasWilayah = () => {
   };
 
   const DataFormaterX = (value) => {
-    return value ? value.replace("Kantor Wilayah Provinsi ", "") : value;
+    return value.replace("Kantor Wilayah Provinsi ", "");
   };
 
   const CustomTooltip = ({ active, payload, label }) => {
@@ -402,7 +408,51 @@ const PnbpBerkasWilayah = () => {
       </List>
     </div>
   );
+  const history = useHistory();
 
+  let columnTable = [
+    {
+      label: "wilayah",
+      isFixed: false,
+    },
+    {
+      label: "pnbp",
+      isFixed: false,
+    },
+    {
+      label: "jumlahberkas",
+      isFixed: true,
+    },
+  ];
+
+  let grafikView = [
+    {
+      dataKey: "pnbp",
+      fill: "#413ea0",
+    },
+  ];
+
+  let axis = {
+    xAxis: "wilayah",
+    yAxis: "Jumlah Nilai PNBP dan berkas",
+  };
+  const title = " PNBP dan jumlah berkas per Kegiatan";
+  const handlePrint = () => {
+    history.push({
+      pathname: "/PrintData",
+      state: {
+        data: data,
+        comment: comment,
+        columnTable: columnTable,
+        title: title,
+        grafik: null,
+        nameColumn: nameColumn,
+        grafikView: grafikView,
+        axis: axis,
+      },
+      target: "_blank",
+    });
+  };
   return (
     <div>
       <Modal
@@ -448,6 +498,24 @@ const PnbpBerkasWilayah = () => {
             className={classes.buttonGroupStyle}
             variant="contained"
           >
+            <TooltipMI title="Embed Iframe" placement="top">
+              <IconButton
+                size="small"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    '<iframe width="500" height="500"' +
+                      ' src="' +
+                      BASE_URL.domain +
+                      "/embed/" +
+                      BASE_URL.path.pnbp_alokasi_anggaran +
+                      '"></iframe>'
+                  );
+                  alert("code embeded berhasil dicopy");
+                }}
+              >
+                <IoCopySharp />
+              </IconButton>
+            </TooltipMI>
             <TooltipMI title="Lihat Detail" placement="top">
               <IconButton
                 size="small"
@@ -472,11 +540,7 @@ const PnbpBerkasWilayah = () => {
                 <IoEye />
               </IconButton>
             </TooltipMI>
-            <TooltipMI
-              title="Print Data"
-              placement="top"
-              onClick={() => window.print()}
-            >
+            <TooltipMI title="Print Data" placement="top" onClick={handlePrint}>
               <IconButton aria-label="delete" size="small">
                 <IoPrint />
               </IconButton>

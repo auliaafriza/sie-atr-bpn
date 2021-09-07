@@ -59,7 +59,7 @@ import { tahunData } from "../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { BASE_URL } from "../../config/embed_conf";
-
+import { useHistory } from "react-router-dom";
 const dataTemp = [
   {
     tahun: "2010",
@@ -395,6 +395,55 @@ const PaguMp = () => {
     </div>
   );
 
+  const history = useHistory();
+
+  let columnTable = [
+    {
+      label: "tahun",
+      isFixed: false,
+    },
+    {
+      label: "pagu",
+      isFixed: true,
+    },
+    {
+      label: "mp",
+      isFixed: true,
+    },
+  ];
+
+  let grafikView = [
+    {
+      dataKey: "pagu",
+      fill: "#6EB5FF",
+    },
+    {
+      dataKey: "mp",
+      fill: "#FCB9AA",
+    },
+  ];
+
+  let axis = {
+    xAxis: "tahun",
+    yAxis: "Nilai Satuan 1 Juta",
+  };
+  const title = "Pagu & MP PNBP (Satuan 1 Juta)";
+  const handlePrint = () => {
+    history.push({
+      pathname: "/PrintData",
+      state: {
+        data: data,
+        comment: comment,
+        columnTable: columnTable,
+        title: title,
+        grafik: "line",
+        nameColumn: nameColumn,
+        grafikView: grafikView,
+        axis: axis,
+      },
+      target: "_blank",
+    });
+  };
   return (
     <div>
       <Modal
@@ -495,17 +544,7 @@ const PaguMp = () => {
               <TooltipMI
                 title="Print Data"
                 placement="top"
-                onClick={
-                  () => window.print()
-                  // printHandle({
-                  //   title: "Pagu & MP PNBP (Satuan 1 Juta)",
-                  //   grafik: data,
-                  //   dataTable: "",
-                  //   analisis: comment ? comment.analisisData : "",
-                  //   type: "Line",
-                  //   nameColumn: ["Tahun", "Pagu", "MP"],
-                  // })
-                }
+                onClick={handlePrint}
               >
                 <IconButton aria-label="delete" size="small">
                   <IoPrint />

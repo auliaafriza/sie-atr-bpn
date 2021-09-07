@@ -47,7 +47,7 @@ import {
   ThemeProvider,
   withStyles,
 } from "@material-ui/core/styles";
-import { IoEye, IoPrint } from "react-icons/io5";
+import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "./styles";
 import axios from "axios";
@@ -57,7 +57,7 @@ import { tipeData } from "../../functionGlobal/globalDataAsset";
 import moment from "moment";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
-
+import { useHistory } from "react-router-dom";
 const dataTemp = [
   {
     tahun: 2017,
@@ -107,17 +107,22 @@ let nameColumn = [
   {
     label: "Tahun",
     value: "tahun",
+    isFixed: false,
+    isLabel: true,
   },
   {
     label: "Alokasi Anggaran",
     value: "alokasi_anggaran",
+    isFixed: true,
+    isLabel: true,
   },
   {
     label: "Anggaran",
     value: "anggaran",
+    isFixed: true,
+    isLabel: true,
   },
 ];
-
 const AlokasiAnggaran = () => {
   const classes = styles();
   const [years, setYears] = useState("OPS");
@@ -378,6 +383,56 @@ const AlokasiAnggaran = () => {
     </div>
   );
 
+  const history = useHistory();
+
+  let columnTable = [
+    {
+      label: "tahun",
+      isFixed: false,
+    },
+    {
+      label: "anggaran",
+      isFixed: true,
+    },
+    {
+      label: "alokasi_anggaran",
+      isFixed: true,
+    },
+  ];
+
+  let grafikView = [
+    {
+      dataKey: "alokasi_anggaran",
+      fill: "#FFA07A",
+    },
+    {
+      dataKey: "anggaran",
+      fill: "#20B2AA",
+    },
+  ];
+
+  let axis = {
+    xAxis: "tahun",
+    yAxis: "Nilai Satuan 1 Juta",
+  };
+  const title = "Alokasi anggaran vs realisasi Belanja";
+  const handlePrint = () => {
+    history.push({
+      pathname: "/PrintData",
+      state: {
+        data: data,
+        comment: comment,
+        columnTable: columnTable,
+        title: title,
+        grafik: "bar",
+        nameColumn: nameColumn,
+        grafikView: grafikView,
+        axis: axis,
+      },
+      target: "_blank",
+    });
+  };
+
   return (
     <div>
       <Modal
@@ -406,7 +461,7 @@ const AlokasiAnggaran = () => {
       >
         <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            alokasi anggaran vs realisasi Belanja
+            Alokasi anggaran vs realisasi Belanja
           </Typography>
         </Grid>
 
@@ -423,6 +478,24 @@ const AlokasiAnggaran = () => {
             className={classes.buttonGroupStyle}
             variant="contained"
           >
+            <TooltipMI title="Embed Iframe" placement="top">
+              <IconButton
+                size="small"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    '<iframe width="500" height="500"' +
+                      ' src="' +
+                      BASE_URL.domain +
+                      "/embed/" +
+                      BASE_URL.path.pnbp_alokasi_anggaran +
+                      '"></iframe>'
+                  );
+                  alert("code embeded berhasil dicopy");
+                }}
+              >
+                <IoCopySharp />
+              </IconButton>
+            </TooltipMI>
             <TooltipMI title="Lihat Detail" placement="top">
               <IconButton
                 size="small"
@@ -447,11 +520,7 @@ const AlokasiAnggaran = () => {
                 <IoEye />
               </IconButton>
             </TooltipMI>
-            <TooltipMI
-              title="Print Data"
-              placement="top"
-              onClick={() => window.print()}
-            >
+            <TooltipMI title="Print Data" placement="top" onClick={handlePrint}>
               <IconButton aria-label="delete" size="small">
                 <IoPrint />
               </IconButton>

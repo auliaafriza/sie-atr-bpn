@@ -48,7 +48,7 @@ import {
   ThemeProvider,
   withStyles,
 } from "@material-ui/core/styles";
-import { IoEye, IoPrint } from "react-icons/io5";
+import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "../dashboardPage/styles";
 import axios from "axios";
@@ -61,7 +61,7 @@ import {
 } from "../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
-
+import { useHistory } from "react-router-dom";
 const dataTemp = [
   {
     nama_satker: "Direktorat",
@@ -109,10 +109,14 @@ let nameColumn = [
   {
     label: "Nama Satker",
     value: "nama_satker",
+    isFixed: false,
+    isLabel: true,
   },
   {
     label: "Realisasi",
     value: "realisasi",
+    isFixed: true,
+    isLabel: true,
   },
 ];
 
@@ -382,6 +386,47 @@ const PengembalianPNBP = () => {
     );
   };
 
+  const history = useHistory();
+
+  let columnTable = [
+    {
+      label: "nama_satker",
+      isFixed: false,
+    },
+    {
+      label: "realisasi",
+      isFixed: true,
+    },
+  ];
+
+  let grafikView = [
+    {
+      dataKey: "realisasi",
+      fill: "#CD5C5C",
+    },
+  ];
+
+  let axis = {
+    xAxis: "nama_satker",
+    yAxis: "Realisasi",
+  };
+  const title = "Jumlah pengembalian PNBP (refund)";
+  const handlePrint = () => {
+    history.push({
+      pathname: "/PrintData",
+      state: {
+        data: data,
+        comment: comment,
+        columnTable: columnTable,
+        title: title,
+        grafik: "bar",
+        nameColumn: nameColumn,
+        grafikView: grafikView,
+        axis: axis,
+      },
+      target: "_blank",
+    });
+  };
   return (
     <div>
       <Modal
@@ -410,7 +455,7 @@ const PengembalianPNBP = () => {
       >
         <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            Jumlah pengembalian PNBP (refund)
+            {title}
           </Typography>
         </Grid>
 
@@ -427,6 +472,24 @@ const PengembalianPNBP = () => {
             className={classes.buttonGroupStyle}
             variant="contained"
           >
+            <TooltipMI title="Embed Iframe" placement="top">
+              <IconButton
+                size="small"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    '<iframe width="500" height="500"' +
+                      ' src="' +
+                      BASE_URL.domain +
+                      "/embed/" +
+                      BASE_URL.path.pnbp_pengembalian +
+                      '"></iframe>'
+                  );
+                  alert("code embeded berhasil dicopy");
+                }}
+              >
+                <IoCopySharp />
+              </IconButton>
+            </TooltipMI>
             <TooltipMI title="Lihat Detail" placement="top">
               <IconButton
                 size="small"
@@ -451,11 +514,7 @@ const PengembalianPNBP = () => {
                 <IoEye />
               </IconButton>
             </TooltipMI>
-            <TooltipMI
-              title="Print Data"
-              placement="top"
-              onClick={() => window.print()}
-            >
+            <TooltipMI title="Print Data" placement="top" onClick={handlePrint}>
               <IconButton aria-label="delete" size="small">
                 <IoPrint />
               </IconButton>

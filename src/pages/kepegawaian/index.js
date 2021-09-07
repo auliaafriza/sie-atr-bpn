@@ -3,6 +3,7 @@ import KepegawaianBPNJK from "./kepegawaian-atr-bpn-JK";
 import KepegawaianBPNUsia from "./kepegawaian-atr-bpn-usia";
 import KepegawaianBPNPendidikan from "./kepegawaian-atr-bpn-pendidikan";
 import KepegawaianBPNJabatan from "./kepegawaian-atr-bpn-jabatan";
+import KepegawaianBPNMutasi from "./kepegawaian-atr-bpn-mutasi";
 import PegawaiAtr from "./PegawaiAtr";
 
 export {
@@ -11,5 +12,6 @@ export {
   KepegawaianBPNUsia,
   KepegawaianBPNPendidikan,
   KepegawaianBPNJabatan,
+  KepegawaianBPNMutasi,
   PegawaiAtr,
 };

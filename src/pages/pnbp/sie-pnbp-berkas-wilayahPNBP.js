@@ -47,7 +47,7 @@ import {
   ThemeProvider,
   withStyles,
 } from "@material-ui/core/styles";
-import { IoEye, IoPrint } from "react-icons/io5";
+import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "./styles";
 import axios from "axios";
@@ -56,7 +56,7 @@ import html2canvas from "html2canvas";
 import moment from "moment";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
-
+import { useHistory } from "react-router-dom";
 const dataTemp = [
   {
     wilayah: "Kantor Wilayah Provinsi",
@@ -209,7 +209,7 @@ const BerkasWilayahPnbp = () => {
     }
   };
   const DataFormaterX = (value) => {
-    return value ? value.replace("Kantor Wilayah Provinsi ", "") : value;
+    return value.replace("Kantor Wilayah Provinsi ", "");
   };
 
   const body = (
@@ -363,7 +363,47 @@ const BerkasWilayahPnbp = () => {
       </List>
     </div>
   );
+  const history = useHistory();
 
+  let columnTable = [
+    {
+      label: "wilayah",
+      isFixed: false,
+    },
+    {
+      label: "pnbp",
+      isFixed: false,
+    },
+  ];
+
+  let grafikView = [
+    {
+      dataKey: "pnbp",
+      fill: "#8884d8",
+    },
+  ];
+
+  let axis = {
+    xAxis: "wilayah",
+    yAxis: "PNBP",
+  };
+  const title = "Jumlah PNBP per Wilayah";
+  const handlePrint = () => {
+    history.push({
+      pathname: "/PrintData",
+      state: {
+        data: data,
+        comment: comment,
+        columnTable: columnTable,
+        title: title,
+        grafik: "bar",
+        nameColumn: nameColumn,
+        grafikView: grafikView,
+        axis: axis,
+      },
+      target: "_blank",
+    });
+  };
   return (
     <div>
       <Modal
@@ -409,6 +449,24 @@ const BerkasWilayahPnbp = () => {
             className={classes.buttonGroupStyle}
             variant="contained"
           >
+            <TooltipMI title="Embed Iframe" placement="top">
+              <IconButton
+                size="small"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    '<iframe width="500" height="500"' +
+                      ' src="' +
+                      BASE_URL.domain +
+                      "/embed/" +
+                      BASE_URL.path.pnbp_alokasi_anggaran +
+                      '"></iframe>'
+                  );
+                  alert("code embeded berhasil dicopy");
+                }}
+              >
+                <IoCopySharp />
+              </IconButton>
+            </TooltipMI>
             <TooltipMI title="Lihat Detail" placement="top">
               <IconButton
                 size="small"
@@ -433,11 +491,7 @@ const BerkasWilayahPnbp = () => {
                 <IoEye />
               </IconButton>
             </TooltipMI>
-            <TooltipMI
-              title="Print Data"
-              placement="top"
-              onClick={() => window.print()}
-            >
+            <TooltipMI title="Print Data" placement="top" onClick={handlePrint}>
               <IconButton aria-label="delete" size="small">
                 <IoPrint />
               </IconButton>

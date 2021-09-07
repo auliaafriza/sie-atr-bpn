@@ -140,6 +140,9 @@ const ComponentPrint = () => {
   const CustomX = (data) => {
     return axis.xAxis == "bulan" && isFinite(data) ? NamaBulan[data + 1] : data;
   };
+  const DataFormaterX = (value) => {
+    return value.replace("Kantor Wilayah Provinsi ", "");
+  };
 
   return (
     <div ref={inputRef}>
@@ -177,7 +180,7 @@ const ComponentPrint = () => {
                   offset={-5}
                 />
               </YAxis>
-              <Tooltip content={<CustomTooltip />} />
+              {/* <Tooltip content={<CustomTooltip />} /> */}
               <Legend />
               {grafikView.map((grafikItem, i) => {
                 return (
@@ -220,7 +223,8 @@ const ComponentPrint = () => {
                   offset={-5}
                 />
               </YAxis>
-              <Tooltip content={<CustomTooltip />} />
+              {/* <Tooltip content={<CustomTooltip />} /> */}
+              <Legend />
               {grafikView.map((grafikItem, i) => {
                 return (
                   <Line
@@ -269,7 +273,7 @@ const ComponentPrint = () => {
                   offset={-5}
                 />
               </YAxis>
-              <Tooltip content={<CustomTooltip />} />
+              {/* <Tooltip content={<CustomTooltip />} /> */}
               <Legend />
               <Bar dataKey="pnbp" barSize={20} fill="#413ea0" />
               <Line

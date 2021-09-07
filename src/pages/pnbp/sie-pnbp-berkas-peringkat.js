@@ -48,7 +48,7 @@ import {
   ThemeProvider,
   withStyles,
 } from "@material-ui/core/styles";
-import { IoEye, IoPrint } from "react-icons/io5";
+import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "./styles";
 import axios from "axios";
@@ -58,7 +58,7 @@ import moment from "moment";
 import { tahunData, bulanData } from "../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
-
+import { useHistory } from "react-router-dom";
 const dataTemp = [
   {
     kantor: "Kantor Pertanahan",
@@ -105,11 +105,15 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 let nameColumn = [
   {
     label: "Kantor",
-    value: "kaantor",
+    value: "kantor",
+    isFixed: false,
+    isLabel: true,
   },
   {
     label: "Besarnya",
     value: "besarnya",
+    isFixed: true,
+    isLabel: true,
   },
 ];
 
@@ -229,7 +233,7 @@ const PnbpBerkasPeringkat = () => {
   };
 
   const DataFormaterX = (value) => {
-    return value ? value.replace("Kantor Pertanahan ", "") : value;
+    return value.replace("Kantor Pertanahan ", "");
   };
 
   const body = (
@@ -382,7 +386,47 @@ const PnbpBerkasPeringkat = () => {
       </List>
     </div>
   );
+  const history = useHistory();
 
+  let columnTable = [
+    {
+      label: "wilayah",
+      isFixed: false,
+    },
+    {
+      label: "besarnya",
+      isFixed: true,
+    },
+  ];
+
+  let grafikView = [
+    {
+      dataKey: "besarnya",
+      fill: "#8884d8",
+    },
+  ];
+
+  let axis = {
+    xAxis: "wilayah",
+    yAxis: "Besarnya",
+  };
+  const title = "  Top 5 penerimaan PNBP per Kantor";
+  const handlePrint = () => {
+    history.push({
+      pathname: "/PrintData",
+      state: {
+        data: data,
+        comment: comment,
+        columnTable: columnTable,
+        title: title,
+        grafik: "bar",
+        nameColumn: nameColumn,
+        grafikView: grafikView,
+        axis: axis,
+      },
+      target: "_blank",
+    });
+  };
   return (
     <div>
       <Modal
@@ -428,6 +472,24 @@ const PnbpBerkasPeringkat = () => {
             className={classes.buttonGroupStyle}
             variant="contained"
           >
+            <TooltipMI title="Embed Iframe" placement="top">
+              <IconButton
+                size="small"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    '<iframe width="500" height="500"' +
+                      ' src="' +
+                      BASE_URL.domain +
+                      "/embed/" +
+                      BASE_URL.path.pnbp_alokasi_anggaran +
+                      '"></iframe>'
+                  );
+                  alert("code embeded berhasil dicopy");
+                }}
+              >
+                <IoCopySharp />
+              </IconButton>
+            </TooltipMI>
             <TooltipMI title="Lihat Detail" placement="top">
               <IconButton
                 size="small"
@@ -452,11 +514,7 @@ const PnbpBerkasPeringkat = () => {
                 <IoEye />
               </IconButton>
             </TooltipMI>
-            <TooltipMI
-              title="Print Data"
-              placement="top"
-              onClick={() => window.print()}
-            >
+            <TooltipMI title="Print Data" placement="top" onClick={handlePrint}>
               <IconButton aria-label="delete" size="small">
                 <IoPrint />
               </IconButton>
