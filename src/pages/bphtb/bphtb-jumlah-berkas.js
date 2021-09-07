@@ -161,7 +161,9 @@ const BPHTBJumlahBerkas = () => {
   const [semester, setSemester] = useState(2);
   const [bulan, setBulan] = useState("04");
   const [open, setOpen] = useState(false);
-  const [dataFilter, setDataFilter] = useState([]);
+  const [dataFilter, setDataFilter] = useState([
+    "Kantor Pertanahan Kabupaten Kampar",
+  ]);
 
   const [dataModal, setDataModal] = useState({
     title: "",
