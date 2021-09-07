@@ -115,7 +115,7 @@ let columnTable = [
 let grafikView = [
   {
     dataKey: "jumlah",
-    fill: "#c545ff",
+    fill: "#065535",
   },
 ];
 
@@ -260,7 +260,7 @@ const SieLayananKebutuhanKantorPertanahan = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="jumlah" fill="#C71585"></Bar>
+            <Bar dataKey="jumlah" fill="#065535"></Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -577,7 +577,7 @@ const SieLayananKebutuhanKantorPertanahan = () => {
                       </YAxis>
                       <Tooltip content={<CustomTooltip />} />
                       <Legend />
-                      <Bar dataKey="jumlah" fill="#C71585" />
+                      <Bar dataKey="jumlah" fill="#065535" />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
