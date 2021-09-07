@@ -1,29 +1,12 @@
-import React from "react";
-import {
-  AppBar,
-  MenuItem,
-  Tab,
-  Tabs,
-  // Popover,
-  Menu,
-  // Popper,
-  // Grow,
-  // Paper,
-  // MenuList,
-  // ClickAwayListener,
-  // Fade,
-} from "@material-ui/core";
-// import { Home, SupervisorAccount, Public } from "@material-ui/icons";
-// import { BiMoney, BiLineChart, BiBriefcase } from "react-icons/bi";
-// import { FaCertificate, FaHandshake } from "react-icons/fa";
+import React, { useEffect } from "react";
+import { AppBar, MenuItem, Tab, Tabs, Menu } from "@material-ui/core";
 import PropTypes from "prop-types";
 import styles from "./styles";
-// import { Button } from "react-bootstrap";
 import { MENU_LIST } from "../config/menu";
 import _ from "lodash";
 import { useHistory } from "react-router";
-// import DashHome from "./Home";
-// import CenteredGrid from "./dashboard_2";
+
+import axios from "axios";
 
 const TabPanel = (props) => {
   const { children, value, index } = props;
@@ -48,12 +31,71 @@ TabPanel.propTypes = {
 
 const NavBar = (props) => {
   const classes = styles();
-  // const anchorRef = React.useRef(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  // const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(0);
   const [id, setId] = React.useState("");
+  const [menuList, setMenuList] = React.useState([]);
+
+  useEffect(() => {
+    getListMenu();
+  }, []);
+
+  // ============= NOTE ===========================
+  // JIKA BELOM INTEGRASI DENGAN SSO
+  // untuk set username melalui localstorage
+  // buka inspec element -> application -> localstorage
+  // add new. isi key dengan usernameSie dan value sesuai keinginan.
+  // refresh halaman
+  const getListMenu = () => {
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios({
+      method: "post",
+      url: "http://10.20.57.234/SIEBackEnd/ApiMenu/ByUsername",
+      data: {
+        u: localStorage.getItem("usernameSie"), //agung13
+      },
+    })
+      .then(function (response) {
+        const menuFromApi = _.get(response, "data.data", []) || [];
+        const copy_MENU_LIST = _.clone(MENU_LIST);
+        if (menuFromApi.length === 0) return setMenuList(copy_MENU_LIST);
+        const selectedMenu = copy_MENU_LIST.reduce((accMenu, menu, idxMenu) => {
+          let idxMenuApi = menuFromApi.findIndex(
+            (e) => e.text.toLowerCase().search(menu.name.toLowerCase()) !== -1
+          );
+          if (idxMenu === 0) {
+            accMenu.push(menu);
+          } else if (idxMenuApi !== -1) {
+            menu.subMenus = menu.subMenus.reduce((accSubMenu, subMenu) => {
+              let idxSubMenuApi = menuFromApi[
+                idxMenuApi
+              ]?.listSubMenu.findIndex(
+                (e) =>
+                  e.text.toLowerCase().search(subMenu.name.toLowerCase()) !== -1
+              );
+              if (idxSubMenuApi !== -1) {
+                accSubMenu.push(subMenu);
+              }
+              return accSubMenu;
+            }, []);
+            accMenu.push(menu);
+          }
+          return accMenu;
+        }, []);
+        // console.log({ menuFromApi, selectedMenu });
+        return setMenuList(selectedMenu);
+      })
+      .catch(function (error) {
+        // handle error
+        setMenuList(MENU_LIST);
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -61,29 +103,12 @@ const NavBar = (props) => {
 
   const a11yProps = (index, open) => {
     return {
-      // id: `simple-tab-${index}`,
-      // "aria-controls": `simple-tabpanel-${index}`,
       id: `simple-menu-${index}`,
       "aria-controls": `simple-menu-${index}`,
       "aria-haspopup": "true",
     };
   };
 
-  // const isMenuOpen = Boolean(anchorEl);
-  // const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  // const handleProfileMenuOpen = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-
-  // const handleMobileMenuClose = () => {
-  //   setMobileMoreAnchorEl(null);
-  // };
-
-  // const handleMenuClose = () => {
-  //   setAnchorEl(null);
-  //   // handleMobileMenuClose();
-  // };
   const history = useHistory();
   const handleChangePage = (link) => {
     history.push(link);
@@ -106,44 +131,6 @@ const NavBar = (props) => {
         position="static"
         elevation={0}
       >
-        {/* <Button
-          id="simple-menu-1"
-          aria-controls="simple-menu-1"
-          aria-haspopup="true"
-          onClick={handleOpenSubMenu}
-        >
-          Open Menu
-        </Button>
-        <Menu
-          id="simple-menu-1"
-          anchorEl={anchorEl}
-          keepMounted
-          open={id === "simple-menu-1"}
-          onClose={handleCloseSubMenu}
-        >
-          <MenuItem onClick={handleCloseSubMenu}>Profile</MenuItem>
-          <MenuItem onClick={handleCloseSubMenu}>My account</MenuItem>
-          <MenuItem onClick={handleCloseSubMenu}>Logout</MenuItem>
-        </Menu>
-        <Button
-          id="simple-menu-2"
-          aria-controls="simple-menu-2"
-          aria-haspopup="true"
-          onClick={handleOpenSubMenu}
-        >
-          Open Menu 2
-        </Button>
-        <Menu
-          id="simple-menu-2"
-          anchorEl={anchorEl}
-          keepMounted
-          open={id === "simple-menu-2"}
-          onClose={handleCloseSubMenu}
-        >
-          <MenuItem onClick={handleCloseSubMenu}>Profile2</MenuItem>
-          <MenuItem onClick={handleCloseSubMenu}>My account2</MenuItem>
-          <MenuItem onClick={handleCloseSubMenu}>Logout2</MenuItem>
-        </Menu> */}
         <Tabs
           value={value}
           textColor="inherit"
@@ -151,7 +138,7 @@ const NavBar = (props) => {
           indicatorColor="transparent"
           centered
         >
-          {MENU_LIST.map((menu) => (
+          {menuList.map((menu) => (
             <>
               <Tab
                 textColor="inherit"
@@ -192,90 +179,8 @@ const NavBar = (props) => {
               )}
             </>
           ))}
-
-          {/* <Tab
-            textColor="inherit"
-            icon={<BiMoney size={24} />}
-            label="Aset & Keuangan"
-            onClick={handleOpenSubMenu}
-            {...a11yProps(1)}
-          /> */}
-          {/* <Tab
-            textColor="inherit"
-            icon={<SupervisorAccount />}
-            label="Kepegawaian"
-            {...a11yProps(2)}
-          /> */}
-          {/* <Tab
-            textColor="inherit"
-            icon={<FaHandshake size={24} />}
-            label="Mitra"
-            {...a11yProps(3)}
-          /> */}
-          {/* <Tab
-            textColor="inherit"
-            icon={<BiLineChart size={24} />}
-            label="Kinerja Layanan"
-          /> */}
-
-          {/* <Tab
-            textColor="inherit"
-            icon={<BiBriefcase size={24} />}
-            label="PSN"
-            {...a11yProps(5)}
-          /> */}
-          {/* <Tab
-            textColor="inherit"
-            icon={<FaCertificate size={24} />}
-            label="Sertifikat"
-            {...a11yProps(6)}
-          /> */}
-          {/* <Tab
-            textColor="inherit"
-            icon={<Public />}
-            label="Info Geo-spasial"
-            {...a11yProps(7)}
-            onClick={() => setOpen(true)}
-          /> */}
         </Tabs>
-        {/* <Menu
-          id={id}
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleCloseSubMenu}
-        >
-          <MenuItem onClick={handleCloseSubMenu}>PNBP</MenuItem>
-          <MenuItem onClick={handleCloseSubMenu}>BPHTB</MenuItem>
-        </Menu> */}
-        {/* <Popover
-          open={open}
-          anchorEl={anchorEl}
-          onClose={handleMenuClose}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
-        >
-          <MenuItem onClick={() => setOpen(false)}>Three</MenuItem>
-          <MenuItem onClick={() => setOpen(false)}>Four</MenuItem>
-          <MenuItem onClick={() => setOpen(false)}>Five</MenuItem>
-        </Popover> */}
       </AppBar>
-      {/* <TabPanel value={value} index={0}>
-        <CenteredGrid />
-        <DashHome />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        Item Two
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        Item Three
-      </TabPanel> */}
     </div>
   );
 };
