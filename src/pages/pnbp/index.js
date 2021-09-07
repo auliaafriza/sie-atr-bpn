@@ -10,6 +10,8 @@ import PnbpBerkasWilayah from "./sie-pnbp-berkas-wilayah";
 import RealisasiPenerimaan from "./sie-pnbp-realisasi-penerimaan";
 import RealisasiPengunaan from "./sie-pnbp-realisasi-pengunaan";
 import RealisasiTargetPenerimaan from "./sie-pnbp-realisasi-target-penerimaan";
+import PersentaseRealisasiBelanja from "./sie-pnbp-persentase-realisasi-belanja";
+import KinerjaBerkasPnbp from "./sie-pnbp-kinerja-berkas";
 import PnbpPage from "./pnbpPage";
 
 export {
@@ -25,5 +27,7 @@ export {
   RealisasiPenerimaan,
   RealisasiPengunaan,
   RealisasiTargetPenerimaan,
+  PersentaseRealisasiBelanja,
+  KinerjaBerkasPnbp,
   PnbpPage,
 };

@@ -62,12 +62,12 @@ import { useSelector } from "react-redux";
 
 const dataTemp = [
   {
-    pendidikan: "",
-    jml_pegawai: 0,
+    namajabatan: "",
+    jumlah: 0,
   },
   {
-    pendidikan: "",
-    jml_pegawai: 0,
+    namajabatan: "",
+    jumlah: 0,
   },
 ];
 
@@ -105,14 +105,14 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {
-    label: "Pendidikan",
-    value: "pendidikan",
+    label: "Nama Jabatan",
+    value: "namajabatan",
     isFixed: false,
     isLabel: false,
   },
   {
-    label: "Jumlah Pegawai",
-    value: "jml_pegawai",
+    label: "Jumlah",
+    value: "jumlah",
     isFixed: false,
     isLabel: false,
   },
@@ -120,25 +120,25 @@ let nameColumn = [
 
 let columnTable = [
   {
-    label: "pendidikan",
+    label: "namajabatan",
     isFixed: false,
   },
   {
-    label: "jml_pegawai",
+    label: "jumlah",
     isFixed: false,
   },
 ];
 
 let grafikView = [
   {
-    dataKey: "jml_pegawai",
+    dataKey: "jumlah",
     fill: "#FFA07A",
   },
 ];
 
 let axis = {
-  xAxis: "pendidikan",
-  yAxis: "Jumlah Pegawai",
+  xAxis: "namajabatan",
+  yAxis: "Jumlah",
 };
 
 const KepegawaianOrganisasi = () => {
@@ -242,7 +242,7 @@ const KepegawaianOrganisasi = () => {
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Jumlah Pegawai : ${payload[0].value}`}</p>
+          >{`Jumlah : ${payload[0].value}`}</p>
         </div>
       );
     }
@@ -288,7 +288,7 @@ const KepegawaianOrganisasi = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="pendidikan"></XAxis>
+            <XAxis dataKey="namajabatan"></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value="Nilai Satuan 1 Juta"
@@ -299,7 +299,7 @@ const KepegawaianOrganisasi = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="jml_pegawai" fill="#FFA07A" />
+            <Bar dataKey="jumlah" fill="#FFA07A" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -326,16 +326,16 @@ const KepegawaianOrganisasi = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.pendidikan}>
+                    <StyledTableRow key={row.namajabatan}>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.pendidikan}
+                        {row.namajabatan}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {row.jml_pegawai}
+                        {row.jumlah}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
@@ -418,11 +418,6 @@ const KepegawaianOrganisasi = () => {
   };
 
   const handleChangeKantor = (event) => {
-    let temp =
-      event.target.value.length > 10
-        ? event.target.value.slice(0, 10)
-        : event.target.value;
-    setKantorDis(temp);
     setKantor(event.target.value);
   };
 
@@ -590,7 +585,7 @@ const KepegawaianOrganisasi = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="pendidikan" />
+                    <XAxis dataKey="namajabatan" />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
                         value="Nilai Satuan 1 Juta"
@@ -601,7 +596,7 @@ const KepegawaianOrganisasi = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Bar dataKey="jml_pegawai" fill="#FFA07A" />
+                    <Bar dataKey="jumlah" fill="#FFA07A" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

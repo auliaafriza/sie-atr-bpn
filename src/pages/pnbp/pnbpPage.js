@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { getSatker, getKantor, getKanwil } from "../../actions/globalActions";
 import { useDispatch } from "react-redux";
 import PnbpBerkasWilayah from "./sie-pnbp-berkas-wilayah";
-import BerkasWilayahPnbp from "./sie-pnbp-berkas-wilayahPNBP";
 import PnbpBerkasPeringkat from "./sie-pnbp-berkas-peringkat";
 import PnbpBerkasPeringkatWilayah from "./sie-pnbp-berkas-peringkat-wilayah";
 import RealisasiPenggunaan from "./sie-pnbp-realisasi-pengunaan";
@@ -14,6 +13,8 @@ import PeringkatRealisasi from "./sie-peringkat-realisasi";
 import RealisasiAnggaran from "./sie-pnbp-realisasi-anggaran";
 import PaguMp from "./sie-pnbp-pagu-mp";
 import PaguMpOpsNon from "./sie_pnbp_pagu_mp_ops_non";
+import PersentaseRealisasiBelanja from "./sie-pnbp-persentase-realisasi-belanja";
+import KinerjaBerkasPnbp from "./sie-pnbp-kinerja-berkas";
 
 const PnbpPage = () => {
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ const PnbpPage = () => {
       <PnbpBerkasPeringkatWilayah />
       <RealisasiAnggaran />
       <RealisasiPenggunaan />
+      <PersentaseRealisasiBelanja />
       <RealisasiPenerimaan />
       <RealisasiTargetPenerimaan />
       <PaguMp />
@@ -38,6 +40,7 @@ const PnbpPage = () => {
       <AlokasiAnggaran />
       <PeringkatRealisasi />
       <PengembalianPNBP />
+      <KinerjaBerkasPnbp />
     </div>
   );
 };

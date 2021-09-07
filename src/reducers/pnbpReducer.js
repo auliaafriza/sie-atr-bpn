@@ -16,6 +16,14 @@ import {
   GET_BERKAS_PNBP_KANTOR_FILTER_PENDING,
   GET_BERKAS_PNBP_KANTOR_FILTER_FULFILLED,
   GET_BERKAS_PNBP_KANTOR_FILTER_REJECTED,
+  GET_PERSENTASE_PNBP_BELANJA_FILTER,
+  GET_PERSENTASE_PNBP_BELANJA_FILTER_PENDING,
+  GET_PERSENTASE_PNBP_BELANJA_FILTER_FULFILLED,
+  GET_PERSENTASE_PNBP_BELANJA_FILTER_REJECTED,
+  GET_PNBP_KINERJA_BERKAS_FILTER,
+  GET_PNBP_KINERJA_BERKAS_FILTER_PENDING,
+  GET_PNBP_KINERJA_BERKAS_FILTER_FULFILLED,
+  GET_PNBP_KINERJA_BERKAS_FILTER_REJECTED,
 } from "../actions/actionTypes";
 
 const initialstate = {
@@ -24,6 +32,8 @@ const initialstate = {
   pengembalianPnbpFilter: [],
   berkasPnbpWilayah: [],
   berkasPnbpKantor: [],
+  persentaseBelanjaFilter: [],
+  pnbpKinerjaBerkas: [],
   error: {},
 };
 
@@ -113,6 +123,50 @@ const reducer = (state = initialstate, action) => {
         ...state,
         loading: false,
         berkasPnbpKantor: [],
+        errors: action.payload.error,
+      };
+    }
+
+    case GET_PERSENTASE_PNBP_BELANJA_FILTER: {
+      return { ...state };
+    }
+    case GET_PERSENTASE_PNBP_BELANJA_FILTER_PENDING: {
+      return { ...state, loading: true };
+    }
+    case GET_PERSENTASE_PNBP_BELANJA_FILTER_FULFILLED: {
+      return {
+        ...state,
+        persentaseBelanjaFilter: action.payload.data.data,
+        loading: false,
+      };
+    }
+    case GET_PERSENTASE_PNBP_BELANJA_FILTER_REJECTED: {
+      return {
+        ...state,
+        loading: false,
+        persentaseBelanjaFilter: [],
+        errors: action.payload.error,
+      };
+    }
+
+    case GET_PNBP_KINERJA_BERKAS_FILTER: {
+      return { ...state };
+    }
+    case GET_PNBP_KINERJA_BERKAS_FILTER_PENDING: {
+      return { ...state, loading: true };
+    }
+    case GET_PNBP_KINERJA_BERKAS_FILTER_FULFILLED: {
+      return {
+        ...state,
+        pnbpKinerjaBerkas: action.payload.data.data,
+        loading: false,
+      };
+    }
+    case GET_PNBP_KINERJA_BERKAS_FILTER_REJECTED: {
+      return {
+        ...state,
+        loading: false,
+        pnbpKinerjaBerkas: [],
         errors: action.payload.error,
       };
     }
