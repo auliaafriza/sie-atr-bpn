@@ -67,14 +67,67 @@ import "react-toastify/dist/ReactToastify.css";
 
 const dataTemp = [
   {
-    wilayah: "Kantor Wilayah Provinsi",
-    pnbp: 0,
+    hampirjatuhtempo: 0,
+    jatuhtempo: 184,
+    jumlahberkas: 184,
+    namaprofile: "Loket Pelayanan Penyerahan",
+    sesuaidurasi: 0,
   },
   {
-    wilayah: "Kantor Wilayah Provinsi",
-    pnbp: 10,
+    hampirjatuhtempo: 0,
+    jatuhtempo: 2,
+    jumlahberkas: 2,
+    namaprofile: "Pelaksana Kelompok Substansi Penatagunaan Tanah",
+    sesuaidurasi: 0,
   },
 ];
+
+let columnTable = [
+  {
+    label: "namaprofile",
+    isFixed: false,
+  },
+  {
+    label: "hampirjatuhtempo",
+    isFixed: false,
+  },
+  {
+    label: "jatuhtempo",
+    isFixed: false,
+  },
+  {
+    label: "jumlahberkas",
+    isFixed: false,
+  },
+  {
+    label: "sesuaidurasi",
+    isFixed: false,
+  },
+];
+
+let grafikView = [
+  {
+    dataKey: "hampirjatuhtempo",
+    fill: "#CD5C5C",
+  },
+  {
+    dataKey: "jatuhtempo",
+    fill: "#8884d8",
+  },
+  {
+    dataKey: "jumlahberkas",
+    fill: "#FFD700",
+  },
+  {
+    dataKey: "sesuaidurasi",
+    fill: "#1E90FF",
+  },
+];
+
+let axis = {
+  xAxis: "namaprofile",
+  yAxis: "Nilai",
+};
 
 const theme = createTheme({
   typography: {
@@ -118,12 +171,24 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {
-    label: "Wilayah",
-    value: "wilayah",
+    label: "Nama Profile",
+    value: "namaprofile",
   },
   {
-    label: "PNBP",
-    value: "pnbp",
+    label: "Hampir Jatuh Tempo",
+    value: "hampirjatuhtempo",
+  },
+  {
+    label: "Jatuh Tempo",
+    value: "jatuhtempo",
+  },
+  {
+    label: "Jatuh Berkas",
+    value: "jumlahberkas",
+  },
+  {
+    label: "Sesuai Durasi",
+    value: "sesuaidurasi",
   },
 ];
 
@@ -216,6 +281,34 @@ const KinerjaBerkasPnbp = () => {
       });
   };
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className={classes.tooltipCustom}>
+          <p className="label">{label}</p>
+          <p
+            className="desc"
+            style={{ color: payload[0].color }}
+          >{`Hampir Jatuh Tempo :  ${payload[0].value}`}</p>
+          <p
+            className="desc"
+            style={{ color: payload[1].color }}
+          >{`Jatuh Tempo :  ${payload[1].value}`}</p>
+          <p
+            className="desc"
+            style={{ color: payload[2].color }}
+          >{`Jatuh Berkas :  ${payload[2].value}`}</p>
+          <p
+            className="desc"
+            style={{ color: payload[3].color }}
+          >{`Sesuai Durasi :  ${payload[3].value}`}</p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   useEffect(() => {
     dispatch(getPnbpKinerjaBerkasFilter());
     getData();
@@ -275,7 +368,7 @@ const KinerjaBerkasPnbp = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="wilayah"
+              dataKey="namaprofile"
               angle={60}
               interval={0}
               tick={{
@@ -290,15 +383,17 @@ const KinerjaBerkasPnbp = () => {
             ></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="PNBP"
+                value="Nilai"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
               />
             </YAxis>
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
             {/* <Legend /> */}
-            <Bar dataKey="pnbp" fill="#8884d8" />
+            {grafikView.map((item, i) => (
+              <Bar dataKey={item.dataKey} fill={item.fill} />
+            ))}
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -323,13 +418,19 @@ const KinerjaBerkasPnbp = () => {
                   .map((row) => (
                     <StyledTableRow key={row.wilayah}>
                       <StyledTableCell align="left" component="th" scope="row">
-                        {row.wilayah}
+                        {row.namaprofile}
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        Rp{" "}
-                        {row.pnbp
-                          .toFixed(2)
-                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                        {row.hampirjatuhtempo}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row.jatuhtempo}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row.jumlahberkas}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row.sesuaidurasi}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
@@ -393,28 +494,6 @@ const KinerjaBerkasPnbp = () => {
   );
   const history = useHistory();
 
-  let columnTable = [
-    {
-      label: "wilayah",
-      isFixed: false,
-    },
-    {
-      label: "pnbp",
-      isFixed: false,
-    },
-  ];
-
-  let grafikView = [
-    {
-      dataKey: "pnbp",
-      fill: "#8884d8",
-    },
-  ];
-
-  let axis = {
-    xAxis: "wilayah",
-    yAxis: "PNBP",
-  };
   const title = "Kinerja Penyesuaian Berkas";
   const handlePrint = () => {
     history.push({
@@ -746,7 +825,13 @@ const KinerjaBerkasPnbp = () => {
                           )
                         : "",
                     type: "Bar",
-                    nameColumn: ["Wilayah", "PNBP"],
+                    nameColumn: [
+                      "Nama Profile",
+                      "Hampir Jatuh Tempo",
+                      "Jatuh Tempo",
+                      "Jatuh Berkas",
+                      "Sesuai Durasi",
+                    ],
                     listTop10Comment: comment.listTop10Comment,
                   })
                 }
@@ -878,7 +963,13 @@ const KinerjaBerkasPnbp = () => {
                             )
                           : "",
                       type: "Bar",
-                      nameColumn: ["Wilayah", "PNBP"],
+                      nameColumn: [
+                        "Nama Profile",
+                        "Hampir Jatuh Tempo",
+                        "Jatuh Tempo",
+                        "Jatuh Berkas",
+                        "Sesuai Durasi",
+                      ],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
@@ -915,7 +1006,7 @@ const KinerjaBerkasPnbp = () => {
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
-                      dataKey="wilayah"
+                      dataKey="namaprofile"
                       angle={60}
                       interval={0}
                       tick={{
@@ -930,15 +1021,17 @@ const KinerjaBerkasPnbp = () => {
                     />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
-                        value="PNBP"
+                        value="Nilai"
                         angle={-90}
                         position="insideBottomLeft"
                         offset={-5}
                       />
                     </YAxis>
-                    <Tooltip />
+                    <Tooltip content={<CustomTooltip />} />
                     {/* <Legend /> */}
-                    <Bar dataKey="pnbp" fill="#8884d8" />
+                    {grafikView.map((item, i) => (
+                      <Bar dataKey={item.dataKey} fill={item.fill} />
+                    ))}
                   </BarChart>
                 </ResponsiveContainer>
               </div>
