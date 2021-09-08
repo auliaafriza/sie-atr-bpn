@@ -537,7 +537,7 @@ const Sie_sertifikasi_target_realisasi = () => {
             margin: 10,
           }}
         />
-        <Grid container spacing={2}>
+        <Grid container spacing={2} style={{ marginBottom: "10px" }}>
           <Grid item xs={8}>
             <Card className={classes.root} variant="outlined">
               <CardContent>

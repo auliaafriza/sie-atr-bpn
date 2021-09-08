@@ -408,7 +408,7 @@ const SieSertifikatKonsolidasiKota = () => {
   };
 
   return (
-    <div>
+    <div style={{ marginBottom: "10px" }}>
       <Modal
         open={open}
         onClose={handleClose}

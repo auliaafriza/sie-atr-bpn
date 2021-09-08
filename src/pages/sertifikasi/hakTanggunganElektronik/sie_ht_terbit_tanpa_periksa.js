@@ -483,7 +483,6 @@ const TerbitTanpaPeriksa = () => {
       >
         {body}
       </Modal>
-
       <Grid
         container
         spacing={2}
