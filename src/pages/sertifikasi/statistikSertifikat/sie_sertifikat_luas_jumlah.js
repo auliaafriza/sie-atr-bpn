@@ -67,14 +67,6 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { generateOptions } from "../../../functionGlobal/generateOptionSelect";
 
-const dataTemp = [
-  {
-    nama: "",
-    jumlah_sertifikat: 0,
-    luastertulis: 0,
-  },
-];
-
 const theme = createTheme({
   typography: {
     fontFamily: [
@@ -107,68 +99,62 @@ const StyledTableRow = withStyles((theme) => ({
 
 let url = "http://10.20.57.234/SIEBackEnd/";
 
-let nameColumn = [
-  {
-    label: "Nama",
-    value: "nama",
-    isLabel: true,
-  },
-  {
-    label: "Jumlah Sertifikat",
-    value: "jumlah_sertifikat",
-  },
-  {
-    label: "Luas Tertulis",
-    value: "luastertulis",
-  },
-];
-
-let columnTable = [
-  {
-    label: "nama",
-    isFixed: false,
-  },
-  {
-    label: "jumlah_sertifikat",
-    isFixed: false,
-  },
-
-  {
-    label: "luastertulis",
-    isFixed: false,
-  },
-];
-
-let grafikView = [
-  {
-    dataKey: "jumlah_sertifikat",
-    fill: "#065535",
-  },
-  {
-    dataKey: "luastertulis",
-    fill: "#b48c06",
-  },
-];
-
+const dataTemp = [{ kantah: "", luaspersil: 0 }];
 let axis = {
-  xAxis: "Nama",
-  yAxis: "Jumlah",
+  xAxis: "Kantah",
+  yAxis: "Luas",
 };
-const title = "Jumlah Sertifikat dan Luas Berdasarkan Program";
-const SieSertifikatTahun = () => {
+const title = "Luas Bidang Berdasarkan Jenis Sertifikat";
+const SieSertifikatLuasJumlah = () => {
   const classes = styles();
-  const [years, setYears] = useState("2021");
-  const [data, setData] = useState(dataTemp);
+  const [years, setYears] = useState("2017");
+  const [tahunAkhir, setTahunAkhir] = useState("2019");
+
+  const [semester, setSemester] = useState(2);
+  const [bulan, setBulan] = useState("07");
   const [comment, setComment] = useState("");
-  const [dataFilter, setDataFilter] = useState(["Sumut"]);
-  const [listWilayah, setListWilayah] = useState([]);
-  // const [kanwil, setKanwil] = useState(
-  //   "Kementerian Agraria dan Tata Ruang/Badan Pertanahan Nasional "
-  // );
-  // const [kantor, setKantor] = useState("Jawa Tengah");
-  // const [satker, setSatker] = useState(
-  //   "Kantor Pertanahan Kabupaten Purbalingga "
-  // );
+  const [dataFilterKanwil, setDataFilterKanwil] = useState(["Aceh"]);
+  const [listKanwil, setListKanwil] = useState([]);
+  const [dataFilterKantah, setDataFilterKantah] = useState(["Kab. Pidie"]);
+  const [listKantah, setListKantah] = useState([]);
+  const [dataFilterTipeHak, setDataFilterTipeHak] = useState(["Hak Milik"]);
+  const [listtipeHak, setListTipeHak] = useState([]);
+  const [dataFilterTipePemilik, setDataFilterTipePemilik] = useState([
+    "PERORANGAN",
+  ]);
+  const [listTipePemilik, setListTipePemilik] = useState([]);
+  const [dataFilterProduk, setDataFilterProduk] = useState(["Rutin"]);
+  const [listProduk, setListProduk] = useState([]);
+
+  const [dataFilterOutput, setDataFilterOutput] = useState(["luaspersil"]);
+  const [listOutput, setListOutput] = useState([
+    {
+      nama: "luaspersil",
+      label: "Luas Persil",
+      color: "#d53515",
+    },
+    {
+      nama: "luaspeta",
+      label: "Luas Peta",
+      color: "#2acaea",
+    },
+    {
+      nama: "luastertulis",
+      label: "Luas Tertulis",
+      color: "#ff84a3",
+    },
+    {
+      nama: "bataspersil",
+      label: "Batas Persil",
+      color: "#93a689",
+    },
+    {
+      nama: "persil",
+      label: "Persil",
+      color: "#7a4fa1",
+    },
+  ]);
+
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -182,9 +168,76 @@ const SieSertifikatTahun = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const [data, setData] = useState(dataTemp);
+  const [nameColumn, setColumn] = useState([
+    {
+      label: "Kantah",
+      value: "kantah",
+      isLabel: true,
+    },
+    { label: "Luas Persil", isFixed: false, value: "luaspersil" },
+  ]);
+  const [grafikView, setGrafikView] = useState([
+    { dataKey: "luaspersil", name: "Luas Persil", fill: "#d53515" },
+  ]);
+  const [columnTable, setColumnTable] = useState(
+    {
+      label: "kantah",
+      isFixed: false,
+    },
+    {
+      label: "luaspersil",
+      isFixed: false,
+    }
+  );
+  const updateGrafik = () => {
+    let nameColumn = dataFilterOutput.reduce(
+      (acc, e) => {
+        const selectedOutput = listOutput.find((lo) => lo.nama === e);
+        if (selectedOutput)
+          acc.push({ value: e, isFixed: false, label: selectedOutput.label });
+        return acc;
+      },
+      [
+        {
+          label: "Kantah",
+          value: "kantah",
+          isLabel: true,
+        },
+      ]
+    );
+
+    let grafikView = dataFilterOutput.reduce((acc, e) => {
+      const selectedOutput = listOutput.find((lo) => lo.nama === e);
+      if (selectedOutput)
+        acc.push({
+          dataKey: e,
+          name: selectedOutput.label,
+          fill: selectedOutput.color,
+        });
+      return acc;
+    }, []);
+
+    let columnTable = dataFilterOutput.reduce(
+      (acc, e) => {
+        acc.push({ label: e, isFixed: false });
+        return acc;
+      },
+      [
+        {
+          label: "kantah",
+          isFixed: false,
+        },
+      ]
+    );
+    setColumn(nameColumn);
+    setGrafikView(grafikView);
+    setColumnTable(columnTable);
+  };
   // const dispatch = useDispatch();
   // const satkerRed = useSelector((state) => state.globalReducer.satker);
 
+  console.log({ columnTable });
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -203,17 +256,17 @@ const SieSertifikatTahun = () => {
     setOpen(false);
   };
 
-  const getWilayah = () => {
+  const getKanwil = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikasi_tahun_filter_wilayah`
+        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_luas_jumlah_filter_kanwil`
       )
       .then(function (response) {
-        const listWilayahApi = response.data.data;
+        const listKanwilApi = response.data.data;
 
-        setListWilayah(listWilayahApi);
+        setListKanwil(listKanwilApi);
       })
       .catch(function (error) {
         // handle error
@@ -223,15 +276,104 @@ const SieSertifikatTahun = () => {
         // always executed
       });
   };
+
+  const getKantah = () => {
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .get(
+        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_luas_jumlah_filter_kantah`
+      )
+      .then(function (response) {
+        const listKantahApi = response.data.data;
+
+        setListKantah(listKantahApi);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
+
+  const getTipeHak = () => {
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .get(
+        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_luas_jumlah_filter_tipehak`
+      )
+      .then(function (response) {
+        const listTipeHakApi = response.data.data;
+
+        setListTipeHak(listTipeHakApi);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
+  const getTipePemilik = () => {
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .get(
+        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_luas_jumlah_filter_tipepemilik`
+      )
+      .then(function (response) {
+        const listTipePemilikApi = response.data.data;
+
+        setListTipePemilik(listTipePemilikApi);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
+
+  const getProduk = () => {
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .get(
+        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_luas_jumlah_filter_produk`
+      )
+      .then(function (response) {
+        const listProdukApi = response.data.data;
+
+        setListProduk(listProdukApi);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
+
   const getData = () => {
-    let temp = { wilayah: [] };
-    temp.wilayah = dataFilter;
+    let temp = {
+      kanwil: dataFilterKanwil,
+      kantah: dataFilterKantah,
+      tipehak: dataFilterTipeHak,
+      tipepemilik: dataFilterTipePemilik,
+      produk: dataFilterProduk,
+    };
 
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikasi_tahun?tahun=${years}`,
+        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_luas_jumlah?tahunAwal=${years}&tahunAkhir=${tahunAkhir}`,
         temp
       )
       .then(function (response) {
@@ -250,12 +392,20 @@ const SieSertifikatTahun = () => {
 
   useEffect(() => {
     // dispatch(getSatker());
-    getWilayah();
+    getKanwil();
+    getKantah();
+    getTipeHak();
+    getTipePemilik();
+    getProduk();
     getData();
   }, []);
 
   const handleChange = (event) => {
     setYears(event.target.value);
+  };
+
+  const handleChangeTahunAkhir = (event) => {
+    setTahunAkhir(event.target.value);
   };
 
   const DataFormater = (number) => {
@@ -274,19 +424,13 @@ const SieSertifikatTahun = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">{label}</p>
-          <p
-            className="desc"
-            style={{ color: payload[0].color }}
-          >{`Jumlah Sertifikat : ${payload[0].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
-          <p
-            className="desc"
-            style={{ color: payload[1].color }}
-          >{`Luas Tertulis : ${payload[1].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+          <p className="label">Kantah {label}</p>
+          {grafikView.map((e, i) => (
+            <p
+              className="desc"
+              style={{ color: payload[i].color }}
+            >{`${e.name} : ${payload[i].value}`}</p>
+          ))}
         </div>
       );
     }
@@ -323,7 +467,7 @@ const SieSertifikatTahun = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="nama"></XAxis>
+            <XAxis dataKey="kantah"></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value={axis.yAxis}
@@ -350,10 +494,13 @@ const SieSertifikatTahun = () => {
             >
               <TableHead>
                 <TableRow>
-                  {nameColumn.map((item, i) => {
+                  <StyledTableCell align="center" component="th" scope="row">
+                    kantah
+                  </StyledTableCell>
+                  {grafikView.map((item, i) => {
                     return (
                       <StyledTableCell align="center">
-                        {item.label}
+                        {item.name}
                       </StyledTableCell>
                     );
                   })}
@@ -362,25 +509,20 @@ const SieSertifikatTahun = () => {
               <TableBody>
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <StyledTableRow key={row.nama}>
+                  .map((row, i) => (
+                    <StyledTableRow key={i}>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.nama}
+                        {row.kantah}
                       </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.jumlah_sertifikat
-                          .toFixed(2)
-                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.luastertulis
-                          .toFixed(2)
-                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                      </StyledTableCell>
+                      {grafikView.map((nc, inc) => (
+                        <StyledTableCell align="center">
+                          {row[nc.dataKey]}
+                        </StyledTableCell>
+                      ))}
                     </StyledTableRow>
                   ))}
               </TableBody>
@@ -461,11 +603,26 @@ const SieSertifikatTahun = () => {
     });
   };
 
-  const handleChangeFilter = (event) => {
-    setDataFilter(event.target.value);
+  const handleChangeFilterKanwil = (event) => {
+    setDataFilterKanwil(event.target.value);
+  };
+  const handleChangeFilterKantah = (event) => {
+    setDataFilterKantah(event.target.value);
+  };
+  const handleChangeFilterTipeHak = (event) => {
+    setDataFilterTipeHak(event.target.value);
+  };
+  const handleChangeFilterTipePemilk = (event) => {
+    setDataFilterTipePemilik(event.target.value);
+  };
+  const handleChangeFilterProduk = (event) => {
+    setDataFilterProduk(event.target.value);
+  };
+  const handleChangeFilterOutput = (event) => {
+    setDataFilterOutput(event.target.value);
   };
   return (
-    <div style={{ marginBottom: "10px" }}>
+    <div>
       <Modal
         open={open}
         onClose={handleClose}
@@ -573,7 +730,7 @@ const SieSertifikatTahun = () => {
           margin: 10,
         }}
       />
-      <Grid container spacing={2}>
+      <Grid container spacing={2} style={{ marginBottom: "10px" }}>
         <Grid item xs={4}>
           <div style={{ margin: 10, marginRight: 25 }}>
             <Grid
@@ -619,38 +776,264 @@ const SieSertifikatTahun = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Wilayah
+                  Tahun Akhir
                 </Typography>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel
-                    id="demo-simple-select-outlined-label"
-                    htmlFor="outlined-Name"
-                  >
-                    Wilayah
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Tahun Akhir
                   </InputLabel>
                   <Select
-                    multiple
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    value={dataFilter}
-                    onChange={handleChangeFilter}
-                    label="Kantor"
+                    value={tahunAkhir}
+                    onChange={handleChangeTahunAkhir}
+                    label="Tahun"
                     className={classes.selectStyle}
-                    renderValue={(selected) => `${selected.length} Terpilih`}
                   >
-                    {listWilayah.map((item, i) => {
+                    {tahunData.map((item, i) => {
                       return (
-                        <MenuItem value={item.wilayah} key={i}>
-                          <Checkbox
-                            checked={dataFilter.indexOf(item.wilayah) > -1}
-                          />
-                          <ListItemText primary={item.wilayah} />
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
                         </MenuItem>
                       );
                     })}
                   </Select>
                 </FormControl>
               </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Kanwil
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel
+                    id="demo-simple-select-outlined-label"
+                    htmlFor="outlined-Name"
+                  >
+                    Kanwil
+                  </InputLabel>
+                  <Select
+                    multiple
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={dataFilterKanwil}
+                    onChange={handleChangeFilterKanwil}
+                    label="Kanwil"
+                    className={classes.selectStyle}
+                    renderValue={(selected) => `${selected.length} Terpilih`}
+                  >
+                    {listKanwil.map((item, i) => {
+                      return (
+                        <MenuItem value={item.kanwil} key={i}>
+                          <Checkbox
+                            checked={dataFilterKanwil.indexOf(item.kanwil) > -1}
+                          />
+                          <ListItemText primary={item.kanwil} />
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Kantah
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel
+                    id="demo-simple-select-outlined-label"
+                    htmlFor="outlined-Name"
+                  >
+                    Kantah
+                  </InputLabel>
+                  <Select
+                    multiple
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={dataFilterKantah}
+                    onChange={handleChangeFilterKantah}
+                    label="Kantah"
+                    className={classes.selectStyle}
+                    renderValue={(selected) => `${selected.length} Terpilih`}
+                  >
+                    {listKantah.map((item, i) => {
+                      return (
+                        <MenuItem value={item.kantah} key={i}>
+                          <Checkbox
+                            checked={dataFilterKantah.indexOf(item.kantah) > -1}
+                          />
+                          <ListItemText primary={item.kantah} />
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Tipe Hak
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel
+                    id="demo-simple-select-outlined-label"
+                    htmlFor="outlined-Name"
+                  >
+                    Tipe Hak
+                  </InputLabel>
+                  <Select
+                    multiple
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={dataFilterTipeHak}
+                    onChange={handleChangeFilterTipeHak}
+                    label="TipeHak"
+                    className={classes.selectStyle}
+                    renderValue={(selected) => `${selected.length} Terpilih`}
+                  >
+                    {listtipeHak.map((item, i) => {
+                      return (
+                        <MenuItem value={item.tipehak} key={i}>
+                          <Checkbox
+                            checked={
+                              dataFilterTipeHak.indexOf(item.tipehak) > -1
+                            }
+                          />
+                          <ListItemText primary={item.tipehak} />
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Tipe Pemilik
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel
+                    id="demo-simple-select-outlined-label"
+                    htmlFor="outlined-Name"
+                  >
+                    Tipe Pemilik
+                  </InputLabel>
+                  <Select
+                    multiple
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={dataFilterTipePemilik}
+                    onChange={handleChangeFilterTipePemilk}
+                    label="TipePemilik"
+                    className={classes.selectStyle}
+                    renderValue={(selected) => `${selected.length} Terpilih`}
+                  >
+                    {listTipePemilik.map((item, i) => {
+                      return (
+                        <MenuItem value={item.tipepemilik} key={i}>
+                          <Checkbox
+                            checked={
+                              dataFilterTipePemilik.indexOf(item.tipepemilik) >
+                              -1
+                            }
+                          />
+                          <ListItemText primary={item.tipepemilik} />
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Produk
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel
+                    id="demo-simple-select-outlined-label"
+                    htmlFor="outlined-Name"
+                  >
+                    Produk
+                  </InputLabel>
+                  <Select
+                    multiple
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={dataFilterProduk}
+                    onChange={handleChangeFilterProduk}
+                    label="produk"
+                    className={classes.selectStyle}
+                    renderValue={(selected) => `${selected.length} Terpilih`}
+                  >
+                    {listProduk.map((item, i) => {
+                      return (
+                        <MenuItem value={item.produk} key={i}>
+                          <Checkbox
+                            checked={dataFilterProduk.indexOf(item.produk) > -1}
+                          />
+                          <ListItemText primary={item.tipepemilik} />
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Grafik
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel
+                    id="demo-simple-select-outlined-label"
+                    htmlFor="outlined-Name"
+                  >
+                    Tampilkan Grafik
+                  </InputLabel>
+                  <Select
+                    multiple
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={dataFilterOutput}
+                    onChange={handleChangeFilterOutput}
+                    label="output"
+                    className={classes.selectStyle}
+                    renderValue={(selected) => `${selected.length} Terpilih`}
+                  >
+                    {listOutput.map((item, i) => {
+                      return (
+                        <MenuItem value={item.nama} key={i}>
+                          <Checkbox
+                            checked={dataFilterOutput.indexOf(item.nama) > -1}
+                          />
+                          <ListItemText primary={item.label} />
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+
               <Grid
                 container
                 direction="row"
@@ -663,7 +1046,10 @@ const SieSertifikatTahun = () => {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => getData()}
+                  onClick={() => {
+                    getData();
+                    updateGrafik();
+                  }}
                 >
                   Submit
                 </Button>
@@ -733,7 +1119,7 @@ const SieSertifikatTahun = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="nama"></XAxis>
+                    <XAxis dataKey="kantah"></XAxis>
                     <YAxis tickFormatter={DataFormater}>
                       <Label
                         value={axis.yAxis}
@@ -758,4 +1144,4 @@ const SieSertifikatTahun = () => {
   );
 };
 
-export default SieSertifikatTahun;
+export default SieSertifikatLuasJumlah;
