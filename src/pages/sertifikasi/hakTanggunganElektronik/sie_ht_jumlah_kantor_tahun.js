@@ -42,6 +42,7 @@ import {
   Avatar,
   TablePagination,
   Button,
+  Checkbox,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -53,17 +54,22 @@ import { IoMdDownload } from "react-icons/io";
 import styles from "./../styles";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
-import { tahunData } from "../../../functionGlobal/globalDataAsset";
+import {
+  tahunData,
+  semesterData,
+  bulanDataNumberic,
+} from "../../../functionGlobal/globalDataAsset";
 import moment from "moment";
 import { fileExport } from "../../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
 // import { getSatker } from "../../actions/globalActions";
 import { useDispatch, useSelector } from "react-redux";
+import { generateOptions } from "../../../functionGlobal/generateOptionSelect";
 
 const dataTemp = [
   {
-    kantor_wilayah: "",
+    kantor: "",
     jumlah_ht: 0,
   },
 ];
@@ -102,19 +108,19 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {
-    label: "Kantor Wilayah",
-    value: "kantor_wilayah",
+    label: "Kantor",
+    value: "kantor",
     isLabel: true,
   },
   {
-    label: "Jumlah Upload",
-    value: "jumlah Hak Tanggungan",
+    label: "Jumlah Hak Tanggungan",
+    value: "jumlah_ht",
   },
 ];
 
 let columnTable = [
   {
-    label: "kantor_wilayah",
+    label: "kantor",
     isFixed: false,
   },
   {
@@ -131,16 +137,21 @@ let grafikView = [
 ];
 
 let axis = {
-  xAxis: "Kantor Wilayah",
-  yAxis: "Jumlah Upload",
+  xAxis: "Kantor",
+  yAxis: "Jumlah Hak Tanggungan",
 };
 const title = "Jumlah dan Nilai Hak Tanggungan Elektronik per Kantor";
 const SieHtJumlahKantorTahun = () => {
   const classes = styles();
-  const [years, setYears] = useState("2019");
-  const [tahunAkhir, setTahunAkhir] = useState("2020");
+  const [years, setYears] = useState("2021");
   const [data, setData] = useState(dataTemp);
+  const [semester, setSemester] = useState(2);
+  const [bulan, setBulan] = useState("07");
   const [comment, setComment] = useState("");
+  const [dataFilter, setDataFilter] = useState([
+    "Kantor Pertanahan Kabupaten Kampar",
+  ]);
+  const [listKantor, setListKantor] = useState([]);
   // const [kanwil, setKanwil] = useState(
   //   "Kementerian Agraria dan Tata Ruang/Badan Pertanahan Nasional "
   // );
@@ -182,12 +193,36 @@ const SieHtJumlahKantorTahun = () => {
     setOpen(false);
   };
 
-  const getData = () => {
+  const getKantor = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}Sertifikasi/HakTanggunganElektronik/sie_ht_jumlah_kantor_tahun?tahunAwal=${years}&tahunAkhir=${tahunAkhir}`
+        `${url}Sertifikasi/HakTanggunganElektronik/sie_ht_jumlah_kantor_tahun_filter_kantor`
+      )
+      .then(function (response) {
+        const listKantorApi = response.data.data;
+
+        setListKantor(listKantorApi);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
+  const getData = () => {
+    let temp = { kantor: [] };
+    temp.kantor = dataFilter;
+
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .post(
+        `${url}Sertifikasi/HakTanggunganElektronik/sie_ht_jumlah_kantor_tahun?tahun=${years}&bulan=${bulan}&semester=${semester}`,
+        temp
       )
       .then(function (response) {
         setData(response.data.data);
@@ -205,15 +240,12 @@ const SieHtJumlahKantorTahun = () => {
 
   useEffect(() => {
     // dispatch(getSatker());
+    getKantor();
     getData();
   }, []);
 
   const handleChange = (event) => {
     setYears(event.target.value);
-  };
-
-  const handleChangeTahunAkhir = (event) => {
-    setTahunAkhir(event.target.value);
   };
 
   const DataFormater = (number) => {
@@ -232,7 +264,7 @@ const SieHtJumlahKantorTahun = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">Kantor Wilayah {label}</p>
+          <p className="label">Kantor {label}</p>
           <p
             className="desc"
             style={{ color: payload[0].color }}
@@ -275,7 +307,7 @@ const SieHtJumlahKantorTahun = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="kantor_wilayah"></XAxis>
+            <XAxis dataKey="kantor"></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value={axis.yAxis}
@@ -315,13 +347,13 @@ const SieHtJumlahKantorTahun = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.kantor_wilayah}>
+                    <StyledTableRow key={row.kantor}>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.kantor_wilayah}
+                        {row.kantor}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {row.jumlah_ht
@@ -408,6 +440,15 @@ const SieHtJumlahKantorTahun = () => {
     });
   };
 
+  const handleChangeSemester = (event) => {
+    setSemester(event.target.value);
+  };
+  const handleChangeBulan = (event) => {
+    setBulan(event.target.value);
+  };
+  const handleChangeFilter = (event) => {
+    setDataFilter(event.target.value);
+  };
   return (
     <div>
       <Modal
@@ -563,24 +604,92 @@ const SieHtJumlahKantorTahun = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Tahun Akhir
+                  Pilih Bulan
                 </Typography>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun Akhir
+                    Bulan
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    value={tahunAkhir}
-                    onChange={handleChangeTahunAkhir}
-                    label="Tahun Akhir"
+                    value={bulan}
+                    onChange={handleChangeBulan}
+                    label="Bulan"
                     className={classes.selectStyle}
                   >
-                    {tahunData.map((item, i) => {
+                    {bulanDataNumberic.map((item, i) => {
                       return (
                         <MenuItem value={item.id} key={i}>
-                          {item.value}
+                          {item.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Semester
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Semester
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={semester}
+                    onChange={handleChangeSemester}
+                    label="Semester"
+                    className={classes.selectStyle}
+                  >
+                    {semesterData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Kantor
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel
+                    id="demo-simple-select-outlined-label"
+                    htmlFor="outlined-Name"
+                  >
+                    Kantor
+                  </InputLabel>
+                  <Select
+                    multiple
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={dataFilter}
+                    onChange={handleChangeFilter}
+                    label="Kantor"
+                    className={classes.selectStyle}
+                    renderValue={(selected) => `${selected.length} Terpilih`}
+                  >
+                    {listKantor.map((item, i) => {
+                      return (
+                        <MenuItem value={item.kantor} key={i}>
+                          <Checkbox
+                            checked={dataFilter.indexOf(item.kantor) > -1}
+                          />
+                          <ListItemText primary={item.kantor} />
                         </MenuItem>
                       );
                     })}
@@ -669,7 +778,7 @@ const SieHtJumlahKantorTahun = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="kantor_wilayah"></XAxis>
+                    <XAxis dataKey="kantor"></XAxis>
                     <YAxis tickFormatter={DataFormater}>
                       <Label
                         value={axis.yAxis}

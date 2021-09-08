@@ -99,7 +99,6 @@ const styles = makeStyles((theme) => ({
     letterSpacing: 1,
     color: "#464855",
     fontSize: 28,
-    lineHeight: 1,
   },
   isiTextStyle: {
     margin: 10,
