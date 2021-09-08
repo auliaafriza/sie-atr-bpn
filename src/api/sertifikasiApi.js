@@ -11,6 +11,6 @@ export const getTipeHakApi = () => {
 
 export const getNamaProfileApi = () => {
   return apiClient.get(
-    `Sertifikasi/StatistikSertifikat/sie_pnbp_kinerja_peny_berkas_per_jabatan_filter_namaprofile`
+    `Aset&Keuangan/PNBP/sie_pnbp_kinerja_peny_berkas_per_jabatan_filter_namaprofile`
   );
 };

@@ -38,7 +38,7 @@ import {
   ListItem,
   Divider,
   ListItemText,
-  ListItemAvatar,
+  Checkbox,
   Avatar,
   TablePagination,
   Button,
@@ -67,15 +67,11 @@ import { useHistory } from "react-router-dom";
 const dataTemp = [
   {
     kantah: "kantah",
-    nol: 0,
-    satutiga: 0,
-    tiga: 0,
+    luas_realisasi: 0,
   },
   {
     kantah: "kantah 2",
-    nol: 0,
-    satutiga: 0,
-    tiga: 0,
+    luas_realisasi: 0,
   },
 ];
 
@@ -86,16 +82,8 @@ let nameColumn = [
     isLabel: true,
   },
   {
-    label: "Kurang dari 1 tahun",
-    value: "nol",
-  },
-  {
-    label: "1 sampai 3 tahun",
-    value: "satutiga",
-  },
-  {
-    label: "lebih dari 3 tahun",
-    value: "tiga",
+    label: "Luas Realisasi",
+    value: "luas_realisasi",
   },
 ];
 
@@ -105,36 +93,20 @@ let columnTable = [
     isFixed: false,
   },
   {
-    label: "nol",
-    isFixed: false,
-  },
-  {
-    label: "satutiga",
-    isFixed: false,
-  },
-  {
-    label: "tiga",
+    label: "luas_realisasi",
     isFixed: false,
   },
 ];
 
 let grafikView = [
   {
-    dataKey: "nol",
+    dataKey: "luas_realisasi",
     fill: "#FFA07A",
-  },
-  {
-    dataKey: "satutiga",
-    fill: "#20B2AA",
-  },
-  {
-    dataKey: "tiga",
-    fill: "#E54F6E",
   },
 ];
 
 let axis = {
-  xAxis: "Katah",
+  xAxis: "nama_program",
   yAxis: "Jumlah Sertifikat",
 };
 
@@ -181,7 +153,10 @@ const Sie_sertifikasi_target_realisasi = () => {
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [open, setOpen] = useState(false);
-  const [namaProgramFil, setNamaProgram] = useState([]);
+  const [namaProgramFil, setNamaProgram] = useState([
+    "Pelaksana Kelompok Substansi Penatagunaan Tanah",
+    "Petugas Kontrol Pengumuman",
+  ]);
   const [dataModal, setDataModal] = useState({
     title: "",
     grafik: "",
@@ -199,11 +174,8 @@ const Sie_sertifikasi_target_realisasi = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const namaProfile = useSelector((state) =>
-    generateOptions({
-      data: state.sertifikasi.namaProfile.data,
-      keyVal: "namaProfile",
-    })
+  const namaProfile = useSelector(
+    (state) => state.sertifikasi.namaProfile.data
   );
 
   const handleChangePage = (event, newPage) => {
@@ -231,11 +203,9 @@ const Sie_sertifikasi_target_realisasi = () => {
 
   const getData = () => {
     let temp = {
-      nama_program: [
-        "Konsolidasi Tanah Swadaya Massal tahun 2020",
-        "Sertipikasi BMN Tahun 2020 < 25.000 m2",
-      ],
+      nama_program: [,],
     };
+    temp.nama_program = namaProgramFil;
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
@@ -288,23 +258,11 @@ const Sie_sertifikasi_target_realisasi = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">Kantah {label}</p>
+          <p className="label">{label}</p>
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Kurang dari 1 tahun : ${payload[0].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
-          <p
-            className="desc"
-            style={{ color: payload[1].color }}
-          >{`1 sampai 3 tahun : ${payload[1].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
-          <p
-            className="desc"
-            style={{ color: payload[2].color }}
-          >{`lebih dari 3 tahun : ${payload[2].value
+          >{`Luas Realisasi : ${payload[0].value
             .toFixed(2)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
         </div>
@@ -357,7 +315,7 @@ const Sie_sertifikasi_target_realisasi = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3 3" />
-            <XAxis dataKey="kantah" />
+            <XAxis dataKey="nama_program" />
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value="Jumlah sertifikat"
@@ -370,25 +328,11 @@ const Sie_sertifikasi_target_realisasi = () => {
             <Legend />
             <Line
               type="monotone"
-              dataKey="nol"
+              dataKey="luas_realisasi"
               stroke="#FFA07A"
               activeDot={{ r: 8 }}
               strokeWidth={3}
-              label="kurang dari 1 tahun"
-            />
-            <Line
-              type="monotone"
-              dataKey="satutiga"
-              stroke="#20B2AA"
-              activeDot={{ r: 8 }}
-              strokeWidth={3}
-            />
-            <Line
-              type="monotone"
-              dataKey="tiga"
-              stroke="#E54F6E"
-              activeDot={{ r: 8 }}
-              strokeWidth={3}
+              label="Luas Realisasi"
             />
           </LineChart>
         </ResponsiveContainer>
@@ -416,18 +360,10 @@ const Sie_sertifikasi_target_realisasi = () => {
                   .map((row) => (
                     <StyledTableRow key={row.kantah}>
                       <StyledTableCell align="left" component="th" scope="row">
-                        {row.kantah}
+                        {row.nama_program}
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        {row.nol.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
-                        {row.satutiga
-                          .toFixed(2)
-                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
-                        {row.tiga
+                        {row.luas_realisasi
                           .toFixed(2)
                           .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                       </StyledTableCell>
@@ -561,12 +497,7 @@ const Sie_sertifikasi_target_realisasi = () => {
                             )
                           : "",
                       type: "Bar",
-                      nameColumn: [
-                        "Kantah",
-                        "Kurang dari 1 tahun",
-                        "1 sampai 3 tahun",
-                        "Lebih dari 3 tahun",
-                      ],
+                      nameColumn: ["Nama Program", "Luas Realisasi"],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
@@ -624,7 +555,7 @@ const Sie_sertifikasi_target_realisasi = () => {
                       }}
                     >
                       <CartesianGrid strokeDasharray="3 3 3" />
-                      <XAxis dataKey="kantah" />
+                      <XAxis dataKey="nama_program" />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
                           value="Jumlah sertifikat"
@@ -637,22 +568,8 @@ const Sie_sertifikasi_target_realisasi = () => {
                       <Legend />
                       <Line
                         type="monotone"
-                        dataKey="nol"
+                        dataKey="luas_realisasi"
                         stroke="#FFA07A"
-                        activeDot={{ r: 8 }}
-                        strokeWidth={3}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="satutiga"
-                        stroke="#20B2AA"
-                        activeDot={{ r: 8 }}
-                        strokeWidth={3}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="tiga"
-                        stroke="#E54F6E"
                         activeDot={{ r: 8 }}
                         strokeWidth={3}
                       />
@@ -762,17 +679,24 @@ const Sie_sertifikasi_target_realisasi = () => {
                       Nama Program
                     </InputLabel>
                     <Select
+                      multiple
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
                       value={namaProgramFil}
                       onChange={handleChangeNamaProgram}
                       label="Nama Program"
                       className={classes.selectStyle}
+                      renderValue={(selected) => `${selected.length} Terpilih`}
                     >
                       {namaProfile.map((item, i) => {
                         return (
-                          <MenuItem value={item.id} key={i}>
-                            {item.value}
+                          <MenuItem value={item.namaprofile} key={i}>
+                            <Checkbox
+                              checked={
+                                namaProgramFil.indexOf(item.namaprofile) > -1
+                              }
+                            />
+                            <ListItemText primary={item.namaprofile} />
                           </MenuItem>
                         );
                       })}
@@ -825,12 +749,7 @@ const Sie_sertifikasi_target_realisasi = () => {
                               )
                             : "",
                         type: "Bar",
-                        nameColumn: [
-                          "Kantah",
-                          "Kurang dari 1 tahun",
-                          "1 sampai 3 tahun",
-                          "Lebih dari 3 tahun",
-                        ],
+                        nameColumn: ["Nama Program", "Luas Realisasi"],
                         listTop10Comment: comment.listTop10Comment,
                       })
                     }

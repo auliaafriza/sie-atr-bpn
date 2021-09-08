@@ -163,7 +163,7 @@ let axis = {
 
 const KepegawaianBpnMutasi = () => {
   const classes = styles();
-  const [years, setYears] = useState("2021");
+  const [years, setYears] = useState("1995");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [bulan, setBulan] = useState("Nov");
@@ -184,6 +184,8 @@ const KepegawaianBpnMutasi = () => {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
+
+  const tahunMutasi = useSelector((state) => state.kepegawaian.tahunMutasi);
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
@@ -579,10 +581,10 @@ const KepegawaianBpnMutasi = () => {
                     label="Tahun"
                     className={classes.selectStyle}
                   >
-                    {tahunData.map((item, i) => {
+                    {tahunMutasi.map((item, i) => {
                       return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
+                        <MenuItem value={item.tahun} key={i}>
+                          {item.tahun}
                         </MenuItem>
                       );
                     })}

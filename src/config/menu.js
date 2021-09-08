@@ -142,21 +142,21 @@ export const MENU_LIST = [
     name: "PSN",
     parentLink: "PSN",
     subMenus: [
-      // {
-      //   icon: <FaCalendarCheck size={22} />,
-      //   name: "Percepatan Rencana Detail Tata Ruang",
-      //   link: null,
-      // },
+      {
+        icon: <FaCalendarCheck size={22} />,
+        name: "Percepatan Rencana Detail Tata Ruang (RDTR)",
+        link: null,
+      },
       {
         icon: <GrTableAdd size={22} />,
         name: "Pendaftaran Tanah Sistematis Lengkap (PTSL)",
         link: "/PSN/PTSL",
       },
-      // {
-      //   icon: <BiBuildingHouse size={24} />,
-      //   name: "Reforma Agraria",
-      //   link: null,
-      // },
+      {
+        icon: <BiBuildingHouse size={24} />,
+        name: "Reforma Agraria",
+        link: null,
+      },
       {
         icon: <MdAddShoppingCart size={24} />,
         name: "Pengadaan Tanah",

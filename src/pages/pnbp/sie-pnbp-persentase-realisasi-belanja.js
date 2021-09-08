@@ -824,7 +824,7 @@ const PersentaseRealisasiBelanja = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -862,7 +862,7 @@ const PersentaseRealisasiBelanja = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={4}>
+              {/* <Grid item xs={4}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -899,14 +899,14 @@ const PersentaseRealisasiBelanja = () => {
                     })}
                   </Select>
                 </FormControl>
-              </Grid>
+              </Grid> */}
               <Grid
                 container
                 direction="row"
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={4}
+                xs={6}
                 style={{ paddingTop: 40, paddingLeft: 20 }}
               >
                 <Button
