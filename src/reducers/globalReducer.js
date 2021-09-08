@@ -11,6 +11,10 @@ import {
   GET_KANWIL_PENDING,
   GET_KANWIL_FULFILLED,
   GET_KANWIL_REJECTED,
+  GET_WILAYAH,
+  GET_WILAYAH_PENDING,
+  GET_WILAYAH_FULFILLED,
+  GET_WILAYAH_REJECTED,
 } from "../actions/actionTypes";
 
 const initialstate = {
@@ -18,6 +22,7 @@ const initialstate = {
   satker: [],
   kanwil: [],
   kantor: [],
+  wilayah: [],
   error: {},
 };
 
@@ -85,6 +90,28 @@ const reducer = (state = initialstate, action) => {
         ...state,
         loading: false,
         kanwil: [],
+        errors: action.payload.error,
+      };
+    }
+
+    case GET_WILAYAH: {
+      return { ...state };
+    }
+    case GET_WILAYAH_PENDING: {
+      return { ...state, loading: true };
+    }
+    case GET_WILAYAH_FULFILLED: {
+      return {
+        ...state,
+        wilayah: action.payload.data.data,
+        loading: false,
+      };
+    }
+    case GET_WILAYAH_REJECTED: {
+      return {
+        ...state,
+        loading: false,
+        wilayah: [],
         errors: action.payload.error,
       };
     }

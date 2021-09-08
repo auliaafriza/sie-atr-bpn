@@ -41,6 +41,7 @@ import {
 import {
   StatistikSertifikat,
   HakTanggunganElektronik,
+  TanahAssetPemerintah,
 } from "./pages/sertifikasi";
 import { LayananUmum } from "./pages/kinerjaLayanan";
 import {
@@ -102,6 +103,10 @@ const Main = withRouter(({ location }) => {
         <Route path="/Sertifikasi/HakTanggunganElektronik">
           <HakTanggunganElektronik />
         </Route>
+        <Route path="/Sertifikasi/TanahAssetPemerintah">
+          <TanahAssetPemerintah />
+        </Route>
+
         {/* Start Route PNBP */}
         <Route path="/AssetKeuangan/PNBP/RealisasiAnggaran">
           <RealisasiAnggaran />

@@ -14,3 +14,10 @@ export const getKanwilApi = () => {
   // apiClientRB.defaults.headers["Authorization"] = "Bearer " + token;
   return apiClient.get(`Kepegawaian/Pegawai/get_kanwil`);
 };
+
+export const getWilayahApi = () => {
+  // apiClientRB.defaults.headers["Authorization"] = "Bearer " + token;
+  return apiClient.get(
+    `Sertifikasi/TanahAsetPemerintah/sie_sertifikasi_aset_pemerintah_filter_kanwil`
+  );
+};

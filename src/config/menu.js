@@ -188,7 +188,7 @@ export const MENU_LIST = [
       {
         icon: <FaCertificate size={24} />,
         name: "Tanah Aset Pemerintah",
-        link: null,
+        link: "/Sertifikasi/TanahAssetPemerintah",
       },
       {
         icon: <BiBuildings size={24} />,

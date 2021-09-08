@@ -1,5 +1,10 @@
-import { getSatkerApi, getKantorApi, getKanwilApi } from "../api/globalApi";
-import { GET_SATKER, GET_KANTOR, GET_KANWIL } from "./actionTypes";
+import {
+  getSatkerApi,
+  getKantorApi,
+  getKanwilApi,
+  getWilayahApi,
+} from "../api/globalApi";
+import { GET_SATKER, GET_KANTOR, GET_KANWIL, GET_WILAYAH } from "./actionTypes";
 
 export const getSatker = () => {
   return (dispatch) => {
@@ -24,6 +29,15 @@ export const getKanwil = () => {
     return dispatch({
       type: GET_KANWIL,
       payload: getKanwilApi(),
+    });
+  };
+};
+
+export const getWilayah = () => {
+  return (dispatch) => {
+    return dispatch({
+      type: GET_WILAYAH,
+      payload: getWilayahApi(),
     });
   };
 };
