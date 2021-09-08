@@ -16,7 +16,19 @@ import RealisasiPenerimaan from "../pages/pnbp/sie-pnbp-realisasi-penerimaan";
 import RealisasiPenggunaan from "../pages/pnbp/sie-pnbp-realisasi-pengunaan";
 import RealisasiTargetPenerimaan from "../pages/pnbp/sie-pnbp-realisasi-target-penerimaan";
 import SiePsnPtsl5Peringkat from "../pages/psn/PTSL/sie_psn_ptsl_5peringkat";
+import RealisasiPerkegiatan from "../pages/psn/PTSL/sie_ptsl_realisasi_perkegiatan";
 import SieLayananJumlahPerjenis from "../pages/kinerjaLayanan/layananUmum/sie_layanan_jumlah_perjenis";
+import BPHTBJumlahBerkas from "../pages/bphtb/bphtb-jumlah-berkas";
+import BPHTBDaerahTerintegrasi from "../pages/bphtb/bphtb-jumlah-terintegrasi";
+import KepegawaianBpnGol from "../pages/kepegawaian/kepegawaian-atr-bpn-golongan";
+import KepegawaianBpnJabatan from "../pages/kepegawaian/kepegawaian-atr-bpn-jabatan";
+import KepegawaianBpnJK from "../pages/kepegawaian/kepegawaian-atr-bpn-JK";
+import KepegawaianBpnMutasi from "../pages/kepegawaian/kepegawaian-atr-bpn-mutasi";
+import KepegawaianBpnPendidikan from "../pages/kepegawaian/kepegawaian-atr-bpn-pendidikan";
+import KepegawaianBpnUsia from "../pages/kepegawaian/kepegawaian-atr-bpn-usia";
+import KepegawaianOrganisasi from "../pages/kepegawaian/kepegawaian-organisasi";
+import SieLayananKebutuhanKantorPertanahan from "../pages/kinerjaLayanan/layananUmum/sie_layanan_kebutuhan_kantor_pertanahan";
+import SiePsnRdtr from "../pages/psn/RDTR/sie_psn_rdtr";
 import { Provider } from "react-redux";
 import store from "../config/store";
 
@@ -120,7 +132,7 @@ class IframeGenerator extends React.Component {
           document.getElementById("replace-tag")
         );
         break;
-      case "sie-psn-ptsl-5peringkat":
+      case "sie-psn-ptsl-5-peringkat":
         ReactDOM.render(
           <SiePsnPtsl5Peringkat />,
           document.getElementById("replace-tag")
@@ -129,6 +141,91 @@ class IframeGenerator extends React.Component {
       case "sie-layanan-jumlah-perjenis":
         ReactDOM.render(
           <SieLayananJumlahPerjenis />,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "bphtb-jumlah-berkas":
+        ReactDOM.render(
+          <Provider store={store}>
+            <BPHTBJumlahBerkas />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "bphtb-jumlah-terintegrasi":
+        ReactDOM.render(
+          <BPHTBDaerahTerintegrasi />,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "kepegawaian-atr-bpn-golongan":
+        ReactDOM.render(
+          <Provider store={store}>
+            <KepegawaianBpnGol />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "kepegawaian-atr-bpn-jabatan":
+        ReactDOM.render(
+          <Provider store={store}>
+            <KepegawaianBpnJabatan />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "kepegawaian-atr-bpn-JK":
+        ReactDOM.render(
+          <Provider store={store}>
+            <KepegawaianBpnJK />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "kepegawaian-atr-bpn-mutasi":
+        ReactDOM.render(
+          <Provider store={store}>
+            <KepegawaianBpnMutasi />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "kepegawaian-atr-bpn-pendidikan":
+        ReactDOM.render(
+          <Provider store={store}>
+            <KepegawaianBpnPendidikan />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "kepegawaian-atr-bpn-usia":
+        ReactDOM.render(
+          <Provider store={store}>
+            <KepegawaianBpnUsia />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "kepegawaian-organisasi":
+        ReactDOM.render(
+          <Provider store={store}>
+            <KepegawaianOrganisasi />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-layanan-kebutuhan-kantor-pertanahan":
+        ReactDOM.render(
+          <SieLayananKebutuhanKantorPertanahan />,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-psn-rdtr":
+        ReactDOM.render(<SiePsnRdtr />, document.getElementById("replace-tag"));
+        break;
+      case "sie-ptsl-realisasi-perkegiatan":
+        ReactDOM.render(
+          <RealisasiPerkegiatan />,
           document.getElementById("replace-tag")
         );
         break;

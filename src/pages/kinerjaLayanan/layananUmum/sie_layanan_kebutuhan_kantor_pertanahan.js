@@ -33,6 +33,7 @@ import {
   ListItemText,
   TablePagination,
   Box,
+  Button,
 } from "@material-ui/core";
 import { createTheme, withStyles } from "@material-ui/core/styles";
 import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
@@ -46,6 +47,8 @@ import { useHistory } from "react-router-dom";
 // import { getSatker } from "../../actions/globalActions";
 
 import { BASE_URL } from "../../../config/embed_conf";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { ToastContainer, toast } from "react-toastify";
 const dataTemp = [
   {
     nama_kantor: "",
@@ -380,11 +383,24 @@ const SieLayananKebutuhanKantorPertanahan = () => {
     });
   };
 
+  const [iframeIsOpen, setOpenIframe] = useState(false);
+  const [iframeWidth, setIframeWidth] = useState(600);
+  const [iframeHeight, setIframeHeight] = useState(600);
+
+  function handleIframe(status) {
+    setOpenIframe(status);
+  }
+
+  function handleIframeWidth(e) {
+    // alert(e.target.value + "");
+    setIframeWidth(e.target.value);
+  }
+
   return (
     <div>
       <Modal
-        open={open}
-        onClose={handleClose}
+        open={iframeIsOpen}
+        // onClose={handleClose}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
         // className={classes.modalStyle1}
@@ -398,7 +414,220 @@ const SieLayananKebutuhanKantorPertanahan = () => {
           padding: "0 9em 0em 5em",
         }}
       >
-        {body}
+        <div className={classes.paper}>
+          <Grid
+            container
+            spacing={2}
+            direction="row"
+            style={
+              {
+                // padding: 10,
+                // paddingTop: 20,
+                // paddingBottom: 5,
+              }
+            }
+          >
+            <Grid
+              container
+              direction="row"
+              // justifyContent="flex-center"
+              alignItems="flex-start"
+              item
+              xs={10}
+            >
+              <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
+                Embeded Code Generator
+              </h2>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              // justifyContent="flex-center"
+              alignItems="flex-start"
+              item
+              xs={1}
+            >
+              <CopyToClipboard
+                text={
+                  '<iframe width="' +
+                  iframeWidth +
+                  '" height="' +
+                  iframeHeight +
+                  '"' +
+                  ' src="' +
+                  BASE_URL.domain +
+                  "/embed/" +
+                  BASE_URL.path.sie_layanan_kebutuhan_kantor_pertanahan +
+                  '"></iframe>'
+                }
+                onCopy={() => toast.success("success copied to clipboard!")}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ height: 30, width: "100%" }}
+                >
+                  Copy
+                </Button>
+              </CopyToClipboard>
+              <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              // justifyContent="flex-center"
+              alignItems="flex-start"
+              item
+              xs={1}
+            >
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => setOpenIframe(false)}
+                style={{ height: 30, width: "100%" }}
+              >
+                Close
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            spacing={2}
+            direction="row"
+            style={{
+              // padding: 10,
+              // paddingTop: 20,
+              paddingBottom: 5,
+            }}
+          >
+            <Grid
+              container
+              direction="row"
+              // justifyContent="flex-center"
+              alignItems="flex-start"
+              item
+              xs={10}
+            >
+              <textarea
+                style={{ width: "100%" }}
+                rows={3}
+                value={
+                  '<iframe width="' +
+                  iframeWidth +
+                  '" height="' +
+                  iframeHeight +
+                  '"' +
+                  ' src="' +
+                  BASE_URL.domain +
+                  "/embed/" +
+                  BASE_URL.path.sie_layanan_kebutuhan_kantor_pertanahan +
+                  '"></iframe>'
+                }
+              />
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              // justifyContent="flex-start"
+              alignItems="flex-start"
+              item
+              xs={2}
+            >
+              <Grid
+                container
+                direction="row"
+                // justifyContent="flex-start"
+                alignItems="flex-start"
+                item
+              >
+                <Grid
+                  direction="row"
+                  // justifyContent="flex-end"
+                  alignItems="flex-center"
+                  item
+                  xs={4}
+                >
+                  width
+                </Grid>
+                <Grid
+                  direction="row"
+                  // justifyContent="flex-end"
+                  alignItems="flex-center"
+                  item
+                  xs={8}
+                >
+                  <input
+                    type="number"
+                    value={iframeWidth}
+                    style={{ width: "100%" }}
+                    onChange={(e) => setIframeWidth(e.target.value)}
+                  />
+                </Grid>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                // justifyContent="flex-start"
+                alignItems="flex-start"
+                item
+              >
+                <Grid
+                  direction="row"
+                  // justifyContent="flex-end"
+                  alignItems="flex-center"
+                  item
+                  xs={4}
+                >
+                  height
+                </Grid>
+                <Grid
+                  direction="row"
+                  // justifyContent="flex-end"
+                  alignItems="flex-center"
+                  item
+                  xs={8}
+                >
+                  <input
+                    type="number"
+                    value={iframeHeight}
+                    style={{ width: "100%" }}
+                    onChange={(e) => setIframeHeight(e.target.value)}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            spacing={2}
+            direction="row"
+            style={{
+              // padding: 10,
+              // paddingTop: 20,
+              paddingBottom: 5,
+            }}
+          >
+            <iframe
+              width={iframeWidth}
+              height={iframeHeight}
+              src={
+                BASE_URL.domain +
+                "/embed/" +
+                BASE_URL.path.sie_layanan_kebutuhan_kantor_pertanahan
+              }
+            ></iframe>
+          </Grid>
+        </div>
       </Modal>
       <Box
         style={{
@@ -435,6 +664,16 @@ const SieLayananKebutuhanKantorPertanahan = () => {
               className={classes.buttonGroupStyle}
               variant="contained"
             >
+              <TooltipMI title="Embed Iframe" placement="top">
+                <IconButton
+                  size="small"
+                  onClick={() => {
+                    handleIframe(true);
+                  }}
+                >
+                  <IoCopySharp />
+                </IconButton>
+              </TooltipMI>
               <TooltipMI title="Lihat Detail" placement="top">
                 <IconButton
                   size="small"
