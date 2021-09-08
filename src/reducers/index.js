@@ -5,6 +5,7 @@ import sertifikasi from "./sertifikasiReducer";
 import pnbp from "./pnbpReducer";
 import bphtb from "./bhptbReducer";
 import kepegawaian from "./kepegawaianReducer";
+import mitra from "./mitraReducer";
 
 const reducers = {
   dashReducer,
@@ -13,6 +14,7 @@ const reducers = {
   pnbp,
   bphtb,
   kepegawaian,
+  mitra,
 };
 
 const rootReducer = combineReducers(reducers);

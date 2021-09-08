@@ -104,7 +104,7 @@ export const MENU_LIST = [
       {
         icon: <GrBarChart size={24} />,
         name: "Statistik Kemitraan",
-        link: null,
+        link: "/Mitra/StatistikKemitraan",
       },
     ],
   },

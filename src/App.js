@@ -21,6 +21,7 @@ import {
   KinerjaBerkasPnbp,
   PnbpPage,
 } from "./pages/pnbp";
+import { Mitra } from "./pages/mitra";
 import {
   BPHTBJumlahBerkas,
   BPHTBJumlahIntegrasi,
@@ -142,6 +143,11 @@ const Main = withRouter(({ location }) => {
           <PnbpPage />
         </Route>
         {/* End Route PNBP */}
+        {/* start mitra */}
+        <Route path="/Mitra/StatistikKemitraan">
+          <Mitra />
+        </Route>
+        {/* end mitra */}
         {/* Start Route BPHTB */}
         <Route path="/AssetKeuangan//BPHTB/BPHTBJumlahBerkas">
           <BPHTBJumlahBerkas />
