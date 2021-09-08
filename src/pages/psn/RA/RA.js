@@ -1,6 +1,5 @@
 import React from "react";
-import SiePsnPtsl5Peringkat from "./sie_psn_ptsl_5peringkat";
-import RealisasiPerkegiatan from "./sie_ptsl_realisasi_perkegiatan";
+import PSNRa from "./sie_psn_ra";
 
 const PTSL = () => {
   return (
@@ -9,10 +8,10 @@ const PTSL = () => {
         marginTop: 20,
         marginBottom: 20,
         width: "100%",
+        height: "80vh",
       }}
     >
-      <SiePsnPtsl5Peringkat />
-      <RealisasiPerkegiatan />
+      <PSNRa />
     </div>
   );
 };

@@ -155,7 +155,7 @@ export const MENU_LIST = [
       {
         icon: <BiBuildingHouse size={24} />,
         name: "Reforma Agraria",
-        link: null,
+        link: "/PSN/RA",
       },
       {
         icon: <MdAddShoppingCart size={24} />,
