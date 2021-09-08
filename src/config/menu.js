@@ -145,7 +145,7 @@ export const MENU_LIST = [
       {
         icon: <FaCalendarCheck size={22} />,
         name: "Percepatan Rencana Detail Tata Ruang (RDTR)",
-        link: null,
+        link: "/PSN/RDTR",
       },
       {
         icon: <GrTableAdd size={22} />,

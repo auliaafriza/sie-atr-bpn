@@ -18,5 +18,6 @@ export const BASE_URL = {
     realisasi_target_penerimaan: "sie-pnbp-realisasi-target-penerimaan",
     psn_ptls_5peringkat: "sie-psn-ptsl-5peringkat",
     KL_LU_Layanan_Jumlah_Perjenis: "sie-layanan-jumlah-perjenis",
+    psn_rdtr: "sie-psn-rdtr",
   },
 };
