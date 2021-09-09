@@ -247,7 +247,7 @@ const PSNRa = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Nilai Refroma Agraria",
+      "Nilai Nilai realisasi Refroma Agraria",
       data,
       ".xlsx"
     );
@@ -688,7 +688,7 @@ const PSNRa = () => {
         >
           <Grid item xs={6}>
             <Typography className={classes.titleSection} variant="h2">
-              Refroma Agraria
+              Nilai realisasi Refroma Agraria
             </Typography>
           </Grid>
           <Grid
@@ -723,7 +723,7 @@ const PSNRa = () => {
                   size="small"
                   onClick={() =>
                     handleOpen({
-                      title: "Refroma Agraria",
+                      title: "Nilai realisasi Refroma Agraria",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -744,7 +744,12 @@ const PSNRa = () => {
               <TooltipMI
                 title="Print Data"
                 placement="top"
-                onClick={() => handlePrintData("Refroma Agraria", columnTable)}
+                onClick={() =>
+                  handlePrintData(
+                    "Nilai realisasi Refroma Agraria",
+                    columnTable
+                  )
+                }
               >
                 <IconButton aria-label="delete" size="small">
                   <IoPrint />
@@ -917,7 +922,7 @@ const PSNRa = () => {
                     href="#"
                     onClick={() =>
                       handleOpen({
-                        title: "Refroma Agraria",
+                        title: "Nilai realisasi Refroma Agraria",
                         grafik: data,
                         dataTable: "",
                         analisis:

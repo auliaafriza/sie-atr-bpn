@@ -125,7 +125,7 @@ let axis = {
   xAxis: "Penggunaan",
   yAxis: "Realisasi",
 };
-const title = "Rencana Detail Tata Ruang";
+const title = "Jumlah peraturan RDTR per kegiatan";
 const SiePsnRdtr = () => {
   const classes = styles();
   const [data, setData] = useState(dataTemp);
