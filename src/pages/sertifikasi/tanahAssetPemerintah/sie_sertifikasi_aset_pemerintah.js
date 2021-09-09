@@ -472,7 +472,6 @@ const AssetPemerintah = () => {
   return (
     <div
       style={{
-        paddingTop: 20,
         paddingBottom: 20,
         paddingLeft: 20,
         marginTop: 20,

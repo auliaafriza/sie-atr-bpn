@@ -216,7 +216,7 @@ const BPHTBJumlahBerkas = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Nilai BPHTB (Rupiah)dan jumlah berkas layanan BPHTB",
+      "Jumlah Pengembalian PNBP (Refund) per Kantor ",
       data,
       ".xlsx"
     );
@@ -727,7 +727,7 @@ const BPHTBJumlahBerkas = () => {
       >
         <Grid item xs={9}>
           <Typography className={classes.titleSection} variant="h2">
-            Nilai BPHTB (Rupiah)dan jumlah berkas layanan BPHTB
+            Jumlah Pengembalian PNBP (Refund) per Kantor
           </Typography>
         </Grid>
 
@@ -759,8 +759,7 @@ const BPHTBJumlahBerkas = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title:
-                      "Nilai BPHTB (Rupiah)dan jumlah berkas layanan BPHTB",
+                    title: "Jumlah Pengembalian PNBP (Refund) per Kantor ",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -784,7 +783,7 @@ const BPHTBJumlahBerkas = () => {
               placement="top"
               onClick={() =>
                 handlePrintData(
-                  "Nilai BPHTB (Rupiah)dan jumlah berkas layanan BPHTB",
+                  "Jumlah Pengembalian PNBP (Refund) per Kantor ",
                   columnTable
                 )
               }
@@ -969,8 +968,7 @@ const BPHTBJumlahBerkas = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title:
-                        "Nilai BPHTB (Rupiah)dan jumlah berkas layanan BPHTB",
+                      title: "Jumlah Pengembalian PNBP (Refund) per Kantor ",
                       grafik: data,
                       dataTable: "",
                       analisis:

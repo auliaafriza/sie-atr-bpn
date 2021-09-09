@@ -18,6 +18,7 @@ import {
   FormControl,
   Select,
   InputLabel,
+  OutlinedInput,
   MenuItem,
   Card,
   ButtonGroup,
@@ -863,18 +864,18 @@ const RealisasiAnggaran = () => {
                 spacing={2}
               >
                 <Grid item xs={4}>
-                  <Typography
+                  {/* <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
                     Tahun Awal
-                  </Typography>
+                  </Typography> */}
                   <FormControl
                     variant="outlined"
                     className={classes.formControl}
                   >
-                    <InputLabel id="demo-simple-select-outlined-label">
+                    <InputLabel htmlFor="demo-simple-select-outlined-label">
                       Tahun Awal
                     </InputLabel>
                     <Select
@@ -896,18 +897,18 @@ const RealisasiAnggaran = () => {
                   </FormControl>
                 </Grid>
                 <Grid item xs={5}>
-                  <Typography
+                  {/* <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
                     Tahun Akhir
-                  </Typography>
+                  </Typography> */}
                   <FormControl
                     variant="outlined"
                     className={classes.formControl}
                   >
-                    <InputLabel id="demo-simple-select-outlined-label">
+                    <InputLabel htmlFor="demo-simple-select-outlined-label">
                       Tahun Akhir
                     </InputLabel>
                     <Select
@@ -935,7 +936,7 @@ const RealisasiAnggaran = () => {
                   alignItems="center"
                   item
                   xs={3}
-                  style={{ paddingTop: 40, paddingLeft: 20 }}
+                  style={{ paddingLeft: 20 }}
                 >
                   <Button
                     variant="contained"
