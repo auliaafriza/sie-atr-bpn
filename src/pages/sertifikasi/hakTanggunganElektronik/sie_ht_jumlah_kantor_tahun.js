@@ -153,6 +153,7 @@ const SieHtJumlahKantorTahun = () => {
   const [bulan, setBulan] = useState("07");
   const [comment, setComment] = useState("");
   const [dataFilter, setDataFilter] = useState([
+    "",
     "Kantor Pertanahan Kabupaten Kampar",
   ]);
   const [listKantor, setListKantor] = useState([]);
@@ -857,13 +858,13 @@ const SieHtJumlahKantorTahun = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <Typography
+                {/* <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
                   Pilih Bulan
-                </Typography>
+                </Typography> */}
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
                     Bulan
@@ -875,6 +876,7 @@ const SieHtJumlahKantorTahun = () => {
                     onChange={handleChangeBulan}
                     label="Bulan"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {bulanDataNumberic.map((item, i) => {
                       return (
@@ -887,13 +889,13 @@ const SieHtJumlahKantorTahun = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <Typography
+                {/* <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
                   Pilih Semester
-                </Typography>
+                </Typography> */}
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
                     Semester
@@ -905,6 +907,7 @@ const SieHtJumlahKantorTahun = () => {
                     onChange={handleChangeSemester}
                     label="Semester"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {semesterData.map((item, i) => {
                       return (
@@ -924,13 +927,7 @@ const SieHtJumlahKantorTahun = () => {
                 >
                   Pilih Kantor
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel
-                    id="demo-simple-select-outlined-label"
-                    htmlFor="outlined-Name"
-                  >
-                    Kantor
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -939,8 +936,16 @@ const SieHtJumlahKantorTahun = () => {
                     onChange={handleChangeFilter}
                     label="Kantor"
                     className={classes.selectStyle}
-                    renderValue={(selected) => `${selected.length} Terpilih`}
+                    renderValue={(selected) => {
+                      if (selected.length > 1)
+                        return `${selected.length - 1} Terpilih`;
+                      else if (selected[0] == "") return "Kantor";
+                    }}
+                    disableUnderline
                   >
+                    <MenuItem value="" disabled>
+                      Kantor
+                    </MenuItem>
                     {listKantor.map((item, i) => {
                       return (
                         <MenuItem value={item.kantor} key={i}>
