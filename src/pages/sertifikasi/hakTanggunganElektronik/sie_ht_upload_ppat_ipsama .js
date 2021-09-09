@@ -133,6 +133,7 @@ let grafikView = [
   {
     dataKey: "jumlah_upload",
     fill: "#0ff1ce",
+    name: "Jumlah Upload",
   },
 ];
 
@@ -294,7 +295,7 @@ const SieHTUploadPpatIpSama = () => {
             <Tooltip content={<CustomTooltip />} />
             <Legend />
             {grafikView.map((e) => (
-              <Bar dataKey={e.dataKey} fill={e.fill}></Bar>
+              <Bar dataKey={e.dataKey} fill={e.fill} name={e.name}></Bar>
             ))}
           </BarChart>
         </ResponsiveContainer>
@@ -940,7 +941,11 @@ const SieHTUploadPpatIpSama = () => {
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
                     {grafikView.map((e) => (
-                      <Bar dataKey={e.dataKey} fill={e.fill}></Bar>
+                      <Bar
+                        dataKey={e.dataKey}
+                        fill={e.fill}
+                        name={e.name}
+                      ></Bar>
                     ))}
                   </BarChart>
                 </ResponsiveContainer>

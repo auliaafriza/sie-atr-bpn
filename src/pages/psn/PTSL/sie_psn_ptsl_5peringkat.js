@@ -260,7 +260,11 @@ const SiePsnPtsl5Peringkat = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="jumlah_berkas" fill="#C71585"></Bar>
+            <Bar
+              dataKey="jumlah_berkas"
+              fill="#C71585"
+              name="Jumlah Berkas"
+            ></Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -820,7 +824,11 @@ const SiePsnPtsl5Peringkat = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Bar dataKey="jumlah_berkas" fill="#C71585" />
+                    <Bar
+                      dataKey="jumlah_berkas"
+                      fill="#C71585"
+                      name="Jumlah Berkas"
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

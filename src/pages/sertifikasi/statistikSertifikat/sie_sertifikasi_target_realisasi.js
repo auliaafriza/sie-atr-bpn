@@ -336,7 +336,7 @@ const Sie_sertifikasi_target_realisasi = () => {
               stroke="#FFA07A"
               activeDot={{ r: 8 }}
               strokeWidth={3}
-              label="Luas Realisasi"
+              name="Luas Realisasi"
             />
           </LineChart>
         </ResponsiveContainer>
@@ -831,6 +831,7 @@ const Sie_sertifikasi_target_realisasi = () => {
                         stroke="#FFA07A"
                         activeDot={{ r: 8 }}
                         strokeWidth={3}
+                        name="Luas Realisasi"
                       />
                     </LineChart>
                   </ResponsiveContainer>

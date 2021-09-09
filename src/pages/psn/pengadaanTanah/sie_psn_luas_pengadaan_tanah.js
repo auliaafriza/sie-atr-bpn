@@ -347,9 +347,8 @@ const PengadaanTanah = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="jumlah_bidang" fill="#FFA07A" />
-            20B2AA
-            <Bar dataKey="luas_psn" fill="#20B2AA" />
+            <Bar dataKey="jumlah_bidang" fill="#FFA07A" name="Jumlah Bidang" />
+            <Bar dataKey="luas_psn" fill="#20B2AA" name="Luas PSN" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -951,8 +950,12 @@ const PengadaanTanah = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Bar dataKey="jumlah_bidang" fill="#FFA07A" />
-                    <Bar dataKey="luas_psn" fill="#20B2AA" />
+                    <Bar
+                      dataKey="jumlah_bidang"
+                      fill="#FFA07A"
+                      name="Jumlah Bidang"
+                    />
+                    <Bar dataKey="luas_psn" fill="#20B2AA" name="Luas PSN" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

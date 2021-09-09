@@ -318,7 +318,7 @@ const KepegawaianBpnMutasi = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="jumlah_mutasi" fill="#F0E68C" />
+            <Bar dataKey="jumlah_mutasi" fill="#F0E68C" name="Jumlah Mutasi" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -935,7 +935,11 @@ const KepegawaianBpnMutasi = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Bar dataKey="jumlah_mutasi" fill="#F0E68C" />
+                    <Bar
+                      dataKey="jumlah_mutasi"
+                      fill="#F0E68C"
+                      name="Jumlah Mutasi"
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

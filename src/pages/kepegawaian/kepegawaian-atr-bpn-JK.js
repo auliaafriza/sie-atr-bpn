@@ -304,7 +304,7 @@ const KepegawaianBpnJK = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="jml_pegawai" fill="#66CDAA" />
+            <Bar dataKey="jml_pegawai" fill="#66CDAA" name="Jumlah Pegawai" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -848,7 +848,11 @@ const KepegawaianBpnJK = () => {
                       </YAxis>
                       <Tooltip content={<CustomTooltip />} />
                       <Legend />
-                      <Bar dataKey="jml_pegawai" fill="#66CDAA" />
+                      <Bar
+                        dataKey="jml_pegawai"
+                        fill="#66CDAA"
+                        name="Jumlah Pegawai"
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>

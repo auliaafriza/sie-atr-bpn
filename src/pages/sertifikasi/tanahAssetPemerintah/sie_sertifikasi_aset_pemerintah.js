@@ -324,8 +324,8 @@ const AssetPemerintah = () => {
         </YAxis>
         <Tooltip content={<CustomTooltip />} />
         <Legend />
-        <Bar dataKey="luas_target" fill="#C71585" />
-        <Bar dataKey="luas_realisasi" fill="#82ca9d" />
+        <Bar dataKey="luas_target" fill="#C71585" name="Luas Target" />
+        <Bar dataKey="luas_realisasi" fill="#82ca9d" name="Luas Realisasi" />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -856,8 +856,16 @@ const AssetPemerintah = () => {
                       </YAxis>
                       <Tooltip content={<CustomTooltip />} />
                       <Legend />
-                      <Bar dataKey="luas_target" fill="#C71585" />
-                      <Bar dataKey="luas_realisasi" fill="#82ca9d" />
+                      <Bar
+                        dataKey="luas_target"
+                        fill="#C71585"
+                        name="Luas Target"
+                      />
+                      <Bar
+                        dataKey="luas_realisasi"
+                        fill="#82ca9d"
+                        name="Luas Realisasi"
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>

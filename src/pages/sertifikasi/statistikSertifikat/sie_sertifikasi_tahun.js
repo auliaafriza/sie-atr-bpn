@@ -147,10 +147,12 @@ let grafikView = [
   {
     dataKey: "jumlah_sertifikat",
     fill: "#065535",
+    name: "Jumlah Sertifikat",
   },
   {
     dataKey: "luastertulis",
     fill: "#b48c06",
+    name: "Luas Tertulis",
   },
 ];
 
@@ -340,7 +342,7 @@ const SieSertifikatTahun = () => {
             <Tooltip content={<CustomTooltip />} />
             <Legend />
             {grafikView.map((e) => (
-              <Bar dataKey={e.dataKey} fill={e.fill}></Bar>
+              <Bar dataKey={e.dataKey} fill={e.fill} name={e.name}></Bar>
             ))}
           </BarChart>
         </ResponsiveContainer>
@@ -1007,7 +1009,11 @@ const SieSertifikatTahun = () => {
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
                     {grafikView.map((e) => (
-                      <Bar dataKey={e.dataKey} fill={e.fill}></Bar>
+                      <Bar
+                        dataKey={e.dataKey}
+                        fill={e.fill}
+                        name={e.name}
+                      ></Bar>
                     ))}
                   </BarChart>
                 </ResponsiveContainer>

@@ -248,7 +248,11 @@ const SieLayananJumlahPerjenis = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="jumlah_layanan" fill="#C71585"></Bar>
+            <Bar
+              dataKey="jumlah_layanan"
+              fill="#C71585"
+              name="Jumlah Layanan"
+            ></Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -808,7 +812,11 @@ const SieLayananJumlahPerjenis = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Bar dataKey="jumlah_layanan" fill="#C71585" />
+                    <Bar
+                      dataKey="jumlah_layanan"
+                      fill="#C71585"
+                      name="Jumlah Layanan"
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
