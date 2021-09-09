@@ -164,6 +164,8 @@ let axis = {
   yAxis: "Jumlah",
 };
 
+let kantahTemp = [];
+
 const KepegawaianOrganisasi = () => {
   const classes = styles();
   const [years, setYears] = useState("2022");
@@ -174,7 +176,7 @@ const KepegawaianOrganisasi = () => {
     "Kantor Wilayah Provinsi Bali",
     "Kantor Wilayah Provinsi Sulawesi Tenggara",
   ]);
-  const [kantor, setKantor] = useState([]);
+  const [kantor, setKantor] = useState([""]);
   const [satker, setSatker] = useState("");
   const [kanwilDis, setKanwilDis] = useState("");
   const [kantorDis, setKantorDis] = useState("");
@@ -203,7 +205,7 @@ const KepegawaianOrganisasi = () => {
   };
 
   const tahunRed = useSelector((state) => state.globalReducer.tahun);
-  const kantahRed = useSelector((state) => state.globalReducer.kantah);
+  const kantahRed = useSelector((state) => state.mitra.kantah);
   const kanwilRed = useSelector((state) => state.globalReducer.kanwil);
 
   const handleOpen = (data) => {
@@ -896,10 +898,7 @@ const KepegawaianOrganisasi = () => {
                 >
                   Tahun Awal
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun Awal
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -907,6 +906,7 @@ const KepegawaianOrganisasi = () => {
                     onChange={handleChangeAwal}
                     label="Tahun"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {tahunData.map((item, i) => {
                       return (
@@ -926,10 +926,7 @@ const KepegawaianOrganisasi = () => {
                 >
                   Tahun Akhir
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun Akhir
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -937,6 +934,7 @@ const KepegawaianOrganisasi = () => {
                     onChange={handleChange}
                     label="Tahun Akhir"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {tahunData.map((item, i) => {
                       return (
@@ -965,10 +963,7 @@ const KepegawaianOrganisasi = () => {
                   Pilih Kantah
                 </Typography>
 
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Kantah
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -977,8 +972,15 @@ const KepegawaianOrganisasi = () => {
                     onChange={handleChangeKantor}
                     label="Kantah"
                     className={classes.selectStyle}
-                    renderValue={(selected) => `${selected.length} Terpilih`}
+                    renderValue={(selected) => {
+                      if (selected[0] == "") return "Kantah";
+                      else return `${selected.length} Terpilih`;
+                    }}
+                    disableUnderline
                   >
+                    <MenuItem value="" disabled>
+                      Kantah
+                    </MenuItem>
                     {kantahRed && kantahRed.length != 0
                       ? kantahRed.map((item, i) => {
                           return (
@@ -1002,10 +1004,7 @@ const KepegawaianOrganisasi = () => {
                 >
                   Pilih Kanwil
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Kanwil
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -1015,6 +1014,7 @@ const KepegawaianOrganisasi = () => {
                     label="Kanwil"
                     className={classes.selectStyle}
                     renderValue={(selected) => `${selected.length} Terpilih`}
+                    disableUnderline
                   >
                     {kanwilRed.map((item, i) => {
                       return (

@@ -15,6 +15,7 @@ import PaguMp from "./sie-pnbp-pagu-mp";
 import PaguMpOpsNon from "./sie_pnbp_pagu_mp_ops_non";
 import PersentaseRealisasiBelanja from "./sie-pnbp-persentase-realisasi-belanja";
 import KinerjaBerkasPnbp from "./sie-pnbp-kinerja-berkas";
+import bgImg from "../../assets/img/bg-login.jpg";
 
 const PnbpPage = () => {
   const dispatch = useDispatch();
@@ -26,7 +27,18 @@ const PnbpPage = () => {
   }, []);
 
   return (
-    <div style={{ paddingBottom: 20, paddingTop: 20 }}>
+    <div
+      style={{
+        backgroundImage: `url(${bgImg})`,
+        height: "100%",
+        width: "100wh",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        zIndex: 1,
+        paddingBottom: 20,
+        paddingTop: 20,
+      }}
+    >
       <PnbpBerkasWilayah />
       <PnbpBerkasPeringkat />
       <PnbpBerkasPeringkatWilayah />

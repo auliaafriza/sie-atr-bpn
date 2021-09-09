@@ -39,7 +39,7 @@ import {
   Divider,
   ListItemText,
   ListItemAvatar,
-  Avatar,
+  Checkbox,
   TablePagination,
   Button,
 } from "@material-ui/core";
@@ -55,10 +55,11 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
-import { tipeData, DataFormater } from "../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
+import { getPnbpKinerjaBerkasFilter } from "../../actions/pnbpAction";
+import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
@@ -66,37 +67,67 @@ import "react-toastify/dist/ReactToastify.css";
 
 const dataTemp = [
   {
-    tahun: "2010",
-    alokasi_anggaran: 0,
-    anggaran: 0,
+    hampirjatuhtempo: 0,
+    jatuhtempo: 184,
+    jumlahberkas: 184,
+    namaprofile: "Loket Pelayanan Penyerahan",
+    sesuaidurasi: 0,
   },
   {
-    tahun: "2011",
-    alokasi_anggaran: 10,
-    anggaran: 0,
+    hampirjatuhtempo: 0,
+    jatuhtempo: 2,
+    jumlahberkas: 2,
+    namaprofile: "Pelaksana Kelompok Substansi Penatagunaan Tanah",
+    sesuaidurasi: 0,
   },
 ];
 
-let nameColumn = [
+let columnTable = [
   {
-    label: "Tahun",
-    value: "tahun",
+    label: "namaprofile",
     isFixed: false,
-    isLabel: true,
   },
   {
-    label: "Alokasi Anggaran",
-    value: "alokasi_anggaran",
-    isFixed: true,
-    isLabel: true,
+    label: "hampirjatuhtempo",
+    isFixed: false,
   },
   {
-    label: "Anggaran",
-    value: "anggaran",
-    isFixed: true,
-    isLabel: true,
+    label: "jatuhtempo",
+    isFixed: false,
+  },
+  {
+    label: "jumlahberkas",
+    isFixed: false,
+  },
+  {
+    label: "sesuaidurasi",
+    isFixed: false,
   },
 ];
+
+let grafikView = [
+  {
+    dataKey: "hampirjatuhtempo",
+    fill: "#CD5C5C",
+  },
+  {
+    dataKey: "jatuhtempo",
+    fill: "#8884d8",
+  },
+  {
+    dataKey: "jumlahberkas",
+    fill: "#FFD700",
+  },
+  {
+    dataKey: "sesuaidurasi",
+    fill: "#1E90FF",
+  },
+];
+
+let axis = {
+  xAxis: "namaprofile",
+  yAxis: "Nilai",
+};
 
 const theme = createTheme({
   typography: {
@@ -109,6 +140,14 @@ const theme = createTheme({
     ].join(","),
   },
 });
+
+const tahunData = [
+  { id: "2021", value: 2021 },
+  { id: "2020", value: 2020 },
+  { id: "2019", value: 2019 },
+  { id: "2018", value: 2018 },
+  { id: "2017", value: 2017 },
+];
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -130,11 +169,44 @@ const StyledTableRow = withStyles((theme) => ({
 
 let url = "http://10.20.57.234/SIEBackEnd/";
 
-const PaguMpOpsNon = () => {
+let nameColumn = [
+  {
+    label: "Nama Profile",
+    value: "namaprofile",
+  },
+  {
+    label: "Hampir Jatuh Tempo",
+    value: "hampirjatuhtempo",
+  },
+  {
+    label: "Jatuh Tempo",
+    value: "jatuhtempo",
+  },
+  {
+    label: "Jatuh Berkas",
+    value: "jumlahberkas",
+  },
+  {
+    label: "Sesuai Durasi",
+    value: "sesuaidurasi",
+  },
+];
+
+const KinerjaBerkasPnbp = () => {
   const classes = styles();
-  const [tipe, setTipe] = useState("OPS");
+  const pnbpKinerjaBerkas = useSelector(
+    (state) => state.pnbp.pnbpKinerjaBerkas
+  );
+  const dispatch = useDispatch();
+  const [dataFilter, setDataFilter] = useState([
+    "Pelaksana Kelompok Substansi Penatagunaan Tanah",
+    "Loket Pelayanan Penyerahan",
+  ]);
+  const [years, setYears] = useState("2014");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
+  const [semester, setSemester] = useState("2");
+  const [bulan, setBulan] = useState("Jan");
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -157,6 +229,10 @@ const PaguMpOpsNon = () => {
     setPage(newPage);
   };
 
+  const handleChangeFilter = (event) => {
+    setDataFilter(event.target.value);
+  };
+
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
@@ -172,11 +248,25 @@ const PaguMpOpsNon = () => {
     setOpen(false);
   };
 
+  const exportData = () => {
+    fileExport(
+      loadDataColumnTable(nameColumn),
+      "Kinerja Penyesuaian Berkas",
+      data,
+      ".xlsx"
+    );
+  };
+
   const getData = () => {
+    let temp = { namaprofile: [] };
+    temp.namaprofile = dataFilter;
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(`${url}Aset&Keuangan/PNBP/sie_pnbp_pagu_mp_ops_non?tipe=${tipe}`)
+      .post(
+        `${url}KinerjaLayanan/LayananUmum/sie_pnbp_kinerja_peny_berkas_per_jabatan`,
+        temp
+      )
       .then(function (response) {
         setData(response.data.data);
         setComment(response.data);
@@ -191,35 +281,27 @@ const PaguMpOpsNon = () => {
       });
   };
 
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const handleChange = (event) => {
-    setYears(event.target.value);
-  };
-
-  const handleChangeAwal = (event) => {
-    setTipe(event.target.value);
-  };
-
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">Tahun {label}</p>
+          <p className="label">{label}</p>
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Alokasi Anggaran : Rp ${payload[0].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+          >{`Hampir Jatuh Tempo :  ${payload[0].value}`}</p>
           <p
             className="desc"
             style={{ color: payload[1].color }}
-          >{`Anggaran : Rp ${payload[1].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+          >{`Jatuh Tempo :  ${payload[1].value}`}</p>
+          <p
+            className="desc"
+            style={{ color: payload[2].color }}
+          >{`Jatuh Berkas :  ${payload[2].value}`}</p>
+          <p
+            className="desc"
+            style={{ color: payload[3].color }}
+          >{`Sesuai Durasi :  ${payload[3].value}`}</p>
         </div>
       );
     }
@@ -227,13 +309,28 @@ const PaguMpOpsNon = () => {
     return null;
   };
 
-  const exportData = () => {
-    fileExport(
-      loadDataColumnTable(nameColumn),
-      "MP dana PNBP vs Realisasi Belanja",
-      data,
-      ".xlsx"
-    );
+  useEffect(() => {
+    dispatch(getPnbpKinerjaBerkasFilter());
+    getData();
+  }, []);
+
+  const handleChange = (event) => {
+    setYears(event.target.value);
+  };
+
+  const DataFormater = (number) => {
+    if (number > 1000000000) {
+      return (number / 1000000000).toString() + "M";
+    } else if (number > 1000000) {
+      return (number / 1000000).toString() + "Jt";
+    } else if (number > 1000) {
+      return (number / 1000).toString() + "Rb";
+    } else {
+      return number.toString();
+    }
+  };
+  const DataFormaterX = (value) => {
+    return value.replace("Kantor Wilayah Provinsi ", "");
   };
 
   const body = (
@@ -252,43 +349,52 @@ const PaguMpOpsNon = () => {
       <div className={classes.barChart}>
         {/* <img width={500} src={image} /> */}
         <ResponsiveContainer width="100%" height={250}>
-          <LineChart
+          <BarChart
             width={500}
-            height={300}
-            data={data}
+            height={800}
+            data={dataModal.grafik}
             margin={{
               top: 5,
               right: 30,
               left: 20,
               bottom: 5,
             }}
+            padding={{
+              top: 15,
+              right: 10,
+              left: 10,
+              bottom: 15,
+            }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="tahun" />
+            <XAxis
+              dataKey="namaprofile"
+              angle={60}
+              interval={0}
+              tick={{
+                // angle: 90,
+                transform: "rotate(-35)",
+                textAnchor: "start",
+                dominantBaseline: "ideographic",
+                fontSize: 8,
+              }}
+              height={100}
+              tickFormatter={DataFormaterX}
+            ></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Nilai Satuan 1 Juta"
+                value="Nilai"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
               />
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="alokasi_anggaran"
-              stroke="#FFDEAD"
-              activeDot={{ r: 8 }}
-              strokeWidth={3}
-            />
-            <Line
-              type="monotone"
-              dataKey="anggaran"
-              stroke="#4B0082"
-              strokeWidth={3}
-            />
-          </LineChart>
+            {/* <Legend /> */}
+            {grafikView.map((item, i) => (
+              <Bar dataKey={item.dataKey} fill={item.fill} />
+            ))}
+          </BarChart>
         </ResponsiveContainer>
       </div>
       {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
@@ -302,7 +408,7 @@ const PaguMpOpsNon = () => {
               <TableHead>
                 <TableRow>
                   {dataModal.nameColumn.map((item) => (
-                    <StyledTableCell align="center">{item}</StyledTableCell>
+                    <StyledTableCell align="left">{item}</StyledTableCell>
                   ))}
                 </TableRow>
               </TableHead>
@@ -310,25 +416,21 @@ const PaguMpOpsNon = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.tahun}>
-                      <StyledTableCell
-                        align="center"
-                        component="th"
-                        scope="row"
-                      >
-                        {row.tahun}
+                    <StyledTableRow key={row.wilayah}>
+                      <StyledTableCell align="left" component="th" scope="row">
+                        {row.namaprofile}
                       </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Rp{" "}
-                        {row.alokasi_anggaran
-                          .toFixed(2)
-                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                      <StyledTableCell align="left">
+                        {row.hampirjatuhtempo}
                       </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Rp{" "}
-                        {row.anggaran
-                          .toFixed(2)
-                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                      <StyledTableCell align="left">
+                        {row.jatuhtempo}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row.jumlahberkas}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {row.sesuaidurasi}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
@@ -390,40 +492,9 @@ const PaguMpOpsNon = () => {
       </List>
     </div>
   );
-
   const history = useHistory();
 
-  let columnTable = [
-    {
-      label: "tahun",
-      isFixed: false,
-    },
-    {
-      label: "anggaran",
-      isFixed: true,
-    },
-    {
-      label: "alokasi_anggaran",
-      isFixed: true,
-    },
-  ];
-
-  let grafikView = [
-    {
-      dataKey: "alokasi_anggaran",
-      fill: "#FFDEAD",
-    },
-    {
-      dataKey: "anggaran",
-      fill: "#4B0082",
-    },
-  ];
-
-  let axis = {
-    xAxis: "tahun",
-    yAxis: "Nilai Satuan 1 Juta",
-  };
-  const title = "MP dana PNBP vs Realisasi Belanja";
+  const title = "Kinerja Penyesuaian Berkas";
   const handlePrint = () => {
     history.push({
       pathname: "/PrintData",
@@ -432,7 +503,7 @@ const PaguMpOpsNon = () => {
         comment: comment,
         columnTable: columnTable,
         title: title,
-        grafik: "line",
+        grafik: "bar",
         nameColumn: nameColumn,
         grafikView: grafikView,
         axis: axis,
@@ -515,7 +586,7 @@ const PaguMpOpsNon = () => {
                   ' src="' +
                   BASE_URL.domain +
                   "/embed/" +
-                  BASE_URL.path.pnbp_pagu_mp_ops_non +
+                  BASE_URL.path.kinerja_berkas_pnbp +
                   '"></iframe>'
                 }
                 onCopy={() => toast.success("success copied to clipboard!")}
@@ -588,7 +659,7 @@ const PaguMpOpsNon = () => {
                   ' src="' +
                   BASE_URL.domain +
                   "/embed/" +
-                  BASE_URL.path.pnbp_pagu_mp_ops_non +
+                  BASE_URL.path.kinerja_berkas_pnbp +
                   '"></iframe>'
                 }
               />
@@ -679,7 +750,7 @@ const PaguMpOpsNon = () => {
               width={iframeWidth}
               height={iframeHeight}
               src={
-                BASE_URL.domain + "/embed/" + BASE_URL.path.pnbp_pagu_mp_ops_non
+                BASE_URL.domain + "/embed/" + BASE_URL.path.kinerja_berkas_pnbp
               }
             ></iframe>
           </Grid>
@@ -703,57 +774,185 @@ const PaguMpOpsNon = () => {
       >
         {body}
       </Modal>
-      <Box
-        style={{
-          backgroundColor: "rgb(244, 245, 250)",
-          paddingTop: 20,
-          paddingBottom: 20,
-        }}
+      <Grid
+        container
+        spacing={2}
+        direction="row"
+        style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
       >
+        <Grid item xs={6}>
+          <Typography className={classes.titleSection} variant="h2">
+            Kinerja Penyesuaian Berkas
+          </Typography>
+        </Grid>
+
         <Grid
           container
-          spacing={2}
           direction="row"
-          style={{
-            padding: 10,
-            paddingTop: 20,
-            paddingBottom: 5,
-          }}
+          justifyContent="flex-end"
+          alignItems="flex-end"
+          item
+          xs={6}
         >
-          <Grid item xs={6}>
-            <Typography className={classes.titleSection} variant="h2">
-              {title}
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justifyContent="flex-end"
-            alignItems="flex-end"
-            item
-            xs={6}
+          <ButtonGroup
+            aria-label="outlined button group"
+            className={classes.buttonGroupStyle}
+            variant="contained"
           >
-            <ButtonGroup
-              aria-label="outlined button group"
-              className={classes.buttonGroupStyle}
-              variant="contained"
+            <TooltipMI title="Embed Iframe" placement="top">
+              <IconButton
+                size="small"
+                onClick={() => {
+                  handleIframe(true);
+                }}
+              >
+                <IoCopySharp />
+              </IconButton>
+            </TooltipMI>
+            <TooltipMI title="Lihat Detail" placement="top">
+              <IconButton
+                size="small"
+                onClick={() =>
+                  handleOpen({
+                    title: "Kinerja Penyesuaian Berkas",
+                    grafik: data,
+                    dataTable: "",
+                    analisis:
+                      comment && comment.lastComment
+                        ? comment.lastComment.analisisData.replace(
+                            /<[^>]+>/g,
+                            ""
+                          )
+                        : "",
+                    type: "Bar",
+                    nameColumn: [
+                      "Nama Profile",
+                      "Hampir Jatuh Tempo",
+                      "Jatuh Tempo",
+                      "Jatuh Berkas",
+                      "Sesuai Durasi",
+                    ],
+                    listTop10Comment: comment.listTop10Comment,
+                  })
+                }
+              >
+                <IoEye />
+              </IconButton>
+            </TooltipMI>
+            <TooltipMI title="Print Data" placement="top" onClick={handlePrint}>
+              <IconButton aria-label="delete" size="small">
+                <IoPrint />
+              </IconButton>
+            </TooltipMI>
+            <TooltipMI
+              title="Unduh Data"
+              placement="top"
+              onClick={() => exportData()}
             >
-              <TooltipMI title="Embed Iframe" placement="top">
-                <IconButton
-                  size="small"
-                  onClick={() => {
-                    handleIframe(true);
-                  }}
+              <IconButton
+                aria-label="delete"
+                size="small"
+                onClick={() => exportData()}
+              >
+                <IoMdDownload />
+              </IconButton>
+            </TooltipMI>
+          </ButtonGroup>
+        </Grid>
+      </Grid>
+      <div
+        style={{
+          borderTop: "0.5px solid #626e8261 ",
+          width: "98%",
+          margin: 10,
+        }}
+      />
+      <Grid container spacing={2}>
+        <Grid item xs={4}>
+          <div style={{ margin: 10, marginRight: 25 }}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
                 >
-                  <IoCopySharp />
-                </IconButton>
-              </TooltipMI>
-              <TooltipMI title="Lihat Detail" placement="top">
-                <IconButton
-                  size="small"
+                  Pilih Nama Profile
+                </Typography>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel
+                    id="demo-simple-select-outlined-label"
+                    htmlFor="outlined-Name"
+                  >
+                    Nama Profile
+                  </InputLabel>
+                  <Select
+                    multiple
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={dataFilter}
+                    onChange={handleChangeFilter}
+                    label="Nama Profile"
+                    className={classes.selectStyle}
+                    renderValue={(selected) => `${selected.length} Terpilih`}
+                  >
+                    {pnbpKinerjaBerkas.map((item, i) => {
+                      return (
+                        <MenuItem value={item.namaprofile} key={i}>
+                          <Checkbox
+                            checked={dataFilter.indexOf(item.namaprofile) > -1}
+                          />
+                          <ListItemText primary={item.namaprofile} />
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+                item
+                xs={6}
+                style={{ paddingTop: 40, paddingLeft: 20 }}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => getData()}
+                  style={{ height: 57, width: "100%" }}
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
+
+            <Typography
+              className={classes.isiContentTextStyle}
+              variant="h2"
+              wrap
+            >
+              {comment && comment.lastComment
+                ? comment.lastComment.analisisData
+                    .replace(/<[^>]+>/g, "")
+                    .slice(0, 500)
+                : ""}
+              {comment &&
+              comment.lastComment &&
+              comment.lastComment.analisisData.length > 500 ? (
+                <Link
+                  href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "MP dana PNBP vs Realisasi Belanja",
+                      title: "Kinerja Penyesuaian Berkas",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -763,203 +962,85 @@ const PaguMpOpsNon = () => {
                               ""
                             )
                           : "",
-                      type: "Line",
-                      nameColumn: ["Tahun", "Alokasi Anggaran", "Anggaran"],
-
+                      type: "Bar",
+                      nameColumn: [
+                        "Nama Profile",
+                        "Hampir Jatuh Tempo",
+                        "Jatuh Tempo",
+                        "Jatuh Berkas",
+                        "Sesuai Durasi",
+                      ],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
+                  variant="body2"
                 >
-                  <IoEye />
-                </IconButton>
-              </TooltipMI>
-
-              <TooltipMI
-                title="Print Data"
-                placement="top"
-                onClick={handlePrint}
-              >
-                <IconButton aria-label="delete" size="small">
-                  <IoPrint />
-                </IconButton>
-              </TooltipMI>
-              <TooltipMI
-                title="Unduh Data"
-                placement="top"
-                onClick={() => exportData()}
-              >
-                <IconButton
-                  aria-label="delete"
-                  size="small"
-                  onClick={() => exportData()}
-                >
-                  <IoMdDownload />
-                </IconButton>
-              </TooltipMI>
-            </ButtonGroup>
-          </Grid>
+                  {" "}
+                  More
+                </Link>
+              ) : null}
+            </Typography>
+          </div>
         </Grid>
-        <div
-          style={{
-            borderTop: "0.5px solid #626e8261 ",
-            width: "98%",
-            margin: 10,
-          }}
-        />
-        <Grid container>
-          <Grid item xs={7}>
-            <Card className={classes.rootOdd} variant="outlined">
-              <CardContent>
-                <div className={classes.barChart}>
-                  <ResponsiveContainer width="100%" height={250}>
-                    <LineChart
-                      width={500}
-                      height={300}
-                      data={data}
-                      margin={{
-                        top: 5,
-                        right: 30,
-                        left: 20,
-                        bottom: 5,
+        <Grid item xs={8}>
+          <Card className={classes.root} variant="outlined">
+            <CardContent>
+              <div className={classes.barChart}>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart
+                    width={500}
+                    height={800}
+                    data={data}
+                    margin={{
+                      top: 5,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                    padding={{
+                      top: 15,
+                      right: 10,
+                      left: 10,
+                      bottom: 15,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis
+                      dataKey="namaprofile"
+                      angle={60}
+                      interval={0}
+                      tick={{
+                        // angle: 90,
+                        transform: "rotate(-35)",
+                        textAnchor: "start",
+                        dominantBaseline: "ideographic",
+                        fontSize: 8,
                       }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="tahun" />
-                      <YAxis tickFormatter={DataFormater}>
-                        <Label
-                          value="Nilai Satuan 1 Juta"
-                          angle={-90}
-                          position="insideBottomLeft"
-                          offset={-5}
-                        />
-                      </YAxis>
-                      <Tooltip content={<CustomTooltip />} />
-                      <Legend />
-                      <Line
-                        type="monotone"
-                        dataKey="alokasi_anggaran"
-                        stroke="#FFDEAD"
-                        activeDot={{ r: 8 }}
-                        strokeWidth={3}
+                      height={100}
+                      tickFormatter={DataFormaterX}
+                    />
+                    <YAxis tickFormatter={DataFormater}>
+                      <Label
+                        value="Nilai"
+                        angle={-90}
+                        position="insideBottomLeft"
+                        offset={-5}
                       />
-                      <Line
-                        type="monotone"
-                        dataKey="anggaran"
-                        stroke="#4B0082"
-                        strokeWidth={3}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={5}>
-            <div style={{ marginRight: 25 }}>
-              <Grid
-                container
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                spacing={2}
-              >
-                <Grid item xs={6}>
-                  <Typography
-                    className={classes.isiTextStyle}
-                    variant="h2"
-                    style={{ fontSize: 12 }}
-                  >
-                    Pilih Tipe
-                  </Typography>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Tipe
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={tipe}
-                      onChange={handleChangeAwal}
-                      label="Tipe"
-                      className={classes.selectStyle}
-                    >
-                      {tipeData.map((item, i) => {
-                        return (
-                          <MenuItem value={item.id} key={i}>
-                            {item.name}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid
-                  container
-                  direction="row"
-                  justifyContent="flex-start"
-                  alignItems="center"
-                  item
-                  xs={6}
-                  style={{ paddingTop: 40, paddingLeft: 20 }}
-                >
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => getData()}
-                    style={{ height: 57, width: "100%" }}
-                  >
-                    Submit
-                  </Button>
-                </Grid>
-              </Grid>
-              <Typography
-                className={classes.isiContentTextStyle}
-                variant="h2"
-                wrap
-              >
-                {comment && comment.lastComment
-                  ? comment.lastComment.analisisData
-                      .replace(/<[^>]+>/g, "")
-                      .slice(0, 500)
-                  : ""}
-                {comment &&
-                comment.lastComment &&
-                comment.lastComment.analisisData.length > 500 ? (
-                  <Link
-                    href="#"
-                    onClick={() =>
-                      handleOpen({
-                        title: "MP dana PNBP vs Realisasi Belanja",
-                        grafik: data,
-                        dataTable: "",
-                        analisis:
-                          comment && comment.lastComment
-                            ? comment.lastComment.analisisData.replace(
-                                /<[^>]+>/g,
-                                ""
-                              )
-                            : "",
-                        type: "Line",
-                        nameColumn: ["Tahun", "Alokasi Anggaran", "Anggaran"],
-                        listTop10Comment: comment.listTop10Comment,
-                      })
-                    }
-                    variant="body2"
-                  >
-                    {" "}
-                    More
-                  </Link>
-                ) : null}
-              </Typography>
-            </div>
-          </Grid>
+                    </YAxis>
+                    <Tooltip content={<CustomTooltip />} />
+                    {/* <Legend /> */}
+                    {grafikView.map((item, i) => (
+                      <Bar dataKey={item.dataKey} fill={item.fill} />
+                    ))}
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
         </Grid>
-      </Box>
+      </Grid>
     </div>
   );
 };
 
-export default PaguMpOpsNon;
+export default KinerjaBerkasPnbp;

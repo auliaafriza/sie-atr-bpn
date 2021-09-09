@@ -500,7 +500,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
   return (
     <div
       style={{
-        backgroundColor: "rgba(107,111,130,0.2)",
+        backgroundColor: "rgb(244, 245, 250)",
         paddingTop: 20,
         paddingBottom: 20,
         paddingLeft: 20,
