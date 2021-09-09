@@ -798,16 +798,14 @@ const AlokasiAnggaran = () => {
                 <Typography className={classes.isiTextStyle} variant="h2">
                   Pilih Tipe
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tipe
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
                     value={years}
                     onChange={handleChange}
                     label="Tipe"
+                    disableUnderline
                   >
                     {tipeData.map((item, i) => {
                       return (

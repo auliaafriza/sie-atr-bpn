@@ -1008,10 +1008,7 @@ const SieSertifikatLuasJumlah = () => {
                 >
                   Tahun Awal
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun Awal
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -1038,10 +1035,7 @@ const SieSertifikatLuasJumlah = () => {
                 >
                   Tahun Akhir
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun Akhir
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -1068,7 +1062,7 @@ const SieSertifikatLuasJumlah = () => {
                 >
                   Kanwil
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl className={classes.formControl}>
                   <InputLabel
                     id="demo-simple-select-outlined-label"
                     htmlFor="outlined-Name"
@@ -1106,7 +1100,7 @@ const SieSertifikatLuasJumlah = () => {
                 >
                   Kantah
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl className={classes.formControl}>
                   <InputLabel
                     id="demo-simple-select-outlined-label"
                     htmlFor="outlined-Name"
@@ -1144,7 +1138,7 @@ const SieSertifikatLuasJumlah = () => {
                 >
                   Tipe Hak
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl className={classes.formControl}>
                   <InputLabel
                     id="demo-simple-select-outlined-label"
                     htmlFor="outlined-Name"
@@ -1184,7 +1178,7 @@ const SieSertifikatLuasJumlah = () => {
                 >
                   Tipe Pemilik
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl className={classes.formControl}>
                   <InputLabel
                     id="demo-simple-select-outlined-label"
                     htmlFor="outlined-Name"
@@ -1225,7 +1219,7 @@ const SieSertifikatLuasJumlah = () => {
                 >
                   Produk
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl className={classes.formControl}>
                   <InputLabel
                     id="demo-simple-select-outlined-label"
                     htmlFor="outlined-Name"
@@ -1263,7 +1257,7 @@ const SieSertifikatLuasJumlah = () => {
                 >
                   Grafik
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl className={classes.formControl}>
                   <InputLabel
                     id="demo-simple-select-outlined-label"
                     htmlFor="outlined-Name"

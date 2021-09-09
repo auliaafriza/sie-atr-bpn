@@ -716,329 +716,54 @@ const KepegawaianBpnUsia = () => {
       >
         {body}
       </Modal>
-      <Grid
-        container
-        spacing={2}
-        direction="row"
-        style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
+      <Box
+        style={{
+          backgroundColor: "rgb(244, 245, 250)",
+          paddingTop: 20,
+          paddingBottom: 20,
+        }}
       >
-        <Grid item xs={6}>
-          <Typography className={classes.titleSection} variant="h2">
-            Jumlah Pegawai berdasarkan Usia
-          </Typography>
-        </Grid>
         <Grid
           container
+          spacing={2}
           direction="row"
-          justifyContent="flex-end"
-          alignItems="flex-end"
-          item
-          xs={6}
+          style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
         >
-          {/* <ReactToPrint
+          <Grid item xs={6}>
+            <Typography className={classes.titleSection} variant="h2">
+              Jumlah Pegawai berdasarkan Usia
+            </Typography>
+          </Grid>
+          <Grid
+            container
+            direction="row"
+            justifyContent="flex-end"
+            alignItems="flex-end"
+            item
+            xs={6}
+          >
+            {/* <ReactToPrint
             trigger={() => <button>Print this out!</button>}
             content={() => inputRef.current}
           /> */}
-          <ButtonGroup
-            aria-label="outlined button group"
-            className={classes.buttonGroupStyle}
-            variant="contained"
-          >
-            <TooltipMI title="Embed Iframe" placement="top">
-              <IconButton
-                size="small"
-                onClick={() => {
-                  handleIframe(true);
-                }}
-              >
-                <IoCopySharp />
-              </IconButton>
-            </TooltipMI>
-            <TooltipMI title="Lihat Detail" placement="top">
-              <IconButton
-                size="small"
-                onClick={() =>
-                  handleOpen({
-                    title: "Jumlah Pegawai berdasarkan Usia ",
-                    grafik: data,
-                    dataTable: "",
-                    analisis:
-                      comment && comment.lastComment
-                        ? comment.lastComment.analisisData.replace(
-                            /<[^>]+>/g,
-                            ""
-                          )
-                        : "",
-                    type: "Bar",
-                    listTop10Comment: comment.listTop10Comment,
-                  })
-                }
-              >
-                <IoEye />
-              </IconButton>
-            </TooltipMI>
-            {/* <ReactToPrint
-              trigger={() => (
-                <TooltipMI title="Print Data" placement="top">
-                  <IconButton aria-label="delete" size="small">
-                    <IoPrint />
-                  </IconButton>
-                </TooltipMI>
-              )}
-              content={inputRef.current}
-            > */}
-            <TooltipMI
-              title="Print Data"
-              placement="top"
-              onClick={() =>
-                handlePrintData("Jumlah Pegawai berdasarkan Usia", columnTable)
-              }
+            <ButtonGroup
+              aria-label="outlined button group"
+              className={classes.buttonGroupStyle}
+              variant="contained"
             >
-              <IconButton aria-label="delete" size="small">
-                <IoPrint />
-              </IconButton>
-            </TooltipMI>
-            <TooltipMI
-              title="Unduh Data"
-              placement="top"
-              onClick={() => exportData()}
-            >
-              <IconButton
-                aria-label="delete"
-                size="small"
-                onClick={() => exportData()}
-              >
-                <IoMdDownload />
-              </IconButton>
-            </TooltipMI>
-          </ButtonGroup>
-        </Grid>
-      </Grid>
-      <div
-        style={{
-          borderTop: "0.5px solid #626e8261 ",
-          width: "98%",
-          margin: 10,
-        }}
-      />
-      <Grid container spacing={2}>
-        <Grid item xs={4}>
-          <div style={{ margin: 10, marginRight: 25 }}>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={4}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
+              <TooltipMI title="Embed Iframe" placement="top">
+                <IconButton
+                  size="small"
+                  onClick={() => {
+                    handleIframe(true);
+                  }}
                 >
-                  Tahun Awal
-                </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun Awal
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={tahunAwal}
-                    onChange={handleChangeAwal}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                  >
-                    {tahunData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Tahun Akhir
-                </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun Akhir
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={years}
-                    onChange={handleChange}
-                    label="Bulan"
-                    className={classes.selectStyle}
-                  >
-                    {tahunData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Pilih Satker
-                </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Satker
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={satkerDis}
-                    onChange={handleChangeSatket}
-                    label="Satker"
-                    className={classes.selectStyle}
-                  >
-                    {satkerRed && satkerRed.length != 0
-                      ? satkerRed.map((item, i) => {
-                          return (
-                            <MenuItem value={item.satker} key={i}>
-                              {item.satker}
-                            </MenuItem>
-                          );
-                        })
-                      : null}
-                  </Select>
-                </FormControl>
-              </Grid>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={4}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Pilih Kantor
-                </Typography>
-                {/* <Autocomplete
-                  id="combo-box-demo"
-                  options={kantorRed}
-                  getOptionLabel={(option) => option.kantor}
-                  className={classes.selectStyle}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Kantor" variant="outlined" />
-                  )}
-                /> */}
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Kantor
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={kantorDis}
-                    onChange={handleChangeKantor}
-                    label="Kantor"
-                    className={classes.selectStyle}
-                  >
-                    {kantorRed && kantorRed.length != 0
-                      ? kantorRed.map((item, i) => {
-                          return (
-                            <MenuItem value={item.kantor} key={i}>
-                              {item.kantor}
-                            </MenuItem>
-                          );
-                        })
-                      : null}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Pilih Kanwil
-                </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Kanwil
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={kanwilDis}
-                    onChange={handleChangeKanwil}
-                    label="Kanwil"
-                    className={classes.selectStyle}
-                  >
-                    {kanwilRed && kanwilRed.length != 0
-                      ? kanwilRed.map((item, i) => {
-                          return (
-                            <MenuItem value={item.kanwil} key={i}>
-                              {item.kanwil}
-                            </MenuItem>
-                          );
-                        })
-                      : null}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid
-                container
-                direction="row"
-                justifyContent="flex-start"
-                alignItems="center"
-                item
-                xs={4}
-                style={{ paddingTop: 40, paddingLeft: 20 }}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => getData()}
-                  style={{ height: 57, width: "100%" }}
-                >
-                  Submit
-                </Button>
-              </Grid>
-            </Grid>
-
-            <Typography
-              className={classes.isiContentTextStyle}
-              variant="h2"
-              wrap
-            >
-              {comment && comment.lastComment
-                ? comment.lastComment.analisisData
-                    .replace(/<[^>]+>/g, "")
-                    .slice(0, 500)
-                : ""}
-              {comment &&
-              comment.lastComment &&
-              comment.lastComment.analisisData.length > 100 ? (
-                <Link
-                  href="#"
+                  <IoCopySharp />
+                </IconButton>
+              </TooltipMI>
+              <TooltipMI title="Lihat Detail" placement="top">
+                <IconButton
+                  size="small"
                   onClick={() =>
                     handleOpen({
                       title: "Jumlah Pegawai berdasarkan Usia ",
@@ -1055,61 +780,337 @@ const KepegawaianBpnUsia = () => {
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
-                  variant="body2"
                 >
-                  {" "}
-                  More
-                </Link>
-              ) : null}
-            </Typography>
-          </div>
+                  <IoEye />
+                </IconButton>
+              </TooltipMI>
+              {/* <ReactToPrint
+              trigger={() => (
+                <TooltipMI title="Print Data" placement="top">
+                  <IconButton aria-label="delete" size="small">
+                    <IoPrint />
+                  </IconButton>
+                </TooltipMI>
+              )}
+              content={inputRef.current}
+            > */}
+              <TooltipMI
+                title="Print Data"
+                placement="top"
+                onClick={() =>
+                  handlePrintData(
+                    "Jumlah Pegawai berdasarkan Usia",
+                    columnTable
+                  )
+                }
+              >
+                <IconButton aria-label="delete" size="small">
+                  <IoPrint />
+                </IconButton>
+              </TooltipMI>
+              <TooltipMI
+                title="Unduh Data"
+                placement="top"
+                onClick={() => exportData()}
+              >
+                <IconButton
+                  aria-label="delete"
+                  size="small"
+                  onClick={() => exportData()}
+                >
+                  <IoMdDownload />
+                </IconButton>
+              </TooltipMI>
+            </ButtonGroup>
+          </Grid>
         </Grid>
-        <Grid item xs={8}>
-          <Card className={classes.root} variant="outlined">
-            <CardContent>
-              <div className={classes.barChart}>
-                <ResponsiveContainer width="100%" height={250}>
-                  <BarChart
-                    width={500}
-                    height={300}
-                    data={data}
-                    margin={{
-                      top: 5,
-                      right: 30,
-                      left: 20,
-                      bottom: 5,
-                    }}
-                    padding={{
-                      top: 15,
-                      right: 10,
-                      left: 10,
-                      bottom: 15,
-                    }}
+        <div
+          style={{
+            borderTop: "0.5px solid #626e8261 ",
+            width: "98%",
+            margin: 10,
+          }}
+        />
+        <Grid container spacing={2}>
+          <Grid item xs={4}>
+            <div style={{ margin: 10, marginRight: 25 }}>
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={2}
+              >
+                <Grid item xs={4}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="usia" />
-                    <YAxis tickFormatter={DataFormater}>
-                      <Label
-                        value="Nilai Satuan 1 Juta"
-                        angle={-90}
-                        position="insideBottomLeft"
-                        offset={-5}
+                    Tahun Awal
+                  </Typography>
+                  <FormControl className={classes.formControl}>
+                    <Select
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={tahunAwal}
+                      onChange={handleChangeAwal}
+                      label="Tahun"
+                      className={classes.selectStyle}
+                      disableUnderline
+                    >
+                      {tahunData.map((item, i) => {
+                        return (
+                          <MenuItem value={item.id} key={i}>
+                            {item.value}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Tahun Akhir
+                  </Typography>
+                  <FormControl className={classes.formControl}>
+                    <Select
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={years}
+                      onChange={handleChange}
+                      label="Bulan"
+                      className={classes.selectStyle}
+                      disableUnderline
+                    >
+                      {tahunData.map((item, i) => {
+                        return (
+                          <MenuItem value={item.id} key={i}>
+                            {item.value}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Pilih Satker
+                  </Typography>
+                  <FormControl className={classes.formControl}>
+                    <Select
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={satkerDis}
+                      onChange={handleChangeSatket}
+                      label="Satker"
+                      className={classes.selectStyle}
+                      disableUnderline
+                    >
+                      {satkerRed && satkerRed.length != 0
+                        ? satkerRed.map((item, i) => {
+                            return (
+                              <MenuItem value={item.satker} key={i}>
+                                {item.satker}
+                              </MenuItem>
+                            );
+                          })
+                        : null}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={2}
+              >
+                <Grid item xs={4}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Pilih Kantor
+                  </Typography>
+                  {/* <Autocomplete
+                  id="combo-box-demo"
+                  options={kantorRed}
+                  getOptionLabel={(option) => option.kantor}
+                  className={classes.selectStyle}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Kantor" variant="outlined" />
+                  )}
+                /> */}
+                  <FormControl className={classes.formControl}>
+                    <Select
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={kantorDis}
+                      onChange={handleChangeKantor}
+                      label="Kantor"
+                      className={classes.selectStyle}
+                      disableUnderline
+                    >
+                      {kantorRed && kantorRed.length != 0
+                        ? kantorRed.map((item, i) => {
+                            return (
+                              <MenuItem value={item.kantor} key={i}>
+                                {item.kantor}
+                              </MenuItem>
+                            );
+                          })
+                        : null}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Pilih Kanwil
+                  </Typography>
+                  <FormControl className={classes.formControl}>
+                    <Select
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={kanwilDis}
+                      onChange={handleChangeKanwil}
+                      label="Kanwil"
+                      className={classes.selectStyle}
+                      disableUnderline
+                    >
+                      {kanwilRed && kanwilRed.length != 0
+                        ? kanwilRed.map((item, i) => {
+                            return (
+                              <MenuItem value={item.kanwil} key={i}>
+                                {item.kanwil}
+                              </MenuItem>
+                            );
+                          })
+                        : null}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  item
+                  xs={4}
+                  style={{ paddingTop: 40, paddingLeft: 20 }}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => getData()}
+                    style={{ height: 57, width: "100%" }}
+                  >
+                    Submit
+                  </Button>
+                </Grid>
+              </Grid>
+
+              <Typography
+                className={classes.isiContentTextStyle}
+                variant="h2"
+                wrap
+              >
+                {comment && comment.lastComment
+                  ? comment.lastComment.analisisData
+                      .replace(/<[^>]+>/g, "")
+                      .slice(0, 500)
+                  : ""}
+                {comment &&
+                comment.lastComment &&
+                comment.lastComment.analisisData.length > 100 ? (
+                  <Link
+                    href="#"
+                    onClick={() =>
+                      handleOpen({
+                        title: "Jumlah Pegawai berdasarkan Usia ",
+                        grafik: data,
+                        dataTable: "",
+                        analisis:
+                          comment && comment.lastComment
+                            ? comment.lastComment.analisisData.replace(
+                                /<[^>]+>/g,
+                                ""
+                              )
+                            : "",
+                        type: "Bar",
+                        listTop10Comment: comment.listTop10Comment,
+                      })
+                    }
+                    variant="body2"
+                  >
+                    {" "}
+                    More
+                  </Link>
+                ) : null}
+              </Typography>
+            </div>
+          </Grid>
+          <Grid item xs={8}>
+            <Card className={classes.root} variant="outlined">
+              <CardContent>
+                <div className={classes.barChart}>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <BarChart
+                      width={500}
+                      height={300}
+                      data={data}
+                      margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                      }}
+                      padding={{
+                        top: 15,
+                        right: 10,
+                        left: 10,
+                        bottom: 15,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="usia" />
+                      <YAxis tickFormatter={DataFormater}>
+                        <Label
+                          value="Nilai Satuan 1 Juta"
+                          angle={-90}
+                          position="insideBottomLeft"
+                          offset={-5}
+                        />
+                      </YAxis>
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Bar
+                        dataKey="jml_pegawai"
+                        fill="#F0E68C"
+                        name="Jumlah Pegawai"
                       />
-                    </YAxis>
-                    <Tooltip content={<CustomTooltip />} />
-                    <Legend />
-                    <Bar
-                      dataKey="jml_pegawai"
-                      fill="#F0E68C"
-                      name="Jumlah Pegawai"
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </div>
   );
 };

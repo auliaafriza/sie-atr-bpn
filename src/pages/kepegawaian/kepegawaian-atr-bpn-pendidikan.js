@@ -702,7 +702,6 @@ const KepegawaianBpnPendidikan = () => {
       </Modal>
       <Box
         style={{
-          backgroundColor: "rgb(244, 245, 250)",
           marginTop: 20,
           paddingBottom: 20,
         }}
@@ -879,9 +878,6 @@ const KepegawaianBpnPendidikan = () => {
                     Tahun Awal
                   </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Tahun Awal
-                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -889,6 +885,7 @@ const KepegawaianBpnPendidikan = () => {
                       onChange={handleChangeAwal}
                       label="Tahun"
                       className={classes.selectStyle}
+                      disableUnderline
                     >
                       {tahunData.map((item, i) => {
                         return (
@@ -909,9 +906,6 @@ const KepegawaianBpnPendidikan = () => {
                     Tahun Akhir
                   </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Tahun Akhir
-                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -919,6 +913,7 @@ const KepegawaianBpnPendidikan = () => {
                       onChange={handleChange}
                       label="Bulan"
                       className={classes.selectStyle}
+                      disableUnderline
                     >
                       {tahunData.map((item, i) => {
                         return (
@@ -939,9 +934,6 @@ const KepegawaianBpnPendidikan = () => {
                     Pilih Satker
                   </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Satker
-                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -954,6 +946,7 @@ const KepegawaianBpnPendidikan = () => {
                           ? `${selected.slice(0, 8)}...`
                           : selected
                       }
+                      disableUnderline
                     >
                       {satkerRed && satkerRed.length != 0
                         ? satkerRed.map((item, i) => {
@@ -993,9 +986,6 @@ const KepegawaianBpnPendidikan = () => {
                   )}
                 /> */}
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Kantor
-                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -1008,6 +998,7 @@ const KepegawaianBpnPendidikan = () => {
                           ? `${selected.slice(0, 8)}...`
                           : selected
                       }
+                      disableUnderline
                     >
                       {kantorRed && kantorRed.length != 0
                         ? kantorRed.map((item, i) => {
@@ -1030,9 +1021,6 @@ const KepegawaianBpnPendidikan = () => {
                     Pilih Kanwil
                   </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Kanwil
-                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -1045,6 +1033,7 @@ const KepegawaianBpnPendidikan = () => {
                           ? `${selected.slice(0, 8)}...`
                           : selected
                       }
+                      disableUnderline
                     >
                       {kanwilRed && kanwilRed.length != 0
                         ? kanwilRed.map((item, i) => {

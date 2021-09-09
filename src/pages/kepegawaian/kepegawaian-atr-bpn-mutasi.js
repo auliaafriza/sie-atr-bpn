@@ -819,10 +819,7 @@ const KepegawaianBpnMutasi = () => {
                 >
                   Pilih Tahun
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -830,6 +827,7 @@ const KepegawaianBpnMutasi = () => {
                     onChange={handleChange}
                     label="Tahun"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {tahunMutasi.map((item, i) => {
                       return (

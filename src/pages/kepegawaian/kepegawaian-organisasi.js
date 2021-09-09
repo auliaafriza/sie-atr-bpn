@@ -866,10 +866,7 @@ const KepegawaianOrganisasi = () => {
                 >
                   Tahun Awal
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun Awal
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -877,6 +874,7 @@ const KepegawaianOrganisasi = () => {
                     onChange={handleChangeAwal}
                     label="Tahun"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {tahunData.map((item, i) => {
                       return (
@@ -896,10 +894,7 @@ const KepegawaianOrganisasi = () => {
                 >
                   Tahun Akhir
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun Akhir
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -907,6 +902,7 @@ const KepegawaianOrganisasi = () => {
                     onChange={handleChange}
                     label="Bulan"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {tahunData.map((item, i) => {
                       return (
@@ -926,10 +922,7 @@ const KepegawaianOrganisasi = () => {
                 >
                   Pilih Satker
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Satker
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -942,6 +935,7 @@ const KepegawaianOrganisasi = () => {
                         ? `${selected.slice(0, 8)}...`
                         : selected
                     }
+                    disableUnderline
                   >
                     {satkerRed && satkerRed.length != 0
                       ? satkerRed.map((item, i) => {
@@ -980,10 +974,7 @@ const KepegawaianOrganisasi = () => {
                     <TextField {...params} label="Kantor" variant="outlined" />
                   )}
                 /> */}
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Kantor
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -996,6 +987,7 @@ const KepegawaianOrganisasi = () => {
                         ? `${selected.slice(0, 8)}...`
                         : selected
                     }
+                    disableUnderline
                   >
                     {kantorRed && kantorRed.length != 0
                       ? kantorRed.map((item, i) => {
@@ -1017,10 +1009,7 @@ const KepegawaianOrganisasi = () => {
                 >
                   Pilih Kanwil
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Kanwil
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -1033,6 +1022,7 @@ const KepegawaianOrganisasi = () => {
                         ? `${selected.slice(0, 8)}...`
                         : selected
                     }
+                    disableUnderline
                   >
                     {kanwilRed && kanwilRed.length != 0
                       ? kanwilRed.map((item, i) => {

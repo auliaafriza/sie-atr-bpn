@@ -855,10 +855,7 @@ const SieSertifikatTahun = () => {
                 >
                   Tahun Awal
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun Awal
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -885,7 +882,7 @@ const SieSertifikatTahun = () => {
                 >
                   Pilih Wilayah
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl className={classes.formControl}>
                   <InputLabel
                     id="demo-simple-select-outlined-label"
                     htmlFor="outlined-Name"

@@ -199,6 +199,7 @@ const KinerjaBerkasPnbp = () => {
   );
   const dispatch = useDispatch();
   const [dataFilter, setDataFilter] = useState([
+    "",
     "Pelaksana Kelompok Substansi Penatagunaan Tanah",
     "Loket Pelayanan Penyerahan",
   ]);
@@ -885,13 +886,7 @@ const KinerjaBerkasPnbp = () => {
                 >
                   Pilih Nama Profile
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel
-                    id="demo-simple-select-outlined-label"
-                    htmlFor="outlined-Name"
-                  >
-                    Nama Profile
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -900,8 +895,16 @@ const KinerjaBerkasPnbp = () => {
                     onChange={handleChangeFilter}
                     label="Nama Profile"
                     className={classes.selectStyle}
-                    renderValue={(selected) => `${selected.length} Terpilih`}
+                    disableUnderline
+                    renderValue={(selected) => {
+                      if (selected.length > 1)
+                        return `${selected.length - 1} Terpilih`;
+                      else if (selected[0] == "") return "Nama Profile";
+                    }}
                   >
+                    <MenuItem value="" disabled>
+                      Nama Profile
+                    </MenuItem>
                     {pnbpKinerjaBerkas.map((item, i) => {
                       return (
                         <MenuItem value={item.namaprofile} key={i}>

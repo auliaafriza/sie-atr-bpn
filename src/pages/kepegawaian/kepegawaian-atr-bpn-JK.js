@@ -878,9 +878,6 @@ const KepegawaianBpnJK = () => {
                     Tahun Awal
                   </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Tahun Awal
-                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -888,6 +885,7 @@ const KepegawaianBpnJK = () => {
                       onChange={handleChangeAwal}
                       label="Tahun"
                       className={classes.selectStyle}
+                      disableUnderline
                     >
                       {tahunData.map((item, i) => {
                         return (
@@ -908,9 +906,6 @@ const KepegawaianBpnJK = () => {
                     Tahun Akhir
                   </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Tahun Akhir
-                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -918,6 +913,7 @@ const KepegawaianBpnJK = () => {
                       onChange={handleChange}
                       label="Bulan"
                       className={classes.selectStyle}
+                      disableUnderline
                     >
                       {tahunData.map((item, i) => {
                         return (
@@ -938,9 +934,6 @@ const KepegawaianBpnJK = () => {
                     Pilih Satker
                   </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Satker
-                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -953,6 +946,7 @@ const KepegawaianBpnJK = () => {
                           ? `${selected.slice(0, 8)}...`
                           : selected
                       }
+                      disableUnderline
                     >
                       {satkerRed && satkerRed.length != 0
                         ? satkerRed.map((item, i) => {
@@ -992,9 +986,6 @@ const KepegawaianBpnJK = () => {
                   )}
                 /> */}
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Kantor
-                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -1007,6 +998,7 @@ const KepegawaianBpnJK = () => {
                           ? `${selected.slice(0, 8)}...`
                           : selected
                       }
+                      disableUnderline
                     >
                       {kantorRed && kantorRed.length != 0
                         ? kantorRed.map((item, i) => {
@@ -1029,9 +1021,6 @@ const KepegawaianBpnJK = () => {
                     Pilih Kanwil
                   </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Kanwil
-                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -1044,6 +1033,7 @@ const KepegawaianBpnJK = () => {
                           ? `${selected.slice(0, 8)}...`
                           : selected
                       }
+                      disableUnderline
                     >
                       {kanwilRed && kanwilRed.length != 0
                         ? kanwilRed.map((item, i) => {

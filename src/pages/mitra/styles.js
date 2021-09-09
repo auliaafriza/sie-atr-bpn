@@ -107,6 +107,7 @@ const styles = makeStyles((theme) => ({
     color: "#6b6f82",
     fontSize: 12,
     fontWeight: "600",
+    marginBottom: 0,
   },
   isiContentTextStyle: {
     margin: 10,

@@ -826,10 +826,7 @@ const KepegawaianBpnJabatan = () => {
                 >
                   Tahun Awal
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun Awal
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -837,6 +834,7 @@ const KepegawaianBpnJabatan = () => {
                     onChange={handleChangeAwal}
                     label="Tahun"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {tahunData.map((item, i) => {
                       return (
@@ -856,10 +854,7 @@ const KepegawaianBpnJabatan = () => {
                 >
                   Tahun Akhir
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun Akhir
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -867,6 +862,7 @@ const KepegawaianBpnJabatan = () => {
                     onChange={handleChange}
                     label="Bulan"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {tahunData.map((item, i) => {
                       return (
@@ -886,10 +882,7 @@ const KepegawaianBpnJabatan = () => {
                 >
                   Pilih Satker
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Satker
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -902,7 +895,12 @@ const KepegawaianBpnJabatan = () => {
                         ? `${selected.slice(0, 8)}...`
                         : selected
                     }
+                    disableUnderline
+                    defaultValue="Satker"
                   >
+                    <MenuItem value="" disabled>
+                      Satker
+                    </MenuItem>
                     {satkerRed && satkerRed.length != 0
                       ? satkerRed.map((item, i) => {
                           return (
@@ -940,10 +938,7 @@ const KepegawaianBpnJabatan = () => {
                     <TextField {...params} label="Kantor" variant="outlined" />
                   )}
                 /> */}
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Kantor
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -956,7 +951,12 @@ const KepegawaianBpnJabatan = () => {
                         ? `${selected.slice(0, 8)}...`
                         : selected
                     }
+                    disableUnderline
+                    defaultValue="Kantor"
                   >
+                    <MenuItem value="" disabled>
+                      Kantor
+                    </MenuItem>
                     {kantorRed && kantorRed.length != 0
                       ? kantorRed.map((item, i) => {
                           return (
@@ -977,10 +977,7 @@ const KepegawaianBpnJabatan = () => {
                 >
                   Pilih Kanwil
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Kanwil
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -993,7 +990,13 @@ const KepegawaianBpnJabatan = () => {
                         ? `${selected.slice(0, 8)}...`
                         : selected
                     }
+                    disableUnderline
+                    defaultValue="Kanwil"
                   >
+                    <MenuItem value="" disabled>
+                      Kanwil
+                    </MenuItem>
+
                     {kanwilRed && kanwilRed.length != 0
                       ? kanwilRed.map((item, i) => {
                           return (

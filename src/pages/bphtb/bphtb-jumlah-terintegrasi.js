@@ -419,7 +419,6 @@ const BPHTBDaerahTerintegrasi = () => {
   return (
     <div
       style={{
-        backgroundColor: "rgb(244, 245, 250)",
         paddingTop: 20,
         paddingBottom: 20,
         paddingLeft: 20,
@@ -816,7 +815,7 @@ const BPHTBDaerahTerintegrasi = () => {
               {/* <Typography className={classes.isiTextStyle} variant="h2">
                 Pilih Tahun
               </Typography>
-              <FormControl variant="outlined" className={classes.formControl}>
+              <FormControl  className={classes.formControl}>
                 <InputLabel id="demo-simple-select-outlined-label">
                   Tahun
                 </InputLabel>

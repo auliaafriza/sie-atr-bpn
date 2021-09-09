@@ -140,6 +140,7 @@ const PengembalianPNBP = () => {
   const [bulan, setBulan] = useState("01");
   const [open, setOpen] = useState(false);
   const [dataFilter, setDataFilter] = useState([
+    "",
     "Kantor Pertanahan Kabupaten Kampar",
   ]);
   const [dataModal, setDataModal] = useState({
@@ -814,10 +815,7 @@ const PengembalianPNBP = () => {
                 >
                   Pilih Tahun
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -825,6 +823,7 @@ const PengembalianPNBP = () => {
                     onChange={handleChange}
                     label="Tahun"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {tahunData.map((item, i) => {
                       return (
@@ -844,10 +843,7 @@ const PengembalianPNBP = () => {
                 >
                   Pilih Bulan
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Bulan
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -855,6 +851,7 @@ const PengembalianPNBP = () => {
                     onChange={handleChangeBulan}
                     label="Bulan"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {bulanDataNumberic.map((item, i) => {
                       return (
@@ -882,13 +879,7 @@ const PengembalianPNBP = () => {
                 >
                   Pilih Satker
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel
-                    id="demo-simple-select-outlined-label"
-                    htmlFor="outlined-Name"
-                  >
-                    Satker
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -897,8 +888,15 @@ const PengembalianPNBP = () => {
                     onChange={handleChangeFilter}
                     label="Kantor"
                     className={classes.selectStyle}
-                    renderValue={(selected) => `${selected.length} Terpilih`}
+                    renderValue={(selected) => {
+                      if (selected.length > 1)
+                        return `${selected.length - 1} Terpilih`;
+                      else if (selected[0] == "") return "Satker";
+                    }}
                   >
+                    <MenuItem value="" disabled>
+                      Satker
+                    </MenuItem>
                     {pengembalianPnbpFilter.map((item, i) => {
                       return (
                         <MenuItem value={item.satker} key={i}>

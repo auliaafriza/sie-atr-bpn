@@ -864,17 +864,14 @@ const RealisasiAnggaran = () => {
                 spacing={2}
               >
                 <Grid item xs={4}>
-                  {/* <Typography
+                  <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
                     Tahun Awal
-                  </Typography> */}
+                  </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="demo-simple-select-outlined-label">
-                      Tahun Awal
-                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -882,6 +879,7 @@ const RealisasiAnggaran = () => {
                       onChange={handleChangeAwal}
                       label="Tahun"
                       className={classes.selectStyle}
+                      disableUnderline
                     >
                       {tahunData.map((item, i) => {
                         return (
@@ -894,17 +892,14 @@ const RealisasiAnggaran = () => {
                   </FormControl>
                 </Grid>
                 <Grid item xs={5}>
-                  {/* <Typography
+                  <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
                     Tahun Akhir
-                  </Typography> */}
+                  </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="demo-simple-select-outlined-label">
-                      Tahun Akhir
-                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -912,6 +907,7 @@ const RealisasiAnggaran = () => {
                       onChange={handleChange}
                       label="Bulan"
                       className={classes.selectStyle}
+                      disableUnderline
                     >
                       {tahunData.map((item, i) => {
                         return (

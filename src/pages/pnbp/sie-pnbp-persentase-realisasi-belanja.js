@@ -152,6 +152,7 @@ const PersentaseRealisasiBelanja = () => {
   const [bulan, setBulan] = useState("Jan");
   const [open, setOpen] = useState(false);
   const [dataFilterWilayah, setDataFilterWilayah] = useState([
+    "",
     "Kantor Wilayah Provinsi Jawa Barat",
     "Kantor Wilayah Provinsi Jambi",
   ]);
@@ -856,13 +857,7 @@ const PersentaseRealisasiBelanja = () => {
                 >
                   Pilih Wilayah
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel
-                    id="demo-simple-select-outlined-label"
-                    htmlFor="outlined-Name"
-                  >
-                    Wilayah
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -871,8 +866,16 @@ const PersentaseRealisasiBelanja = () => {
                     onChange={handleChangeFilterWilayah}
                     label="Wilayah"
                     className={classes.selectStyle}
-                    renderValue={(selected) => `${selected.length} Terpilih`}
+                    disableUnderline
+                    renderValue={(selected) => {
+                      if (selected.length > 1)
+                        return `${selected.length - 1} Terpilih`;
+                      else if (selected[0] == "") return "Wilayah";
+                    }}
                   >
+                    <MenuItem value="" disabled>
+                      Wilayah
+                    </MenuItem>
                     {berkasPnbpWilayah.map((item, i) => {
                       return (
                         <MenuItem value={item.wilayah} key={i}>
@@ -894,7 +897,7 @@ const PersentaseRealisasiBelanja = () => {
                 >
                   Pilih Kantor
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl  className={classes.formControl}>
                   <InputLabel
                     id="demo-simple-select-outlined-label"
                     htmlFor="outlined-Name"

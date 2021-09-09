@@ -167,6 +167,7 @@ const BPHTBJumlahBerkas = () => {
   const [bulan, setBulan] = useState("04");
   const [open, setOpen] = useState(false);
   const [dataFilter, setDataFilter] = useState([
+    "",
     "Kantor Pertanahan Kabupaten Kampar",
   ]);
 
@@ -833,10 +834,7 @@ const BPHTBJumlahBerkas = () => {
                 >
                   Pilih Tahun
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -844,6 +842,7 @@ const BPHTBJumlahBerkas = () => {
                     onChange={handleChange}
                     label="Tahun"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {tahunData.map((item, i) => {
                       return (
@@ -863,10 +862,7 @@ const BPHTBJumlahBerkas = () => {
                 >
                   Pilih Bulan
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Bulan
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -874,6 +870,7 @@ const BPHTBJumlahBerkas = () => {
                     onChange={handleChangeBulan}
                     label="Bulan"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {bulanDataNumberic.map((item, i) => {
                       return (
@@ -901,13 +898,7 @@ const BPHTBJumlahBerkas = () => {
                 >
                   Pilih Kantor
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel
-                    id="demo-simple-select-outlined-label"
-                    htmlFor="outlined-Name"
-                  >
-                    Kantor
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -916,15 +907,24 @@ const BPHTBJumlahBerkas = () => {
                     onChange={handleChangeFilter}
                     label="Kantor"
                     className={classes.selectStyle}
-                    renderValue={(selected) => `${selected.length} Terpilih`}
+                    disableUnderline
+                    renderValue={(selected) => {
+                      if (selected.length > 1)
+                        return `${selected.length - 1} Terpilih`;
+                      else if (selected[0] == "") return "Kantor";
+                    }}
                   >
+                    <MenuItem value="" disabled>
+                      Kantor
+                    </MenuItem>
+
                     {bphtbBerkasFilter.map((item, i) => {
                       return (
-                        <MenuItem value={item.kantor} key={i}>
+                        <MenuItem value={item.satker} key={i}>
                           <Checkbox
-                            checked={dataFilter.indexOf(item.kantor) > -1}
+                            checked={dataFilter.indexOf(item.satker) > -1}
                           />
-                          <ListItemText primary={item.kantor} />
+                          <ListItemText primary={item.satker} />
                         </MenuItem>
                       );
                     })}

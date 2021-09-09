@@ -8,6 +8,7 @@ import KepegawaianBPNMutasi from "./kepegawaian-atr-bpn-mutasi";
 import { getSatker, getKantor, getKanwil } from "../../actions/globalActions";
 import { getTahunMutasi } from "../../actions/kepegawaianAction";
 import { useDispatch } from "react-redux";
+import bgImg from "../../assets/img/asetKeuangan.jpg";
 
 const PegawaiAtr = () => {
   const dispatch = useDispatch();
@@ -20,9 +21,21 @@ const PegawaiAtr = () => {
   }, []);
 
   return (
-    <div style={{ marginTop: 20, marginBottom: 20 }}>
-      <KepegawaianBPNGol />
-      <KepegawaianBPNPendidikan />
+    <div style={{ marginBottom: 20 }}>
+      <div
+        style={{
+          backgroundImage: `url(${bgImg})`,
+          height: "100%",
+          width: "90wh",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          zIndex: 1,
+          paddingTop: 20,
+        }}
+      >
+        <KepegawaianBPNGol />
+        <KepegawaianBPNPendidikan />
+      </div>
       <KepegawaianBPNJabatan />
       <KepegawaianBPNJK />
       <KepegawaianBPNUsia />

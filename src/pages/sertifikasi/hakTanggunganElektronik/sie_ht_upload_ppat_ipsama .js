@@ -795,7 +795,7 @@ const SieHTUploadPpatIpSama = () => {
                 >
                   Pilih Tahun
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
                     Tahun
                   </InputLabel>
@@ -825,7 +825,7 @@ const SieHTUploadPpatIpSama = () => {
                 >
                   Pilih Bulan
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
                     Bulan
                   </InputLabel>

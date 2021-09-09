@@ -852,17 +852,14 @@ const PnbpBerkasWilayah = () => {
               spacing={2}
             >
               <Grid item xs={12} sm={4}>
-                {/* <Typography
+                <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
                   Pilih Tahun
-                </Typography> */}
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel htmlFor="demo-simple-select-outlined-label">
-                    Tahun
-                  </InputLabel>
+                </Typography>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -870,6 +867,7 @@ const PnbpBerkasWilayah = () => {
                     onChange={handleChange}
                     label="Tahun"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {tahunData.map((item, i) => {
                       return (
@@ -882,17 +880,14 @@ const PnbpBerkasWilayah = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={4}>
-                {/* <Typography
+                <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
                   Pilih Bulan
-                </Typography> */}
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel htmlFor="demo-simple-select-outlined-label">
-                    Bulan
-                  </InputLabel>
+                </Typography>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -900,6 +895,7 @@ const PnbpBerkasWilayah = () => {
                     onChange={handleChangeBulan}
                     label="Bulan"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {bulanData.map((item, i) => {
                       return (
@@ -912,17 +908,14 @@ const PnbpBerkasWilayah = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                {/* <Typography
+                <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
                   Pilih Semester
-                </Typography> */}
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel htmlFor="demo-simple-select-outlined-label">
-                    Semester
-                  </InputLabel>
+                </Typography>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -930,6 +923,7 @@ const PnbpBerkasWilayah = () => {
                     onChange={handleChangeSemester}
                     label="Semester"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {semesterData.map((item, i) => {
                       return (
@@ -950,20 +944,14 @@ const PnbpBerkasWilayah = () => {
               spacing={2}
             >
               <Grid item xs={4}>
-                {/* <Typography
+                <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
                   Pilih Kantor
-                </Typography> */}
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel
-                    id="demo-simple-select-outlined-label"
-                    htmlFor="outlined-Name"
-                  >
-                    Kantor
-                  </InputLabel>
+                </Typography>
+                <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -973,6 +961,7 @@ const PnbpBerkasWilayah = () => {
                     label="Kantor"
                     className={classes.selectStyle}
                     renderValue={(selected) => `${selected.length} Terpilih`}
+                    disableUnderline
                   >
                     {berkasPnbpKantor.map((item, i) => {
                       return (
@@ -988,20 +977,14 @@ const PnbpBerkasWilayah = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                {/* <Typography
+                <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
                   Pilih Wilayah
-                </Typography> */}
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel
-                    id="demo-simple-select-outlined-label"
-                    htmlFor="outlined-Name"
-                  >
-                    Wilayah
-                  </InputLabel>
+                </Typography>
+                <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -1011,6 +994,7 @@ const PnbpBerkasWilayah = () => {
                     label="Wilayah"
                     className={classes.selectStyle}
                     renderValue={(selected) => `${selected.length} Terpilih`}
+                    disableUnderline
                   >
                     {berkasPnbpWilayah.map((item, i) => {
                       return (

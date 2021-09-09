@@ -834,10 +834,8 @@ const SieHtJumlahKantorTahun = () => {
                 >
                   Tahun Awal
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun Awal
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
+                 
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -864,7 +862,7 @@ const SieHtJumlahKantorTahun = () => {
                 >
                   Pilih Bulan
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
                     Bulan
                   </InputLabel>
@@ -894,7 +892,7 @@ const SieHtJumlahKantorTahun = () => {
                 >
                   Pilih Semester
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">
                     Semester
                   </InputLabel>
@@ -924,7 +922,7 @@ const SieHtJumlahKantorTahun = () => {
                 >
                   Pilih Kantor
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl className={classes.formControl}>
                   <InputLabel
                     id="demo-simple-select-outlined-label"
                     htmlFor="outlined-Name"

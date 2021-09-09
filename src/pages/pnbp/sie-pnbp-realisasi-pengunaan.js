@@ -146,6 +146,7 @@ const realisasiPenggunaan = () => {
   const [bulan, setBulan] = useState("01");
   const [open, setOpen] = useState(false);
   const [dataFilter, setDataFilter] = useState([
+    "",
     "Kantor Pertanahan Kabupaten Kampar",
     "Kantor Pertanahan Kabupaten Kupang",
     "Kantor Pertanahan Kabupaten Sumba Barat",
@@ -908,12 +909,7 @@ const realisasiPenggunaan = () => {
                   >
                     Pilih Tahun
                   </Typography>
-                  <FormControl
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Tahun
-                    </InputLabel>
+                  <FormControl className={classes.formControl}>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -921,6 +917,7 @@ const realisasiPenggunaan = () => {
                       onChange={handleChange}
                       label="Tahun"
                       className={classes.selectStyle}
+                      disableUnderline
                     >
                       {tahunData.map((item, i) => {
                         return (
@@ -940,12 +937,7 @@ const realisasiPenggunaan = () => {
                   >
                     Pilih Bulan
                   </Typography>
-                  <FormControl
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Bulan
-                    </InputLabel>
+                  <FormControl className={classes.formControl}>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -953,6 +945,7 @@ const realisasiPenggunaan = () => {
                       onChange={handleChangeBulan}
                       label="Bulan"
                       className={classes.selectStyle}
+                      disableUnderline
                     >
                       {bulanDataNumberic.map((item, i) => {
                         return (
@@ -980,15 +973,7 @@ const realisasiPenggunaan = () => {
                   >
                     Pilih Kantor
                   </Typography>
-                  <FormControl
-                    className={classes.formControl}
-                  >
-                    <InputLabel
-                      id="demo-simple-select-outlined-label"
-                      htmlFor="outlined-Name"
-                    >
-                      Kantor
-                    </InputLabel>
+                  <FormControl className={classes.formControl}>
                     <Select
                       multiple
                       labelId="demo-simple-select-outlined-label"
@@ -997,8 +982,17 @@ const realisasiPenggunaan = () => {
                       onChange={handleChangeFilter}
                       label="Kantor"
                       className={classes.selectStyle}
-                      renderValue={(selected) => `${selected.length} Terpilih`}
+                      renderValue={(selected) => {
+                        if (selected.length > 1)
+                          return `${selected.length - 1} Terpilih`;
+                        else if (selected[0] == "") return "Kantor";
+                      }}
+                      disableUnderline
                     >
+                      <MenuItem value="" disabled>
+                        Kantor
+                      </MenuItem>
+
                       {realisasiPenggunaanFilter.map((item, i) => {
                         return (
                           <MenuItem value={item.kantor} key={i}>

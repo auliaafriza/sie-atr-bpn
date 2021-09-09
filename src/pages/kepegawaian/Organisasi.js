@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import KepegawaianOrganisasi from "./kepegawaian-organisasi";
 import { getSatker, getKantor, getKanwil } from "../../actions/globalActions";
 import { useDispatch } from "react-redux";
+import bgImg from "../../assets/img/asetKeuangan.jpg";
 
 const Organisasi = () => {
   const dispatch = useDispatch();
@@ -15,10 +16,14 @@ const Organisasi = () => {
   return (
     <div
       style={{
-        marginTop: 20,
-        marginBottom: 20,
-        width: "100%",
-        height: "90vh",
+        paddingBottom: 20,
+        paddingTop: 20,
+        backgroundImage: `url(${bgImg})`,
+        height: "80vh",
+        width: "100wh",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        zIndex: 1,
       }}
     >
       <KepegawaianOrganisasi />

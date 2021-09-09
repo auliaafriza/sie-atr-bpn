@@ -811,10 +811,7 @@ const PeringkatRealisasi = () => {
                 >
                   Pilih Urutan
                 </Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Urutan
-                  </InputLabel>
+                <FormControl className={classes.formControl}>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -822,6 +819,7 @@ const PeringkatRealisasi = () => {
                     onChange={handleChange}
                     label="Tahun"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {levelData.map((item, i) => {
                       return (
