@@ -796,9 +796,9 @@ const SieHTUploadPpatIpSama = () => {
                   Pilih Tahun
                 </Typography>
                 <FormControl className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
+                  {/* <InputLabel id="demo-simple-select-outlined-label">
                     Tahun
-                  </InputLabel>
+                  </InputLabel> */}
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -806,6 +806,7 @@ const SieHTUploadPpatIpSama = () => {
                     onChange={handleChange}
                     label="Tahun"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {tahunData.map((item, i) => {
                       return (
@@ -826,9 +827,9 @@ const SieHTUploadPpatIpSama = () => {
                   Pilih Bulan
                 </Typography>
                 <FormControl className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
+                  {/* <InputLabel id="demo-simple-select-outlined-label">
                     Bulan
-                  </InputLabel>
+                  </InputLabel> */}
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -836,6 +837,7 @@ const SieHTUploadPpatIpSama = () => {
                     onChange={handleChangeBulan}
                     label="Bulan"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {bulanDataNumberic.map((item, i) => {
                       return (

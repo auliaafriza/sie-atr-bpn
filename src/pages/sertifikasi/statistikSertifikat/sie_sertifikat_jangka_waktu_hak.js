@@ -500,7 +500,6 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
   return (
     <div
       style={{
-        backgroundColor: "rgb(244, 245, 250)",
         paddingTop: 20,
         paddingBottom: 20,
         paddingLeft: 20,
@@ -919,7 +918,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -928,9 +927,6 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                     Pilih Kanwil
                   </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Kanwil
-                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -938,6 +934,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                       onChange={handleChangeKanwil}
                       label="Kanwil"
                       className={classes.selectStyle}
+                      disableUnderline
                     >
                       {kanwilList.map((item, i) => {
                         return (
@@ -949,7 +946,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -958,9 +955,6 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                     Pilih Tipe Hak
                   </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Tipe Hak
-                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -968,6 +962,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                       onChange={handleChangeTipeHak}
                       label="Tipe Hak"
                       className={classes.selectStyle}
+                      disableUnderline
                     >
                       {tipeHakList.map((item, i) => {
                         return (
@@ -985,8 +980,8 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                   justifyContent="flex-start"
                   alignItems="center"
                   item
-                  xs={4}
-                  style={{ paddingTop: 40, paddingLeft: 20 }}
+                  xs={6}
+                  style={{ paddingLeft: 20 }}
                 >
                   <Button
                     variant="contained"
