@@ -98,8 +98,7 @@ export const MENU_LIST = [
     id: 3,
     icon: <FaHandshake size={24} />,
     name: "Mitra",
-
-    parentLink: "null",
+    parentLink: "/Mitra",
     subMenus: [
       {
         icon: <GrBarChart size={24} />,

@@ -158,7 +158,7 @@ let grafikView = [
 
 let axis = {
   xAxis: "Nama",
-  yAxis: "Jumlah",
+  yAxis: "",
 };
 const title = "Jumlah Sertifikat dan Luas Berdasarkan Program";
 

@@ -272,7 +272,7 @@ const SieHtJumlahKantorTahun = () => {
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Jumlah Upload : ${payload[0].value
+          >{`Jumlah Hak Tanggungan : ${payload[0].value
             .toFixed(2)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
         </div>
