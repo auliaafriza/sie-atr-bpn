@@ -106,7 +106,7 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 const dataTemp = [{ kantah: "", luaspersil: 0 }];
 let axis = {
   xAxis: "Kantah",
-  yAxis: "Luas",
+  yAxis: "",
 };
 const title = "Luas Bidang Berdasarkan Jenis Sertifikat";
 const SieSertifikatLuasJumlah = () => {

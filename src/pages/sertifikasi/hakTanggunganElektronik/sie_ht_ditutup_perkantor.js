@@ -113,7 +113,7 @@ let nameColumn = [
     isLabel: true,
   },
   {
-    label: "Jumlah Upload",
+    label: "nilai",
     value: "nilai",
   },
 ];
@@ -138,7 +138,7 @@ let grafikView = [
 
 let axis = {
   xAxis: "Nama Kantor",
-  yAxis: "Jumlah Upload",
+  yAxis: "",
 };
 const title = "Hak Tanggungan Elektronik Ditutup per Kantor";
 const SieHtDitutupPerkantor = () => {
@@ -230,7 +230,7 @@ const SieHtDitutupPerkantor = () => {
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Jumlah Upload : ${payload[0].value
+          >{`nilai : ${payload[0].value
             .toFixed(2)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
         </div>

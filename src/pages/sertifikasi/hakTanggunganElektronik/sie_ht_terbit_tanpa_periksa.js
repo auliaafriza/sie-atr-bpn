@@ -332,11 +332,7 @@ const TerbitTanpaPeriksa = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar
-              dataKey="jumlah_ht"
-              fill="#FFA07A"
-              name="Jumlah Hak Tanggungan"
-            />
+            <Bar dataKey="jumlah_ht" fill="#FFA07A" name="Jumlah" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -875,11 +871,7 @@ const TerbitTanpaPeriksa = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Bar
-                      dataKey="jumlah_ht"
-                      fill="#FFA07A"
-                      name="Jumlah Hak Tanggungan"
-                    />
+                    <Bar dataKey="jumlah_ht" fill="#FFA07A" name="Jumlah" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

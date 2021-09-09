@@ -210,7 +210,7 @@ const SiePsnPtsl5Peringkat = () => {
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Jumlah Sertifikat : ${payload[0].value
+          >{`Jumlah Berkas : ${payload[0].value
             .toFixed(2)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
         </div>
