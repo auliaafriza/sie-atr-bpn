@@ -794,15 +794,15 @@ const PnbpBerkasPeringkat = () => {
               spacing={2}
             >
               <Grid item xs={4}>
-                <Typography
+                {/* <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
                   Pilih Tahun
-                </Typography>
+                </Typography> */}
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
+                  <InputLabel htmlFor="demo-simple-select-outlined-label">
                     Tahun
                   </InputLabel>
                   <Select
@@ -824,15 +824,15 @@ const PnbpBerkasPeringkat = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <Typography
+                {/* <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
                   Pilih Bulan
-                </Typography>
+                </Typography> */}
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
+                  <InputLabel htmlFor="demo-simple-select-outlined-label">
                     Bulan
                   </InputLabel>
                   <Select
@@ -860,7 +860,7 @@ const PnbpBerkasPeringkat = () => {
                 alignItems="center"
                 item
                 xs={4}
-                style={{ paddingTop: 40, paddingLeft: 20 }}
+                style={{ paddingLeft: 20 }}
               >
                 <Button
                   variant="contained"

@@ -852,15 +852,15 @@ const PnbpBerkasWilayah = () => {
               spacing={2}
             >
               <Grid item xs={12} sm={4}>
-                <Typography
+                {/* <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
                   Pilih Tahun
-                </Typography>
+                </Typography> */}
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
+                  <InputLabel htmlFor="demo-simple-select-outlined-label">
                     Tahun
                   </InputLabel>
                   <Select
@@ -882,15 +882,15 @@ const PnbpBerkasWilayah = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={4}>
-                <Typography
+                {/* <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
                   Pilih Bulan
-                </Typography>
+                </Typography> */}
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
+                  <InputLabel htmlFor="demo-simple-select-outlined-label">
                     Bulan
                   </InputLabel>
                   <Select
@@ -912,15 +912,15 @@ const PnbpBerkasWilayah = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <Typography
+                {/* <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
                   Pilih Semester
-                </Typography>
+                </Typography> */}
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-outlined-label">
+                  <InputLabel htmlFor="demo-simple-select-outlined-label">
                     Semester
                   </InputLabel>
                   <Select
@@ -950,13 +950,13 @@ const PnbpBerkasWilayah = () => {
               spacing={2}
             >
               <Grid item xs={4}>
-                <Typography
+                {/* <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
                   Pilih Kantor
-                </Typography>
+                </Typography> */}
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel
                     id="demo-simple-select-outlined-label"
@@ -988,13 +988,13 @@ const PnbpBerkasWilayah = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <Typography
+                {/* <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
                   Pilih Wilayah
-                </Typography>
+                </Typography> */}
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel
                     id="demo-simple-select-outlined-label"
@@ -1032,7 +1032,7 @@ const PnbpBerkasWilayah = () => {
                 alignItems="center"
                 item
                 xs={4}
-                style={{ paddingTop: 40, paddingLeft: 20 }}
+                style={{ paddingLeft: 20 }}
               >
                 <Button
                   variant="contained"

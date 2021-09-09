@@ -95,11 +95,12 @@ const styles = makeStyles((theme) => ({
   },
   titleSection: {
     margin: 10,
-    lineHeight: "1.2rem",
+    lineHeight: 1.5,
     letterSpacing: 1,
     color: "#464855",
     fontSize: 28,
     lineHeight: 1,
+    fontWeight: "bold",
   },
   isiTextStyle: {
     margin: 10,

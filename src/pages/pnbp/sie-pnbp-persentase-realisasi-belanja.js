@@ -202,7 +202,7 @@ const PersentaseRealisasiBelanja = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Persentase Realisasi Belanja",
+      "PBNB dan Jumlah Berkas Per Wilayah",
       data,
       ".xlsx"
     );
@@ -469,7 +469,7 @@ const PersentaseRealisasiBelanja = () => {
     xAxis: "wilayah",
     yAxis: "Nilai Realisasi",
   };
-  const title = "Persentase Realisasi Belanja";
+  const title = "PBNB dan Jumlah Berkas Per Wilayah";
   const handlePrint = () => {
     history.push({
       pathname: "/PrintData",
@@ -759,7 +759,7 @@ const PersentaseRealisasiBelanja = () => {
       >
         <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            Persentase Realisasi Belanja
+            PBNB dan Jumlah Berkas Per Wilayah
           </Typography>
         </Grid>
 
@@ -791,7 +791,7 @@ const PersentaseRealisasiBelanja = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Persentase Realisasi Belanja",
+                    title: "PBNB dan Jumlah Berkas Per Wilayah",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -961,7 +961,7 @@ const PersentaseRealisasiBelanja = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "Persentase Realisasi Belanja",
+                      title: "PBNB dan Jumlah Berkas Per Wilayah",
                       grafik: data,
                       dataTable: "",
                       analisis:

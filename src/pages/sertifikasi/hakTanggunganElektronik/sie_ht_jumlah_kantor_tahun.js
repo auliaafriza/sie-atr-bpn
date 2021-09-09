@@ -144,7 +144,7 @@ let axis = {
   xAxis: "Kantor",
   yAxis: "Jumlah Hak Tanggungan",
 };
-const title = "Jumlah dan Nilai Hak Tanggungan Elektronik per Kantor";
+const title = "Jumlah Hak Tanggungan Elektronik per Kantor";
 const SieHtJumlahKantorTahun = () => {
   const classes = styles();
   const [years, setYears] = useState("2021");
