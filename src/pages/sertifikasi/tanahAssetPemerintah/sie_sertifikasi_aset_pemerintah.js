@@ -537,7 +537,7 @@ const AssetPemerintah = () => {
                   ' src="' +
                   BASE_URL.domain +
                   "/embed/" +
-                  BASE_URL.path.kegiatan +
+                  BASE_URL.path.tanah_asset_pemerintah +
                   '"></iframe>'
                 }
                 onCopy={() => toast.success("success copied to clipboard!")}
@@ -610,7 +610,7 @@ const AssetPemerintah = () => {
                   ' src="' +
                   BASE_URL.domain +
                   "/embed/" +
-                  BASE_URL.path.realisasi_kegiatan +
+                  BASE_URL.path.tanah_asset_pemerintah +
                   '"></iframe>'
                 }
               />
@@ -700,7 +700,11 @@ const AssetPemerintah = () => {
             <iframe
               width={iframeWidth}
               height={iframeHeight}
-              src={BASE_URL.domain + "/embed/" + BASE_URL.path.kegiatan}
+              src={
+                BASE_URL.domain +
+                "/embed/" +
+                BASE_URL.path.tanah_asset_pemerintah
+              }
             ></iframe>
           </Grid>
         </div>

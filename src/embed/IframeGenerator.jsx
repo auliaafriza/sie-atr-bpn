@@ -35,6 +35,13 @@ import SieHtDitutupPerkantor from "../pages/sertifikasi/hakTanggunganElektronik/
 import SieHtJumlahKantorTahun from "../pages/sertifikasi/hakTanggunganElektronik/sie_ht_jumlah_kantor_tahun";
 import TerbitTanpaPeriksa from "../pages/sertifikasi/hakTanggunganElektronik/sie_ht_terbit_tanpa_periksa";
 import SieHTUploadPpatIpSama from "../pages/sertifikasi/hakTanggunganElektronik/sie_ht_upload_ppat_ipsama ";
+import TanahAsetPemerintah from "../pages/sertifikasi/tanahAssetPemerintah/sie_sertifikasi_aset_pemerintah";
+import RefromaAgria from "../pages/psn/RA/sie_psn_ra";
+import SertifikasiTahun from "../pages/sertifikasi/statistikSertifikat/sie_sertifikasi_tahun";
+import SieSertifikasiTargetRealisasi from "../pages/sertifikasi/statistikSertifikat/sie_sertifikasi_target_realisasi";
+import SieSertifikasiJangkaWaktuHak from "../pages/sertifikasi/statistikSertifikat/sie_sertifikat_jangka_waktu_hak";
+import SieSertifikasiKonsolidasiKota from "../pages/sertifikasi/statistikSertifikat/sie_sertifikat_konsolidasi_kota";
+import SieSertifikasiLuasJumlah from "../pages/sertifikasi/statistikSertifikat/sie_sertifikat_luas_jumlah";
 import { Provider } from "react-redux";
 import store from "../config/store";
 
@@ -271,6 +278,62 @@ class IframeGenerator extends React.Component {
         ReactDOM.render(
           <Provider store={store}>
             <SieHTUploadPpatIpSama />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-sertifikasi-aset-pemerintah":
+        ReactDOM.render(
+          <Provider store={store}>
+            <TanahAsetPemerintah />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-reforma-agria":
+        ReactDOM.render(
+          <Provider store={store}>
+            <RefromaAgria />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-sertifikasi-tahun":
+        ReactDOM.render(
+          <Provider store={store}>
+            <SertifikasiTahun />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-sertifikasi-target-realisasi":
+        ReactDOM.render(
+          <Provider store={store}>
+            <SieSertifikasiTargetRealisasi />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-sertifikasi-jangka-waktu-hak":
+        ReactDOM.render(
+          <Provider store={store}>
+            <SieSertifikasiJangkaWaktuHak />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-sertifikasi-konsolidasi-kota":
+        ReactDOM.render(
+          <Provider store={store}>
+            <SieSertifikasiKonsolidasiKota />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-sertifikasi-luas-jumlah":
+        ReactDOM.render(
+          <Provider store={store}>
+            <SieSertifikasiLuasJumlah />
           </Provider>,
           document.getElementById("replace-tag")
         );

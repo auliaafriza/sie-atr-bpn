@@ -272,6 +272,13 @@ export const HIDE_HEADER = [
   "/embed/sie-ht-jumlah-kantor-tahun",
   "/embed/sie-ht-terbit-tanpa-periksa",
   "/embed/sie-ht-upload-ppat-ip-sama",
+  "/embed/sie-sertifikasi-aset-pemerintah",
+  "/embed/sie-reforma-agria",
+  "/embed/sie-sertifikasi-tahun",
+  "/embed/sie-sertifikasi-target-realisasi",
+  "/embed/sie-sertifikasi-jangka-waktu-hak",
+  "/embed/sie-sertifikasi-konsolidasi-kota",
+  "/embed/sie-sertifikasi-luas-jumlah",
 ];
 
 // *****************************************************
@@ -318,4 +325,11 @@ export const HIDE_FOOTER = [
   "/embed/sie-ht-jumlah-kantor-tahun",
   "/embed/sie-ht-terbit-tanpa-periksa",
   "/embed/sie-ht-upload-ppat-ip-sama",
+  "/embed/sie-sertifikasi-aset-pemerintah",
+  "/embed/sie-reforma-agria",
+  "/embed/sie-sertifikasi-tahun",
+  "/embed/sie-sertifikasi-target-realisasi",
+  "/embed/sie-sertifikasi-jangka-waktu-hak",
+  "/embed/sie-sertifikasi-konsolidasi-kota",
+  "/embed/sie-sertifikasi-luas-jumlah",
 ];

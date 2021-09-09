@@ -493,7 +493,7 @@ const PSNRa = () => {
                   ' src="' +
                   BASE_URL.domain +
                   "/embed/" +
-                  BASE_URL.path.kegiatan +
+                  BASE_URL.path.refroma_agria +
                   '"></iframe>'
                 }
                 onCopy={() => toast.success("success copied to clipboard!")}
@@ -566,7 +566,7 @@ const PSNRa = () => {
                   ' src="' +
                   BASE_URL.domain +
                   "/embed/" +
-                  BASE_URL.path.realisasi_kegiatan +
+                  BASE_URL.path.refroma_agria +
                   '"></iframe>'
                 }
               />
@@ -656,7 +656,7 @@ const PSNRa = () => {
             <iframe
               width={iframeWidth}
               height={iframeHeight}
-              src={BASE_URL.domain + "/embed/" + BASE_URL.path.kegiatan}
+              src={BASE_URL.domain + "/embed/" + BASE_URL.path.refroma_agria}
             ></iframe>
           </Grid>
         </div>

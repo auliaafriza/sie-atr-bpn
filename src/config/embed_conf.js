@@ -40,5 +40,12 @@ export const BASE_URL = {
     sie_ht_jumlah_kantor_tahun: "sie-ht-jumlah-kantor-tahun",
     terbit_tanpa_periksa: "sie-ht-terbit-tanpa-periksa",
     sie_ht_upload_ppat_ip_sama: "sie-ht-upload-ppat-ip-sama",
+    tanah_asset_pemerintah: "sie-sertifikasi-aset-pemerintah",
+    refroma_agria: "sie-reforma-agria",
+    sie_sertifikasi_tahun: "sie-sertifikasi-tahun",
+    sie_sertifikasi_target_realisasi: "sie-sertifikasi-target-realisasi",
+    sie_sertifikasi_jangka_waktu_hak: "sie-sertifikasi-jangka-waktu-hak",
+    sie_sertifikasi_konsolidasi_kota: "sie-sertifikasi-konsolidasi-kota",
+    sie_sertifikasi_luas_jumlah: "sie-sertifikasi-luas-jumlah",
   },
 };
