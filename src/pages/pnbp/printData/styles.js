@@ -114,6 +114,10 @@ const styles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: "100%",
+    border: "1px solid rgba(0, 0, 0, 1)",
+    borderRadius: "10px",
+    borderWidth: 1,
+    paddingLeft: 5,
   },
   selectStyle: {
     height: 57,
