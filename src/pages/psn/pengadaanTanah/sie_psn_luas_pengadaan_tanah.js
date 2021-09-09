@@ -62,6 +62,7 @@ import { useHistory } from "react-router";
 import { BASE_URL } from "../../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
+import bgImg from "../../../assets/img/psn.jpg";
 // Pagu & MP PNBP (Satuan 1 Juta)
 const dataTemp = [
   {
@@ -449,10 +450,14 @@ const PengadaanTanah = () => {
   return (
     <div
       style={{
-        marginTop: 20,
-        marginBottom: 20,
+        paddingTop: 20,
+        paddingBottom: 20,
         width: "100%",
         height: "75vh",
+        backgroundImage: `url(${bgImg})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        zIndex: 1,
       }}
     >
       <Modal
@@ -812,6 +817,7 @@ const PengadaanTanah = () => {
                     value={tahunAwal}
                     onChange={handleChangeTahunAwal}
                     label="Tahun"
+                    disableUnderline
                     className={classes.selectStyle}
                   >
                     {tahunData.map((item, i) => {
@@ -840,6 +846,7 @@ const PengadaanTanah = () => {
                     onChange={handleChange}
                     label="Tahun"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {tahunData.map((item, i) => {
                       return (

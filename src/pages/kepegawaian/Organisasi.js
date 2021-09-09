@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import KepegawaianOrganisasi from "./kepegawaian-organisasi";
 import { getSatker, getKantor, getKanwil } from "../../actions/globalActions";
 import { useDispatch } from "react-redux";
-import bgImg from "../../assets/img/asetKeuangan.jpg";
+import bgImg from "../../assets/img/kepegawaian.jpg";
 
 const Organisasi = () => {
   const dispatch = useDispatch();

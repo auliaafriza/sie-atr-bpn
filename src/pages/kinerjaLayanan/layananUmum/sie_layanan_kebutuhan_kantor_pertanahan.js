@@ -620,7 +620,6 @@ const SieLayananKebutuhanKantorPertanahan = () => {
       </Modal>
       <Box
         style={{
-          backgroundColor: "rgb(244, 245, 250)",
           marginTop: 20,
           paddingBottom: 20,
         }}

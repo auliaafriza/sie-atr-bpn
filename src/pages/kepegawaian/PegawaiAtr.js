@@ -8,7 +8,7 @@ import KepegawaianBPNMutasi from "./kepegawaian-atr-bpn-mutasi";
 import { getSatker, getKantor, getKanwil } from "../../actions/globalActions";
 import { getTahunMutasi } from "../../actions/kepegawaianAction";
 import { useDispatch } from "react-redux";
-import bgImg from "../../assets/img/asetKeuangan.jpg";
+import bgImg from "../../assets/img/kepegawaian.jpg";
 
 const PegawaiAtr = () => {
   const dispatch = useDispatch();

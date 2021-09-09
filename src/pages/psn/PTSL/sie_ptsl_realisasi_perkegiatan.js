@@ -452,7 +452,6 @@ const RealisasiPerkegiatan = () => {
   return (
     <div
       style={{
-        backgroundColor: "rgb(244, 245, 250)",
         paddingTop: 20,
         paddingBottom: 20,
         paddingLeft: 20,
@@ -863,9 +862,6 @@ const RealisasiPerkegiatan = () => {
                     Tahun Awal
                   </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Tahun Awal
-                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -873,6 +869,7 @@ const RealisasiPerkegiatan = () => {
                       onChange={handleChangeAwal}
                       label="Tahun"
                       className={classes.selectStyle}
+                      disableUnderline
                     >
                       {tahunData.map((item, i) => {
                         return (
@@ -893,9 +890,6 @@ const RealisasiPerkegiatan = () => {
                     Tahun Akhir
                   </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Tahun Akhir
-                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -903,6 +897,7 @@ const RealisasiPerkegiatan = () => {
                       onChange={handleChange}
                       label="Bulan"
                       className={classes.selectStyle}
+                      disableUnderline
                     >
                       {tahunData.map((item, i) => {
                         return (
