@@ -62,6 +62,7 @@ import { BASE_URL } from "../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { DataFormater } from "../../functionGlobal/globalDataAsset";
 
 const dataTemp = [
   {
@@ -257,18 +258,6 @@ const BPHTBDaerahTerintegrasi = () => {
     // alert(e.target.value + "");
     setIframeWidth(e.target.value);
   }
-
-  const DataFormater = (number) => {
-    if (number > 1000000000) {
-      return (number / 1000000000).toString() + "M";
-    } else if (number > 1000000) {
-      return (number / 1000000).toString() + "Jt";
-    } else if (number > 1000) {
-      return (number / 1000).toString() + "Rb";
-    } else {
-      return number.toString();
-    }
-  };
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {

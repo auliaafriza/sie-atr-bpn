@@ -44,6 +44,7 @@ import moment from "moment";
 import { fileExport } from "../../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
+import { DataFormater } from "../../../functionGlobal/globalDataAsset";
 // import { getSatker } from "../../actions/globalActions";
 
 import { BASE_URL } from "../../../config/embed_conf";
@@ -191,18 +192,6 @@ const SieLayananKebutuhanKantorPertanahan = () => {
 
   const handleChangeAwal = (event) => {
     setTahunAwal(event.target.value);
-  };
-
-  const DataFormater = (number) => {
-    if (number > 1000000000) {
-      return (number / 1000000000).toString() + "M";
-    } else if (number > 1000000) {
-      return (number / 1000000).toString() + "Jt";
-    } else if (number > 1000) {
-      return (number / 1000).toString() + "Rb";
-    } else {
-      return number.toString();
-    }
   };
 
   const CustomTooltip = ({ active, payload, label }) => {

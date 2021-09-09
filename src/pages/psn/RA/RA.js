@@ -8,7 +8,7 @@ const PTSL = () => {
         marginTop: 20,
         marginBottom: 20,
         width: "100%",
-        height: "80vh",
+        height: "75vh",
       }}
     >
       <PSNRa />

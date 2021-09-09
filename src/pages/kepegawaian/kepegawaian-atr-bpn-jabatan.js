@@ -53,7 +53,7 @@ import { IoMdDownload } from "react-icons/io";
 import styles from "./styles";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
-import { tahunData } from "../../functionGlobal/globalDataAsset";
+import { tahunData, DataFormater } from "../../functionGlobal/globalDataAsset";
 import moment from "moment";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
@@ -224,18 +224,6 @@ const KepegawaianBpnJabatan = () => {
 
   const handleChangeAwal = (event) => {
     setTahunAwal(event.target.value);
-  };
-
-  const DataFormater = (number) => {
-    if (number > 1000000000) {
-      return (number / 1000000000).toString() + "M";
-    } else if (number > 1000000) {
-      return (number / 1000000).toString() + "Jt";
-    } else if (number > 1000) {
-      return (number / 1000).toString() + "Rb";
-    } else {
-      return number.toString();
-    }
   };
 
   const CustomTooltip = ({ active, payload, label }) => {

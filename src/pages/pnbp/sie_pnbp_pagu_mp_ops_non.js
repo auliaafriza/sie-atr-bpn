@@ -55,7 +55,7 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
-import { tipeData } from "../../functionGlobal/globalDataAsset";
+import { tipeData, DataFormater } from "../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
@@ -201,18 +201,6 @@ const PaguMpOpsNon = () => {
 
   const handleChangeAwal = (event) => {
     setTipe(event.target.value);
-  };
-
-  const DataFormater = (number) => {
-    if (number > 1000000000) {
-      return (number / 1000000000).toString() + "M";
-    } else if (number > 1000000) {
-      return (number / 1000000).toString() + "Jt";
-    } else if (number > 1000) {
-      return (number / 1000).toString() + "Rb";
-    } else {
-      return number.toString();
-    }
   };
 
   const CustomTooltip = ({ active, payload, label }) => {

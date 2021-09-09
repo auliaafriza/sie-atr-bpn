@@ -53,7 +53,10 @@ import { IoMdDownload } from "react-icons/io";
 import styles from "./../styles";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
-import { tahunData } from "../../../functionGlobal/globalDataAsset";
+import {
+  tahunData,
+  DataFormater,
+} from "../../../functionGlobal/globalDataAsset";
 import moment from "moment";
 import { fileExport } from "../../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
@@ -216,18 +219,6 @@ const SieHtDitutupPerkantor = () => {
     setTahunAkhir(event.target.value);
   };
 
-  const DataFormater = (number) => {
-    if (number > 1000000000) {
-      return (number / 1000000000).toString() + "M";
-    } else if (number > 1000000) {
-      return (number / 1000000).toString() + "Jt";
-    } else if (number > 1000) {
-      return (number / 1000).toString() + "Rb";
-    } else {
-      return number.toString();
-    }
-  };
-
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
@@ -280,8 +271,8 @@ const SieHtDitutupPerkantor = () => {
               <Label
                 value={axis.yAxis}
                 angle={-90}
-                position="insideBottomLeft"
-                offset={-5}
+                position="left"
+                offset={5}
               />
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
@@ -409,7 +400,14 @@ const SieHtDitutupPerkantor = () => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        backgroundColor: "rgba(107,111,130,0.2)",
+        marginTop: 20,
+        paddingBottom: 20,
+        paddingLeft: 10,
+      }}
+    >
       <Modal
         open={open}
         onClose={handleClose}
@@ -428,13 +426,7 @@ const SieHtDitutupPerkantor = () => {
       >
         {body}
       </Modal>
-      <Box
-        style={{
-          backgroundColor: "rgba(107,111,130,0.2)",
-          marginTop: 20,
-          paddingBottom: 20,
-        }}
-      >
+      <Box>
         <Grid
           container
           spacing={2}
@@ -544,12 +536,12 @@ const SieHtDitutupPerkantor = () => {
                         left: 20,
                         bottom: 5,
                       }}
-                      padding={{
-                        top: 15,
-                        right: 10,
-                        left: 10,
-                        bottom: 15,
-                      }}
+                      // padding={{
+                      //   top: 15,
+                      //   right: 10,
+                      //   left: 10,
+                      //   bottom: 15,
+                      // }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="nama_kantor"></XAxis>
@@ -558,7 +550,7 @@ const SieHtDitutupPerkantor = () => {
                           value={axis.yAxis}
                           angle={-90}
                           position="insideBottomLeft"
-                          offset={-5}
+                          offset={-10}
                         />
                       </YAxis>
                       <Tooltip content={<CustomTooltip />} />

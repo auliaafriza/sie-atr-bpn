@@ -1,15 +1,17 @@
 import React, { useState, useEffect, createRef } from "react";
 import {
+  ComposedChart,
   BarChart,
+  Line,
+  Area,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
+  Scatter,
   ResponsiveContainer,
-  LineChart,
-  Line,
   Label,
 } from "recharts";
 import {
@@ -217,7 +219,7 @@ const PersentaseRealisasiBelanja = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_berkas_jumlah_PNBP_per_wilayah?tahun=${years}&semeter=${semester}&bulan=${bulan}`,
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_berkas?tahun=${years}&semeter=${semester}&bulan=${bulan}`,
         temp
       )
       .then(function (response) {
@@ -258,6 +260,28 @@ const PersentaseRealisasiBelanja = () => {
     return value.replace("Kantor Wilayah Provinsi ", "");
   };
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className={classes.tooltipCustom}>
+          <p className="label">{label}</p>
+          <p
+            className="desc"
+            style={{ color: payload[0].color }}
+          >{`PNBP : Rp ${payload[0].value
+            .toFixed(2)
+            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+          <p
+            className="desc"
+            style={{ color: payload[1].color }}
+          >{`Jumlah Berkas : ${payload[1].value}`}</p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   const body = (
     <div className={classes.paper}>
       <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
@@ -274,51 +298,51 @@ const PersentaseRealisasiBelanja = () => {
       <div className={classes.barChart}>
         {/* <img width={500} src={image} /> */}
         <ResponsiveContainer width="100%" height={250}>
-          <BarChart
+          <ComposedChart
             width={500}
-            height={800}
-            data={dataModal.grafik}
+            height={400}
+            data={data}
             margin={{
-              top: 5,
-              right: 30,
+              top: 20,
+              right: 20,
+              bottom: 20,
               left: 20,
-              bottom: 5,
-            }}
-            padding={{
-              top: 15,
-              right: 10,
-              left: 10,
-              bottom: 15,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid stroke="#f5f5f5" />
             <XAxis
               dataKey="wilayah"
-              angle={60}
-              interval={0}
+              scale="band"
+              // angle={60}
+              // interval={0}
               tick={{
                 // angle: 90,
-                transform: "rotate(-35)",
-                textAnchor: "start",
-                dominantBaseline: "ideographic",
+                // transform: "rotate(-35)",
+                // textAnchor: "start",
+                // dominantBaseline: "ideographic",
                 fontSize: 8,
               }}
               height={100}
               tickFormatter={DataFormaterX}
-            ></XAxis>
+            />
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="PNBP"
+                value="Jumlah Nilai"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
               />
             </YAxis>
-            <Tooltip />
-            {/* <Legend /> */}
-            <Bar dataKey="pnbp" fill="#8884d8" />
-            <Bar dataKey="jumlahberkas" fill="#808000" />
-          </BarChart>
+            <Tooltip content={<CustomTooltip />} />
+            <Legend />
+            <Bar dataKey="pnbp" barSize={20} fill="#8884d8" />
+            <Line
+              type="jumlahberkas"
+              dataKey="jumlahberkas"
+              stroke="#808000"
+              label="Jumlah Berkas"
+            />
+          </ComposedChart>
         </ResponsiveContainer>
       </div>
       {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
@@ -778,7 +802,7 @@ const PersentaseRealisasiBelanja = () => {
                           )
                         : "",
                     type: "Bar",
-                    nameColumn: ["Wilayah", "PNBP"],
+                    nameColumn: ["Wilayah", "PNBP", "Jumlah Berkas"],
                     listTop10Comment: comment.listTop10Comment,
                   })
                 }
@@ -948,7 +972,7 @@ const PersentaseRealisasiBelanja = () => {
                             )
                           : "",
                       type: "Bar",
-                      nameColumn: ["Wilayah", "PNBP"],
+                      nameColumn: ["Wilayah", "PNBP", "Jumlah Berkas"],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
@@ -966,33 +990,28 @@ const PersentaseRealisasiBelanja = () => {
             <CardContent>
               <div className={classes.barChart}>
                 <ResponsiveContainer width="100%" height={250}>
-                  <BarChart
+                  <ComposedChart
                     width={500}
-                    height={800}
+                    height={400}
                     data={data}
                     margin={{
-                      top: 5,
-                      right: 30,
+                      top: 20,
+                      right: 20,
+                      bottom: 20,
                       left: 20,
-                      bottom: 5,
-                    }}
-                    padding={{
-                      top: 15,
-                      right: 10,
-                      left: 10,
-                      bottom: 15,
                     }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" />
+                    <CartesianGrid stroke="#f5f5f5" />
                     <XAxis
                       dataKey="wilayah"
-                      angle={60}
-                      interval={0}
+                      scale="band"
+                      // angle={60}
+                      // interval={0}
                       tick={{
                         // angle: 90,
-                        transform: "rotate(-35)",
-                        textAnchor: "start",
-                        dominantBaseline: "ideographic",
+                        // transform: "rotate(-35)",
+                        // textAnchor: "start",
+                        // dominantBaseline: "ideographic",
                         fontSize: 8,
                       }}
                       height={100}
@@ -1000,17 +1019,22 @@ const PersentaseRealisasiBelanja = () => {
                     />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
-                        value="PNBP"
+                        value="Jumlah Nilai"
                         angle={-90}
                         position="insideBottomLeft"
                         offset={-5}
                       />
                     </YAxis>
-                    <Tooltip />
-                    {/* <Legend /> */}
-                    <Bar dataKey="pnbp" fill="#8884d8" />
-                    <Bar dataKey="jumlahberkas" fill="#808000" />
-                  </BarChart>
+                    <Tooltip content={<CustomTooltip />} />
+                    <Legend />
+                    <Bar dataKey="pnbp" barSize={20} fill="#8884d8" />
+                    <Line
+                      type="jumlahberkas"
+                      dataKey="jumlahberkas"
+                      stroke="#808000"
+                      label="Jumlah Berkas"
+                    />
+                  </ComposedChart>
                 </ResponsiveContainer>
               </div>
             </CardContent>

@@ -46,7 +46,8 @@ import { useHistory } from "react-router-dom";
 import { BASE_URL } from "../../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
-// import { getSatker } from "../../actions/globalActions";
+import { DataFormater } from "../../../functionGlobal/globalDataAsset";
+
 const dataTemp = [
   {
     nama_layanan: "",
@@ -187,18 +188,6 @@ const SieLayananJumlahPerjenis = () => {
 
   const handleChangeAwal = (event) => {
     setTahunAwal(event.target.value);
-  };
-
-  const DataFormater = (number) => {
-    if (number > 1000000000) {
-      return (number / 1000000000).toString() + "M";
-    } else if (number > 1000000) {
-      return (number / 1000000).toString() + "Jt";
-    } else if (number > 1000) {
-      return (number / 1000).toString() + "Rb";
-    } else {
-      return number.toString();
-    }
   };
 
   const CustomTooltip = ({ active, payload, label }) => {

@@ -8,6 +8,7 @@ import {
   MenuItem,
 } from "@material-ui/core";
 import { MoreVert, AccountCircle, Search } from "@material-ui/icons";
+import { AiOutlineLogout } from "react-icons/ai";
 // import PropTypes from "prop-types";
 import styles from "./styles";
 import Logo from "../assets/img/fav.png";
@@ -17,7 +18,7 @@ const Header = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   // const [open, setOpen] = React.useState(false);
-
+  let userName = localStorage.getItem("usernameSie");
   const isMenuOpen = Boolean(anchorEl);
   // const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -71,9 +72,9 @@ const Header = (props) => {
         <div className={classes.grow} />
         <div className={classes.sectionDesktop}>
           <div className={classes.search} style={{ marginRight: "40px" }}>
-            <div className={classes.searchIcon}>
+            {/* <div className={classes.searchIcon}>
               <Search />
-            </div>
+            </div> */}
             {/* <InputBase
               placeholder="Search…"
               classes={{
@@ -87,20 +88,13 @@ const Header = (props) => {
             variant="h6"
             style={{ fontSize: "16px", marginTop: "10px", margin: "10px" }}
           >
-            John Doe
+            {userName}
           </Typography>
-          <IconButton
-            edge="end"
-            aria-label="account of current user"
-            aria-controls={menuId}
-            aria-haspopup="true"
-            onClick={handleProfileMenuOpen}
-            color="inherit"
-          >
-            <AccountCircle />
+          <IconButton edge="end" color="inherit" href="/Login">
+            <AiOutlineLogout />
           </IconButton>
         </div>
-        <div className={classes.sectionMobile}>
+        {/* <div className={classes.sectionMobile}>
           <IconButton
             aria-label="show more"
             aria-controls={mobileMenuId}
@@ -110,7 +104,7 @@ const Header = (props) => {
           >
             <MoreVert />
           </IconButton>
-        </div>
+        </div> */}
       </Toolbar>
       <div
         style={{

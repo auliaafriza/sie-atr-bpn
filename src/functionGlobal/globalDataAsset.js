@@ -55,3 +55,21 @@ export const tipeData = [
   { id: "OPS", value: "OPS", name: "OPS" },
   { id: "NONOPS", value: "NONOPS", name: "NON OPS" },
 ];
+
+export const DataFormater = (number) => {
+  if (number > 1000000000000000000) {
+    return (number / 1000000000000000000).toString() + "Qi";
+  } else if (number > 1000000000000000) {
+    return (number / 1000000000000000).toString() + "Quar";
+  } else if (number > 1000000000000) {
+    return (number / 1000000000000).toString() + "T";
+  } else if (number > 1000000000) {
+    return (number / 1000000000).toString() + "M";
+  } else if (number > 1000000) {
+    return (number / 1000000).toString() + "Jt";
+  } else if (number > 1000) {
+    return (number / 1000).toString() + "Rb";
+  } else {
+    return number.toString();
+  }
+};
