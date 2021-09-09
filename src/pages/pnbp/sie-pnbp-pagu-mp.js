@@ -874,10 +874,7 @@ const PaguMp = () => {
                   >
                     Tahun Awal
                   </Typography>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
+                  <FormControl className={classes.formControl}>
                     <InputLabel id="demo-simple-select-outlined-label">
                       Tahun Awal
                     </InputLabel>
@@ -907,10 +904,7 @@ const PaguMp = () => {
                   >
                     Tahun Akhir
                   </Typography>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
+                  <FormControl className={classes.formControl}>
                     <InputLabel id="demo-simple-select-outlined-label">
                       Tahun Akhir
                     </InputLabel>

@@ -909,7 +909,6 @@ const realisasiPenggunaan = () => {
                     Pilih Tahun
                   </Typography>
                   <FormControl
-                    variant="outlined"
                     className={classes.formControl}
                   >
                     <InputLabel id="demo-simple-select-outlined-label">
@@ -942,7 +941,6 @@ const realisasiPenggunaan = () => {
                     Pilih Bulan
                   </Typography>
                   <FormControl
-                    variant="outlined"
                     className={classes.formControl}
                   >
                     <InputLabel id="demo-simple-select-outlined-label">
@@ -983,7 +981,6 @@ const realisasiPenggunaan = () => {
                     Pilih Kantor
                   </Typography>
                   <FormControl
-                    variant="outlined"
                     className={classes.formControl}
                   >
                     <InputLabel

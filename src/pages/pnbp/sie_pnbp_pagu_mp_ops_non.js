@@ -871,10 +871,7 @@ const PaguMpOpsNon = () => {
                   >
                     Pilih Tipe
                   </Typography>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
+                  <FormControl className={classes.formControl}>
                     <InputLabel id="demo-simple-select-outlined-label">
                       Tipe
                     </InputLabel>

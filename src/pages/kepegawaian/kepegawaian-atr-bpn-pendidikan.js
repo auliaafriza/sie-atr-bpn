@@ -878,10 +878,7 @@ const KepegawaianBpnPendidikan = () => {
                   >
                     Tahun Awal
                   </Typography>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
+                  <FormControl className={classes.formControl}>
                     <InputLabel id="demo-simple-select-outlined-label">
                       Tahun Awal
                     </InputLabel>
@@ -911,10 +908,7 @@ const KepegawaianBpnPendidikan = () => {
                   >
                     Tahun Akhir
                   </Typography>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
+                  <FormControl className={classes.formControl}>
                     <InputLabel id="demo-simple-select-outlined-label">
                       Tahun Akhir
                     </InputLabel>
@@ -944,10 +938,7 @@ const KepegawaianBpnPendidikan = () => {
                   >
                     Pilih Satker
                   </Typography>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
+                  <FormControl className={classes.formControl}>
                     <InputLabel id="demo-simple-select-outlined-label">
                       Satker
                     </InputLabel>
@@ -1001,10 +992,7 @@ const KepegawaianBpnPendidikan = () => {
                     <TextField {...params} label="Kantor" variant="outlined" />
                   )}
                 /> */}
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
+                  <FormControl className={classes.formControl}>
                     <InputLabel id="demo-simple-select-outlined-label">
                       Kantor
                     </InputLabel>
@@ -1041,10 +1029,7 @@ const KepegawaianBpnPendidikan = () => {
                   >
                     Pilih Kanwil
                   </Typography>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
+                  <FormControl className={classes.formControl}>
                     <InputLabel id="demo-simple-select-outlined-label">
                       Kanwil
                     </InputLabel>

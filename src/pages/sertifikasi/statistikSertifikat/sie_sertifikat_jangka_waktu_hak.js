@@ -927,10 +927,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                   >
                     Pilih Kanwil
                   </Typography>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
+                  <FormControl className={classes.formControl}>
                     <InputLabel id="demo-simple-select-outlined-label">
                       Kanwil
                     </InputLabel>
@@ -960,10 +957,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                   >
                     Pilih Tipe Hak
                   </Typography>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
+                  <FormControl className={classes.formControl}>
                     <InputLabel id="demo-simple-select-outlined-label">
                       Tipe Hak
                     </InputLabel>

@@ -856,10 +856,7 @@ const Sie_sertifikasi_target_realisasi = () => {
                   >
                     Tahun Awal
                   </Typography>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
+                  <FormControl className={classes.formControl}>
                     <InputLabel id="demo-simple-select-outlined-label">
                       Tahun Awal
                     </InputLabel>
@@ -889,10 +886,7 @@ const Sie_sertifikasi_target_realisasi = () => {
                   >
                     Tahun Akhir
                   </Typography>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
+                  <FormControl className={classes.formControl}>
                     <InputLabel id="demo-simple-select-outlined-label">
                       Tahun Akhir
                     </InputLabel>
@@ -931,10 +925,7 @@ const Sie_sertifikasi_target_realisasi = () => {
                   >
                     Nama Program
                   </Typography>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
+                  <FormControl className={classes.formControl}>
                     <InputLabel id="demo-simple-select-outlined-label">
                       Nama Program
                     </InputLabel>

@@ -871,10 +871,7 @@ const RealisasiAnggaran = () => {
                   >
                     Tahun Awal
                   </Typography> */}
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
+                  <FormControl className={classes.formControl}>
                     <InputLabel htmlFor="demo-simple-select-outlined-label">
                       Tahun Awal
                     </InputLabel>
@@ -904,10 +901,7 @@ const RealisasiAnggaran = () => {
                   >
                     Tahun Akhir
                   </Typography> */}
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
+                  <FormControl className={classes.formControl}>
                     <InputLabel htmlFor="demo-simple-select-outlined-label">
                       Tahun Akhir
                     </InputLabel>
