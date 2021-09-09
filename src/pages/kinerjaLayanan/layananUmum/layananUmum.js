@@ -10,7 +10,7 @@ const LayananUmum = () => {
         paddingBottom: 20,
         paddingTop: 20,
         backgroundImage: `url(${bgImg})`,
-        // height: "80vh",
+        // height: "100vh",
         width: "100wh",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",

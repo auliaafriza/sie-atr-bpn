@@ -770,7 +770,7 @@ const AssetPemerintah = () => {
                   size="small"
                   onClick={() =>
                     handleOpen({
-                      title: "Refroma Agraria",
+                      title: "Tanah Aset Pemerintah",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -791,7 +791,9 @@ const AssetPemerintah = () => {
               <TooltipMI
                 title="Print Data"
                 placement="top"
-                onClick={() => handlePrintData("Refroma Agraria", columnTable)}
+                onClick={() =>
+                  handlePrintData("Tanah Aset Pemerintah", columnTable)
+                }
               >
                 <IconButton aria-label="delete" size="small">
                   <IoPrint />
@@ -1034,7 +1036,7 @@ const AssetPemerintah = () => {
                     href="#"
                     onClick={() =>
                       handleOpen({
-                        title: "Refroma Agraria",
+                        title: "Tanah Aset Pemerintah",
                         grafik: data,
                         dataTable: "",
                         analisis:

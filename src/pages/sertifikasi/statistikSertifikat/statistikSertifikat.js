@@ -19,7 +19,7 @@ const StatistikSertifikat = () => {
           paddingBottom: 20,
           width: "100%",
           // opacity: "0.5",
-          // height: "75vh",
+          // height: "100vh",
         }}
       >
         <SieSertifikatKonsolidasiKota />

@@ -219,7 +219,7 @@ const KepegawaianOrganisasi = () => {
 
   const getData = () => {
     let temp = { kantor: [], wilayah: [] };
-    temp.kantor = kantor;
+    temp.kantah = kantor && kantor.length == 1 && kantor[0] == "" ? [] : kantor;
     temp.wilayah = kanwil;
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
@@ -296,6 +296,14 @@ const KepegawaianOrganisasi = () => {
     setIframeWidth(e.target.value);
   }
 
+  const DataFormaterX = (value) => {
+    return (
+      value.replace("Kantor Pertanahan Kabupaten ", "") ||
+      value.replace("Kantor Pertanahan Provinsi ", "") ||
+      value.replace("Kantor Wilayah ", "")
+    );
+  };
+
   const body = (
     <div className={classes.paper}>
       <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
@@ -321,7 +329,18 @@ const KepegawaianOrganisasi = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="kantah"></XAxis>
+            <XAxis
+              angle={60}
+              interval={0}
+              tick={{
+                transform: "rotate(-35)",
+                textAnchor: "start",
+                dominantBaseline: "ideographic",
+                fontSize: 8,
+              }}
+              dataKey="kantah"
+              tickFormatter={DataFormaterX}
+            />
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value="Nilai Satuan 1 Juta"
@@ -331,7 +350,7 @@ const KepegawaianOrganisasi = () => {
               />
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
+            {/* <Legend /> */}
             <Bar dataKey="jumlah" fill="#FFA07A" />
           </BarChart>
         </ResponsiveContainer>
@@ -740,9 +759,10 @@ const KepegawaianOrganisasi = () => {
         direction="row"
         style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
       >
-        <Grid item xs={6}>
+        <Grid item xs={9}>
           <Typography className={classes.titleSection} variant="h2">
-            Jumlah unit organisasi
+            Statistik: jenis (ppat, surveryor berlisensi (mitra), penilai
+            pertanahan, jasa keuangan, lembaga permerintah pusat, perorangan)
           </Typography>
         </Grid>
         <Grid
@@ -751,7 +771,7 @@ const KepegawaianOrganisasi = () => {
           justifyContent="flex-end"
           alignItems="flex-end"
           item
-          xs={6}
+          xs={3}
         >
           {/* <ReactToPrint
             trigger={() => <button>Print this out!</button>}
@@ -777,7 +797,8 @@ const KepegawaianOrganisasi = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Statistik Kemitraan",
+                    title:
+                      "Statistik: jenis (ppat, surveryor berlisensi (mitra), penilai pertanahan, jasa keuangan, lembaga permerintah pusat, perorangan)",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -809,7 +830,10 @@ const KepegawaianOrganisasi = () => {
               title="Print Data"
               placement="top"
               onClick={() =>
-                handlePrintData("Statistik Kemitraan", columnTable)
+                handlePrintData(
+                  "Statistik: jenis (ppat, surveryor berlisensi (mitra), penilai pertanahan, jasa keuangan, lembaga permerintah pusat, perorangan)",
+                  columnTable
+                )
               }
             >
               <IconButton aria-label="delete" size="small">
@@ -863,7 +887,18 @@ const KepegawaianOrganisasi = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="kantah" />
+                    <XAxis
+                      angle={60}
+                      interval={0}
+                      tick={{
+                        transform: "rotate(-35)",
+                        textAnchor: "start",
+                        dominantBaseline: "ideographic",
+                        fontSize: 8,
+                      }}
+                      dataKey="kantah"
+                      tickFormatter={DataFormaterX}
+                    />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
                         value="Nilai Satuan 1 Juta"
@@ -873,7 +908,7 @@ const KepegawaianOrganisasi = () => {
                       />
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
-                    <Legend />
+                    {/* <Legend /> */}
                     <Bar dataKey="jumlah" fill="#FFA07A" />
                   </BarChart>
                 </ResponsiveContainer>
@@ -1064,7 +1099,8 @@ const KepegawaianOrganisasi = () => {
             href="#"
             onClick={() =>
               handleOpen({
-                title: "Statistik Kemitraan",
+                title:
+                  "Statistik: jenis (ppat, surveryor berlisensi (mitra), penilai pertanahan, jasa keuangan, lembaga permerintah pusat, perorangan)",
                 grafik: data,
                 dataTable: "",
                 analisis:

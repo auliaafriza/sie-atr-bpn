@@ -23,7 +23,7 @@ const Mitra = () => {
         paddingTop: 20,
         paddingBottom: 20,
         width: "100%",
-        height: "75vh",
+        height: "100vh",
       }}
     >
       <StatistikKemitraan />

@@ -9,7 +9,7 @@ const RTDR = () => {
         paddingTop: 20,
         paddingBottom: 20,
         width: "100%",
-        height: "75vh",
+        height: "100vh",
         backgroundImage: `url(${bgImg})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",

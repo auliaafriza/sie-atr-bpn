@@ -130,7 +130,7 @@ export default function CenteredGrid() {
           </Card>
         </Grid>
         <Grid item xs={6}>
-          <Card className={classes.root}>
+          <Card className={classes.root} style={{ marginTop: 30 }}>
             <CardContent>
               <Grid
                 container
@@ -156,7 +156,7 @@ export default function CenteredGrid() {
           </Card>
         </Grid>
         <Grid item xs={6}>
-          <Card className={classes.root}>
+          <Card className={classes.root} style={{ marginTop: 30 }}>
             <CardContent>
               <Grid
                 container
@@ -182,7 +182,7 @@ export default function CenteredGrid() {
           </Card>
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid item xs={12} style={{ marginTop: 30 }}>
           <Card className={classes.root}>
             <CardContent>
               <Typography
@@ -249,7 +249,7 @@ export default function CenteredGrid() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Card className={classes.root}>
             <CardContent>
               <Typography
@@ -272,7 +272,7 @@ export default function CenteredGrid() {
               </Typography>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid> */}
       </Grid>
     </div>
   );
