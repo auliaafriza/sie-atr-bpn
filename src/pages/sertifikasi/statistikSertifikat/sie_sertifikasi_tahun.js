@@ -167,7 +167,7 @@ const SieSertifikatTahun = () => {
   const [years, setYears] = useState("2021");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
-  const [dataFilter, setDataFilter] = useState(["Sumut"]);
+  const [dataFilter, setDataFilter] = useState(["", "Sumut"]);
   const [listWilayah, setListWilayah] = useState([]);
   // const [kanwil, setKanwil] = useState(
   //   "Kementerian Agraria dan Tata Ruang/Badan Pertanahan Nasional "
@@ -856,6 +856,9 @@ const SieSertifikatTahun = () => {
                   Tahun Awal
                 </Typography>
                 <FormControl className={classes.formControl}>
+                  {/* <InputLabel id="demo-simple-select-outlined-label">
+                    Tahun Awal
+                  </InputLabel> */}
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -863,6 +866,7 @@ const SieSertifikatTahun = () => {
                     onChange={handleChange}
                     label="Tahun"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {tahunData.map((item, i) => {
                       return (
@@ -883,12 +887,12 @@ const SieSertifikatTahun = () => {
                   Pilih Wilayah
                 </Typography>
                 <FormControl className={classes.formControl}>
-                  <InputLabel
+                  {/* <InputLabel
                     id="demo-simple-select-outlined-label"
                     htmlFor="outlined-Name"
                   >
                     Wilayah
-                  </InputLabel>
+                  </InputLabel> */}
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -897,8 +901,16 @@ const SieSertifikatTahun = () => {
                     onChange={handleChangeFilter}
                     label="Kantor"
                     className={classes.selectStyle}
-                    renderValue={(selected) => `${selected.length} Terpilih`}
+                    renderValue={(selected) => {
+                      if (selected.length > 1)
+                        return `${selected.length - 1} Terpilih`;
+                      else if (selected[0] == "") return "Kantor";
+                    }}
+                    disableUnderline
                   >
+                    <MenuItem value="" disabled>
+                      Kantor
+                    </MenuItem>
                     {listWilayah.map((item, i) => {
                       return (
                         <MenuItem value={item.wilayah} key={i}>

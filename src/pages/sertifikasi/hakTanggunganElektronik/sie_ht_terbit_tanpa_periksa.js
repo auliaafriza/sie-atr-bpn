@@ -150,7 +150,7 @@ const TerbitTanpaPeriksa = () => {
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [tahunAwal, setTahunAwal] = useState("2017");
-  const [kanwil, setKanwil] = useState(["DKI", "Jabar"]);
+  const [kanwil, setKanwil] = useState(["", "DKI", "Jabar"]);
   const [kanwilRed, setKanwilRed] = useState([]);
   const [kantor, setKantor] = useState([]);
   const [satker, setSatker] = useState("");
@@ -837,6 +837,141 @@ const TerbitTanpaPeriksa = () => {
         }}
       />
       <Grid container spacing={2}>
+        <Grid item xs={4}>
+          <div style={{ margin: 10, marginRight: 25 }}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Tahun Awal
+                </Typography>
+                <FormControl className={classes.formControl}>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={tahunAwal}
+                    onChange={handleChangeAwal}
+                    label="Tahun"
+                    className={classes.selectStyle}
+                    disableUnderline
+                  >
+                    {tahunData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Tahun Akhir
+                </Typography>
+                <FormControl className={classes.formControl}>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={years}
+                    onChange={handleChange}
+                    label="Tahun Akhir"
+                    className={classes.selectStyle}
+                    disableUnderline
+                  >
+                    {tahunData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Kanwil
+                </Typography>
+                <FormControl className={classes.formControl}>
+                  <Select
+                    multiple
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={kanwil}
+                    onChange={handleChangeKanwil}
+                    label="Kanwil"
+                    className={classes.selectStyle}
+                    renderValue={(selected) => {
+                      if (selected.length > 1)
+                        return `${selected.length - 1} Terpilih`;
+                      else if (selected[0] == "") return "Kanwil";
+                    }}
+                    disableUnderline
+                  >
+                    <MenuItem value="" disabled>
+                      Kanwil
+                    </MenuItem>
+                    {kanwilRed.map((item, i) => {
+                      return (
+                        <MenuItem value={item.kantor_wilayah} key={i}>
+                          <Checkbox
+                            checked={kanwil.indexOf(item.kantor_wilayah) > -1}
+                          />
+                          <ListItemText primary={item.kantor_wilayah} />
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+                item
+                xs={6}
+                style={{ paddingTop: 40, paddingLeft: 20 }}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => getData()}
+                  style={{ height: 57, width: "100%" }}
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
+          </div>
+        </Grid>
         <Grid item xs={8}>
           <Card className={classes.root} variant="outlined">
             <CardContent>
@@ -877,131 +1012,6 @@ const TerbitTanpaPeriksa = () => {
               </div>
             </CardContent>
           </Card>
-        </Grid>
-        <Grid item xs={4}>
-          <div style={{ margin: 10, marginRight: 25 }}>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={6}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Tahun Awal
-                </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={tahunAwal}
-                    onChange={handleChangeAwal}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                  >
-                    {tahunData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Tahun Akhir
-                </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={years}
-                    onChange={handleChange}
-                    label="Tahun Akhir"
-                    className={classes.selectStyle}
-                  >
-                    {tahunData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-            </Grid>
-
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={6}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Pilih Kanwil
-                </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    multiple
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={kanwil}
-                    onChange={handleChangeKanwil}
-                    label="Kanwil"
-                    className={classes.selectStyle}
-                    renderValue={(selected) => `${selected.length} Terpilih`}
-                  >
-                    {kanwilRed.map((item, i) => {
-                      return (
-                        <MenuItem value={item.kantor_wilayah} key={i}>
-                          <Checkbox
-                            checked={kanwil.indexOf(item.kantor_wilayah) > -1}
-                          />
-                          <ListItemText primary={item.kantor_wilayah} />
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid
-                container
-                direction="row"
-                justifyContent="flex-start"
-                alignItems="center"
-                item
-                xs={6}
-                style={{ paddingTop: 40, paddingLeft: 20 }}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => getData()}
-                  style={{ height: 57, width: "100%" }}
-                >
-                  Submit
-                </Button>
-              </Grid>
-            </Grid>
-          </div>
         </Grid>
       </Grid>
       <Typography className={classes.isiContentTextStyle} variant="h2" wrap>

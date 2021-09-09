@@ -177,7 +177,7 @@ const AssetPemerintah = () => {
     type: "",
     listTop10Comment: [],
   });
-  const [dataFilter, setDataFilter] = useState(["DKI", "Jabar"]);
+  const [dataFilter, setDataFilter] = useState(["", "DKI", "Jabar"]);
   const inputRef = useRef();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -472,9 +472,9 @@ const AssetPemerintah = () => {
   return (
     <div
       style={{
-        paddingBottom: 20,
+        paddingBottom: 30,
         paddingLeft: 20,
-        marginTop: 20,
+        // marginTop: 20,
       }}
     >
       <Modal
@@ -889,9 +889,9 @@ const AssetPemerintah = () => {
                     Tahun Awal
                   </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
+                    {/* <InputLabel id="demo-simple-select-outlined-label">
                       Tahun Awal
-                    </InputLabel>
+                    </InputLabel> */}
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -899,6 +899,7 @@ const AssetPemerintah = () => {
                       onChange={handleChangeAwal}
                       label="Tahun"
                       className={classes.selectStyle}
+                      disableUnderline
                     >
                       {tahunData.map((item, i) => {
                         return (
@@ -919,9 +920,9 @@ const AssetPemerintah = () => {
                     Tahun Akhir
                   </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
+                    {/* <InputLabel id="demo-simple-select-outlined-label">
                       Tahun Akhir
-                    </InputLabel>
+                    </InputLabel> */}
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -929,6 +930,7 @@ const AssetPemerintah = () => {
                       onChange={handleChange}
                       label="Bulan"
                       className={classes.selectStyle}
+                      disableUnderline
                     >
                       {tahunData.map((item, i) => {
                         return (
@@ -957,12 +959,12 @@ const AssetPemerintah = () => {
                     Pilih Wilayah
                   </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel
+                    {/* <InputLabel
                       id="demo-simple-select-outlined-label"
                       htmlFor="outlined-Name"
                     >
                       Wilayah
-                    </InputLabel>
+                    </InputLabel> */}
                     <Select
                       multiple
                       labelId="demo-simple-select-outlined-label"
@@ -971,8 +973,17 @@ const AssetPemerintah = () => {
                       onChange={handleChangeFilter}
                       label="Wilayah"
                       className={classes.selectStyle}
-                      renderValue={(selected) => `${selected.length} Terpilih`}
+                      renderValue={(selected) => {
+                        if (selected.length > 1)
+                          return `${selected.length - 1} Terpilih`;
+                        else if (selected[0] == "") return "Wilayah";
+                      }}
+                      disableUnderline
                     >
+                      <MenuItem value="" disabled>
+                        Wilayah
+                      </MenuItem>
+
                       {wilayahRed.map((item, i) => {
                         return (
                           <MenuItem value={item.kanwil} key={i}>

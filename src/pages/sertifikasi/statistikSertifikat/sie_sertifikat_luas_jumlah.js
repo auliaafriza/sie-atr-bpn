@@ -117,20 +117,21 @@ const SieSertifikatLuasJumlah = () => {
   const [semester, setSemester] = useState(2);
   const [bulan, setBulan] = useState("07");
   const [comment, setComment] = useState("");
-  const [dataFilterKanwil, setDataFilterKanwil] = useState(["Aceh"]);
+  const [dataFilterKanwil, setDataFilterKanwil] = useState(["", "Aceh"]);
   const [listKanwil, setListKanwil] = useState([]);
-  const [dataFilterKantah, setDataFilterKantah] = useState(["Kab. Pidie"]);
+  const [dataFilterKantah, setDataFilterKantah] = useState(["", "Kab. Pidie"]);
   const [listKantah, setListKantah] = useState([]);
-  const [dataFilterTipeHak, setDataFilterTipeHak] = useState(["Hak Milik"]);
+  const [dataFilterTipeHak, setDataFilterTipeHak] = useState(["", "Hak Milik"]);
   const [listtipeHak, setListTipeHak] = useState([]);
   const [dataFilterTipePemilik, setDataFilterTipePemilik] = useState([
+    "",
     "PERORANGAN",
   ]);
   const [listTipePemilik, setListTipePemilik] = useState([]);
-  const [dataFilterProduk, setDataFilterProduk] = useState(["Rutin"]);
+  const [dataFilterProduk, setDataFilterProduk] = useState(["", "Rutin"]);
   const [listProduk, setListProduk] = useState([]);
 
-  const [dataFilterOutput, setDataFilterOutput] = useState(["luaspersil"]);
+  const [dataFilterOutput, setDataFilterOutput] = useState(["", "luaspersil"]);
   const [listOutput, setListOutput] = useState([
     {
       nama: "luaspersil",
@@ -1016,6 +1017,7 @@ const SieSertifikatLuasJumlah = () => {
                     onChange={handleChange}
                     label="Tahun"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {tahunData.map((item, i) => {
                       return (
@@ -1043,6 +1045,7 @@ const SieSertifikatLuasJumlah = () => {
                     onChange={handleChangeTahunAkhir}
                     label="Tahun"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {tahunData.map((item, i) => {
                       return (
@@ -1063,12 +1066,6 @@ const SieSertifikatLuasJumlah = () => {
                   Kanwil
                 </Typography>
                 <FormControl className={classes.formControl}>
-                  <InputLabel
-                    id="demo-simple-select-outlined-label"
-                    htmlFor="outlined-Name"
-                  >
-                    Kanwil
-                  </InputLabel>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -1077,8 +1074,17 @@ const SieSertifikatLuasJumlah = () => {
                     onChange={handleChangeFilterKanwil}
                     label="Kanwil"
                     className={classes.selectStyle}
-                    renderValue={(selected) => `${selected.length} Terpilih`}
+                    renderValue={(selected) => {
+                      if (selected.length > 1)
+                        return `${selected.length - 1} Terpilih`;
+                      else if (selected[0] == "") return "Kanwil";
+                    }}
+                    disableUnderline
                   >
+                    <MenuItem value="" disabled>
+                      Kanwil
+                    </MenuItem>
+
                     {listKanwil.map((item, i) => {
                       return (
                         <MenuItem value={item.kanwil} key={i}>
@@ -1101,12 +1107,6 @@ const SieSertifikatLuasJumlah = () => {
                   Kantah
                 </Typography>
                 <FormControl className={classes.formControl}>
-                  <InputLabel
-                    id="demo-simple-select-outlined-label"
-                    htmlFor="outlined-Name"
-                  >
-                    Kantah
-                  </InputLabel>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -1116,6 +1116,7 @@ const SieSertifikatLuasJumlah = () => {
                     label="Kantah"
                     className={classes.selectStyle}
                     renderValue={(selected) => `${selected.length} Terpilih`}
+                    disableUnderline
                   >
                     {listKantah.map((item, i) => {
                       return (
@@ -1139,12 +1140,6 @@ const SieSertifikatLuasJumlah = () => {
                   Tipe Hak
                 </Typography>
                 <FormControl className={classes.formControl}>
-                  <InputLabel
-                    id="demo-simple-select-outlined-label"
-                    htmlFor="outlined-Name"
-                  >
-                    Tipe Hak
-                  </InputLabel>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -1153,8 +1148,16 @@ const SieSertifikatLuasJumlah = () => {
                     onChange={handleChangeFilterTipeHak}
                     label="TipeHak"
                     className={classes.selectStyle}
-                    renderValue={(selected) => `${selected.length} Terpilih`}
+                    renderValue={(selected) => {
+                      if (selected.length > 1)
+                        return `${selected.length - 1} Terpilih`;
+                      else if (selected[0] == "") return "Tipe Hak";
+                    }}
+                    disableUnderline
                   >
+                    <MenuItem value="" disabled>
+                      Tipe Hak
+                    </MenuItem>
                     {listtipeHak.map((item, i) => {
                       return (
                         <MenuItem value={item.tipehak} key={i}>
@@ -1179,12 +1182,6 @@ const SieSertifikatLuasJumlah = () => {
                   Tipe Pemilik
                 </Typography>
                 <FormControl className={classes.formControl}>
-                  <InputLabel
-                    id="demo-simple-select-outlined-label"
-                    htmlFor="outlined-Name"
-                  >
-                    Tipe Pemilik
-                  </InputLabel>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -1193,8 +1190,16 @@ const SieSertifikatLuasJumlah = () => {
                     onChange={handleChangeFilterTipePemilk}
                     label="TipePemilik"
                     className={classes.selectStyle}
-                    renderValue={(selected) => `${selected.length} Terpilih`}
+                    renderValue={(selected) => {
+                      if (selected.length > 1)
+                        return `${selected.length - 1} Terpilih`;
+                      else if (selected[0] == "") return "Tipe Pemilik";
+                    }}
+                    disableUnderline
                   >
+                    <MenuItem value="" disabled>
+                      Tipe Pemilik
+                    </MenuItem>
                     {listTipePemilik.map((item, i) => {
                       return (
                         <MenuItem value={item.tipepemilik} key={i}>
@@ -1220,12 +1225,6 @@ const SieSertifikatLuasJumlah = () => {
                   Produk
                 </Typography>
                 <FormControl className={classes.formControl}>
-                  <InputLabel
-                    id="demo-simple-select-outlined-label"
-                    htmlFor="outlined-Name"
-                  >
-                    Produk
-                  </InputLabel>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -1234,15 +1233,24 @@ const SieSertifikatLuasJumlah = () => {
                     onChange={handleChangeFilterProduk}
                     label="produk"
                     className={classes.selectStyle}
-                    renderValue={(selected) => `${selected.length} Terpilih`}
+                    renderValue={(selected) => {
+                      if (selected.length > 1)
+                        return `${selected.length - 1} Terpilih`;
+                      else if (selected[0] == "") return "Produk";
+                    }}
+                    disableUnderline
                   >
+                    <MenuItem value="" disabled>
+                      Produk
+                    </MenuItem>
+
                     {listProduk.map((item, i) => {
                       return (
                         <MenuItem value={item.produk} key={i}>
                           <Checkbox
                             checked={dataFilterProduk.indexOf(item.produk) > -1}
                           />
-                          <ListItemText primary={item.tipepemilik} />
+                          <ListItemText primary={item.produk} />
                         </MenuItem>
                       );
                     })}
@@ -1258,12 +1266,6 @@ const SieSertifikatLuasJumlah = () => {
                   Grafik
                 </Typography>
                 <FormControl className={classes.formControl}>
-                  <InputLabel
-                    id="demo-simple-select-outlined-label"
-                    htmlFor="outlined-Name"
-                  >
-                    Tampilkan Grafik
-                  </InputLabel>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -1272,8 +1274,17 @@ const SieSertifikatLuasJumlah = () => {
                     onChange={handleChangeFilterOutput}
                     label="output"
                     className={classes.selectStyle}
-                    renderValue={(selected) => `${selected.length} Terpilih`}
+                    renderValue={(selected) => {
+                      if (selected.length > 1)
+                        return `${selected.length - 1} Terpilih`;
+                      else if (selected[0] == "") return "Grafik";
+                    }}
+                    disableUnderline
                   >
+                    <MenuItem value="" disabled>
+                      Grafik
+                    </MenuItem>
+
                     {listOutput.map((item, i) => {
                       return (
                         <MenuItem value={item.nama} key={i}>
@@ -1351,7 +1362,7 @@ const SieSertifikatLuasJumlah = () => {
           </div>
         </Grid>
         <Grid item xs={8}>
-          <Card className={classes.root} variant="outlined">
+          <Card className={classes.root}>
             <CardContent>
               <div className={classes.barChart}>
                 <ResponsiveContainer width="100%" height={250}>

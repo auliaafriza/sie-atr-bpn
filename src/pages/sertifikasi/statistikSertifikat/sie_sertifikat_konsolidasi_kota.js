@@ -802,6 +802,7 @@ const SieSertifikatKonsolidasiKota = () => {
                     onChange={handleChangeAwal}
                     label="Tahun"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {tahunData.map((item, i) => {
                       return (
@@ -822,7 +823,6 @@ const SieSertifikatKonsolidasiKota = () => {
                   Tahun Akhir
                 </Typography>
                 <FormControl className={classes.formControl}>
-                  
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -830,6 +830,7 @@ const SieSertifikatKonsolidasiKota = () => {
                     onChange={handleChange}
                     label="Bulan"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {tahunData.map((item, i) => {
                       return (

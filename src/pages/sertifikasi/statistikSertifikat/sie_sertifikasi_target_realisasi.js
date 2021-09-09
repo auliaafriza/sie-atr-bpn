@@ -158,6 +158,7 @@ const Sie_sertifikasi_target_realisasi = () => {
   const [comment, setComment] = useState("");
   const [open, setOpen] = useState(false);
   const [namaProgramFil, setNamaProgram] = useState([
+    "",
     "Pelaksana Kelompok Substansi Penatagunaan Tanah",
     "Petugas Kontrol Pengumuman",
   ]);
@@ -797,48 +798,6 @@ const Sie_sertifikasi_target_realisasi = () => {
           }}
         />
         <Grid container spacing={2} style={{ marginBottom: "10px" }}>
-          <Grid item xs={8}>
-            <Card className={classes.root} variant="outlined">
-              <CardContent>
-                <div className={classes.barChart}>
-                  <ResponsiveContainer width="100%" height={250}>
-                    <LineChart
-                      width={500}
-                      height={300}
-                      data={data}
-                      margin={{
-                        top: 5,
-                        right: 30,
-                        left: 20,
-                        bottom: 5,
-                      }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3 3" />
-                      <XAxis dataKey="nama_program" />
-                      <YAxis tickFormatter={DataFormater}>
-                        <Label
-                          value="Jumlah sertifikat"
-                          angle={-90}
-                          position="insideBottomLeft"
-                          offset={-5}
-                        />
-                      </YAxis>
-                      <Tooltip content={<CustomTooltip />} />
-                      <Legend />
-                      <Line
-                        type="monotone"
-                        dataKey="luas_realisasi"
-                        stroke="#FFA07A"
-                        activeDot={{ r: 8 }}
-                        strokeWidth={3}
-                        name="Luas Realisasi"
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-          </Grid>
           <Grid item xs={4}>
             <div style={{ margin: 10, marginRight: 25 }}>
               <Grid
@@ -857,9 +816,9 @@ const Sie_sertifikasi_target_realisasi = () => {
                     Tahun Awal
                   </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
+                    {/* <InputLabel id="demo-simple-select-outlined-label">
                       Tahun Awal
-                    </InputLabel>
+                    </InputLabel> */}
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -867,6 +826,7 @@ const Sie_sertifikasi_target_realisasi = () => {
                       onChange={handleChangeTahunAwal}
                       label="Tahun"
                       className={classes.selectStyle}
+                      disableUnderline
                     >
                       {tahunData.map((item, i) => {
                         return (
@@ -887,9 +847,9 @@ const Sie_sertifikasi_target_realisasi = () => {
                     Tahun Akhir
                   </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
+                    {/* <InputLabel id="demo-simple-select-outlined-label">
                       Tahun Akhir
-                    </InputLabel>
+                    </InputLabel> */}
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -897,6 +857,7 @@ const Sie_sertifikasi_target_realisasi = () => {
                       onChange={handleChangeTahunAkhir}
                       label="Bulan"
                       className={classes.selectStyle}
+                      disableUnderline
                     >
                       {tahunData.map((item, i) => {
                         return (
@@ -926,9 +887,9 @@ const Sie_sertifikasi_target_realisasi = () => {
                     Nama Program
                   </Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">
+                    {/* <InputLabel id="demo-simple-select-outlined-label">
                       Nama Program
-                    </InputLabel>
+                    </InputLabel> */}
                     <Select
                       multiple
                       labelId="demo-simple-select-outlined-label"
@@ -937,8 +898,17 @@ const Sie_sertifikasi_target_realisasi = () => {
                       onChange={handleChangeNamaProgram}
                       label="Nama Program"
                       className={classes.selectStyle}
-                      renderValue={(selected) => `${selected.length} Terpilih`}
+                      renderValue={(selected) => {
+                        if (selected.length > 1)
+                          return `${selected.length - 1} Terpilih`;
+                        else if (selected[0] == "") return "Nama Program";
+                      }}
+                      disableUnderline
                     >
+                      <MenuItem value="" disabled>
+                        Nama Program
+                      </MenuItem>
+
                       {namaProfile.map((item, i) => {
                         return (
                           <MenuItem value={item.namaprofile} key={i}>
@@ -1012,6 +982,48 @@ const Sie_sertifikasi_target_realisasi = () => {
                 ) : null}
               </Typography>
             </div>
+          </Grid>
+          <Grid item xs={8}>
+            <Card className={classes.root} variant="outlined">
+              <CardContent>
+                <div className={classes.barChart}>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <LineChart
+                      width={500}
+                      height={300}
+                      data={data}
+                      margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3 3" />
+                      <XAxis dataKey="nama_program" />
+                      <YAxis tickFormatter={DataFormater}>
+                        <Label
+                          value="Jumlah sertifikat"
+                          angle={-90}
+                          position="insideBottomLeft"
+                          offset={-5}
+                        />
+                      </YAxis>
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Line
+                        type="monotone"
+                        dataKey="luas_realisasi"
+                        stroke="#FFA07A"
+                        activeDot={{ r: 8 }}
+                        strokeWidth={3}
+                        name="Luas Realisasi"
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
           </Grid>
         </Grid>
       </Box>

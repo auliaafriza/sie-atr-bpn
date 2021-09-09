@@ -468,7 +468,7 @@ const SieHtJumlahKantorTahun = () => {
     setDataFilter(event.target.value);
   };
   return (
-    <div>
+    <div style={{ zIndex: "5" }}>
       <Modal
         open={iframeIsOpen}
         // onClose={handleClose}
@@ -827,7 +827,7 @@ const SieHtJumlahKantorTahun = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -843,6 +843,7 @@ const SieHtJumlahKantorTahun = () => {
                     onChange={handleChange}
                     label="Tahun"
                     className={classes.selectStyle}
+                    disableUnderline
                   >
                     {tahunData.map((item, i) => {
                       return (
@@ -854,7 +855,7 @@ const SieHtJumlahKantorTahun = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -882,7 +883,7 @@ const SieHtJumlahKantorTahun = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -910,7 +911,7 @@ const SieHtJumlahKantorTahun = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -956,8 +957,8 @@ const SieHtJumlahKantorTahun = () => {
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={4}
-                style={{ paddingLeft: 20, paddingTop: 40 }}
+                xs={6}
+                style={{ paddingLeft: 20 }}
               >
                 <Button
                   variant="contained"
