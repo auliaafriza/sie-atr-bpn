@@ -909,12 +909,21 @@ const KepegawaianBpnUsia = () => {
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
-                      value={satkerDis}
+                      value={satker ? satker : "Satker"}
                       onChange={handleChangeSatket}
                       label="Satker"
                       className={classes.selectStyle}
+                      renderValue={(selected) =>
+                        selected.length > 8
+                          ? `${selected.slice(0, 8)}...`
+                          : selected
+                      }
                       disableUnderline
                     >
+                      <MenuItem value="" disabled>
+                        Satker
+                      </MenuItem>
+
                       {satkerRed && satkerRed.length != 0
                         ? satkerRed.map((item, i) => {
                             return (
@@ -956,12 +965,21 @@ const KepegawaianBpnUsia = () => {
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
-                      value={kantorDis}
+                      value={kantor ? kantor : "Kantor"}
                       onChange={handleChangeKantor}
                       label="Kantor"
                       className={classes.selectStyle}
+                      renderValue={(selected) =>
+                        selected.length > 8
+                          ? `${selected.slice(0, 8)}...`
+                          : selected
+                      }
                       disableUnderline
                     >
+                      <MenuItem value="" disabled>
+                        Kantor
+                      </MenuItem>
+
                       {kantorRed && kantorRed.length != 0
                         ? kantorRed.map((item, i) => {
                             return (
@@ -986,12 +1004,20 @@ const KepegawaianBpnUsia = () => {
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
-                      value={kanwilDis}
+                      value={kanwil ? kanwil : "Kanwil"}
                       onChange={handleChangeKanwil}
                       label="Kanwil"
                       className={classes.selectStyle}
+                      renderValue={(selected) =>
+                        selected.length > 8
+                          ? `${selected.slice(0, 8)}...`
+                          : selected
+                      }
                       disableUnderline
                     >
+                      <MenuItem value="" disabled>
+                        Kanwil
+                      </MenuItem>
                       {kanwilRed && kanwilRed.length != 0
                         ? kanwilRed.map((item, i) => {
                             return (

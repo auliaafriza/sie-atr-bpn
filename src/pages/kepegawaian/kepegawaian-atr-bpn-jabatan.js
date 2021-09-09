@@ -886,7 +886,7 @@ const KepegawaianBpnJabatan = () => {
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    value={satker}
+                    value={satker ? satker : "Satker"}
                     onChange={handleChangeSatket}
                     label="Satker"
                     className={classes.selectStyle}
@@ -896,11 +896,11 @@ const KepegawaianBpnJabatan = () => {
                         : selected
                     }
                     disableUnderline
-                    defaultValue="Satker"
                   >
                     <MenuItem value="" disabled>
                       Satker
                     </MenuItem>
+
                     {satkerRed && satkerRed.length != 0
                       ? satkerRed.map((item, i) => {
                           return (
@@ -942,7 +942,7 @@ const KepegawaianBpnJabatan = () => {
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    value={kantor}
+                    value={kantor ? kantor : "Kantor"}
                     onChange={handleChangeKantor}
                     label="Kantor"
                     className={classes.selectStyle}
@@ -952,11 +952,11 @@ const KepegawaianBpnJabatan = () => {
                         : selected
                     }
                     disableUnderline
-                    defaultValue="Kantor"
                   >
                     <MenuItem value="" disabled>
                       Kantor
                     </MenuItem>
+
                     {kantorRed && kantorRed.length != 0
                       ? kantorRed.map((item, i) => {
                           return (
@@ -981,7 +981,7 @@ const KepegawaianBpnJabatan = () => {
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    value={kanwil}
+                    value={kanwil ? kanwil : "Kanwil"}
                     onChange={handleChangeKanwil}
                     label="Kanwil"
                     className={classes.selectStyle}
@@ -991,12 +991,10 @@ const KepegawaianBpnJabatan = () => {
                         : selected
                     }
                     disableUnderline
-                    defaultValue="Kanwil"
                   >
                     <MenuItem value="" disabled>
                       Kanwil
                     </MenuItem>
-
                     {kanwilRed && kanwilRed.length != 0
                       ? kanwilRed.map((item, i) => {
                           return (
