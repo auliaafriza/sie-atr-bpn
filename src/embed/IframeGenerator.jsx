@@ -29,6 +29,12 @@ import KepegawaianBpnUsia from "../pages/kepegawaian/kepegawaian-atr-bpn-usia";
 import KepegawaianOrganisasi from "../pages/kepegawaian/kepegawaian-organisasi";
 import SieLayananKebutuhanKantorPertanahan from "../pages/kinerjaLayanan/layananUmum/sie_layanan_kebutuhan_kantor_pertanahan";
 import SiePsnRdtr from "../pages/psn/RDTR/sie_psn_rdtr";
+import StatistikKemitraan from "../pages/mitra/statistikKemitraan";
+import PengadaanTanah from "../pages/psn/pengadaanTanah/sie_psn_luas_pengadaan_tanah";
+import SieHtDitutupPerkantor from "../pages/sertifikasi/hakTanggunganElektronik/sie_ht_ditutup_perkantor";
+import SieHtJumlahKantorTahun from "../pages/sertifikasi/hakTanggunganElektronik/sie_ht_jumlah_kantor_tahun";
+import TerbitTanpaPeriksa from "../pages/sertifikasi/hakTanggunganElektronik/sie_ht_terbit_tanpa_periksa";
+import SieHTUploadPpatIpSama from "../pages/sertifikasi/hakTanggunganElektronik/sie_ht_upload_ppat_ipsama ";
 import { Provider } from "react-redux";
 import store from "../config/store";
 
@@ -226,6 +232,46 @@ class IframeGenerator extends React.Component {
       case "sie-ptsl-realisasi-perkegiatan":
         ReactDOM.render(
           <RealisasiPerkegiatan />,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-statistik-kemitraan":
+        ReactDOM.render(
+          <Provider store={store}>
+            <StatistikKemitraan />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-psn-luas-pengadaaan-tanah":
+        ReactDOM.render(
+          <PengadaanTanah />,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-ht-ditutup-perkantor":
+        ReactDOM.render(
+          <SieHtDitutupPerkantor />,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-ht-jumlah-kantor-tahun":
+        ReactDOM.render(
+          <SieHtJumlahKantorTahun />,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-ht-terbit-tanpa-periksa":
+        ReactDOM.render(
+          <TerbitTanpaPeriksa />,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-ht-upload-ppat-ip-sama":
+        ReactDOM.render(
+          <Provider store={store}>
+            <SieHTUploadPpatIpSama />
+          </Provider>,
           document.getElementById("replace-tag")
         );
         break;

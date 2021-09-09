@@ -266,6 +266,12 @@ export const HIDE_HEADER = [
   "/embed/sie-psn-rdtr",
   "/embed/sie-psn-ptsl-5-peringkat",
   "/embed/sie-ptsl-realisasi-perkegiatan",
+  "/embed/sie-statistik-kemitraan",
+  "/embed/sie-psn-luas-pengadaaan-tanah",
+  "/embed/sie-ht-ditutup-perkantor",
+  "/embed/sie-ht-jumlah-kantor-tahun",
+  "/embed/sie-ht-terbit-tanpa-periksa",
+  "/embed/sie-ht-upload-ppat-ip-sama",
 ];
 
 // *****************************************************
@@ -306,4 +312,10 @@ export const HIDE_FOOTER = [
   "/embed/sie-psn-rdtr",
   "/embed/sie-psn-ptsl-5-peringkat",
   "/embed/sie-ptsl-realisasi-perkegiatan",
+  "/embed/sie-statistik-kemitraan",
+  "/embed/sie-psn-luas-pengadaaan-tanah",
+  "/embed/sie-ht-ditutup-perkantor",
+  "/embed/sie-ht-jumlah-kantor-tahun",
+  "/embed/sie-ht-terbit-tanpa-periksa",
+  "/embed/sie-ht-upload-ppat-ip-sama",
 ];

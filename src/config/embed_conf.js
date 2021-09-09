@@ -34,5 +34,11 @@ export const BASE_URL = {
     sie_psn_rdtr: "sie-psn-rdtr",
     sie_psn_ptsl_5_peringkat: "sie-psn-ptsl-5-peringkat",
     realisasi_kegiatan: "sie-ptsl-realisasi-perkegiatan",
+    statistik_kemitraan: "sie-statistik-kemitraan",
+    pengadaan_tanah: "sie-psn-luas-pengadaaan-tanah",
+    sie_ht_ditutup_perkantor: "sie-ht-ditutup-perkantor",
+    sie_ht_jumlah_kantor_tahun: "sie-ht-jumlah-kantor-tahun",
+    terbit_tanpa_periksa: "sie-ht-terbit-tanpa-periksa",
+    sie_ht_upload_ppat_ip_sama: "sie-ht-upload-ppat-ip-sama",
   },
 };
