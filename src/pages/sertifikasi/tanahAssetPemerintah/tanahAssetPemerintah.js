@@ -14,12 +14,9 @@ const PTSL = () => {
   return (
     <div
       style={{
-        // marginBottom: 20,
         backgroundImage: `url(${imgSertifikasi})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
-        // zIndex: 1,
-        // paddingTop: 20,
         paddingBottom: 20,
         width: "100%",
         height: "100vh",

@@ -34,6 +34,10 @@ import {
   TablePagination,
   Box,
   Button,
+  Checkbox,
+  MenuItem,
+  FormControl,
+  Select,
 } from "@material-ui/core";
 import { createTheme, withStyles } from "@material-ui/core/styles";
 import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
@@ -143,7 +147,13 @@ const SieLayananKebutuhanKantorPertanahan = () => {
   });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
+  const [dataFilter, setDataFilter] = useState([
+    "",
+    "Kantor Pertanahan Kabupaten Kampar",
+    "Kantor Pertanahan Kabupaten Kupang",
+    "Kantor Pertanahan Kabupaten Sumba Barat",
+  ]);
+  const [listNamaKan, setListNamaKan] = useState([]);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -162,12 +172,23 @@ const SieLayananKebutuhanKantorPertanahan = () => {
     setOpen(false);
   };
 
+  const DataFormaterX = (value) => {
+    return (
+      value.replace("Kantor Pertanahan Kabupaten ", "") ||
+      value.replace("Kantor Pertanahan Provinsi ", "") ||
+      value.replace("Kantor Wilayah ", "")
+    );
+  };
+
   const getData = () => {
+    let temp = { kantor: [] };
+    temp.kantor = dataFilter;
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(
-        `${url}KinerjaLayanan/LayananUmum/sie_layanan_kebutuhan_kantor_pertanahan`
+      .post(
+        `${url}KinerjaLayanan/LayananUmum/sie_layanan_kebutuhan_kantor_pertanahan`,
+        temp
       )
       .then(function (response) {
         setData(response.data.data);
@@ -183,6 +204,20 @@ const SieLayananKebutuhanKantorPertanahan = () => {
   };
 
   useEffect(() => {
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .get(`${url}KinerjaLayanan/LayananUmum/filter_nama_kantor`)
+      .then(function (response) {
+        setListNamaKan(response.data.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
     getData();
   }, []);
 
@@ -192,6 +227,10 @@ const SieLayananKebutuhanKantorPertanahan = () => {
 
   const handleChangeAwal = (event) => {
     setTahunAwal(event.target.value);
+  };
+
+  const handleChangeFilter = (event) => {
+    setDataFilter(event.target.value);
   };
 
   const CustomTooltip = ({ active, payload, label }) => {
@@ -241,7 +280,18 @@ const SieLayananKebutuhanKantorPertanahan = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="nama_kantor"></XAxis>
+            <XAxis
+              angle={60}
+              interval={0}
+              tick={{
+                transform: "rotate(-35)",
+                textAnchor: "start",
+                dominantBaseline: "ideographic",
+                fontSize: 8,
+              }}
+              dataKey="nama_kantor"
+              tickFormatter={DataFormaterX}
+            />
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value={axis.yAxis}
@@ -251,7 +301,7 @@ const SieLayananKebutuhanKantorPertanahan = () => {
               />
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
+            {/* <Legend /> */}
             <Bar dataKey="jumlah" fill="#065535"></Bar>
           </BarChart>
         </ResponsiveContainer>
@@ -728,8 +778,75 @@ const SieLayananKebutuhanKantorPertanahan = () => {
           }}
         />
         <Grid container spacing={2} style={{ marginBottom: "10px" }}>
-          <Grid item xs={comment && comment.lastComment ? 4 : 0}>
+          <Grid item xs={4}>
             <div style={{ margin: 10, marginRight: 25 }}>
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={2}
+              >
+                <Grid item xs={6}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Pilih Nama Kantor
+                  </Typography>
+                  <FormControl className={classes.formControl}>
+                    <Select
+                      multiple
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={dataFilter}
+                      onChange={handleChangeFilter}
+                      label="Nama Kantor"
+                      className={classes.selectStyle}
+                      renderValue={(selected) => {
+                        if (selected.length > 1)
+                          return `${selected.length - 1} Terpilih`;
+                        else if (selected[0] == "") return "Nama Kantor";
+                      }}
+                      disableUnderline
+                    >
+                      <MenuItem value="" disabled>
+                        Nama Kantor
+                      </MenuItem>
+
+                      {listNamaKan.map((item, i) => {
+                        return (
+                          <MenuItem value={item.namakantor} key={i}>
+                            <Checkbox
+                              checked={dataFilter.indexOf(item.namakantor) > -1}
+                            />
+                            <ListItemText primary={item.namakantor} />
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  item
+                  xs={6}
+                  style={{ paddingTop: 40, paddingLeft: 20 }}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => getData()}
+                    style={{ height: 57, width: "100%" }}
+                  >
+                    Submit
+                  </Button>
+                </Grid>
+              </Grid>
               <Typography
                 className={classes.isiContentTextStyle}
                 variant="h2"
@@ -770,7 +887,7 @@ const SieLayananKebutuhanKantorPertanahan = () => {
               </Typography>
             </div>
           </Grid>
-          <Grid item xs={comment && comment.lastComment ? 8 : 11}>
+          <Grid item xs={8}>
             <Card className={classes.root} variant="outlined">
               <CardContent>
                 <div className={classes.barChart}>
@@ -793,7 +910,18 @@ const SieLayananKebutuhanKantorPertanahan = () => {
                       }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="nama_kantor"></XAxis>
+                      <XAxis
+                        angle={60}
+                        interval={0}
+                        tick={{
+                          transform: "rotate(-35)",
+                          textAnchor: "start",
+                          dominantBaseline: "ideographic",
+                          fontSize: 8,
+                        }}
+                        dataKey="nama_kantor"
+                        tickFormatter={DataFormaterX}
+                      />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
                           value={axis.yAxis}
@@ -803,7 +931,7 @@ const SieLayananKebutuhanKantorPertanahan = () => {
                         />
                       </YAxis>
                       <Tooltip content={<CustomTooltip />} />
-                      <Legend />
+                      {/* <Legend /> */}
                       <Bar dataKey="jumlah" fill="#065535" />
                     </BarChart>
                   </ResponsiveContainer>

@@ -33,6 +33,10 @@ import {
   ListItemText,
   TablePagination,
   Button,
+  FormControl,
+  Select,
+  MenuItem,
+  Checkbox,
 } from "@material-ui/core";
 import { createTheme, withStyles } from "@material-ui/core/styles";
 import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
@@ -141,6 +145,16 @@ const SieLayananJumlahPerjenis = () => {
   });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [namaLay, setNamaLayanan] = useState([
+    "",
+    "Analis Pendaftaran Hak Tanah Dan Ruang",
+  ]);
+  const [jenisLay, setJenisLayanan] = useState([
+    "",
+    "Izin Pelepasan Sebagai HGU Badan Hukum",
+  ]);
+  const [listNamaLayanan, setListNamaLayanan] = useState([]);
+  const [listJenisLayanan, setListJenisLayanan] = useState([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -161,10 +175,25 @@ const SieLayananJumlahPerjenis = () => {
   };
 
   const getData = () => {
+    let temp = {
+      jenisLayanan: [],
+      namaLayanan: [],
+    };
+    temp.jenisLayanan =
+      jenisLay && jenisLay.length == 1 && jenisLay[0] == ""
+        ? []
+        : jenisLay.slice(1);
+    temp.namaLayanan =
+      namaLay && namaLay.length == 1 && namaLay[0] == ""
+        ? []
+        : namaLay.slice(1);
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(`${url}KinerjaLayanan/LayananUmum/sie_layanan_jumlah_perjenis`)
+      .post(
+        `${url}KinerjaLayanan/LayananUmum/sie_layanan_jumlah_perjenis`,
+        temp
+      )
       .then(function (response) {
         setData(response.data.data);
         setComment(response.data);
@@ -178,17 +207,45 @@ const SieLayananJumlahPerjenis = () => {
       });
   };
 
+  const handleChange = (event) => {
+    setNamaLayanan(event.target.value);
+  };
+
+  const handleChangeJenis = (event) => {
+    setJenisLayanan(event.target.value);
+  };
+
   useEffect(() => {
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .get(`${url}KinerjaLayanan/LayananUmum/filter_nama_layanan`)
+      .then(function (response) {
+        setListNamaLayanan(response.data.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .get(`${url}KinerjaLayanan/LayananUmum/filter_jenis_layanan`)
+      .then(function (response) {
+        setListJenisLayanan(response.data.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
     getData();
   }, []);
-
-  const handleChange = (event) => {
-    setYears(event.target.value);
-  };
-
-  const handleChangeAwal = (event) => {
-    setTahunAwal(event.target.value);
-  };
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -736,8 +793,114 @@ const SieLayananJumlahPerjenis = () => {
         }}
       />
       <Grid container spacing={2} style={{ marginBottom: "10px" }}>
-        <Grid item xs={comment && comment.lastComment ? 4 : 0}>
+        <Grid item xs={4}>
           <div style={{ margin: 10, marginRight: 25 }}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Nama Layanan
+                </Typography>
+                <FormControl className={classes.formControl}>
+                  <Select
+                    multiple
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={namaLay}
+                    onChange={handleChange}
+                    label="Nama Layanan"
+                    className={classes.selectStyle}
+                    disableUnderline
+                    renderValue={(selected) => {
+                      if (selected.length > 1)
+                        return `${selected.length - 1} Terpilih`;
+                      else if (selected[0] == "") return "Nama Layanan";
+                    }}
+                  >
+                    <MenuItem value="" disabled>
+                      Nama Layanan
+                    </MenuItem>
+                    {listNamaLayanan.map((item, i) => {
+                      return (
+                        <MenuItem value={item.namalayanan} key={i}>
+                          <Checkbox
+                            checked={namaLay.indexOf(item.namalayanan) > -1}
+                          />
+                          <ListItemText primary={item.namalayanan} />
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Jenis Layanan
+                </Typography>
+                <FormControl className={classes.formControl}>
+                  <Select
+                    multiple
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={jenisLay}
+                    onChange={handleChangeJenis}
+                    label="Jenis Layanan"
+                    className={classes.selectStyle}
+                    disableUnderline
+                    renderValue={(selected) => {
+                      if (selected.length > 1)
+                        return `${selected.length - 1} Terpilih`;
+                      else if (selected[0] == "") return "Jenis Layanan";
+                    }}
+                  >
+                    <MenuItem value="" disabled>
+                      Jenis Layanan
+                    </MenuItem>
+                    {listJenisLayanan.map((item, i) => {
+                      return (
+                        <MenuItem value={item.jenislayanan} key={i}>
+                          <Checkbox
+                            checked={jenisLay.indexOf(item.jenislayanan) > -1}
+                          />
+                          <ListItemText primary={item.jenislayanan} />
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+                item
+                xs={4}
+                style={{ paddingLeft: 20 }}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => getData()}
+                  style={{ height: 57, width: "100%" }}
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
             <Typography
               className={classes.isiContentTextStyle}
               variant="h2"
@@ -778,7 +941,7 @@ const SieLayananJumlahPerjenis = () => {
             </Typography>
           </div>
         </Grid>
-        <Grid item xs={comment && comment.lastComment ? 8 : 11}>
+        <Grid item xs={8}>
           <Card className={classes.root} variant="outlined">
             <CardContent>
               <div className={classes.barChart}>

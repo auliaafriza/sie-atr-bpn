@@ -33,6 +33,10 @@ import {
   ListItemText,
   TablePagination,
   Button,
+  Checkbox,
+  MenuItem,
+  FormControl,
+  Select,
 } from "@material-ui/core";
 import { createTheme, withStyles } from "@material-ui/core/styles";
 import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
@@ -44,6 +48,10 @@ import { fileExport } from "../../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
 // import { getSatker } from "../../actions/globalActions";
+import {
+  tahunData,
+  DataFormater,
+} from "../../../functionGlobal/globalDataAsset";
 
 import { BASE_URL } from "../../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -141,7 +149,23 @@ const SiePsnRdtr = () => {
   });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [tahun, setTahun] = useState("2016");
+  const [prov, setProv] = useState("JAWA BARAT");
+  const [guna, setGuna] = useState(["Taman", "Danau"]);
+  const [provList, setProvList] = useState([]);
+  const [gunaList, setGunaList] = useState([]);
 
+  const handleChangeTahun = (event) => {
+    setTahun(event.target.value);
+  };
+
+  const handleChangeProv = (event) => {
+    setProv(event.target.value);
+  };
+
+  const handleChangeGuna = (event) => {
+    setGuna(event.target.value);
+  };
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -161,10 +185,17 @@ const SiePsnRdtr = () => {
   };
 
   const getData = () => {
+    let temp = {
+      penggunaan: [],
+    };
+    temp.penggunaan = guna;
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(`${url}ProgramStrategisNasional/RDTR/sie_psn_rtdr`)
+      .post(
+        `${url}ProgramStrategisNasional/RDTR/sie_psn_rtdr?tahun=${tahun}&provinsi=${prov}`,
+        temp
+      )
       .then(function (response) {
         setData(response.data.data);
         setComment(response.data);
@@ -179,6 +210,34 @@ const SiePsnRdtr = () => {
   };
 
   useEffect(() => {
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .get(`${url}ProgramStrategisNasional/RDTR/filter_penggunaan`)
+      .then(function (response) {
+        setGunaList(response.data.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .get(`${url}ProgramStrategisNasional/RDTR/filter_provinsi`)
+      .then(function (response) {
+        setProvList(response.data.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
     getData();
   }, []);
 
@@ -740,8 +799,146 @@ const SiePsnRdtr = () => {
         }}
       />
       <Grid container spacing={2} style={{ marginBottom: "10px" }}>
-        <Grid item xs={comment && comment.lastComment ? 4 : 0}>
+        <Grid item xs={4}>
           <div style={{ margin: 10, marginRight: 25 }}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Tahun
+                </Typography>
+
+                <FormControl className={classes.formControl}>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={tahun}
+                    onChange={handleChangeTahun}
+                    label="Tahun"
+                    className={classes.selectStyle}
+                    disableUnderline
+                  >
+                    <MenuItem value="" disabled>
+                      Tahun
+                    </MenuItem>
+                    {tahunData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Provinsi
+                </Typography>
+                <FormControl className={classes.formControl}>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={prov}
+                    onChange={handleChangeProv}
+                    label="Provinsi"
+                    className={classes.selectStyle}
+                    disableUnderline
+                  >
+                    {provList.map((item, i) => {
+                      return (
+                        <MenuItem value={item.provinsi} key={i}>
+                          <ListItemText primary={item.provinsi} />
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Penggunaan
+                </Typography>
+
+                <FormControl className={classes.formControl}>
+                  <Select
+                    multiple
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={guna}
+                    onChange={handleChangeGuna}
+                    label="Penggunaan"
+                    className={classes.selectStyle}
+                    renderValue={(selected) => {
+                      if (selected[0] == "") return "Penggunaan";
+                      else return `${selected.length} Terpilih`;
+                    }}
+                    disableUnderline
+                  >
+                    <MenuItem value="" disabled>
+                      Penggunaan
+                    </MenuItem>
+                    {gunaList && gunaList.length != 0
+                      ? gunaList.map((item, i) => {
+                          return (
+                            <MenuItem value={item.penggunaan} key={i}>
+                              <Checkbox
+                                checked={guna.indexOf(item.penggunaan) > -1}
+                              />
+                              <ListItemText primary={item.penggunaan} />
+                            </MenuItem>
+                          );
+                        })
+                      : null}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+                item
+                xs={6}
+                style={{ paddingTop: 40, paddingLeft: 20 }}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => getData()}
+                  style={{ height: 57, width: "100%" }}
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
+
             <Typography
               className={classes.isiContentTextStyle}
               variant="h2"
@@ -782,7 +979,7 @@ const SiePsnRdtr = () => {
             </Typography>
           </div>
         </Grid>
-        <Grid item xs={comment && comment.lastComment ? 8 : 11}>
+        <Grid item xs={8}>
           <Card className={classes.root} variant="outlined">
             <CardContent>
               <div className={classes.barChart}>
