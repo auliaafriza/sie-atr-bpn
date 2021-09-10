@@ -111,6 +111,7 @@ const styles = makeStyles((theme) => ({
     letterSpacing: 1,
     color: "#6b6f82",
     fontSize: 16,
+    fontWeight: "500",
   },
   formControl: {
     margin: theme.spacing(1),
