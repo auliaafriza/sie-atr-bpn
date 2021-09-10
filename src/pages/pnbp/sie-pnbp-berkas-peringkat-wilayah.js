@@ -65,11 +65,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const dataTemp = [
   {
-    wilayah: "Kantor Wilayah",
+    wilayah: "Kantor Wilayah Provinsi Jabar",
     besarnya: 0,
   },
   {
-    wilayah: "Kantor Wilayah",
+    wilayah: "Kantor Wilayah Provinsi Jateng",
     besarnya: 10,
   },
 ];
@@ -286,7 +286,7 @@ const PnbpBerkasPeringkatWilayah = () => {
                 fontSize: 8,
               }}
               height={100}
-              tickFormatter={DataFormaterX}
+              // tickFormatter={DataFormaterX}
             ></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
@@ -945,7 +945,7 @@ const PnbpBerkasPeringkatWilayah = () => {
                         fontSize: 8,
                       }}
                       height={100}
-                      tickFormatter={DataFormaterX}
+                      // tickFormatter={DataFormaterX}
                     />
                     <YAxis tickFormatter={DataFormater}>
                       <Label

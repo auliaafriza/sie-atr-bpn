@@ -65,11 +65,11 @@ import { ToastContainer, toast } from "react-toastify";
 
 const dataTemp = [
   {
-    kantah: "",
+    tipe_mitrakerja: "",
     jumlah: 0,
   },
   {
-    kantah: "",
+    tipe_mitrakerja: "",
     jumlah: 0,
   },
 ];
@@ -108,8 +108,8 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {
-    label: "Kantah",
-    value: "kantah",
+    label: "Tipe Mitra Kerja",
+    value: "tipe_mitrakerja",
     isFixed: false,
     isLabel: false,
   },
@@ -135,7 +135,7 @@ let nameColumn = [
 
 let columnTable = [
   {
-    label: "kantah",
+    label: "tipe_mitrakerja",
     isFixed: false,
   },
   {
@@ -160,7 +160,7 @@ let grafikView = [
 ];
 
 let axis = {
-  xAxis: "kantah",
+  xAxis: "tipe_mitrakerja",
   yAxis: "Jumlah",
 };
 
@@ -338,7 +338,7 @@ const KepegawaianOrganisasi = () => {
                 dominantBaseline: "ideographic",
                 fontSize: 8,
               }}
-              dataKey="kantah"
+              dataKey="tipe_mitrakerja"
               tickFormatter={DataFormaterX}
             />
             <YAxis tickFormatter={DataFormater}>
@@ -378,13 +378,13 @@ const KepegawaianOrganisasi = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.kantah}>
+                    <StyledTableRow key={row.tipe_mitrakerja}>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.kantah}
+                        {row.tipe_mitrakerja}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {row.kanwil}
@@ -896,7 +896,7 @@ const KepegawaianOrganisasi = () => {
                         dominantBaseline: "ideographic",
                         fontSize: 8,
                       }}
-                      dataKey="kantah"
+                      dataKey="tipe_mitrakerja"
                       tickFormatter={DataFormaterX}
                     />
                     <YAxis tickFormatter={DataFormater}>

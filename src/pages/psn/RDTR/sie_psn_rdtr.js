@@ -133,7 +133,7 @@ let axis = {
   xAxis: "Penggunaan",
   yAxis: "Realisasi",
 };
-const title = "Jumlah peraturan RDTR per kegiatan";
+const title = "Luas & Jumlah kegiatan Penggunaan Lahan RDTR";
 const SiePsnRdtr = () => {
   const classes = styles();
   const [data, setData] = useState(dataTemp);

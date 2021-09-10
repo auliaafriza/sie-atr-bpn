@@ -748,7 +748,7 @@ const SiePsnPtsl5Peringkat = () => {
         }}
       />
       <Grid container spacing={2} style={{ marginBottom: "10px" }}>
-        <Grid item xs={comment && comment.lastComment ? 4 : 0}>
+        <Grid item xs={4}>
           <div style={{ margin: 10, marginRight: 25 }}>
             <Typography
               className={classes.isiContentTextStyle}
@@ -790,7 +790,7 @@ const SiePsnPtsl5Peringkat = () => {
             </Typography>
           </div>
         </Grid>
-        <Grid item xs={comment && comment.lastComment ? 8 : 11}>
+        <Grid item xs={8}>
           <Card className={classes.root} variant="outlined">
             <CardContent>
               <div className={classes.barChart}>

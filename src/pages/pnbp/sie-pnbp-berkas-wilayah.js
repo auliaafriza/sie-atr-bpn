@@ -271,7 +271,13 @@ const PnbpBerkasWilayah = () => {
   const DataFormaterX = (value) => {
     return value.includes("Kantor Pertanahan")
       ? value.replace("Kantor Pertanahan ", "")
-      : value.replace("Kantor Wilayah Provinsi ", "");
+      : value.includes("Kantor Wilayah")
+      ? value.replace("Kantor Wilayah Bpn Provinsi ", "")
+      : value.includes("Kantor Badan Pertanahan")
+      ? value.replace("Kantor Badan Pertanahan", "")
+      : value.includes("Kantor Badan")
+      ? value.replace("Kantor Badan ", "")
+      : value;
   };
 
   const CustomTooltip = ({ active, payload, label }) => {

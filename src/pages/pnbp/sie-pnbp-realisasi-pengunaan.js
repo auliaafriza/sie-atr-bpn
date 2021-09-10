@@ -11,6 +11,8 @@ import {
   LineChart,
   Line,
   Label,
+  AreaChart,
+  Area,
 } from "recharts";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -292,7 +294,7 @@ const realisasiPenggunaan = () => {
       <div className={classes.barChart}>
         {/* <img width={500} src={image} /> */}
         <ResponsiveContainer width="100%" height={250}>
-          <LineChart
+          <AreaChart
             width={500}
             height={800}
             data={dataModal.grafik}
@@ -328,14 +330,14 @@ const realisasiPenggunaan = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             {/* <Legend /> */}
-            <Line
+            <Area
               type="monotone"
               dataKey="realisasi"
               stroke="#6EB5FF"
               activeDot={{ r: 8 }}
               strokeWidth={3}
             />
-          </LineChart>
+          </AreaChart>
         </ResponsiveContainer>
       </div>
       {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
@@ -467,7 +469,7 @@ const realisasiPenggunaan = () => {
         comment: comment,
         columnTable: columnTable,
         title: title,
-        grafik: "line",
+        grafik: "area",
         nameColumn: nameColumn,
         grafikView: grafikView,
         axis: axis,
@@ -843,7 +845,7 @@ const realisasiPenggunaan = () => {
               <CardContent>
                 <div className={classes.barChart}>
                   <ResponsiveContainer width="100%" height={250}>
-                    <LineChart
+                    <AreaChart
                       width={500}
                       height={800}
                       data={data}
@@ -879,14 +881,14 @@ const realisasiPenggunaan = () => {
                       </YAxis>
                       <Tooltip content={<CustomTooltip />} />
                       {/* <Legend /> */}
-                      <Line
+                      <Area
                         type="monotone"
                         dataKey="realisasi"
                         stroke="#6EB5FF"
                         activeDot={{ r: 8 }}
                         strokeWidth={3}
                       />
-                    </LineChart>
+                    </AreaChart>
                   </ResponsiveContainer>
                 </div>
               </CardContent>

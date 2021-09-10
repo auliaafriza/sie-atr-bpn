@@ -15,6 +15,7 @@ import {
   ResponsiveContainer,
   Label,
   LineChart,
+  AreaChart,
 } from "recharts";
 import {
   Typography,
@@ -237,6 +238,56 @@ const ComponentPrint = () => {
                 );
               })}
             </LineChart>
+          ) : grafik == "area" ? (
+            <AreaChart
+              width={500}
+              height={800}
+              data={data}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              {" "}
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey={axis.xAxis}
+                angle={60}
+                interval={0}
+                tick={{
+                  // angle: 90,
+                  transform: "rotate(-35)",
+                  textAnchor: "start",
+                  dominantBaseline: "ideographic",
+                  fontSize: 14,
+                }}
+                height={100}
+                tickFormatter={CustomX}
+              />
+              <YAxis tickFormatter={DataFormater}>
+                <Label
+                  value={axis.yAxis}
+                  angle={-90}
+                  position="insideBottomLeft"
+                  offset={-5}
+                />
+              </YAxis>
+              {/* <Tooltip content={<CustomTooltip />} /> */}
+              <Legend />
+              {grafikView.map((grafikItem, i) => {
+                return (
+                  <Area
+                    type="monotone"
+                    dataKey={grafikItem.dataKey}
+                    stroke={grafikItem.fill}
+                    activeDot={{ r: 8 }}
+                    strokeWidth={3}
+                  />
+                );
+              })}
+            </AreaChart>
           ) : (
             <ComposedChart
               width={500}

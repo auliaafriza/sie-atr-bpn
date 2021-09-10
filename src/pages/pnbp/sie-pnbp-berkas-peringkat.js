@@ -65,11 +65,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const dataTemp = [
   {
-    kantor: "Kantor Pertanahan",
+    kantor: "Kantor Pertanahan Jateng",
     besarnya: 0,
   },
   {
-    kantor: "Kantor Pertanahan",
+    kantor: "Kantor Pertanahan Jabar",
     besarnya: 10,
   },
 ];
@@ -237,7 +237,15 @@ const PnbpBerkasPeringkat = () => {
   };
 
   const DataFormaterX = (value) => {
-    return value.replace("Kantor Pertanahan ", "");
+    return value.includes("Kantor Pertanahan")
+      ? value.replace("Kantor Pertanahan ", "")
+      : value.includes("Kantor Wilayah")
+      ? value.replace("Kantor Wilayah Bpn Provinsi ", "")
+      : value.includes("Kantor Badan Pertanahan")
+      ? value.replace("Kantor Badan Pertanahan", "")
+      : value.includes("Kantor Badan")
+      ? value.replace("Kantor Badan ", "")
+      : value;
   };
 
   const body = (
@@ -286,7 +294,7 @@ const PnbpBerkasPeringkat = () => {
                 fontSize: 8,
               }}
               height={100}
-              tickFormatter={DataFormaterX}
+              // tickFormatter={DataFormaterX}
             ></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
@@ -944,7 +952,7 @@ const PnbpBerkasPeringkat = () => {
                         fontSize: 8,
                       }}
                       height={100}
-                      tickFormatter={DataFormaterX}
+                      // tickFormatter={DataFormaterX}
                     />
                     <YAxis tickFormatter={DataFormater}>
                       <Label

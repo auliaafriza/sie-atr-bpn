@@ -55,8 +55,8 @@ const PnbpPage = () => {
       <PaguMpOpsNon />
       <AlokasiAnggaran />
       <PeringkatRealisasi />
-      <PengembalianPNBP />
-      <KinerjaBerkasPnbp />
+      {/* <PengembalianPNBP /> */}
+      {/* <KinerjaBerkasPnbp /> */}
     </div>
   );
 };

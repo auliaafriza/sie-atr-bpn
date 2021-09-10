@@ -16,7 +16,7 @@ const BPHTBPage = () => {
         zIndex: 1,
       }}
     >
-      <BPHTBJumlahBerkas />
+      {/* <BPHTBJumlahBerkas /> */}
       <BPHTBJumlahIntegrasi />
     </div>
   );

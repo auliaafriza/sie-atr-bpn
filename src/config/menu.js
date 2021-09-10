@@ -87,11 +87,11 @@ export const MENU_LIST = [
         name: "Pegawai ATR/BPN",
         link: "/Kepegawaian/PegawaiAtr",
       },
-      {
-        icon: <GiOrganigram size={24} />,
-        name: "Organisasi",
-        link: "/Kepegawaian/Organisasi",
-      },
+      // {
+      //   icon: <GiOrganigram size={24} />,
+      //   name: "Organisasi",
+      //   link: "/Kepegawaian/Organisasi",
+      // },
     ],
   },
   {

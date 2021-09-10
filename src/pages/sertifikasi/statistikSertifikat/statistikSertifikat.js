@@ -26,7 +26,7 @@ const StatistikSertifikat = () => {
         <SieSertifikatJangkaWaktuHak />
       </div>
       <SieSertifikatTahun />
-      <SieSertifikasiTargetRealisasi />
+      {/* <SieSertifikasiTargetRealisasi /> */}
       <SieSertifikatLuasJumlah />
     </>
   );

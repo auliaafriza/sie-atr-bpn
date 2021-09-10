@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
@@ -6,6 +6,10 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import bgImg from "../../assets/img/bg-content.jpg";
 import Divider from "@material-ui/core/Divider";
+import axios from "axios";
+
+let url = "http://10.20.57.234/SIEBackEnd/";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -30,6 +34,25 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CenteredGrid() {
   const classes = useStyles();
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .get(`${url}api/Dashboard/get_dashboard`)
+      .then(function (response) {
+        setData(response.data.data);
+        console.log(response);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  }, []);
 
   return (
     <div
@@ -54,7 +77,7 @@ export default function CenteredGrid() {
           padding: "3em",
         }}
       >
-        <Grid item xs={4}>
+        <Grid item xs={12}>
           <Card className={classes.root}>
             <CardContent>
               <Grid
@@ -62,24 +85,46 @@ export default function CenteredGrid() {
                 justifyContent="center"
                 alignItems="center"
                 spacing={2}
+                style={{ paddingTop: 25 }}
               >
-                <Grid item xs={8}>
-                  <Typography className={classes.title} gutterBottom>
-                    Jumlah tanah yang telah di-Sertifikatkan
+                <Grid
+                  item
+                  xs={6}
+                  container
+                  justifyContent="flex-start"
+                  alignItems="center"
+                >
+                  <Typography
+                    className={classes.title}
+                    gutterBottom
+                    style={{ fontSize: 20 }}
+                  >
+                    Jumlah tanah yang telah di Sertifikatkan
                   </Typography>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid
+                  item
+                  xs={6}
+                  container
+                  justifyContent="flex-start"
+                  alignItems="center"
+                >
                   <Typography
                     style={{ fontSize: "1.51rem", fontWeight: "bold" }}
                   >
-                    3.294.681
+                    Rp{" "}
+                    {data && data.length != 0
+                      ? data[0].value
+                          .toString()
+                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                      : 0}
                   </Typography>
                 </Grid>
               </Grid>
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={6}>
           <Card className={classes.root}>
             <CardContent>
               <Grid
@@ -87,24 +132,30 @@ export default function CenteredGrid() {
                 justifyContent="center"
                 alignItems="center"
                 spacing={2}
+                style={{ paddingTop: 20 }}
               >
-                <Grid item xs={8}>
+                <Grid item xs={4}>
                   <Typography className={classes.title} gutterBottom>
                     Bidang tanah merupakan hasil redistribusi tanah
                   </Typography>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={8}>
                   <Typography
                     style={{ fontSize: "1.51rem", fontWeight: "bold" }}
                   >
-                    290.770
+                    Rp{" "}
+                    {data && data.length != 0
+                      ? data[1].value
+                          .toString()
+                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                      : 0}
                   </Typography>
                 </Grid>
               </Grid>
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={6}>
           <Card className={classes.root}>
             <CardContent>
               <Grid
@@ -112,17 +163,23 @@ export default function CenteredGrid() {
                 justifyContent="center"
                 alignItems="center"
                 spacing={2}
+                style={{ paddingTop: 20 }}
               >
-                <Grid item xs={8}>
+                <Grid item xs={4}>
                   <Typography className={classes.title} gutterBottom>
                     Tanah telah diukur dan dipetakan
                   </Typography>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={8}>
                   <Typography
                     style={{ fontSize: "1.51rem", fontWeight: "bold" }}
                   >
-                    813.028
+                    Rp{" "}
+                    {data && data.length != 0
+                      ? data[2].value
+                          .toString()
+                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                      : 0}
                   </Typography>
                 </Grid>
               </Grid>
@@ -138,17 +195,22 @@ export default function CenteredGrid() {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={8}>
+                <Grid item xs={6}>
                   <Typography className={classes.title} gutterBottom>
                     Transaksi Hak Tanggungan Elektronik telah tercatat dengan
                     nilai sebesar Rp. 1.011 Triliun
                   </Typography>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                   <Typography
                     style={{ fontSize: "1.51rem", fontWeight: "bold" }}
                   >
-                    493.108
+                    Rp{" "}
+                    {data && data.length != 0
+                      ? data[3].value
+                          .toString()
+                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                      : 0}
                   </Typography>
                 </Grid>
               </Grid>
@@ -164,17 +226,22 @@ export default function CenteredGrid() {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={8}>
+                <Grid item xs={6}>
                   <Typography className={classes.title} gutterBottom>
                     Telah terintegrasi dengan pemerintah daerah dan Dirjen Pajak
                     untuk validasi pajak dan BPHTB secara online
                   </Typography>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                   <Typography
                     style={{ fontSize: "1.51rem", fontWeight: "bold" }}
                   >
-                    361
+                    Rp{" "}
+                    {data && data.length != 0
+                      ? data[4].value
+                          .toString()
+                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                      : 0}
                   </Typography>
                 </Grid>
               </Grid>
@@ -203,7 +270,24 @@ export default function CenteredGrid() {
               >
                 <Grid item xs={2}>
                   <Typography className={classes.title} gutterBottom>
-                    18.481
+                    {data && data.length != 0
+                      ? data[5].value
+                          .toString()
+                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                      : 0}
+                  </Typography>
+                  <Typography className={classes.title} gutterBottom>
+                    Pemilik
+                  </Typography>
+                </Grid>{" "}
+                <Divider orientation="vertical" flexItem />
+                <Grid item xs={2}>
+                  <Typography className={classes.title} gutterBottom>
+                    {data && data.length != 0
+                      ? data[6].value
+                          .toString()
+                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                      : 0}
                   </Typography>
                   <Typography className={classes.title} gutterBottom>
                     PPAT
@@ -212,37 +296,27 @@ export default function CenteredGrid() {
                 <Divider orientation="vertical" flexItem />
                 <Grid item xs={2}>
                   <Typography className={classes.title} gutterBottom>
-                    5.097
+                    {data && data.length != 0
+                      ? data[7].value
+                          .toString()
+                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                      : 0}
                   </Typography>
                   <Typography className={classes.title} gutterBottom>
-                    Surveyor Berlisensi
-                  </Typography>
-                </Grid>
-                <Divider orientation="vertical" flexItem />
-                <Grid item xs={2}>
-                  <Typography className={classes.title} gutterBottom>
-                    135
-                  </Typography>
-                  <Typography className={classes.title} gutterBottom>
-                    Appraisal
+                    Bank
                   </Typography>
                 </Grid>
                 <Divider orientation="vertical" flexItem />
                 <Grid item xs={2}>
                   <Typography className={classes.title} gutterBottom>
-                    2.966
+                    {data && data.length != 0
+                      ? data[8].value
+                          .toString()
+                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                      : 0}
                   </Typography>
                   <Typography className={classes.title} gutterBottom>
-                    Jasa Keuangan
-                  </Typography>
-                </Grid>
-                <Divider orientation="vertical" flexItem />
-                <Grid item xs={3}>
-                  <Typography className={classes.title} gutterBottom>
-                    29
-                  </Typography>
-                  <Typography className={classes.title} gutterBottom>
-                    Lembaga Pemerintah Pusat
+                    Surveyor
                   </Typography>
                 </Grid>
               </Grid>
