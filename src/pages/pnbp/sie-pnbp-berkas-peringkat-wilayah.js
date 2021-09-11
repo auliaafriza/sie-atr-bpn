@@ -237,7 +237,9 @@ const PnbpBerkasPeringkatWilayah = () => {
   };
 
   const DataFormaterX = (value) => {
-    return value.replace("Kantor Wilayah Provinsi ", "");
+    return value && value.indexOf("Kantor Wilayah Provinsi") > -1
+      ? value.replace("Kantor Wilayah Provinsi ", "")
+      : value;
   };
 
   const body = (

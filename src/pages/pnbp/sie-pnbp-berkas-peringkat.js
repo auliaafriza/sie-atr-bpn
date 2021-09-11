@@ -237,13 +237,13 @@ const PnbpBerkasPeringkat = () => {
   };
 
   const DataFormaterX = (value) => {
-    return value.includes("Kantor Pertanahan")
+    return value && value.indexOf("Kantor Pertanahan") > -1
       ? value.replace("Kantor Pertanahan ", "")
-      : value.includes("Kantor Wilayah")
+      : value && value.indexOf("Kantor Wilayah") > -1
       ? value.replace("Kantor Wilayah Bpn Provinsi ", "")
-      : value.includes("Kantor Badan Pertanahan")
+      : value && value.indexOf("Kantor Badan Pertanahan") > -1
       ? value.replace("Kantor Badan Pertanahan", "")
-      : value.includes("Kantor Badan")
+      : value && value.indexOf("Kantor Badan") > -1
       ? value.replace("Kantor Badan ", "")
       : value;
   };

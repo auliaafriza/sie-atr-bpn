@@ -197,11 +197,11 @@ const PeringkatRealisasi = () => {
   };
 
   const DataFormaterX = (value) => {
-    return value.includes("Kantor Pertanahan")
+    return value && value.indexOf("Kantor Pertanahan") > -1
       ? value.replace("Kantor Pertanahan ", "")
-      : value.includes("Kantor Wilayah")
+      : value && value.indexOf("Kantor Wilayah") > -1
       ? value.replace("Kantor Wilayah Bpn Provinsi ", "")
-      : value.includes("Kantor Badan Pertanahan")
+      : value && value.indexOf("Kantor Badan Pertanahan") > -1
       ? value.replace("Kantor Badan Pertanahan", "")
       : value.replace("Kantor Badan ", "");
   };
@@ -292,7 +292,7 @@ const PeringkatRealisasi = () => {
                   fontSize: 8,
                 }}
                 height={100}
-                tickFormatter={DataFormaterX}
+                // tickFormatter={DataFormaterX}
               ></XAxis>
               <YAxis tickFormatter={DataFormater}>
                 <Label
@@ -928,7 +928,7 @@ const PeringkatRealisasi = () => {
                         fontSize: 8,
                       }}
                       height={100}
-                      tickFormatter={DataFormaterX}
+                      // tickFormatter={DataFormaterX}
                     />
                     <YAxis tickFormatter={DataFormater}>
                       <Label

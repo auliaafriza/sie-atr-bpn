@@ -67,11 +67,11 @@ import { DataFormater } from "../../functionGlobal/globalDataAsset";
 const dataTemp = [
   {
     tahun: "2010",
-    targetpenerimaan: 0,
+    jumlah_daerah_terintegrasi: 0,
   },
   {
     tahun: "2011",
-    targetpenerimaan: 10,
+    jumlah_daerah_terintegrasi: 10,
   },
 ];
 
@@ -83,9 +83,9 @@ let nameColumn = [
     isLabel: true,
   },
   {
-    label: "Target Penerimaan",
-    value: "targetpenerimaan",
-    isFixed: true,
+    label: "Jumlah Daerah Terintegrasi",
+    value: "jumlah_daerah_terintegrasi",
+    isFixed: false,
     isLabel: false,
   },
 ];
@@ -96,21 +96,21 @@ let columnTable = [
     isFixed: false,
   },
   {
-    label: "targetpenerimaan",
+    label: "jumlah_daerah_terintegrasi",
     isFixed: true,
   },
 ];
 
 let grafikView = [
   {
-    dataKey: "targetpenerimaan",
+    dataKey: "jumlah_daerah_terintegrasi",
     fill: "#C71585",
   },
 ];
 
 let axis = {
   xAxis: "tahun",
-  yAxis: "Target Penerimaan",
+  yAxis: "Jumlah Daerah Terintegrasi",
 };
 
 const theme = createTheme({
@@ -267,9 +267,7 @@ const BPHTBDaerahTerintegrasi = () => {
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Target Penerimaan : Rp ${payload[0].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+          >{`Jumlah Daerah Terintegrasi : ${payload[0].value}`}</p>
         </div>
       );
     }
@@ -314,7 +312,7 @@ const BPHTBDaerahTerintegrasi = () => {
             <XAxis dataKey="tahun"></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Target Penerimaan"
+                value="Jumlah Daerah Terintegrasi"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
@@ -322,7 +320,7 @@ const BPHTBDaerahTerintegrasi = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="targetpenerimaan" fill="#C71585" />
+            <Bar dataKey="jumlah_daerah_terintegrasi" fill="#C71585" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -337,7 +335,7 @@ const BPHTBDaerahTerintegrasi = () => {
               <TableHead>
                 <TableRow>
                   {dataModal.nameColumn.map((item) => (
-                    <StyledTableCell align="left">{item}</StyledTableCell>
+                    <StyledTableCell align="center">{item}</StyledTableCell>
                   ))}
                 </TableRow>
               </TableHead>
@@ -346,14 +344,16 @@ const BPHTBDaerahTerintegrasi = () => {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
                     <StyledTableRow key={row.tahun}>
-                      <StyledTableCell align="left" component="th" scope="row">
+                      <StyledTableCell
+                        align="center"
+                        component="th"
+                        scope="row"
+                      >
                         {row.tahun}
                       </StyledTableCell>
-                      <StyledTableCell align="left">
-                        Rp{" "}
-                        {row.targetpenerimaan
-                          .toFixed(2)
-                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                      <StyledTableCell align="center">
+                        {" "}
+                        {row.jumlah_daerah_terintegrasi}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
@@ -726,7 +726,7 @@ const BPHTBDaerahTerintegrasi = () => {
                             )
                           : "",
                       type: "Bar",
-                      nameColumn: ["Tahun", "Target Penerimaan"],
+                      nameColumn: ["Tahun", "Jumlah Daerah Terintegrasi"],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
@@ -795,7 +795,7 @@ const BPHTBDaerahTerintegrasi = () => {
                       <XAxis dataKey="tahun" />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
-                          value="Target Penerimaan"
+                          value="Jumlah Daerah Terintegrasi"
                           angle={-90}
                           position="insideBottomLeft"
                           offset={-5}
@@ -803,7 +803,10 @@ const BPHTBDaerahTerintegrasi = () => {
                       </YAxis>
                       <Tooltip content={<CustomTooltip />} />
                       <Legend />
-                      <Bar dataKey="targetpenerimaan" fill="#C71585" />
+                      <Bar
+                        dataKey="jumlah_daerah_terintegrasi"
+                        fill="#C71585"
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -870,7 +873,7 @@ const BPHTBDaerahTerintegrasi = () => {
                               )
                             : "",
                         type: "Bar",
-                        nameColumn: ["Tahun", "Target Penerimaan"],
+                        nameColumn: ["Tahun", "Jumlah Daerah Terintegrasi"],
                         listTop10Comment: comment.listTop10Comment,
                       })
                     }
