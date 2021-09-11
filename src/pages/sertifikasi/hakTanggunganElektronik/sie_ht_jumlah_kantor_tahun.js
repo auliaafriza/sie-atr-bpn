@@ -43,6 +43,7 @@ import {
   TablePagination,
   Button,
   Checkbox,
+  TextField,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -69,7 +70,14 @@ import { generateOptions } from "../../../functionGlobal/generateOptionSelect";
 import { BASE_URL } from "../../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import {
+  CheckBoxOutlineBlank,
+  CheckBox as CheckBoxIcon,
+} from "@material-ui/icons/";
 
+const icon = <CheckBoxOutlineBlank fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const dataTemp = [
   {
     kantor: "",
@@ -153,8 +161,7 @@ const SieHtJumlahKantorTahun = () => {
   const [bulan, setBulan] = useState("07");
   const [comment, setComment] = useState("");
   const [dataFilter, setDataFilter] = useState([
-    "",
-    "Kantor Pertanahan Kabupaten Kampar",
+    { kantor: "Kantor Pertanahan Kabupaten Kampar" },
   ]);
   const [listKantor, setListKantor] = useState([]);
   // const [kanwil, setKanwil] = useState(
@@ -220,7 +227,9 @@ const SieHtJumlahKantorTahun = () => {
   };
   const getData = () => {
     let temp = { kantor: [] };
-    temp.kantor = dataFilter;
+    dataFilter && dataFilter.length != 0
+      ? dataFilter.map((item) => temp.kantor.push(item.kantor))
+      : [];
 
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
@@ -465,7 +474,15 @@ const SieHtJumlahKantorTahun = () => {
     setBulan(event.target.value);
   };
   const handleChangeFilter = (event) => {
-    setDataFilter(event.target.value);
+    // setDataFilter(event.target.value);
+    if (event.length != 0) {
+      setDataFilter([
+        ...dataFilter,
+        ...event.filter((option) => dataFilter.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilter([]);
+    }
   };
   return (
     <div style={{ zIndex: "5" }}>
@@ -919,7 +936,56 @@ const SieHtJumlahKantorTahun = () => {
                 >
                   Pilih Kantor
                 </Typography>
-                <FormControl className={classes.formControl}>
+                <Autocomplete
+                  multiple
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={listKantor}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilter(newValue);
+                  }}
+                  getOptionLabel={(option) => option.kantor}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilter && dataFilter.length != 0
+                            ? dataFilter
+                                .map((item) => item.kantor)
+                                .indexOf(option.kantor) > -1
+                            : false
+                        }
+                      />
+                      {option.kantor}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return `${selected.length} Terpilih`;
+                  }}
+                  defaultValue={dataFilter}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={dataFilter.length != 0 ? "" : "Pilih Kantor"}
+                    />
+                  )}
+                />
+                {/* <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -949,7 +1015,7 @@ const SieHtJumlahKantorTahun = () => {
                       );
                     })}
                   </Select>
-                </FormControl>
+                </FormControl> */}
               </Grid>
               <Grid
                 container

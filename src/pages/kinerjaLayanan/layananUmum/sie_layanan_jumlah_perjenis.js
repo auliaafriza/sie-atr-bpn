@@ -37,6 +37,7 @@ import {
   Select,
   MenuItem,
   Checkbox,
+  TextField,
 } from "@material-ui/core";
 import { createTheme, withStyles } from "@material-ui/core/styles";
 import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
@@ -51,7 +52,14 @@ import { BASE_URL } from "../../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import { DataFormater } from "../../../functionGlobal/globalDataAsset";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import {
+  CheckBoxOutlineBlank,
+  CheckBox as CheckBoxIcon,
+} from "@material-ui/icons/";
 
+const icon = <CheckBoxOutlineBlank fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const dataTemp = [
   {
     nama_layanan: "",
@@ -146,12 +154,10 @@ const SieLayananJumlahPerjenis = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [namaLay, setNamaLayanan] = useState([
-    "",
-    "Analis Pendaftaran Hak Tanah Dan Ruang",
+    { namaLayanan: "Analis Pendaftaran Hak Tanah Dan Ruang" },
   ]);
   const [jenisLay, setJenisLayanan] = useState([
-    "",
-    "Izin Pelepasan Sebagai HGU Badan Hukum",
+    { jenislayanan: "Izin Pelepasan Sebagai HGU Badan Hukum" },
   ]);
   const [listNamaLayanan, setListNamaLayanan] = useState([]);
   const [listJenisLayanan, setListJenisLayanan] = useState([]);
@@ -179,14 +185,22 @@ const SieLayananJumlahPerjenis = () => {
       jenisLayanan: [],
       namaLayanan: [],
     };
-    temp.jenisLayanan =
-      jenisLay && jenisLay.length == 1 && jenisLay[0] == ""
-        ? []
-        : jenisLay.slice(1);
-    temp.namaLayanan =
-      namaLay && namaLay.length == 1 && namaLay[0] == ""
-        ? []
-        : namaLay.slice(1);
+
+    jenisLay && jenisLay.length != 0
+      ? jenisLay.map((item) => temp.jenisLayanan.push(item.jenisLayanan))
+      : [];
+    // temp.jenisLayanan =
+    //   jenisLay && jenisLay.length == 1 && jenisLay[0] == ""
+    //     ? []
+    //     : jenisLay.slice(1);
+
+    namaLay && namaLay.length != 0
+      ? namaLay.map((item) => temp.namaLayanan.push(item.namaLayanan))
+      : [];
+    // temp.namaLayanan =
+    //   namaLay && namaLay.length == 1 && namaLay[0] == ""
+    //     ? []
+    //     : namaLay.slice(1);
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
@@ -208,11 +222,27 @@ const SieLayananJumlahPerjenis = () => {
   };
 
   const handleChange = (event) => {
-    setNamaLayanan(event.target.value);
+    // setNamaLayanan(event.target.value);
+    if (event.length != 0) {
+      setNamaLayanan([
+        ...namaLay,
+        ...event.filter((option) => namaLay.indexOf(option) === -1),
+      ]);
+    } else {
+      setNamaLayanan([]);
+    }
   };
 
   const handleChangeJenis = (event) => {
-    setJenisLayanan(event.target.value);
+    // setJenisLayanan(event.target.value);
+    if (event.length != 0) {
+      setJenisLayanan([
+        ...jenisLay,
+        ...event.filter((option) => jenisLay.indexOf(option) === -1),
+      ]);
+    } else {
+      setJenisLayanan([]);
+    }
   };
 
   useEffect(() => {
@@ -810,7 +840,58 @@ const SieLayananJumlahPerjenis = () => {
                 >
                   Nama Layanan
                 </Typography>
-                <FormControl className={classes.formControl}>
+                <Autocomplete
+                  multiple
+                  id="namalayanan"
+                  name="namalayanan"
+                  style={{ width: "100%", height: 50 }}
+                  options={listNamaLayanan}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChange(newValue);
+                  }}
+                  getOptionLabel={(option) => option.namalayanan}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          namaLay && namaLay.length != 0
+                            ? namaLay
+                                .map((item) => item.namalayanan)
+                                .indexOf(option.namalayanan) > -1
+                            : false
+                        }
+                      />
+                      {option.namalayanan}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return `${selected.length} Terpilih`;
+                  }}
+                  defaultValue={namaLay}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={
+                        namaLay.length != 0 ? "" : "Pilih namalayanan"
+                      }
+                    />
+                  )}
+                />
+                {/* <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -840,7 +921,7 @@ const SieLayananJumlahPerjenis = () => {
                       );
                     })}
                   </Select>
-                </FormControl>
+                </FormControl> */}
               </Grid>
               <Grid item xs={4}>
                 <Typography
@@ -850,7 +931,64 @@ const SieLayananJumlahPerjenis = () => {
                 >
                   Jenis Layanan
                 </Typography>
-                <FormControl className={classes.formControl}>
+                <Autocomplete
+                  multiple
+                  id="jenislayanan"
+                  name="jenislayanan"
+                  style={{ width: "100%", height: 50 }}
+                  options={listJenisLayanan}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeJenis(newValue);
+                  }}
+                  getOptionLabel={(option) =>
+                    option.jenislayanan !== null ? option.jenislayanan : ""
+                  }
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          jenisLay && jenisLay.length != 0
+                            ? jenisLay
+                                .map((item) =>
+                                  item.jenislayanan !== null
+                                    ? item.jenislayanan
+                                    : ""
+                                )
+                                .indexOf(option.jenislayanan) > -1
+                            : false
+                        }
+                      />
+                      {option.jenislayanan}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return `${selected.length} Terpilih`;
+                  }}
+                  defaultValue={jenisLay}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={
+                        jenisLay.length != 0 ? "" : "Pilih jenis layanan"
+                      }
+                    />
+                  )}
+                />
+                {/* <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -880,7 +1018,7 @@ const SieLayananJumlahPerjenis = () => {
                       );
                     })}
                   </Select>
-                </FormControl>
+                </FormControl> */}
               </Grid>
               <Grid
                 container

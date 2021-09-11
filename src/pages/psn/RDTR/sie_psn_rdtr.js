@@ -37,6 +37,7 @@ import {
   MenuItem,
   FormControl,
   Select,
+  TextField,
 } from "@material-ui/core";
 import { createTheme, withStyles } from "@material-ui/core/styles";
 import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
@@ -56,6 +57,14 @@ import {
 import { BASE_URL } from "../../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import {
+  CheckBoxOutlineBlank,
+  CheckBox as CheckBoxIcon,
+} from "@material-ui/icons/";
+
+const icon = <CheckBoxOutlineBlank fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const dataTemp = [
   {
     penggunaan: "",
@@ -151,7 +160,10 @@ const SiePsnRdtr = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [tahun, setTahun] = useState("2016");
   const [prov, setProv] = useState("JAWA BARAT");
-  const [guna, setGuna] = useState(["Taman", "Danau"]);
+  const [guna, setGuna] = useState([
+    { penggunaan: "Taman" },
+    { penggunaan: "Danau" },
+  ]);
   const [provList, setProvList] = useState([]);
   const [gunaList, setGunaList] = useState([]);
 
@@ -164,7 +176,15 @@ const SiePsnRdtr = () => {
   };
 
   const handleChangeGuna = (event) => {
-    setGuna(event.target.value);
+    // setGuna(event.target.value);
+    if (event.length != 0) {
+      setGuna([
+        ...guna,
+        ...event.filter((option) => guna.indexOf(option) === -1),
+      ]);
+    } else {
+      setGuna([]);
+    }
   };
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -188,7 +208,10 @@ const SiePsnRdtr = () => {
     let temp = {
       penggunaan: [],
     };
-    temp.penggunaan = guna;
+
+    guna && guna.length != 0
+      ? guna.map((item) => temp.penggunaan.push(item.penggunaan))
+      : [];
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
@@ -884,8 +907,56 @@ const SiePsnRdtr = () => {
                 >
                   Pilih Penggunaan
                 </Typography>
-
-                <FormControl className={classes.formControl}>
+                <Autocomplete
+                  multiple
+                  id="penggunaan"
+                  name="penggunaan"
+                  style={{ width: "100%", height: 50 }}
+                  options={gunaList}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeGuna(newValue);
+                  }}
+                  getOptionLabel={(option) => option.penggunaan}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          guna && guna.length != 0
+                            ? guna
+                                .map((item) => item.penggunaan)
+                                .indexOf(option.penggunaan) > -1
+                            : false
+                        }
+                      />
+                      {option.penggunaan}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return `${selected.length} Terpilih`;
+                  }}
+                  defaultValue={guna}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={guna.length != 0 ? "" : "Pilih Kantor"}
+                    />
+                  )}
+                />
+                {/* <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -916,7 +987,7 @@ const SiePsnRdtr = () => {
                         })
                       : null}
                   </Select>
-                </FormControl>
+                </FormControl> */}
               </Grid>
 
               <Grid

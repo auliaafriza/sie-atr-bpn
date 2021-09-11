@@ -42,6 +42,7 @@ import {
   Avatar,
   TablePagination,
   Button,
+  TextField,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -62,6 +63,14 @@ import { useSelector } from "react-redux";
 import { BASE_URL } from "../../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import {
+  CheckBoxOutlineBlank,
+  CheckBox as CheckBoxIcon,
+} from "@material-ui/icons/";
+
+const icon = <CheckBoxOutlineBlank fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const dataTemp = [
   {
@@ -150,7 +159,11 @@ const TerbitTanpaPeriksa = () => {
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [tahunAwal, setTahunAwal] = useState("2017");
-  const [kanwil, setKanwil] = useState(["", "DKI", "Jabar"]);
+  // const [kanwil, setKanwil] = useState(["", "DKI", "Jabar"]);
+  const [kanwil, setKanwil] = useState([
+    { kantor_wilayah: "DKI" },
+    { kantor_wilayah: "Jabar" },
+  ]);
   const [kanwilRed, setKanwilRed] = useState([]);
   const [kantor, setKantor] = useState([]);
   const [satker, setSatker] = useState("");
@@ -191,7 +204,9 @@ const TerbitTanpaPeriksa = () => {
   const getData = () => {
     let temp = { wilayah: [] };
 
-    temp.wilayah = kanwil;
+    kanwil && kanwil.length != 0
+      ? kanwil.map((item) => temp.wilayah.push(item.kantor_wilayah))
+      : [];
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
@@ -456,12 +471,20 @@ const TerbitTanpaPeriksa = () => {
   };
 
   const handleChangeKanwil = (event) => {
-    setKanwilDis(
-      event.target.value.length > 10
-        ? event.target.value.slice(0, 10)
-        : event.target.value
-    );
-    setKanwil(event.target.value);
+    // setKanwilDis(
+    //   event.target.value.length > 10
+    //     ? event.target.value.slice(0, 10)
+    //     : event.target.value
+    // );
+    // setKanwil(event.target.value);
+    if (event.length != 0) {
+      setKanwil([
+        ...kanwil,
+        ...event.filter((option) => kanwil.indexOf(option) === -1),
+      ]);
+    } else {
+      setKanwil([]);
+    }
   };
 
   const handleChangeSatket = (event) => {
@@ -919,7 +942,56 @@ const TerbitTanpaPeriksa = () => {
                 >
                   Pilih Kanwil
                 </Typography>
-                <FormControl className={classes.formControl}>
+                <Autocomplete
+                  multiple
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={kanwilRed}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeKanwil(newValue);
+                  }}
+                  getOptionLabel={(option) => option.kantor_wilayah}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          kanwil && kanwil.length != 0
+                            ? kanwil
+                                .map((item) => item.kantor_wilayah)
+                                .indexOf(option.kantor_wilayah) > -1
+                            : false
+                        }
+                      />
+                      {option.kantor_wilayah}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return `${selected.length} Terpilih`;
+                  }}
+                  defaultValue={kanwil}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={kanwil.length != 0 ? "" : "Pilih Kantor"}
+                    />
+                  )}
+                />
+                {/* <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -949,7 +1021,7 @@ const TerbitTanpaPeriksa = () => {
                       );
                     })}
                   </Select>
-                </FormControl>
+                </FormControl> */}
               </Grid>
               <Grid
                 container

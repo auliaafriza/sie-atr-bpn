@@ -43,6 +43,7 @@ import {
   TablePagination,
   Button,
   Checkbox,
+  TextField,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -70,7 +71,14 @@ import { BASE_URL } from "../../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import {
+  CheckBoxOutlineBlank,
+  CheckBox as CheckBoxIcon,
+} from "@material-ui/icons/";
 
+const icon = <CheckBoxOutlineBlank fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const theme = createTheme({
   typography: {
     fontFamily: [
@@ -117,21 +125,30 @@ const SieSertifikatLuasJumlah = () => {
   const [semester, setSemester] = useState(2);
   const [bulan, setBulan] = useState("07");
   const [comment, setComment] = useState("");
-  const [dataFilterKanwil, setDataFilterKanwil] = useState(["", "Aceh"]);
+  const [dataFilterKanwil, setDataFilterKanwil] = useState([
+    { kanwil: "Aceh" },
+  ]);
   const [listKanwil, setListKanwil] = useState([]);
-  const [dataFilterKantah, setDataFilterKantah] = useState(["", "Kab. Pidie"]);
+  const [dataFilterKantah, setDataFilterKantah] = useState([
+    { kantah: "Kab. Pidie" },
+  ]);
   const [listKantah, setListKantah] = useState([]);
-  const [dataFilterTipeHak, setDataFilterTipeHak] = useState(["", "Hak Milik"]);
+  const [dataFilterTipeHak, setDataFilterTipeHak] = useState([
+    { tipehak: "Hak Milik" },
+  ]);
   const [listtipeHak, setListTipeHak] = useState([]);
   const [dataFilterTipePemilik, setDataFilterTipePemilik] = useState([
-    "",
-    "PERORANGAN",
+    { tipepemilik: "PERORANGAN" },
   ]);
   const [listTipePemilik, setListTipePemilik] = useState([]);
-  const [dataFilterProduk, setDataFilterProduk] = useState(["", "Rutin"]);
+  const [dataFilterProduk, setDataFilterProduk] = useState([
+    { produk: "Rutin" },
+  ]);
   const [listProduk, setListProduk] = useState([]);
 
-  const [dataFilterOutput, setDataFilterOutput] = useState(["", "luaspersil"]);
+  const [dataFilterOutput, setDataFilterOutput] = useState([
+    { nama: "luaspersil" },
+  ]);
   const [listOutput, setListOutput] = useState([
     {
       nama: "luaspersil",
@@ -367,11 +384,26 @@ const SieSertifikatLuasJumlah = () => {
 
   const getData = () => {
     let temp = {
-      kanwil: dataFilterKanwil,
-      kantah: dataFilterKantah,
-      tipehak: dataFilterTipeHak,
-      tipepemilik: dataFilterTipePemilik,
-      produk: dataFilterProduk,
+      kanwil:
+        dataFilterKanwil && dataFilterKanwil.length != 0
+          ? dataFilterKanwil.map((item) => item.kanwil)
+          : [],
+      kantah:
+        dataFilterKantah && dataFilterKantah.length != 0
+          ? dataFilterKantah.map((item) => item.kantah)
+          : [],
+      tipehak:
+        dataFilterTipeHak && dataFilterTipeHak.length != 0
+          ? dataFilterTipeHak.map((item) => item.tipehak)
+          : [],
+      tipepemilik:
+        dataFilterTipePemilik && dataFilterTipePemilik.length != 0
+          ? dataFilterTipePemilik.map((item) => item.tipepemilik)
+          : [],
+      produk:
+        dataFilterProduk && dataFilterProduk.length != 0
+          ? dataFilterProduk.map((item) => item.produk)
+          : [],
     };
 
     axios.defaults.headers.post["Content-Type"] =
@@ -609,22 +641,73 @@ const SieSertifikatLuasJumlah = () => {
   };
 
   const handleChangeFilterKanwil = (event) => {
-    setDataFilterKanwil(event.target.value);
+    // setDataFilterKanwil(event.target.value);
+    if (event.length != 0) {
+      setDataFilterKanwil([
+        ...dataFilterKanwil,
+        ...event.filter((option) => dataFilterKanwil.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilterKanwil([]);
+    }
   };
+
   const handleChangeFilterKantah = (event) => {
-    setDataFilterKantah(event.target.value);
+    // setDataFilterKantah(event.target.value);
+    if (event.length != 0) {
+      setDataFilterKantah([
+        ...dataFilterKantah,
+        ...event.filter((option) => dataFilterKantah.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilterKantah([]);
+    }
   };
   const handleChangeFilterTipeHak = (event) => {
-    setDataFilterTipeHak(event.target.value);
+    // setDataFilterTipeHak(event.target.value);
+    if (event.length != 0) {
+      setDataFilterTipeHak([
+        ...dataFilterTipeHak,
+        ...event.filter((option) => dataFilterTipeHak.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilterTipeHak([]);
+    }
   };
   const handleChangeFilterTipePemilk = (event) => {
-    setDataFilterTipePemilik(event.target.value);
+    // setDataFilterTipePemilik(event.target.value);
+    if (event.length != 0) {
+      setDataFilterTipePemilik([
+        ...dataFilterTipePemilik,
+        ...event.filter(
+          (option) => dataFilterTipePemilik.indexOf(option) === -1
+        ),
+      ]);
+    } else {
+      setDataFilterTipePemilik([]);
+    }
   };
   const handleChangeFilterProduk = (event) => {
-    setDataFilterProduk(event.target.value);
+    // setDataFilterProduk(event.target.value);
+    if (event.length != 0) {
+      setDataFilterProduk([
+        ...dataFilterProduk,
+        ...event.filter((option) => dataFilterProduk.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilterProduk([]);
+    }
   };
   const handleChangeFilterOutput = (event) => {
-    setDataFilterOutput(event.target.value);
+    // setDataFilterOutput(event.target.value);
+    if (event.length != 0) {
+      setDataFilterOutput([
+        ...dataFilterOutput,
+        ...event.filter((option) => dataFilterOutput.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilterOutput([]);
+    }
   };
 
   const [iframeIsOpen, setOpenIframe] = useState(false);
@@ -1065,38 +1148,68 @@ const SieSertifikatLuasJumlah = () => {
                 >
                   Kanwil
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    multiple
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={dataFilterKanwil}
-                    onChange={handleChangeFilterKanwil}
-                    label="Kanwil"
-                    className={classes.selectStyle}
-                    renderValue={(selected) => {
-                      if (selected.length > 1)
-                        return `${selected.length - 1} Terpilih`;
-                      else if (selected[0] == "") return "Kanwil";
-                    }}
-                    disableUnderline
-                  >
-                    <MenuItem value="" disabled>
-                      Kanwil
-                    </MenuItem>
-
-                    {listKanwil.map((item, i) => {
-                      return (
-                        <MenuItem value={item.kanwil} key={i}>
-                          <Checkbox
-                            checked={dataFilterKanwil.indexOf(item.kanwil) > -1}
-                          />
-                          <ListItemText primary={item.kanwil} />
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  multiple
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={listKanwil}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilterKanwil(newValue);
+                  }}
+                  getOptionLabel={(option) => option.kanwil}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        // onChange={() =>
+                        //   handleCheckedAutocomplete(
+                        //     setDataFilterKanwil,
+                        //     dataFilterKanwil,
+                        //     option.kanwil,
+                        //     "kanwil"
+                        //   )
+                        // }
+                        // name={option.kanwil}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilterKanwil && dataFilterKanwil.length != 0
+                            ? dataFilterKanwil
+                                .map((item) => item.kanwil)
+                                .indexOf(option.kanwil) > -1
+                            : false
+                        }
+                      />
+                      {option.kanwil}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return (
+                      <Typography style={{ fontSize: 14 }}>
+                        {`${selected.length} Terpilih`}
+                      </Typography>
+                    );
+                  }}
+                  defaultValue={dataFilterKanwil}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={dataFilterKanwil.length != 0 ? "" : "Pilih "}
+                    />
+                  )}
+                />
               </Grid>
               <Grid item xs={4}>
                 <Typography
@@ -1106,7 +1219,60 @@ const SieSertifikatLuasJumlah = () => {
                 >
                   Kantah
                 </Typography>
-                <FormControl className={classes.formControl}>
+                <Autocomplete
+                  multiple
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={listKantah}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilterKantah(newValue);
+                  }}
+                  getOptionLabel={(option) => option.kantah}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilterKantah && dataFilterKantah.length != 0
+                            ? dataFilterKantah
+                                .map((item) => item.kantah)
+                                .indexOf(option.kantah) > -1
+                            : false
+                        }
+                      />
+                      {option.kantah}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return (
+                      <Typography style={{ fontSize: 14 }}>
+                        {`${selected.length} Terpilih`}
+                      </Typography>
+                    );
+                  }}
+                  defaultValue={dataFilterKantah}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={dataFilterKantah.length != 0 ? "" : "Pilih "}
+                    />
+                  )}
+                />
+                {/* <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -1129,7 +1295,7 @@ const SieSertifikatLuasJumlah = () => {
                       );
                     })}
                   </Select>
-                </FormControl>
+                </FormControl> */}
               </Grid>
               <Grid item xs={4}>
                 <Typography
@@ -1139,7 +1305,62 @@ const SieSertifikatLuasJumlah = () => {
                 >
                   Tipe Hak
                 </Typography>
-                <FormControl className={classes.formControl}>
+                <Autocomplete
+                  multiple
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={listtipeHak}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilterTipeHak(newValue);
+                  }}
+                  getOptionLabel={(option) => option.tipehak}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilterTipeHak && dataFilterTipeHak.length != 0
+                            ? dataFilterTipeHak
+                                .map((item) => item.tipehak)
+                                .indexOf(option.tipehak) > -1
+                            : false
+                        }
+                      />
+                      {option.tipehak}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return (
+                      <Typography style={{ fontSize: 14 }}>
+                        {`${selected.length} Terpilih`}
+                      </Typography>
+                    );
+                  }}
+                  defaultValue={dataFilterTipeHak}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={
+                        dataFilterTipeHak.length != 0 ? "" : "Pilih "
+                      }
+                    />
+                  )}
+                />
+                {/* <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -1171,7 +1392,7 @@ const SieSertifikatLuasJumlah = () => {
                       );
                     })}
                   </Select>
-                </FormControl>
+                </FormControl> */}
               </Grid>
               <Grid item xs={4}>
                 <Typography
@@ -1181,7 +1402,63 @@ const SieSertifikatLuasJumlah = () => {
                 >
                   Tipe Pemilik
                 </Typography>
-                <FormControl className={classes.formControl}>
+                <Autocomplete
+                  multiple
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={listTipePemilik}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilterTipePemilk(newValue);
+                  }}
+                  getOptionLabel={(option) => option.tipepemilik}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilterTipePemilik &&
+                          dataFilterTipePemilik.length != 0
+                            ? dataFilterTipePemilik
+                                .map((item) => item.tipepemilik)
+                                .indexOf(option.tipepemilik) > -1
+                            : false
+                        }
+                      />
+                      {option.tipepemilik}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return (
+                      <Typography style={{ fontSize: 14 }}>
+                        {`${selected.length} Terpilih`}
+                      </Typography>
+                    );
+                  }}
+                  defaultValue={dataFilterTipePemilik}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={
+                        dataFilterTipePemilik.length != 0 ? "" : "Pilih "
+                      }
+                    />
+                  )}
+                />
+                {/* <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -1214,7 +1491,7 @@ const SieSertifikatLuasJumlah = () => {
                       );
                     })}
                   </Select>
-                </FormControl>
+                </FormControl> */}
               </Grid>
               <Grid item xs={4}>
                 <Typography
@@ -1224,7 +1501,60 @@ const SieSertifikatLuasJumlah = () => {
                 >
                   Produk
                 </Typography>
-                <FormControl className={classes.formControl}>
+                <Autocomplete
+                  multiple
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={listProduk}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilterProduk(newValue);
+                  }}
+                  getOptionLabel={(option) => option.produk}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilterProduk && dataFilterProduk.length != 0
+                            ? dataFilterProduk
+                                .map((item) => item.produk)
+                                .indexOf(option.produk) > -1
+                            : false
+                        }
+                      />
+                      {option.produk}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return (
+                      <Typography style={{ fontSize: 14 }}>
+                        {`${selected.length} Terpilih`}
+                      </Typography>
+                    );
+                  }}
+                  defaultValue={dataFilterProduk}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={dataFilterProduk.length != 0 ? "" : "Pilih "}
+                    />
+                  )}
+                />
+                {/* <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -1255,7 +1585,7 @@ const SieSertifikatLuasJumlah = () => {
                       );
                     })}
                   </Select>
-                </FormControl>
+                </FormControl> */}
               </Grid>
               <Grid item xs={4}>
                 <Typography
@@ -1265,7 +1595,60 @@ const SieSertifikatLuasJumlah = () => {
                 >
                   Grafik
                 </Typography>
-                <FormControl className={classes.formControl}>
+                <Autocomplete
+                  multiple
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={listOutput}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilterOutput(newValue);
+                  }}
+                  getOptionLabel={(option) => option.nama}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilterOutput && dataFilterOutput.length != 0
+                            ? dataFilterOutput
+                                .map((item) => item.nama)
+                                .indexOf(option.nama) > -1
+                            : false
+                        }
+                      />
+                      {option.nama}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return (
+                      <Typography style={{ fontSize: 14 }}>
+                        {`${selected.length} Terpilih`}
+                      </Typography>
+                    );
+                  }}
+                  defaultValue={dataFilterOutput}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={dataFilterOutput.length != 0 ? "" : "Pilih "}
+                    />
+                  )}
+                />
+                {/* <FormControl className={classes.formControl}>
                   <Select
                     multiple
                     labelId="demo-simple-select-outlined-label"
@@ -1296,7 +1679,7 @@ const SieSertifikatLuasJumlah = () => {
                       );
                     })}
                   </Select>
-                </FormControl>
+                </FormControl> */}
               </Grid>
 
               <Grid

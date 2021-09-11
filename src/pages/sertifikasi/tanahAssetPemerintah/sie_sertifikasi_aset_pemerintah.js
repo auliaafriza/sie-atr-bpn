@@ -42,6 +42,7 @@ import {
   Avatar,
   TablePagination,
   Button,
+  TextField,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -63,6 +64,14 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import {
+  CheckBoxOutlineBlank,
+  CheckBox as CheckBoxIcon,
+} from "@material-ui/icons/";
+
+const icon = <CheckBoxOutlineBlank fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const dataTemp = [
   {
@@ -177,7 +186,12 @@ const AssetPemerintah = () => {
     type: "",
     listTop10Comment: [],
   });
-  const [dataFilter, setDataFilter] = useState(["", "DKI", "Jabar"]);
+  // const [dataFilter, setDataFilter] = useState(["", "DKI", "Jabar"]);
+  const [dataFilter, setDataFilter] = useState([
+    { kanwil: "DKI" },
+    { kanwil: "Jabar" },
+  ]);
+
   const inputRef = useRef();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -202,7 +216,9 @@ const AssetPemerintah = () => {
 
   const getData = () => {
     let temp = { wilayah: [] };
-    temp.wilayah = dataFilter;
+    dataFilter && dataFilter.length != 0
+      ? dataFilter.map((item) => temp.wilayah.push(item.kanwil))
+      : [];
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
@@ -229,7 +245,14 @@ const AssetPemerintah = () => {
   }, []);
 
   const handleChangeFilter = (event) => {
-    setDataFilter(event.target.value);
+    if (event.length != 0) {
+      setDataFilter([
+        ...dataFilter,
+        ...event.filter((option) => dataFilter.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilter([]);
+    }
   };
 
   const handleChange = (event) => {
@@ -960,13 +983,59 @@ const AssetPemerintah = () => {
                   >
                     Pilih Wilayah
                   </Typography>
-                  <FormControl className={classes.formControl}>
-                    {/* <InputLabel
-                      id="demo-simple-select-outlined-label"
-                      htmlFor="outlined-Name"
-                    >
-                      Wilayah
-                    </InputLabel> */}
+                  <Autocomplete
+                    multiple
+                    id="kantor"
+                    name="kantor"
+                    style={{ width: "100%", height: 50 }}
+                    options={wilayahRed}
+                    classes={{
+                      option: classes.option,
+                    }}
+                    disableUnderline
+                    className={classes.formControl}
+                    autoHighlight
+                    onChange={(event, newValue) => {
+                      handleChangeFilter(newValue);
+                    }}
+                    getOptionLabel={(option) => option.kanwil}
+                    renderOption={(option, { selected }) => (
+                      <React.Fragment>
+                        <Checkbox
+                          icon={icon}
+                          checkedIcon={checkedIcon}
+                          style={{ marginRight: 8 }}
+                          checked={
+                            dataFilter && dataFilter.length != 0
+                              ? dataFilter
+                                  .map((item) => item.kanwil)
+                                  .indexOf(option.kanwil) > -1
+                              : false
+                          }
+                        />
+                        {option.kanwil}
+                      </React.Fragment>
+                    )}
+                    renderTags={(selected) => {
+                      return `${selected.length} Terpilih`;
+                    }}
+                    defaultValue={dataFilter}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        InputProps={{
+                          ...params.InputProps,
+                          disableUnderline: true,
+                        }}
+                        style={{ marginTop: 5 }}
+                        placeholder={
+                          dataFilter.length != 0 ? "" : "Pilih Kantor"
+                        }
+                      />
+                    )}
+                  />
+                  {/* <FormControl className={classes.formControl}>
+                   
                     <Select
                       multiple
                       labelId="demo-simple-select-outlined-label"
@@ -997,7 +1066,7 @@ const AssetPemerintah = () => {
                         );
                       })}
                     </Select>
-                  </FormControl>
+                  </FormControl> */}
                 </Grid>
                 <Grid
                   container
