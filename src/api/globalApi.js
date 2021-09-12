@@ -21,3 +21,7 @@ export const getWilayahApi = () => {
     `Sertifikasi/TanahAsetPemerintah/sie_sertifikasi_aset_pemerintah_filter_kanwil`
   );
 };
+
+export const getWhoamiApi = () => {
+  return apiClient.get(`ApiUsers/WhoAmI`);
+};

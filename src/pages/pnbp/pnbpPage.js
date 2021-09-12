@@ -60,8 +60,8 @@ const PnbpPage = () => {
       {/* <RealisasiPenerimaan /> */}
       {/* <RealisasiTargetPenerimaan /> */}
       <PaguMp />
-      <PaguMpOpsNon />
-      {/* <AlokasiAnggaran /> */}
+      {/* <PaguMpOpsNon /> */}
+      <AlokasiAnggaran />
       {/* <PeringkatRealisasi /> */}
       {/* <PengembalianPNBP /> */}
       {/* <KinerjaBerkasPnbp /> */}

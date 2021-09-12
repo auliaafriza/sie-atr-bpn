@@ -47,5 +47,6 @@ export const BASE_URL = {
     sie_sertifikasi_jangka_waktu_hak: "sie-sertifikasi-jangka-waktu-hak",
     sie_sertifikasi_konsolidasi_kota: "sie-sertifikasi-konsolidasi-kota",
     sie_sertifikasi_luas_jumlah: "sie-sertifikasi-luas-jumlah",
+    sie_tunggakan: "sie-tunggakan",
   },
 };

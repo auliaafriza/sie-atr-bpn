@@ -43,7 +43,7 @@ import {
   HakTanggunganElektronik,
   TanahAssetPemerintah,
 } from "./pages/sertifikasi";
-import { LayananUmum } from "./pages/kinerjaLayanan";
+import { LayananUmum, Tunggakan } from "./pages/kinerjaLayanan";
 import {
   BrowserRouter as Router,
   Switch,
@@ -195,12 +195,16 @@ const Main = withRouter(({ location }) => {
         <Route path="/Kepegawaian/Organisasi">
           <Organisasi />
         </Route>
+
         <Route path="/Kepegawaian/Organisasi/KepegawaianOrganisasi">
           <KepegawaianOrganisasi />
         </Route>
         {/* end route pegawai atr */}
         <Route path="/KinerjaLayanan/LayananUmum">
           <LayananUmum />
+        </Route>
+        <Route path="/KinerjaLayanan/Tunggakan">
+          <Tunggakan />
         </Route>
         <Route path="/embed/:view" component={IframeGenerator} />
         <Route path="/" exact>

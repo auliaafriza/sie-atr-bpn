@@ -123,11 +123,11 @@ export const MENU_LIST = [
       //   name: "IKK/IKU",
       //   link: null,
       // },
-      // {
-      //   icon: <FcDebt size={24} />,
-      //   name: "Tunggakan",
-      //   link: null,
-      // },
+      {
+        icon: <FcDebt size={24} />,
+        name: "Tunggakan",
+        link: "/KinerjaLayanan/Tunggakan",
+      },
       {
         icon: <RiServiceFill size={24} />,
         name: "Layanan Umum",
@@ -278,6 +278,7 @@ export const HIDE_HEADER = [
   "/embed/sie-sertifikasi-jangka-waktu-hak",
   "/embed/sie-sertifikasi-konsolidasi-kota",
   "/embed/sie-sertifikasi-luas-jumlah",
+  "/embed/sie-tunggakan",
 ];
 
 // *****************************************************
@@ -331,4 +332,5 @@ export const HIDE_FOOTER = [
   "/embed/sie-sertifikasi-jangka-waktu-hak",
   "/embed/sie-sertifikasi-konsolidasi-kota",
   "/embed/sie-sertifikasi-luas-jumlah",
+  "/embed/sie-tunggakan",
 ];

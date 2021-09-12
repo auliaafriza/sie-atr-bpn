@@ -64,22 +64,24 @@ import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
 import { BASE_URL } from "../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { tahunData } from "../../functionGlobal/globalDataAsset";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import { getKantorPNBP } from "../../actions/pnbpAction";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const dataTemp = [
   {
-    tahun: 2017,
+    label: 2017,
     alokasi_anggaran: 0,
     anggaran: 0,
   },
   {
-    tahun: 2018,
+    label: 2018,
     alokasi_anggaran: 0,
     anggaran: 0,
   },
@@ -119,8 +121,8 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {
-    label: "Tahun",
-    value: "tahun",
+    label: "Kantor",
+    value: "label",
     isFixed: false,
     isLabel: true,
   },
@@ -139,21 +141,31 @@ let nameColumn = [
 ];
 const AlokasiAnggaran = () => {
   const classes = styles();
-  const berkasPnbpWilayah = useSelector(
-    (state) => state.pnbp.berkasPnbpWilayah
-  );
-  const berkasPnbpKantor = useSelector((state) => state.pnbp.berkasPnbpKantor);
+  const dispatch = useDispatch();
+  const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
+  const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
   const [dataFilter, setDataFilter] = useState([
-    { wilayah: "Kantor Wilayah Provinsi Jawa Barat" },
-    { wilayah: "Kantor Wilayah Provinsi Jambi" },
+    {
+      kode: "28",
+      kanwil: "Kantor Wilayah Provinsi Banten",
+    },
+    {
+      kode: "10",
+      kanwil: "Kantor Wilayah Provinsi Jawa Barat",
+    },
   ]);
   const [dataFilterKantor, setDataFilterKantor] = useState([
-    { kantor: "Kantor Pertanahan Kabupaten Bandung" },
+    {
+      kode: "2801",
+      kantor: "Kantor Pertanahan Kabupaten Serang",
+    },
   ]);
-  const [years, setYears] = useState("OPS");
+  const [tahunAwal, setTahunAwal] = useState("2017");
+
+  const [years, setYears] = useState("2022");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
-  const [bulan, setBulan] = useState("Jan");
+  const [tipe, seTipe] = useState("OPS");
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -193,6 +205,9 @@ const AlokasiAnggaran = () => {
 
   const handleChangeFilter = (event) => {
     if (event.length != 0) {
+      let temp = { kodeWilayah: [] };
+      event.map((item) => temp.kodeWilayah.push(item.kode));
+      dispatch(getKantorPNBP(temp));
       setDataFilter([
         ...dataFilter,
         ...event.filter((option) => dataFilter.indexOf(option) === -1),
@@ -214,18 +229,20 @@ const AlokasiAnggaran = () => {
   };
 
   const getData = () => {
-    let temp = { kantor: [], wilayah: [] };
+    let temp = { kantor: [], kanwil: [] };
     dataFilterKantor && dataFilterKantor.length != 0
       ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
       : [];
     dataFilter && dataFilter.length != 0
-      ? dataFilter.map((item) => temp.wilayah.push(item.wilayah))
+      ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
       : [];
+
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_alokasi_anggaran_ops_non?tipe=${years}`
+      .post(
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_alokasi_anggaran_ops_non?tipe=${tipe}&tahunAwal=${tahunAwal}&tahunAkhir=${years}`,
+        temp
       )
       .then(function (response) {
         setData(response.data.data);
@@ -245,8 +262,16 @@ const AlokasiAnggaran = () => {
     getData();
   }, []);
 
+  const handleChangeTipe = (event) => {
+    setTipe(event.target.value);
+  };
+
   const handleChange = (event) => {
     setYears(event.target.value);
+  };
+
+  const handleChangeAwal = (event) => {
+    setTahunAwal(event.target.value);
   };
 
   const DataFormater = (number) => {
@@ -265,17 +290,20 @@ const AlokasiAnggaran = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">Tahun {label}</p>
-          <p className="desc" style={{ color: payload[0].color }}>
-            {`Alokasi Anggaran :  Rp ${payload[0].value
-              .toFixed(2)
-              .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
-          </p>
-          <p className="desc" style={{ color: payload[1].color }}>
-            {`Anggaran : Rp ${payload[1].value
-              .toFixed(2)
-              .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
-          </p>
+          <p className="label">{label}</p>
+          {payload.length != 0
+            ? payload.map((item, i) => (
+                <p className="desc" style={{ color: item.color }}>
+                  {`${
+                    item.name == "alokasi_anggaran"
+                      ? "Alokasi Anggaran"
+                      : "Anggaran"
+                  } :  Rp ${item.value
+                    .toFixed(2)
+                    .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+                </p>
+              ))
+            : null}
         </div>
       );
     }
@@ -325,7 +353,7 @@ const AlokasiAnggaran = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="tahun" />
+            <XAxis dataKey="label" />
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value="Nilai Satuan 1 Juta"
@@ -360,9 +388,9 @@ const AlokasiAnggaran = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.tahun}>
+                    <StyledTableRow key={row.label}>
                       <StyledTableCell align="left" component="th" scope="row">
-                        {row.tahun}
+                        {row.label}
                       </StyledTableCell>
                       <StyledTableCell align="left">
                         Rp{" "}
@@ -441,7 +469,7 @@ const AlokasiAnggaran = () => {
 
   let columnTable = [
     {
-      label: "tahun",
+      label: "label",
       isFixed: false,
     },
     {
@@ -466,7 +494,7 @@ const AlokasiAnggaran = () => {
   ];
 
   let axis = {
-    xAxis: "tahun",
+    xAxis: "label",
     yAxis: "Nilai Satuan 1 Juta",
   };
   const title = "anggaran vs realisasi belanja";
@@ -798,7 +826,7 @@ const AlokasiAnggaran = () => {
                           )
                         : "",
                     type: "Bar",
-                    nameColumn: ["Tahun", "Alokasi Anggaran", "Anggaran"],
+                    nameColumn: ["Kantor", "Alokasi Anggaran", "Anggaran"],
                     listTop10Comment: comment.listTop10Comment,
                   })
                 }
@@ -850,6 +878,71 @@ const AlokasiAnggaran = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
+                  Tahun Awal
+                </Typography>
+                <FormControl className={classes.formControl}>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={tahunAwal}
+                    onChange={handleChangeAwal}
+                    label="Tahun"
+                    className={classes.selectStyle}
+                    disableUnderline
+                  >
+                    {tahunData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Tahun Akhir
+                </Typography>
+                <FormControl className={classes.formControl}>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={years}
+                    onChange={handleChange}
+                    label="Tahun"
+                    className={classes.selectStyle}
+                    disableUnderline
+                  >
+                    {tahunData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
                   Pilih Wilayah
                 </Typography>
                 <Autocomplete
@@ -867,7 +960,7 @@ const AlokasiAnggaran = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilter(newValue);
                   }}
-                  getOptionLabel={(option) => option.wilayah}
+                  getOptionLabel={(option) => option.kanwil || ""}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
@@ -877,12 +970,14 @@ const AlokasiAnggaran = () => {
                         checked={
                           dataFilter && dataFilter.length != 0
                             ? dataFilter
-                                .map((item) => item.wilayah)
-                                .indexOf(option.wilayah) > -1
+                                .map((item) => item.kanwil)
+                                .indexOf(option.kanwil) > -1
                             : false
                         }
                       />
-                      {option.wilayah}
+                      {option.kode}
+                      {"  "}
+                      {option.kanwil}
                     </React.Fragment>
                   )}
                   renderTags={(selected) => {
@@ -897,7 +992,9 @@ const AlokasiAnggaran = () => {
                         disableUnderline: true,
                       }}
                       style={{ marginTop: 5 }}
-                      placeholder={dataFilter.length != 0 ? "" : "Pilih Kantor"}
+                      placeholder={
+                        dataFilter.length != 0 ? "" : "Pilih Wilayah"
+                      }
                     />
                   )}
                 />
@@ -940,6 +1037,8 @@ const AlokasiAnggaran = () => {
                             : false
                         }
                       />
+                      {option.kode}
+                      {"  "}
                       {option.kantor}
                     </React.Fragment>
                   )}
@@ -956,7 +1055,7 @@ const AlokasiAnggaran = () => {
                       }}
                       style={{ marginTop: 5 }}
                       placeholder={
-                        dataFilterKantor.length != 0 ? "" : "Pilih Wilayah"
+                        dataFilterKantor.length != 0 ? "" : "Pilih Kantor"
                       }
                     />
                   )}
@@ -979,8 +1078,8 @@ const AlokasiAnggaran = () => {
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    value={years}
-                    onChange={handleChange}
+                    value={tipe}
+                    onChange={handleChangeTipe}
                     label="Tipe"
                     disableUnderline
                     style={{ width: "100%", height: 50 }}
@@ -1043,7 +1142,7 @@ const AlokasiAnggaran = () => {
                             )
                           : "",
                       type: "Bar",
-                      nameColumn: ["Tahun", "Alokasi Anggaran", "Anggaran"],
+                      nameColumn: ["Kantor", "Alokasi Anggaran", "Anggaran"],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
@@ -1079,7 +1178,7 @@ const AlokasiAnggaran = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="tahun" />
+                    <XAxis dataKey="label" />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
                         value="Nilai Satuan 1 Juta"

@@ -3,8 +3,15 @@ import {
   getKantorApi,
   getKanwilApi,
   getWilayahApi,
+  getWhoamiApi,
 } from "../api/globalApi";
-import { GET_SATKER, GET_KANTOR, GET_KANWIL, GET_WILAYAH } from "./actionTypes";
+import {
+  GET_SATKER,
+  GET_KANTOR,
+  GET_KANWIL,
+  GET_WILAYAH,
+  GET_WHO_AM_I,
+} from "./actionTypes";
 
 export const getSatker = () => {
   return (dispatch) => {
@@ -38,6 +45,15 @@ export const getWilayah = () => {
     return dispatch({
       type: GET_WILAYAH,
       payload: getWilayahApi(),
+    });
+  };
+};
+
+export const getWhoami = () => {
+  return (dispatch) => {
+    return dispatch({
+      type: GET_WHO_AM_I,
+      payload: getWhoamiApi(),
     });
   };
 };

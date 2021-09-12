@@ -43,6 +43,7 @@ import {
   TablePagination,
   Button,
   TextField,
+  Checkbox,
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import {
@@ -52,37 +53,37 @@ import {
 } from "@material-ui/core/styles";
 import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
-import styles from "./styles";
+import styles from "../styles";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
 import {
   tahunData,
-  bulanData,
   DataFormater,
-} from "../../functionGlobal/globalDataAsset";
+} from "../../../functionGlobal/globalDataAsset";
 import moment from "moment";
-import { fileExport } from "../../functionGlobal/exports";
-import { loadDataColumnTable } from "../../functionGlobal/fileExports";
+import { fileExport } from "../../../functionGlobal/exports";
+import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { BASE_URL } from "../../config/embed_conf";
+import { useSelector, useDispatch } from "react-redux";
+import { BASE_URL } from "../../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import { getKantorPNBP } from "../../../actions/pnbpAction";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const dataTemp = [
   {
-    kanwil: "",
-    jumlah_mutasi: 0,
+    keterangan: "",
+    nilai: 0,
   },
   {
-    kanwil: "",
-    jumlah_mutasi: 0,
+    keterangan: "",
+    nilai: 0,
   },
 ];
 
@@ -120,26 +121,14 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {
-    label: "Kantor",
-    value: "kantor",
+    label: "Keterangan",
+    value: "keterangan",
     isFixed: false,
     isLabel: false,
   },
   {
-    label: "Kanwil",
-    value: "kanwil",
-    isFixed: false,
-    isLabel: true,
-  },
-  {
-    label: "Satker",
-    value: "satker",
-    isFixed: false,
-    isLabel: false,
-  },
-  {
-    label: "Jumlah Mutasi",
-    value: "jumlah_mutasi",
+    label: "Nilai Tunggakan",
+    value: "nilai",
     isFixed: false,
     isLabel: false,
   },
@@ -147,51 +136,39 @@ let nameColumn = [
 
 let columnTable = [
   {
-    label: "kantor",
+    label: "keterangan",
     isFixed: false,
   },
   {
-    label: "kanwil",
-    isFixed: false,
-  },
-  {
-    label: "satker",
-    isFixed: false,
-  },
-  {
-    label: "jumlah_mutasi",
+    label: "nilai",
     isFixed: false,
   },
 ];
 
 let grafikView = [
   {
-    dataKey: "jumlah_mutasi",
-    fill: "#F0E68C",
+    dataKey: "nilai",
+    fill: "#8884d8",
   },
 ];
 
 let axis = {
-  xAxis: "kanwil",
-  yAxis: "Jumlah Mutasi",
+  xAxis: "keterangan",
+  yAxis: "Nilai Tunggakan",
 };
 
-const KepegawaianBpnMutasi = () => {
+const KepegawaianBpnJabatan = () => {
   const classes = styles();
-  const [years, setYears] = useState("1995");
+  const [dataFilter, setDataFilter] = useState({
+    namaprofile: "Petugas Kontrol Pengumuman",
+  });
+  const [years, setYears] = useState("2022");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
-  const [bulan, setBulan] = useState("Nov");
-  const berkasPnbpWilayah = useSelector((state) => state.globalReducer.kanwil);
-  const berkasPnbpKantor = useSelector((state) => state.globalReducer.kantor);
-
-  const [dataFilter, setDataFilter] = useState([
-    { wilayah: "Kantor Wilayah Provinsi Jawa Barat" },
-    { wilayah: "Kantor Wilayah Provinsi Jambi" },
-  ]);
-  const [dataFilterKantor, setDataFilterKantor] = useState([
-    { kantor: "Kantor Pertanahan Kabupaten Bandung" },
-  ]);
+  const [tahunAwal, setTahunAwal] = useState("2017");
+  const [kanwil, setKanwil] = useState({ kanwil: "" });
+  const [kantor, setKantor] = useState({ kantor: "" });
+  const [satker, setSatker] = useState({ satker: "" });
 
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
@@ -206,11 +183,11 @@ const KepegawaianBpnMutasi = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const [profileList, setProfileList] = useState([]);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
-  const tahunMutasi = useSelector((state) => state.kepegawaian.tahunMutasi);
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
@@ -227,39 +204,16 @@ const KepegawaianBpnMutasi = () => {
   };
 
   const handleChangeFilter = (event) => {
-    if (event.length != 0) {
-      setDataFilter([
-        ...dataFilter,
-        ...event.filter((option) => dataFilter.indexOf(option) === -1),
-      ]);
-    } else {
-      setDataFilter([]);
-    }
-  };
-
-  const handleChangeFilterKantor = (event) => {
-    if (event.length != 0) {
-      setDataFilterKantor([
-        ...dataFilterKantor,
-        ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
-      ]);
-    } else {
-      setDataFilterKantor([]);
-    }
+    setDataFilter(event);
   };
 
   const getData = () => {
-    let temp = { kantor: [], wilayah: [] };
-    dataFilterKantor && dataFilterKantor.length != 0
-      ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
-      : [];
-    dataFilter && dataFilter.length != 0
-      ? dataFilter.map((item) => temp.wilayah.push(item.wilayah))
-      : [];
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(`${url}Kepegawaian/Pegawai/sie_pegawai_mutasi?tahun=${years}`)
+      .get(
+        `${url}KinerjaLayanan/Tunggakan/Tunggakan?namaprofile=${dataFilter.namaprofile}`
+      )
       .then(function (response) {
         setData(response.data.data);
         setComment(response.data);
@@ -275,6 +229,21 @@ const KepegawaianBpnMutasi = () => {
   };
 
   useEffect(() => {
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .get(`${url}KinerjaLayanan/Tunggakan/tunggakan_filter_namaprofile`)
+      .then(function (response) {
+        setProfileList(response.data.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+
     getData();
   }, []);
 
@@ -282,19 +251,19 @@ const KepegawaianBpnMutasi = () => {
     setYears(event.target.value);
   };
 
-  const handleChangeBulan = (event) => {
-    setBulan(event.target.value);
+  const handleChangeAwal = (event) => {
+    setTahunAwal(event.target.value);
   };
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">kanwil {label}</p>
+          <p className="label">{label}</p>
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Jumlah Mutasi : ${payload[0].value}`}</p>
+          >{`Nilai Tunggakan : ${payload[0].value}`}</p>
         </div>
       );
     }
@@ -305,7 +274,7 @@ const KepegawaianBpnMutasi = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Jumlah Pegawai berdasarkan Mutasi",
+      "Data Tunggakan",
       data,
       ".xlsx"
     );
@@ -353,10 +322,10 @@ const KepegawaianBpnMutasi = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="kanwil"></XAxis>
+            <XAxis dataKey="keterangan"></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Nilai Satuan 1 Juta"
+                value="Nilai Tunggakan"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
@@ -364,7 +333,7 @@ const KepegawaianBpnMutasi = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="jumlah_mutasi" fill="#F0E68C" name="Jumlah Mutasi" />
+            <Bar dataKey="nilai" fill="#8884d8" name="Nilai Tunggakan" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -391,22 +360,16 @@ const KepegawaianBpnMutasi = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.kantor}>
+                    <StyledTableRow key={row.keterangan}>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.kantor}
+                        {row.keterangan}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {row.kanwil}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.satker}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.jumlah_mutasi}
+                        {row.nilai}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
@@ -488,6 +451,18 @@ const KepegawaianBpnMutasi = () => {
     });
   };
 
+  const handleChangeKantor = (event) => {
+    setKantor(event);
+  };
+
+  const handleChangeKanwil = (event) => {
+    setKanwil(event);
+  };
+
+  const handleChangeSatket = (event) => {
+    setSatker(event);
+  };
+
   return (
     <div>
       <Modal
@@ -549,7 +524,7 @@ const KepegawaianBpnMutasi = () => {
                   ' src="' +
                   BASE_URL.domain +
                   "/embed/" +
-                  BASE_URL.path.kepegawaian_bpn_mutasi +
+                  BASE_URL.path.sie_tunggakan +
                   '"></iframe>'
                 }
                 onCopy={() => toast.success("success copied to clipboard!")}
@@ -622,7 +597,7 @@ const KepegawaianBpnMutasi = () => {
                   ' src="' +
                   BASE_URL.domain +
                   "/embed/" +
-                  BASE_URL.path.kepegawaian_bpn_mutasi +
+                  BASE_URL.path.sie_tunggakan +
                   '"></iframe>'
                 }
               />
@@ -712,11 +687,7 @@ const KepegawaianBpnMutasi = () => {
             <iframe
               width={iframeWidth}
               height={iframeHeight}
-              src={
-                BASE_URL.domain +
-                "/embed/" +
-                BASE_URL.path.kepegawaian_bpn_mutasi
-              }
+              src={BASE_URL.domain + "/embed/" + BASE_URL.path.sie_tunggakan}
             ></iframe>
           </Grid>
         </div>
@@ -747,7 +718,7 @@ const KepegawaianBpnMutasi = () => {
       >
         <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            Jumlah Pegawai berdasarkan Mutasi
+            Data Tunggakan
           </Typography>
         </Grid>
         <Grid
@@ -782,7 +753,7 @@ const KepegawaianBpnMutasi = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Jumlah Pegawai berdasarkan Mutasi ",
+                    title: "Data Tunggakan ",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -813,12 +784,7 @@ const KepegawaianBpnMutasi = () => {
             <TooltipMI
               title="Print Data"
               placement="top"
-              onClick={() =>
-                handlePrintData(
-                  "Jumlah Pegawai berdasarkan Mutasi",
-                  columnTable
-                )
-              }
+              onClick={() => handlePrintData("Data Tunggakan", columnTable)}
             >
               <IconButton aria-label="delete" size="small">
                 <IoPrint />
@@ -863,60 +829,13 @@ const KepegawaianBpnMutasi = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Tahun
-                </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={years}
-                    onChange={handleChange}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    {tahunMutasi.map((item, i) => {
-                      return (
-                        <MenuItem value={item.tahun} key={i}>
-                          {item.tahun}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid
-                container
-                direction="row"
-                justifyContent="flex-start"
-                alignItems="center"
-                item
-                xs={6}
-                style={{ paddingLeft: 20 }}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => getData()}
-                  style={{ height: 57, width: "100%", fontSize: 12 }}
-                >
-                  Submit
-                </Button>
-              </Grid>
-              {/* <Grid item xs={6}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
                   Pilih Wilayah
                 </Typography>
                 <Autocomplete
-                  multiple
                   id="kantor"
                   name="kantor"
                   style={{ width: "100%", height: 50 }}
-                  options={berkasPnbpWilayah}
+                  options={profileList}
                   classes={{
                     option: classes.option,
                   }}
@@ -926,27 +845,10 @@ const KepegawaianBpnMutasi = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilter(newValue);
                   }}
-                  getOptionLabel={(option) => option.wilayah}
+                  getOptionLabel={(option) => option.namaprofile || ""}
                   renderOption={(option, { selected }) => (
-                    <React.Fragment>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={
-                          dataFilter && dataFilter.length != 0
-                            ? dataFilter
-                                .map((item) => item.wilayah)
-                                .indexOf(option.wilayah) > -1
-                            : false
-                        }
-                      />
-                      {option.wilayah}
-                    </React.Fragment>
+                    <React.Fragment>{option.namaprofile}</React.Fragment>
                   )}
-                  renderTags={(selected) => {
-                    return `${selected.length} Terpilih`;
-                  }}
                   defaultValue={dataFilter}
                   renderInput={(params) => (
                     <TextField
@@ -956,75 +858,7 @@ const KepegawaianBpnMutasi = () => {
                         disableUnderline: true,
                       }}
                       style={{ marginTop: 5 }}
-                      placeholder={dataFilter.length != 0 ? "" : "Pilih Kantor"}
-                    />
-                  )}
-                />
-              </Grid> */}
-            </Grid>
-            {/* <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={6}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Pilih Kantor
-                </Typography>
-                <Autocomplete
-                  multiple
-                  id="kantor"
-                  name="kantor"
-                  style={{ width: "100%", height: 50 }}
-                  options={berkasPnbpKantor}
-                  classes={{
-                    option: classes.option,
-                  }}
-                  disableUnderline
-                  className={classes.formControl}
-                  autoHighlight
-                  onChange={(event, newValue) => {
-                    handleChangeFilterKantor(newValue);
-                  }}
-                  getOptionLabel={(option) => option.kantor}
-                  renderOption={(option, { selected }) => (
-                    <React.Fragment>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={
-                          dataFilterKantor && dataFilterKantor.length != 0
-                            ? dataFilterKantor
-                                .map((item) => item.kantor)
-                                .indexOf(option.kantor) > -1
-                            : false
-                        }
-                      />
-                      {option.kantor}
-                    </React.Fragment>
-                  )}
-                  renderTags={(selected) => {
-                    return `${selected.length} Terpilih`;
-                  }}
-                  defaultValue={dataFilterKantor}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      InputProps={{
-                        ...params.InputProps,
-                        disableUnderline: true,
-                      }}
-                      style={{ marginTop: 5 }}
-                      placeholder={
-                        dataFilterKantor.length != 0 ? "" : "Pilih Wilayah"
-                      }
+                      placeholder={"Nama Profile"}
                     />
                   )}
                 />
@@ -1047,7 +881,7 @@ const KepegawaianBpnMutasi = () => {
                   Submit
                 </Button>
               </Grid>
-            </Grid> */}
+            </Grid>
 
             <Typography
               className={classes.isiContentTextStyle}
@@ -1066,7 +900,7 @@ const KepegawaianBpnMutasi = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "Jumlah Pegawai berdasarkan Mutasi ",
+                      title: "Data Tunggakan ",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -1112,10 +946,10 @@ const KepegawaianBpnMutasi = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="kanwil" />
+                    <XAxis dataKey="keterangan" />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
-                        value="Nilai Satuan 1 Juta"
+                        value="Nilai Tunggakan"
                         angle={-90}
                         position="insideBottomLeft"
                         offset={-5}
@@ -1124,9 +958,9 @@ const KepegawaianBpnMutasi = () => {
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
                     <Bar
-                      dataKey="jumlah_mutasi"
-                      fill="#F0E68C"
-                      name="Jumlah Mutasi"
+                      dataKey="nilai"
+                      fill="#8884d8"
+                      name="Nilai Tunggakan"
                     />
                   </BarChart>
                 </ResponsiveContainer>
@@ -1139,4 +973,4 @@ const KepegawaianBpnMutasi = () => {
   );
 };
 
-export default KepegawaianBpnMutasi;
+export default KepegawaianBpnJabatan;
