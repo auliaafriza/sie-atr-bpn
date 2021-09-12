@@ -1,5 +1,9 @@
 import React, { useEffect } from "react";
 import { getSatker, getKantor, getKanwil } from "../../actions/globalActions";
+import {
+  getBerkasPnbpWilayahFilter,
+  getBerkasPnbpKantorFilter,
+} from "../../actions/pnbpAction";
 import { useDispatch } from "react-redux";
 import PnbpBerkasWilayah from "./sie-pnbp-berkas-wilayah";
 import PnbpBerkasPeringkat from "./sie-pnbp-berkas-peringkat";
@@ -21,6 +25,8 @@ const PnbpPage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(getBerkasPnbpWilayahFilter());
+    dispatch(getBerkasPnbpKantorFilter());
     dispatch(getSatker());
     dispatch(getKantor());
     dispatch(getKanwil());
@@ -45,7 +51,7 @@ const PnbpPage = () => {
         <PnbpBerkasWilayah />
         <PnbpBerkasPeringkat />
       </div>
-      <PnbpBerkasPeringkatWilayah />
+      {/* <PnbpBerkasPeringkatWilayah /> */}
       <RealisasiAnggaran />
       <RealisasiPenggunaan />
       <PersentaseRealisasiBelanja />

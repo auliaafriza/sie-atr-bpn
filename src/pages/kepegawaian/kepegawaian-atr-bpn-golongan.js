@@ -44,6 +44,7 @@ import {
   Button,
   TextField,
 } from "@material-ui/core";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import {
   createTheme,
   ThemeProvider,
@@ -60,11 +61,15 @@ import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 import { BASE_URL } from "../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const dataTemp = [
   {
@@ -153,12 +158,9 @@ const KepegawaianBpnGol = () => {
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [tahunAwal, setTahunAwal] = useState("2017");
-  const [kanwil, setKanwil] = useState("");
-  const [kantor, setKantor] = useState("");
-  const [satker, setSatker] = useState("");
-  const [kanwilDis, setKanwilDis] = useState("");
-  const [kantorDis, setKantorDis] = useState("");
-  const [satkerDis, setSatkerDis] = useState("");
+  const [kanwil, setKanwil] = useState({ kanwil: "" });
+  const [kantor, setKantor] = useState({ kantor: "" });
+  const [satker, setSatker] = useState({ satker: "" });
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -195,11 +197,14 @@ const KepegawaianBpnGol = () => {
   };
 
   const getData = () => {
+    let kantorTemp = kantor.kantor.trim();
+    let kanwilTemp = kanwil.kanwil.trim();
+    let satkerTemp = satker.satker.trim();
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}Kepegawaian/Pegawai/sie_pegawai_atr_bpn_golongan?tahunAwal=${tahunAwal}&tahunAkhir=${years}&kantor=${kantor}&kanwil=${kanwil}&satker=${satker}`
+        `${url}Kepegawaian/Pegawai/sie_pegawai_atr_bpn_golongan?tahunAwal=${tahunAwal}&tahunAkhir=${years}&kantor=${kantorTemp}&kanwil=${kanwilTemp}&satker=${satkerTemp}`
       )
       .then(function (response) {
         setData(response.data.data);
@@ -228,30 +233,15 @@ const KepegawaianBpnGol = () => {
   };
 
   const handleChangeKantor = (event) => {
-    let temp =
-      event.target.value.length > 10
-        ? event.target.value.slice(0, 10)
-        : event.target.value;
-    setKantorDis(temp);
-    setKantor(event.target.value);
+    setKantor(event);
   };
 
   const handleChangeKanwil = (event) => {
-    setKanwilDis(
-      event.target.value.length > 10
-        ? event.target.value.slice(0, 10)
-        : event.target.value
-    );
-    setKanwil(event.target.value);
+    setKanwil(event);
   };
 
   const handleChangeSatket = (event) => {
-    setSatkerDis(
-      event.target.value.length > 10
-        ? event.target.value.slice(0, 10)
-        : event.target.value
-    );
-    setSatker(event.target.value);
+    setSatker(event);
   };
 
   const CustomTooltip = ({ active, payload, label }) => {
@@ -880,36 +870,34 @@ const KepegawaianBpnGol = () => {
                 >
                   Pilih Satker
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={satker ? satker : "Satker"}
-                    onChange={handleChangeSatket}
-                    label="Satker"
-                    className={classes.selectStyle}
-                    renderValue={(selected) =>
-                      selected.length > 8
-                        ? `${selected.slice(0, 8)}...`
-                        : selected
-                    }
-                    disableUnderline
-                  >
-                    <MenuItem value="" disabled>
-                      Satker
-                    </MenuItem>
-
-                    {satkerRed && satkerRed.length != 0
-                      ? satkerRed.map((item, i) => {
-                          return (
-                            <MenuItem value={item.satker} key={i}>
-                              {item.satker}
-                            </MenuItem>
-                          );
-                        })
-                      : null}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="satker"
+                  name="satker"
+                  style={{ width: "100%", height: 50 }}
+                  options={satkerRed}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeSatket(newValue);
+                  }}
+                  getOptionLabel={(option) => option.satker || ""}
+                  defaultValue={satker}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={satker ? "" : "Satker"}
+                    />
+                  )}
+                />
               </Grid>
             </Grid>
             <Grid
@@ -925,47 +913,36 @@ const KepegawaianBpnGol = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Kantor
+                  Pilih Kanwil
                 </Typography>
-                {/* <Autocomplete
-                  id="combo-box-demo"
-                  options={kantorRed}
-                  getOptionLabel={(option) => option.kantor}
-                  className={classes.selectStyle}
+                <Autocomplete
+                  id="kanwil"
+                  name="kanwil"
+                  style={{ width: "100%", height: 50 }}
+                  options={kanwilRed}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeKanwil(newValue);
+                  }}
+                  getOptionLabel={(option) => option.kanwil || ""}
+                  defaultValue={kanwil}
                   renderInput={(params) => (
-                    <TextField {...params} label="Kantor" variant="outlined" />
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={kanwil ? "" : "Kanwil"}
+                    />
                   )}
-                /> */}
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={kantor ? kantor : "Kantor"}
-                    onChange={handleChangeKantor}
-                    label="Kantor"
-                    className={classes.selectStyle}
-                    renderValue={(selected) =>
-                      selected.length > 8
-                        ? `${selected.slice(0, 8)}...`
-                        : selected
-                    }
-                    disableUnderline
-                  >
-                    <MenuItem value="" disabled>
-                      Kantor
-                    </MenuItem>
-
-                    {kantorRed && kantorRed.length != 0
-                      ? kantorRed.map((item, i) => {
-                          return (
-                            <MenuItem value={item.kantor} key={i}>
-                              {item.kantor}
-                            </MenuItem>
-                          );
-                        })
-                      : null}
-                  </Select>
-                </FormControl>
+                />
               </Grid>
               <Grid item xs={4}>
                 <Typography
@@ -973,37 +950,36 @@ const KepegawaianBpnGol = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Kanwil
+                  Pilih Kantor
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={kanwil ? kanwil : "Kanwil"}
-                    onChange={handleChangeKanwil}
-                    label="Kanwil"
-                    className={classes.selectStyle}
-                    renderValue={(selected) =>
-                      selected.length > 8
-                        ? `${selected.slice(0, 8)}...`
-                        : selected
-                    }
-                    disableUnderline
-                  >
-                    <MenuItem value="" disabled>
-                      Kanwil
-                    </MenuItem>
-                    {kanwilRed && kanwilRed.length != 0
-                      ? kanwilRed.map((item, i) => {
-                          return (
-                            <MenuItem value={item.kanwil} key={i}>
-                              {item.kanwil}
-                            </MenuItem>
-                          );
-                        })
-                      : null}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="kanwil"
+                  name="kanwil"
+                  style={{ width: "100%", height: 50 }}
+                  options={kantorRed}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeKantor(newValue);
+                  }}
+                  getOptionLabel={(option) => option.kantor || ""}
+                  defaultValue={kantor}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={kantor ? "" : "Kantor"}
+                    />
+                  )}
+                />
               </Grid>
               <Grid
                 container

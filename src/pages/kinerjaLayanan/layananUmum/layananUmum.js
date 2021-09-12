@@ -1,9 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
+import {
+  getSatker,
+  getKantor,
+  getKanwil,
+} from "../../../actions/globalActions";
+import {
+  getBerkasPnbpWilayahFilter,
+  getBerkasPnbpKantorFilter,
+} from "../../../actions/pnbpAction";
+import { useDispatch } from "react-redux";
 import SieLayananJumlahPerjenis from "./sie_layanan_jumlah_perjenis";
 import SieLayananKebutuhanKantorPertanahan from "./sie_layanan_kebutuhan_kantor_pertanahan";
 import bgImg from "../../../assets/img/kinerja.jpg";
 
 const LayananUmum = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getBerkasPnbpWilayahFilter());
+    dispatch(getBerkasPnbpKantorFilter());
+    dispatch(getSatker());
+    dispatch(getKantor());
+    dispatch(getKanwil());
+  }, []);
+
   return (
     <div
       style={{

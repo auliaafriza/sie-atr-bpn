@@ -149,15 +149,22 @@ const realisasiPenggunaan = () => {
   const realisasiPenggunaanFilter = useSelector(
     (state) => state.pnbp.realisasiPenggunaanFilter
   );
+  const berkasPnbpWilayah = useSelector(
+    (state) => state.pnbp.berkasPnbpWilayah
+  );
+  const berkasPnbpKantor = useSelector((state) => state.pnbp.berkasPnbpKantor);
+
   const [years, setYears] = useState("2021");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [bulan, setBulan] = useState("01");
   const [open, setOpen] = useState(false);
   const [dataFilter, setDataFilter] = useState([
-    { kantor: "Kantor Pertanahan Kabupaten Kampar" },
-    { kantor: "Kantor Pertanahan Kabupaten Kupang" },
-    { kantor: "Kantor Pertanahan Kabupaten Sumba Barat" },
+    { wilayah: "Kantor Wilayah Provinsi Jawa Barat" },
+    { wilayah: "Kantor Wilayah Provinsi Jambi" },
+  ]);
+  const [dataFilterKantor, setDataFilterKantor] = useState([
+    { kantor: "Kantor Pertanahan Kabupaten Bandung" },
   ]);
 
   const [dataModal, setDataModal] = useState({
@@ -205,10 +212,14 @@ const realisasiPenggunaan = () => {
   };
 
   const getData = () => {
-    let temp = { kantor: [] };
-    dataFilter && dataFilter.length != 0
-      ? dataFilter.map((item) => temp.kantor.push(item.kantor))
+    let temp = { kantor: [], wilayah: [] };
+    dataFilterKantor && dataFilterKantor.length != 0
+      ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
       : [];
+    dataFilter && dataFilter.length != 0
+      ? dataFilter.map((item) => temp.wilayah.push(item.wilayah))
+      : [];
+
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
@@ -243,8 +254,26 @@ const realisasiPenggunaan = () => {
     setBulan(event.target.value);
   };
 
-  const handleChangeFilter = (value) => {
-    setDataFilter(value);
+  const handleChangeFilter = (event) => {
+    if (event.length != 0) {
+      setDataFilter([
+        ...dataFilter,
+        ...event.filter((option) => dataFilter.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilter([]);
+    }
+  };
+
+  const handleChangeFilterKantor = (event) => {
+    if (event.length != 0) {
+      setDataFilterKantor([
+        ...dataFilterKantor,
+        ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilterKantor([]);
+    }
   };
 
   const exportData = () => {
@@ -975,37 +1004,30 @@ const realisasiPenggunaan = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={6}>
+                <Grid item xs={5}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
-                    Pilih Kantor
+                    Pilih Wilayah
                   </Typography>
                   <Autocomplete
                     multiple
                     id="kantor"
                     name="kantor"
                     style={{ width: "100%", height: 50 }}
-                    options={realisasiPenggunaanFilter}
+                    options={berkasPnbpWilayah}
                     classes={{
                       option: classes.option,
                     }}
                     disableUnderline
                     className={classes.formControl}
                     autoHighlight
-                    onChange={(e, v, r) => {
-                      if (r == "select-option") {
-                        handleChangeFilter(v);
-                      }
+                    onChange={(event, newValue) => {
+                      handleChangeFilter(newValue);
                     }}
-                    onInputChange={(e, v, r) => {
-                      if (r == "clear" || r == "input") {
-                        handleChangeFilter(v);
-                      }
-                    }}
-                    getOptionLabel={(option) => option.kantor}
+                    getOptionLabel={(option) => option.wilayah}
                     renderOption={(option, { selected }) => (
                       <React.Fragment>
                         <Checkbox
@@ -1015,12 +1037,12 @@ const realisasiPenggunaan = () => {
                           checked={
                             dataFilter && dataFilter.length != 0
                               ? dataFilter
-                                  .map((item) => item.kantor)
-                                  .indexOf(option.kantor) > -1
+                                  .map((item) => item.wilayah)
+                                  .indexOf(option.wilayah) > -1
                               : false
                           }
                         />
-                        {option.kantor}
+                        {option.wilayah}
                       </React.Fragment>
                     )}
                     renderTags={(selected) => {
@@ -1041,38 +1063,66 @@ const realisasiPenggunaan = () => {
                       />
                     )}
                   />
-                  {/* <FormControl className={classes.formControl}>
-                    <Select
-                      multiple
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={dataFilter}
-                      onChange={handleChangeFilter}
-                      label="Kantor"
-                      className={classes.selectStyle}
-                      renderValue={(selected) => {
-                        if (selected.length > 1)
-                          return `${selected.length - 1} Terpilih`;
-                        else if (selected[0] == "") return "Kantor";
-                      }}
-                      disableUnderline
-                    >
-                      <MenuItem value="" disabled>
-                        Kantor
-                      </MenuItem>
-
-                      {realisasiPenggunaanFilter.map((item, i) => {
-                        return (
-                          <MenuItem value={item.kantor} key={i}>
-                            <Checkbox
-                              checked={dataFilter.indexOf(item.kantor) > -1}
-                            />
-                            <ListItemText primary={item.kantor} />
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl> */}
+                </Grid>
+                <Grid item xs={5}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Pilih Kantor
+                  </Typography>
+                  <Autocomplete
+                    multiple
+                    id="kantor"
+                    name="kantor"
+                    style={{ width: "100%", height: 50 }}
+                    options={berkasPnbpKantor}
+                    classes={{
+                      option: classes.option,
+                    }}
+                    disableUnderline
+                    className={classes.formControl}
+                    autoHighlight
+                    onChange={(event, newValue) => {
+                      handleChangeFilterKantor(newValue);
+                    }}
+                    getOptionLabel={(option) => option.kantor}
+                    renderOption={(option, { selected }) => (
+                      <React.Fragment>
+                        <Checkbox
+                          icon={icon}
+                          checkedIcon={checkedIcon}
+                          style={{ marginRight: 8 }}
+                          checked={
+                            dataFilterKantor && dataFilterKantor.length != 0
+                              ? dataFilterKantor
+                                  .map((item) => item.kantor)
+                                  .indexOf(option.kantor) > -1
+                              : false
+                          }
+                        />
+                        {option.kantor}
+                      </React.Fragment>
+                    )}
+                    renderTags={(selected) => {
+                      return `${selected.length} Terpilih`;
+                    }}
+                    defaultValue={dataFilterKantor}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        InputProps={{
+                          ...params.InputProps,
+                          disableUnderline: true,
+                        }}
+                        style={{ marginTop: 5 }}
+                        placeholder={
+                          dataFilterKantor.length != 0 ? "" : "Pilih Wilayah"
+                        }
+                      />
+                    )}
+                  />
                 </Grid>
                 <Grid
                   container
@@ -1080,14 +1130,14 @@ const realisasiPenggunaan = () => {
                   justifyContent="flex-start"
                   alignItems="center"
                   item
-                  xs={6}
-                  style={{ paddingTop: 40, paddingLeft: 20 }}
+                  xs={2}
+                  style={{ paddingLeft: 20 }}
                 >
                   <Button
                     variant="contained"
                     color="primary"
                     onClick={() => getData()}
-                    style={{ height: 57, width: "100%" }}
+                    style={{ height: 57, width: "100%", fontSize: 12 }}
                   >
                     Submit
                   </Button>

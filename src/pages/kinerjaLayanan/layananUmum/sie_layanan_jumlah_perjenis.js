@@ -51,8 +51,12 @@ import { useHistory } from "react-router-dom";
 import { BASE_URL } from "../../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
-import { DataFormater } from "../../../functionGlobal/globalDataAsset";
+import {
+  DataFormater,
+  tahunData,
+} from "../../../functionGlobal/globalDataAsset";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import { useDispatch, useSelector } from "react-redux";
 import {
   CheckBoxOutlineBlank,
   CheckBox as CheckBoxIcon,
@@ -140,6 +144,19 @@ let axis = {
 const title = "Jumlah layanan berdasarkan jenis layanan";
 const SieLayananJumlahPerjenis = () => {
   const classes = styles();
+  const berkasPnbpWilayah = useSelector(
+    (state) => state.pnbp.berkasPnbpWilayah
+  );
+  const berkasPnbpKantor = useSelector((state) => state.pnbp.berkasPnbpKantor);
+
+  const [dataFilter, setDataFilter] = useState([
+    { wilayah: "Kantor Wilayah Provinsi Jawa Barat" },
+    { wilayah: "Kantor Wilayah Provinsi Jambi" },
+  ]);
+  const [dataFilterKantor, setDataFilterKantor] = useState([
+    { kantor: "Kantor Pertanahan Kabupaten Bandung" },
+  ]);
+  const [years, setYears] = useState("2014");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [open, setOpen] = useState(false);
@@ -180,27 +197,36 @@ const SieLayananJumlahPerjenis = () => {
     setOpen(false);
   };
 
-  const getData = () => {
-    let temp = {
-      jenisLayanan: [],
-      namaLayanan: [],
-    };
+  const handleChangeTahun = (event) => {
+    setYears(event.target.value);
+  };
 
+  const handleChangeFilterKantor = (event) => {
+    if (event.length != 0) {
+      setDataFilterKantor([
+        ...dataFilterKantor,
+        ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilterKantor([]);
+    }
+  };
+
+  const getData = () => {
+    let temp = { kantor: [], wilayah: [], jenisLayanan: [], namaLayanan: [] };
+    dataFilterKantor && dataFilterKantor.length != 0
+      ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
+      : [];
+    dataFilter && dataFilter.length != 0
+      ? dataFilter.map((item) => temp.wilayah.push(item.wilayah))
+      : [];
     jenisLay && jenisLay.length != 0
       ? jenisLay.map((item) => temp.jenisLayanan.push(item.jenisLayanan))
       : [];
-    // temp.jenisLayanan =
-    //   jenisLay && jenisLay.length == 1 && jenisLay[0] == ""
-    //     ? []
-    //     : jenisLay.slice(1);
 
     namaLay && namaLay.length != 0
       ? namaLay.map((item) => temp.namaLayanan.push(item.namaLayanan))
       : [];
-    // temp.namaLayanan =
-    //   namaLay && namaLay.length == 1 && namaLay[0] == ""
-    //     ? []
-    //     : namaLay.slice(1);
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
@@ -838,6 +864,161 @@ const SieLayananJumlahPerjenis = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
+                  Pilih Tahun
+                </Typography>
+                <FormControl className={classes.formControl}>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={years}
+                    onChange={handleChangeTahun}
+                    label="Tahun"
+                    className={classes.selectStyle}
+                    disableUnderline
+                  >
+                    {tahunData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Wilayah
+                </Typography>
+                <Autocomplete
+                  multiple
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={berkasPnbpWilayah}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilter(newValue);
+                  }}
+                  getOptionLabel={(option) => option.wilayah}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilter && dataFilter.length != 0
+                            ? dataFilter
+                                .map((item) => item.wilayah)
+                                .indexOf(option.wilayah) > -1
+                            : false
+                        }
+                      />
+                      {option.wilayah}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return `${selected.length} Terpilih`;
+                  }}
+                  defaultValue={dataFilter}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={dataFilter.length != 0 ? "" : "Pilih Kantor"}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Kantor
+                </Typography>
+                <Autocomplete
+                  multiple
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={berkasPnbpKantor}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilterKantor(newValue);
+                  }}
+                  getOptionLabel={(option) => option.kantor}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilterKantor && dataFilterKantor.length != 0
+                            ? dataFilterKantor
+                                .map((item) => item.kantor)
+                                .indexOf(option.kantor) > -1
+                            : false
+                        }
+                      />
+                      {option.kantor}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return `${selected.length} Terpilih`;
+                  }}
+                  defaultValue={dataFilterKantor}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={
+                        dataFilterKantor.length != 0 ? "" : "Pilih Wilayah"
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
                   Nama Layanan
                 </Typography>
                 <Autocomplete
@@ -891,37 +1072,6 @@ const SieLayananJumlahPerjenis = () => {
                     />
                   )}
                 />
-                {/* <FormControl className={classes.formControl}>
-                  <Select
-                    multiple
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={namaLay}
-                    onChange={handleChange}
-                    label="Nama Layanan"
-                    className={classes.selectStyle}
-                    disableUnderline
-                    renderValue={(selected) => {
-                      if (selected.length > 1)
-                        return `${selected.length - 1} Terpilih`;
-                      else if (selected[0] == "") return "Nama Layanan";
-                    }}
-                  >
-                    <MenuItem value="" disabled>
-                      Nama Layanan
-                    </MenuItem>
-                    {listNamaLayanan.map((item, i) => {
-                      return (
-                        <MenuItem value={item.namalayanan} key={i}>
-                          <Checkbox
-                            checked={namaLay.indexOf(item.namalayanan) > -1}
-                          />
-                          <ListItemText primary={item.namalayanan} />
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl> */}
               </Grid>
               <Grid item xs={4}>
                 <Typography
@@ -988,37 +1138,6 @@ const SieLayananJumlahPerjenis = () => {
                     />
                   )}
                 />
-                {/* <FormControl className={classes.formControl}>
-                  <Select
-                    multiple
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={jenisLay}
-                    onChange={handleChangeJenis}
-                    label="Jenis Layanan"
-                    className={classes.selectStyle}
-                    disableUnderline
-                    renderValue={(selected) => {
-                      if (selected.length > 1)
-                        return `${selected.length - 1} Terpilih`;
-                      else if (selected[0] == "") return "Jenis Layanan";
-                    }}
-                  >
-                    <MenuItem value="" disabled>
-                      Jenis Layanan
-                    </MenuItem>
-                    {listJenisLayanan.map((item, i) => {
-                      return (
-                        <MenuItem value={item.jenislayanan} key={i}>
-                          <Checkbox
-                            checked={jenisLay.indexOf(item.jenislayanan) > -1}
-                          />
-                          <ListItemText primary={item.jenislayanan} />
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl> */}
               </Grid>
               <Grid
                 container

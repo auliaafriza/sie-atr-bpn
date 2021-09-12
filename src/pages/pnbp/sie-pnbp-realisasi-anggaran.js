@@ -43,12 +43,15 @@ import {
   Avatar,
   TablePagination,
   Button,
+  TextField,
 } from "@material-ui/core";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import {
   createTheme,
   ThemeProvider,
   withStyles,
 } from "@material-ui/core/styles";
+import { useSelector } from "react-redux";
 import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "../dashboardPage/styles";
@@ -63,6 +66,11 @@ import { BASE_URL } from "../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const dataTemp = [
   {
@@ -163,6 +171,11 @@ let axis = {
 
 const RealisasiAnggaran = () => {
   const classes = styles();
+  const berkasPnbpWilayah = useSelector(
+    (state) => state.pnbp.berkasPnbpWilayah
+  );
+  const berkasPnbpKantor = useSelector((state) => state.pnbp.berkasPnbpKantor);
+
   const [years, setYears] = useState("2022");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
@@ -179,6 +192,13 @@ const RealisasiAnggaran = () => {
   const inputRef = useRef();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [dataFilter, setDataFilter] = useState([
+    { wilayah: "Kantor Wilayah Provinsi Jawa Barat" },
+    { wilayah: "Kantor Wilayah Provinsi Jambi" },
+  ]);
+  const [dataFilterKantor, setDataFilterKantor] = useState([
+    { kantor: "Kantor Pertanahan Kabupaten Bandung" },
+  ]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -199,11 +219,20 @@ const RealisasiAnggaran = () => {
   };
 
   const getData = () => {
+    let temp = { kantor: [], wilayah: [] };
+    dataFilterKantor && dataFilterKantor.length != 0
+      ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
+      : [];
+    dataFilter && dataFilter.length != 0
+      ? dataFilter.map((item) => temp.wilayah.push(item.wilayah))
+      : [];
+
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_realisasi_anggaran?tahunAwal=${tahunAwal}&tahunAkhir=${years}`
+      .post(
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_realisasi_anggaran?tahunAwal=${tahunAwal}&tahunAkhir=${years}`,
+        temp
       )
       .then(function (response) {
         setData(response.data.data);
@@ -222,6 +251,28 @@ const RealisasiAnggaran = () => {
   useEffect(() => {
     getData();
   }, []);
+
+  const handleChangeFilter = (event) => {
+    if (event.length != 0) {
+      setDataFilter([
+        ...dataFilter,
+        ...event.filter((option) => dataFilter.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilter([]);
+    }
+  };
+
+  const handleChangeFilterKantor = (event) => {
+    if (event.length != 0) {
+      setDataFilterKantor([
+        ...dataFilterKantor,
+        ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilterKantor([]);
+    }
+  };
 
   const handleChange = (event) => {
     setYears(event.target.value);
@@ -863,7 +914,7 @@ const RealisasiAnggaran = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -891,7 +942,7 @@ const RealisasiAnggaran = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -919,20 +970,148 @@ const RealisasiAnggaran = () => {
                     </Select>
                   </FormControl>
                 </Grid>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={2}
+              >
+                <Grid item xs={5}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Pilih Wilayah
+                  </Typography>
+                  <Autocomplete
+                    multiple
+                    id="kantor"
+                    name="kantor"
+                    style={{ width: "100%", height: 50 }}
+                    options={berkasPnbpWilayah}
+                    classes={{
+                      option: classes.option,
+                    }}
+                    disableUnderline
+                    className={classes.formControl}
+                    autoHighlight
+                    onChange={(event, newValue) => {
+                      handleChangeFilter(newValue);
+                    }}
+                    getOptionLabel={(option) => option.wilayah}
+                    renderOption={(option, { selected }) => (
+                      <React.Fragment>
+                        <Checkbox
+                          icon={icon}
+                          checkedIcon={checkedIcon}
+                          style={{ marginRight: 8 }}
+                          checked={
+                            dataFilter && dataFilter.length != 0
+                              ? dataFilter
+                                  .map((item) => item.wilayah)
+                                  .indexOf(option.wilayah) > -1
+                              : false
+                          }
+                        />
+                        {option.wilayah}
+                      </React.Fragment>
+                    )}
+                    renderTags={(selected) => {
+                      return `${selected.length} Terpilih`;
+                    }}
+                    defaultValue={dataFilter}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        InputProps={{
+                          ...params.InputProps,
+                          disableUnderline: true,
+                        }}
+                        style={{ marginTop: 5 }}
+                        placeholder={
+                          dataFilter.length != 0 ? "" : "Pilih Kantor"
+                        }
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={5}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Pilih Kantor
+                  </Typography>
+                  <Autocomplete
+                    multiple
+                    id="kantor"
+                    name="kantor"
+                    style={{ width: "100%", height: 50 }}
+                    options={berkasPnbpKantor}
+                    classes={{
+                      option: classes.option,
+                    }}
+                    disableUnderline
+                    className={classes.formControl}
+                    autoHighlight
+                    onChange={(event, newValue) => {
+                      handleChangeFilterKantor(newValue);
+                    }}
+                    getOptionLabel={(option) => option.kantor}
+                    renderOption={(option, { selected }) => (
+                      <React.Fragment>
+                        <Checkbox
+                          icon={icon}
+                          checkedIcon={checkedIcon}
+                          style={{ marginRight: 8 }}
+                          checked={
+                            dataFilterKantor && dataFilterKantor.length != 0
+                              ? dataFilterKantor
+                                  .map((item) => item.kantor)
+                                  .indexOf(option.kantor) > -1
+                              : false
+                          }
+                        />
+                        {option.kantor}
+                      </React.Fragment>
+                    )}
+                    renderTags={(selected) => {
+                      return `${selected.length} Terpilih`;
+                    }}
+                    defaultValue={dataFilterKantor}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        InputProps={{
+                          ...params.InputProps,
+                          disableUnderline: true,
+                        }}
+                        style={{ marginTop: 5 }}
+                        placeholder={
+                          dataFilterKantor.length != 0 ? "" : "Pilih Wilayah"
+                        }
+                      />
+                    )}
+                  />
+                </Grid>
                 <Grid
                   container
                   direction="row"
                   justifyContent="flex-start"
                   alignItems="center"
                   item
-                  xs={3}
+                  xs={2}
                   style={{ paddingLeft: 20 }}
                 >
                   <Button
                     variant="contained"
                     color="primary"
                     onClick={() => getData()}
-                    style={{ height: 57, width: "100%" }}
+                    style={{ height: 57, width: "100%", fontSize: 12 }}
                   >
                     Submit
                   </Button>

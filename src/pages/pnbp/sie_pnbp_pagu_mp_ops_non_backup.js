@@ -785,7 +785,13 @@ const PaguMpOpsNon = () => {
                   >
                     Pilih Tipe
                   </Typography>
-                  <FormControl className={classes.formControl}>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <InputLabel id="demo-simple-select-outlined-label">
+                      Tipe
+                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
@@ -793,7 +799,6 @@ const PaguMpOpsNon = () => {
                       onChange={handleChangeAwal}
                       label="Tipe"
                       className={classes.selectStyle}
-                      disableUnderline
                     >
                       {tipeData.map((item, i) => {
                         return (
