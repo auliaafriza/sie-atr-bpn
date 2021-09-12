@@ -42,6 +42,7 @@ import SieSertifikasiTargetRealisasi from "../pages/sertifikasi/statistikSertifi
 import SieSertifikasiJangkaWaktuHak from "../pages/sertifikasi/statistikSertifikat/sie_sertifikat_jangka_waktu_hak";
 import SieSertifikasiKonsolidasiKota from "../pages/sertifikasi/statistikSertifikat/sie_sertifikat_konsolidasi_kota";
 import SieSertifikasiLuasJumlah from "../pages/sertifikasi/statistikSertifikat/sie_sertifikat_luas_jumlah";
+import SieTunggakan from "../pages/kinerjaLayanan/tunggakan/sie-tunggakan";
 import { Provider } from "react-redux";
 import store from "../config/store";
 
@@ -334,6 +335,13 @@ class IframeGenerator extends React.Component {
         ReactDOM.render(
           <Provider store={store}>
             <SieSertifikasiLuasJumlah />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+      case "sie-tunggakan":
+        ReactDOM.render(
+          <Provider store={store}>
+            <SieTunggakan />
           </Provider>,
           document.getElementById("replace-tag")
         );
