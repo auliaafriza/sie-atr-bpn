@@ -23,5 +23,5 @@ export const getWilayahApi = () => {
 };
 
 export const getWhoamiApi = () => {
-  return apiClient.get(`ApiUsers/WhoAmI`);
+  return apiClient.get(`http://siedev.atrbpn.go.id/SIEBackend/ApiUsers/WhoAmI`);
 };

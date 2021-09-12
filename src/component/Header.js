@@ -7,6 +7,7 @@ import {
   Menu,
   MenuItem,
 } from "@material-ui/core";
+import { useSelector } from "react-redux";
 import { MoreVert, AccountCircle, Search } from "@material-ui/icons";
 import { AiOutlineLogout } from "react-icons/ai";
 // import PropTypes from "prop-types";
@@ -18,7 +19,9 @@ const Header = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   // const [open, setOpen] = React.useState(false);
-  let userName = localStorage.getItem("usernameSie");
+  const userName = useSelector((state) => state.globalReducer.whoAmI);
+
+  // let userName = localStorage.getItem("usernameSie");
   const isMenuOpen = Boolean(anchorEl);
   // const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 

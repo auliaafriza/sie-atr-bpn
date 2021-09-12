@@ -1,5 +1,10 @@
 import React, { useEffect } from "react";
-import { getSatker, getKantor, getKanwil } from "../../actions/globalActions";
+import {
+  getSatker,
+  getKantor,
+  getKanwil,
+  getWhoami,
+} from "../../actions/globalActions";
 import { useDispatch } from "react-redux";
 
 const DashHome = () => {
@@ -9,6 +14,7 @@ const DashHome = () => {
     dispatch(getSatker());
     dispatch(getKantor());
     dispatch(getKanwil());
+    dispatch(getWhoami());
   }, []);
 
   return <div></div>;

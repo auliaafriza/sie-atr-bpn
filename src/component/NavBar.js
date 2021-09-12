@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import styles from "./styles";
 import { MENU_LIST } from "../config/menu";
 import _ from "lodash";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
 import axios from "axios";
@@ -47,6 +48,9 @@ const NavBar = (props) => {
   // buka inspec element -> application -> localstorage
   // add new. isi key dengan usernameSie dan value sesuai keinginan.
   // refresh halaman
+
+  const userName = useSelector((state) => state.globalReducer.whoAmI);
+
   const getListMenu = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
@@ -54,7 +58,7 @@ const NavBar = (props) => {
       method: "post",
       url: "http://10.20.57.234/SIEBackEnd/ApiMenu/ByUsername",
       data: {
-        u: localStorage.getItem("usernameSie"), //agung13
+        u: userName, //agung13
       },
     })
       .then(function (response) {
