@@ -5,6 +5,8 @@ import {
   getBerkasPnbpKantorFilterApi,
   getPersentasePnbpBelanjaFilterApi,
   getPnbpKinerjaBerkasFilterApi,
+  getWilayahPNBPApi,
+  getKantorPNBPApi,
 } from "../api/pnbpApi";
 import {
   GET_KANTOR_REALISASI_PENGGUNAAN,
@@ -13,6 +15,8 @@ import {
   GET_BERKAS_PNBP_KANTOR_FILTER,
   GET_PERSENTASE_PNBP_BELANJA_FILTER,
   GET_PNBP_KINERJA_BERKAS_FILTER,
+  GET_WILAYAH_PNBP,
+  GET_KANTOR_PNBP,
 } from "./actionTypes";
 
 export const getRealisasiPenggunaanFilter = () => {
@@ -65,6 +69,24 @@ export const getPnbpKinerjaBerkasFilter = () => {
     return dispatch({
       type: GET_PNBP_KINERJA_BERKAS_FILTER,
       payload: getPnbpKinerjaBerkasFilterApi(),
+    });
+  };
+};
+
+export const getWilayahPNBP = () => {
+  return (dispatch) => {
+    return dispatch({
+      type: GET_WILAYAH_PNBP,
+      payload: getWilayahPNBPApi(),
+    });
+  };
+};
+
+export const getKantorPNBP = (data) => {
+  return (dispatch) => {
+    return dispatch({
+      type: GET_KANTOR_PNBP,
+      payload: getKantorPNBPApi(data),
     });
   };
 };

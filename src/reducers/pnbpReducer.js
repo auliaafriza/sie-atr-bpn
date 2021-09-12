@@ -24,6 +24,14 @@ import {
   GET_PNBP_KINERJA_BERKAS_FILTER_PENDING,
   GET_PNBP_KINERJA_BERKAS_FILTER_FULFILLED,
   GET_PNBP_KINERJA_BERKAS_FILTER_REJECTED,
+  GET_WILAYAH_PNBP,
+  GET_WILAYAH_PNBP_PENDING,
+  GET_WILAYAH_PNBP_FULFILLED,
+  GET_WILAYAH_PNBP_REJECTED,
+  GET_KANTOR_PNBP,
+  GET_KANTOR_PNBP_PENDING,
+  GET_KANTOR_PNBP_FULFILLED,
+  GET_KANTOR_PNBP_REJECTED,
 } from "../actions/actionTypes";
 
 const initialstate = {
@@ -34,6 +42,8 @@ const initialstate = {
   berkasPnbpKantor: [],
   persentaseBelanjaFilter: [],
   pnbpKinerjaBerkas: [],
+  wilayahPnbp: [],
+  kantorPnbp: [],
   error: {},
 };
 
@@ -167,6 +177,50 @@ const reducer = (state = initialstate, action) => {
         ...state,
         loading: false,
         pnbpKinerjaBerkas: [],
+        errors: action.payload.error,
+      };
+    }
+
+    case GET_WILAYAH_PNBP: {
+      return { ...state };
+    }
+    case GET_WILAYAH_PNBP_PENDING: {
+      return { ...state, loading: true };
+    }
+    case GET_WILAYAH_PNBP_FULFILLED: {
+      return {
+        ...state,
+        wilayahPnbp: action.payload.data.data,
+        loading: false,
+      };
+    }
+    case GET_WILAYAH_PNBP_REJECTED: {
+      return {
+        ...state,
+        loading: false,
+        wilayahPnbp: [],
+        errors: action.payload.error,
+      };
+    }
+
+    case GET_KANTOR_PNBP: {
+      return { ...state };
+    }
+    case GET_KANTOR_PNBP_PENDING: {
+      return { ...state, loading: true };
+    }
+    case GET_KANTOR_PNBP_FULFILLED: {
+      return {
+        ...state,
+        kantorPnbp: action.payload.data.data,
+        loading: false,
+      };
+    }
+    case GET_KANTOR_PNBP_REJECTED: {
+      return {
+        ...state,
+        loading: false,
+        kantorPnbp: [],
         errors: action.payload.error,
       };
     }

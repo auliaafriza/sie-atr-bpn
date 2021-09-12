@@ -44,6 +44,7 @@ import {
   TablePagination,
   Button,
   TextField,
+  Checkbox,
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import {
@@ -68,18 +69,19 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import { getKantorPNBP } from "../../actions/pnbpAction";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const dataTemp = [
   {
-    tahun: "2010",
+    label: "Kantor Pertanahan Kota Administrasi Jakarta ",
     pagu: 0,
     mp: 0,
   },
   {
-    tahun: "2011",
+    label: "Kantor Pertanahan Kota Administrasi Jakarta Pusat",
     pagu: 10,
     mp: 0,
   },
@@ -87,8 +89,8 @@ const dataTemp = [
 
 let nameColumn = [
   {
-    label: "Tahun",
-    value: "tahun",
+    label: "Kantor",
+    value: "label",
   },
   {
     label: "Pagu",
@@ -134,16 +136,24 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 const PaguMp = () => {
   const classes = styles();
-  const berkasPnbpWilayah = useSelector(
-    (state) => state.pnbp.berkasPnbpWilayah
-  );
-  const berkasPnbpKantor = useSelector((state) => state.pnbp.berkasPnbpKantor);
+  const dispatch = useDispatch();
+  const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
+  const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
   const [dataFilter, setDataFilter] = useState([
-    { wilayah: "Kantor Wilayah Provinsi Jawa Barat" },
-    { wilayah: "Kantor Wilayah Provinsi Jambi" },
+    {
+      kode: "09",
+      kanwil: "Kantor Wilayah Provinsi DKI Jakarta",
+    },
   ]);
   const [dataFilterKantor, setDataFilterKantor] = useState([
-    { kantor: "Kantor Pertanahan Kabupaten Bandung" },
+    {
+      kode: "0903",
+      kantor: "Kantor Pertanahan Kota Administrasi Jakarta Barat",
+    },
+    {
+      kode: "0901",
+      kantor: "Kantor Pertanahan Kota Administrasi Jakarta Pusat",
+    },
   ]);
   const [years, setYears] = useState("2021");
   const [tahunAwal, setTahunAwal] = useState("2017");
@@ -193,6 +203,9 @@ const PaguMp = () => {
 
   const handleChangeFilter = (event) => {
     if (event.length != 0) {
+      let temp = { kodeWilayah: [] };
+      event.map((item) => temp.kodeWilayah.push(item.kode));
+      dispatch(getKantorPNBP(temp));
       setDataFilter([
         ...dataFilter,
         ...event.filter((option) => dataFilter.indexOf(option) === -1),
@@ -212,20 +225,20 @@ const PaguMp = () => {
       setDataFilterKantor([]);
     }
   };
-
   const getData = () => {
-    let temp = { kantor: [], wilayah: [] };
+    let temp = { kantor: [], kanwil: [] };
     dataFilterKantor && dataFilterKantor.length != 0
       ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
       : [];
     dataFilter && dataFilter.length != 0
-      ? dataFilter.map((item) => temp.wilayah.push(item.wilayah))
+      ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
       : [];
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_pagu_mp?tahunAwal=${tahunAwal}&tahunAkhir=${years}`
+      .post(
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_pagu_mp?tahunAwal=${tahunAwal}&tahunAkhir=${years}`,
+        temp
       )
       .then(function (response) {
         setData(response.data.data);
@@ -265,11 +278,19 @@ const PaguMp = () => {
     }
   };
 
+  const DataFormaterX = (val) => {
+    return val && val.indexOf("Kantor Pertanahan Kota Administrasi") > -1
+      ? val.replace("Kantor Pertanahan Kota Administrasi ", "Adm ")
+      : val && val.indexOf("Kantor Pertanahan") > -1
+      ? val.replace("Kantor Pertanahan ", "")
+      : val;
+  };
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">Tahun {label}</p>
+          <p className="label">{label}</p>
           <p
             className="desc"
             style={{ color: payload[0].color }}
@@ -326,7 +347,7 @@ const PaguMp = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="tahun" />
+            <XAxis dataKey="label" tickFormatter={DataFormaterX} />
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value="Nilai Satuan 1 Juta"
@@ -372,13 +393,13 @@ const PaguMp = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.tahun}>
+                    <StyledTableRow key={row.label}>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.tahun}
+                        {row.label}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         Rp{" "}
@@ -455,7 +476,7 @@ const PaguMp = () => {
 
   let columnTable = [
     {
-      label: "tahun",
+      label: "label",
       isFixed: false,
     },
     {
@@ -480,7 +501,7 @@ const PaguMp = () => {
   ];
 
   let axis = {
-    xAxis: "tahun",
+    xAxis: "label",
     yAxis: "Nilai Satuan 1 Juta",
   };
   const title = "Pagu & MP PNBP (Satuan 1 Juta)";
@@ -821,7 +842,7 @@ const PaguMp = () => {
                             )
                           : "",
                       type: "Line",
-                      nameColumn: ["Tahun", "Pagu", "MP"],
+                      nameColumn: ["Kantor", "Pagu", "MP"],
 
                       listTop10Comment: comment.listTop10Comment,
                     })
@@ -880,7 +901,7 @@ const PaguMp = () => {
                       }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="tahun" />
+                      <XAxis dataKey="label" tickFormatter={DataFormaterX} />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
                           value="Nilai Satuan 1 Juta"
@@ -919,7 +940,7 @@ const PaguMp = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -947,7 +968,7 @@ const PaguMp = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -976,7 +997,7 @@ const PaguMp = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={4}>
+                {/* <Grid item xs={4}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1004,7 +1025,7 @@ const PaguMp = () => {
                       })}
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid> */}
               </Grid>
               <Grid
                 container
@@ -1036,7 +1057,7 @@ const PaguMp = () => {
                     onChange={(event, newValue) => {
                       handleChangeFilter(newValue);
                     }}
-                    getOptionLabel={(option) => option.wilayah}
+                    getOptionLabel={(option) => option.kanwil || ""}
                     renderOption={(option, { selected }) => (
                       <React.Fragment>
                         <Checkbox
@@ -1046,12 +1067,14 @@ const PaguMp = () => {
                           checked={
                             dataFilter && dataFilter.length != 0
                               ? dataFilter
-                                  .map((item) => item.wilayah)
-                                  .indexOf(option.wilayah) > -1
+                                  .map((item) => item.kanwil)
+                                  .indexOf(option.kanwil) > -1
                               : false
                           }
                         />
-                        {option.wilayah}
+                        {option.kode}
+                        {"  "}
+                        {option.kanwil}
                       </React.Fragment>
                     )}
                     renderTags={(selected) => {
@@ -1067,7 +1090,7 @@ const PaguMp = () => {
                         }}
                         style={{ marginTop: 5 }}
                         placeholder={
-                          dataFilter.length != 0 ? "" : "Pilih Kantor"
+                          dataFilter.length != 0 ? "" : "Pilih Wilayah"
                         }
                       />
                     )}
@@ -1111,6 +1134,8 @@ const PaguMp = () => {
                               : false
                           }
                         />
+                        {option.kode}
+                        {"  "}
                         {option.kantor}
                       </React.Fragment>
                     )}
@@ -1127,7 +1152,7 @@ const PaguMp = () => {
                         }}
                         style={{ marginTop: 5 }}
                         placeholder={
-                          dataFilterKantor.length != 0 ? "" : "Pilih Wilayah"
+                          dataFilterKantor.length != 0 ? "" : "Pilih Kantor"
                         }
                       />
                     )}
@@ -1181,7 +1206,7 @@ const PaguMp = () => {
                               )
                             : "",
                         type: "Line",
-                        nameColumn: ["Tahun", "Pagu", "Mp"],
+                        nameColumn: ["Kantor", "Pagu", "Mp"],
                         listTop10Comment: comment.listTop10Comment,
                       })
                     }

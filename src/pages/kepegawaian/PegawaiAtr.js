@@ -9,6 +9,11 @@ import { getSatker, getKantor, getKanwil } from "../../actions/globalActions";
 import { getTahunMutasi } from "../../actions/kepegawaianAction";
 import { useDispatch } from "react-redux";
 import bgImg from "../../assets/img/kepegawaian.jpg";
+import {
+  getBerkasPnbpWilayahFilter,
+  getBerkasPnbpKantorFilter,
+  getWilayahPNBP,
+} from "../../actions/pnbpAction";
 
 const PegawaiAtr = () => {
   const dispatch = useDispatch();
@@ -18,6 +23,7 @@ const PegawaiAtr = () => {
     dispatch(getKantor());
     dispatch(getKanwil());
     dispatch(getTahunMutasi());
+    dispatch(getWilayahPNBP());
   }, []);
 
   return (

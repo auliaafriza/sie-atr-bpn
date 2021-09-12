@@ -43,6 +43,7 @@ import {
   TablePagination,
   Button,
   TextField,
+  Checkbox,
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import {
@@ -57,7 +58,7 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { tahunData, bulanData } from "../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
@@ -68,18 +69,19 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import { getKantorPNBP } from "../../actions/pnbpAction";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const dataTemp = [
   {
-    kantor: "Kantor Pertanahan Jateng",
-    besarnya: 0,
+    label: "label Pertanahan Jateng",
+    value: 0,
   },
   {
-    kantor: "Kantor Pertanahan Jabar",
-    besarnya: 10,
+    label: "Kantor Pertanahan Jabar",
+    value: 10,
   },
 ];
 
@@ -115,28 +117,12 @@ const StyledTableRow = withStyles((theme) => ({
 
 let url = "http://10.20.57.234/SIEBackEnd/";
 
-let nameColumn = [
-  {
-    label: "Kantor",
-    value: "kantor",
-    isFixed: false,
-    isLabel: true,
-  },
-  {
-    label: "Besarnya",
-    value: "besarnya",
-    isFixed: true,
-    isLabel: true,
-  },
-];
-
 const PnbpBerkasPeringkat = () => {
   const classes = styles();
-  const berkasPnbpWilayah = useSelector(
-    (state) => state.pnbp.berkasPnbpWilayah
-  );
-  const berkasPnbpKantor = useSelector((state) => state.pnbp.berkasPnbpKantor);
-
+  const dispatch = useDispatch();
+  const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
+  const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
+  const [viewData, setViewData] = useState("wilayah");
   const [years, setYears] = useState("2017");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
@@ -157,12 +143,16 @@ const PnbpBerkasPeringkat = () => {
     quality: 1.0,
   });
   const [dataFilter, setDataFilter] = useState([
-    { wilayah: "Kantor Wilayah Provinsi Jawa Barat" },
-    { wilayah: "Kantor Wilayah Provinsi Jambi" },
+    {
+      kode: "01",
+      kanwil: "Kantor Wilayah Provinsi Aceh",
+    },
+    {
+      kode: "22",
+      kanwil: "Kantor Wilayah Provinsi Bali",
+    },
   ]);
-  const [dataFilterKantor, setDataFilterKantor] = useState([
-    { kantor: "Kantor Pertanahan Kabupaten Bandung" },
-  ]);
+  const [dataFilterKantor, setDataFilterKantor] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -185,8 +175,26 @@ const PnbpBerkasPeringkat = () => {
     setOpen(false);
   };
 
+  let nameColumn = [
+    {
+      label: viewData,
+      value: "label",
+      isFixed: false,
+      isLabel: true,
+    },
+    {
+      label: "Nilai PNBP",
+      value: "value",
+      isFixed: true,
+      isLabel: true,
+    },
+  ];
+
   const handleChangeFilter = (event) => {
     if (event.length != 0) {
+      let temp = { kodeWilayah: [] };
+      event.map((item) => temp.kodeWilayah.push(item.kode));
+      dispatch(getKantorPNBP(temp));
       setDataFilter([
         ...dataFilter,
         ...event.filter((option) => dataFilter.indexOf(option) === -1),
@@ -222,14 +230,13 @@ const PnbpBerkasPeringkat = () => {
       ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
       : [];
     dataFilter && dataFilter.length != 0
-      ? dataFilter.map((item) => temp.wilayah.push(item.wilayah))
+      ? dataFilter.map((item) => temp.wilayah.push(item.kanwil))
       : [];
-    let tempBulan = bulan && bulan == "all" ? "" : bulan;
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_berkas_peringkat_per_kantor?tahun=${years}&bulan=${tempBulan}`,
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_berkas_peringkat?tahun=${years}&bulan=${bulan}`,
         temp
       )
       .then(function (response) {
@@ -258,6 +265,10 @@ const PnbpBerkasPeringkat = () => {
     setBulan(event.target.value);
   };
 
+  const handleChangeView = (event) => {
+    setViewData(event.target.value);
+  };
+
   const DataFormater = (number) => {
     if (number > 1000000000) {
       return (number / 1000000000).toString() + "M";
@@ -278,7 +289,7 @@ const PnbpBerkasPeringkat = () => {
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Besarnya : Rp ${payload[0].value
+          >{`Nilai : Rp ${payload[0].value
             .toFixed(2)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
         </div>
@@ -335,7 +346,7 @@ const PnbpBerkasPeringkat = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="kantor"
+              dataKey="label"
               // angle={60}
               // interval={0}
               tick={{
@@ -350,7 +361,7 @@ const PnbpBerkasPeringkat = () => {
             ></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Besarnya"
+                value="Nilai"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
@@ -358,7 +369,7 @@ const PnbpBerkasPeringkat = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             {/* <Legend /> */}
-            <Bar dataKey="besarnya" fill="#8884d8" />
+            <Bar dataKey="value" fill="#8884d8" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -381,12 +392,12 @@ const PnbpBerkasPeringkat = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.kantor}>
+                    <StyledTableRow key={row.label}>
                       <StyledTableCell align="left" component="th" scope="row">
-                        {row.kantor}
+                        {row.label}
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        {row.besarnya
+                        {row.value
                           .toFixed(2)
                           .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                       </StyledTableCell>
@@ -454,27 +465,27 @@ const PnbpBerkasPeringkat = () => {
 
   let columnTable = [
     {
-      label: "wilayah",
+      label: viewData,
       isFixed: false,
     },
     {
-      label: "besarnya",
+      label: "value",
       isFixed: true,
     },
   ];
 
   let grafikView = [
     {
-      dataKey: "besarnya",
+      dataKey: "value",
       fill: "#8884d8",
     },
   ];
 
   let axis = {
-    xAxis: "wilayah",
-    yAxis: "Besarnya",
+    xAxis: viewData,
+    yAxis: "Nilai",
   };
-  const title = "  Top 5 penerimaan PNBP";
+  const title = "Top 5 penerimaan PNBP " + viewData;
   const handlePrint = () => {
     history.push({
       pathname: "/PrintData",
@@ -807,7 +818,7 @@ const PnbpBerkasPeringkat = () => {
                           )
                         : "",
                     type: "Bar",
-                    nameColumn: ["Kantor", "Besarnya"],
+                    nameColumn: [viewData, "Nilai PNBP"],
                     listTop10Comment: comment.listTop10Comment,
                   })
                 }
@@ -853,7 +864,7 @@ const PnbpBerkasPeringkat = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -881,7 +892,7 @@ const PnbpBerkasPeringkat = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -907,6 +918,29 @@ const PnbpBerkasPeringkat = () => {
                         </MenuItem>
                       );
                     })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Top 5
+                </Typography>
+                <FormControl className={classes.formControl}>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={viewData}
+                    onChange={handleChangeView}
+                    label="View Data"
+                    className={classes.selectStyle}
+                    disableUnderline
+                  >
+                    <MenuItem value="wilayah">PNBP per Wilayah</MenuItem>
+                    <MenuItem value="kantor">PNBP per Kantor</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -941,7 +975,7 @@ const PnbpBerkasPeringkat = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilter(newValue);
                   }}
-                  getOptionLabel={(option) => option.wilayah}
+                  getOptionLabel={(option) => option.kanwil || ""}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
@@ -951,12 +985,14 @@ const PnbpBerkasPeringkat = () => {
                         checked={
                           dataFilter && dataFilter.length != 0
                             ? dataFilter
-                                .map((item) => item.wilayah)
-                                .indexOf(option.wilayah) > -1
+                                .map((item) => item.kanwil)
+                                .indexOf(option.kanwil) > -1
                             : false
                         }
                       />
-                      {option.wilayah}
+                      {option.kode}
+                      {"  "}
+                      {option.kanwil}
                     </React.Fragment>
                   )}
                   renderTags={(selected) => {
@@ -971,7 +1007,9 @@ const PnbpBerkasPeringkat = () => {
                         disableUnderline: true,
                       }}
                       style={{ marginTop: 5 }}
-                      placeholder={dataFilter.length != 0 ? "" : "Pilih Kantor"}
+                      placeholder={
+                        dataFilter.length != 0 ? "" : "Pilih Wilayah"
+                      }
                     />
                   )}
                 />
@@ -999,7 +1037,7 @@ const PnbpBerkasPeringkat = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilterKantor(newValue);
                   }}
-                  getOptionLabel={(option) => option.kantor}
+                  getOptionLabel={(option) => option.kantor || ""}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
@@ -1014,6 +1052,8 @@ const PnbpBerkasPeringkat = () => {
                             : false
                         }
                       />
+                      {option.kode}
+                      {"  "}
                       {option.kantor}
                     </React.Fragment>
                   )}
@@ -1030,7 +1070,7 @@ const PnbpBerkasPeringkat = () => {
                       }}
                       style={{ marginTop: 5 }}
                       placeholder={
-                        dataFilterKantor.length != 0 ? "" : "Pilih Wilayah"
+                        dataFilterKantor.length != 0 ? "" : "Pilih Kantor"
                       }
                     />
                   )}
@@ -1084,7 +1124,7 @@ const PnbpBerkasPeringkat = () => {
                             )
                           : "",
                       type: "Bar",
-                      nameColumn: ["Kantor", "Besarnya"],
+                      nameColumn: [viewData, "Nilai PNBP"],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
@@ -1121,7 +1161,7 @@ const PnbpBerkasPeringkat = () => {
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
-                      dataKey="kantor"
+                      dataKey="label"
                       // angle={60}
                       // interval={0}
                       tick={{
@@ -1136,7 +1176,7 @@ const PnbpBerkasPeringkat = () => {
                     />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
-                        value="Besarnya"
+                        value="Nilai"
                         angle={-90}
                         position="insideBottomLeft"
                         offset={-5}
@@ -1144,7 +1184,7 @@ const PnbpBerkasPeringkat = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     {/* <Legend /> */}
-                    <Bar dataKey="besarnya" fill="#8884d8" />
+                    <Bar dataKey="value" fill="#8884d8" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

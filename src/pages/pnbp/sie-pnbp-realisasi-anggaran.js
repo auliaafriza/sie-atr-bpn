@@ -44,6 +44,7 @@ import {
   TablePagination,
   Button,
   TextField,
+  Checkbox,
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import {
@@ -51,7 +52,7 @@ import {
   ThemeProvider,
   withStyles,
 } from "@material-ui/core/styles";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "../dashboardPage/styles";
@@ -68,18 +69,19 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import { getKantorPNBP } from "../../actions/pnbpAction";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const dataTemp = [
   {
-    tahun: "2010",
+    label: "Kantor Pertanahan Kabupaten",
     anggaran: 0,
     realisasi: 10,
   },
   {
-    tahun: "2011",
+    label: "Kantor Pertanahan Kabupaten ",
     anggaran: 0,
     realisasi: 10,
   },
@@ -119,8 +121,8 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {
-    label: "Tahun",
-    value: "tahun",
+    label: "Kantor",
+    value: "label",
     isFixed: false,
     isLabel: true,
   },
@@ -140,7 +142,7 @@ let nameColumn = [
 
 let columnTable = [
   {
-    label: "tahun",
+    label: "label",
     isFixed: false,
   },
   {
@@ -165,16 +167,16 @@ let grafikView = [
 ];
 
 let axis = {
-  xAxis: "tahun",
+  xAxis: "label",
   yAxis: "Nilai Satuan 1 Juta",
 };
 
 const RealisasiAnggaran = () => {
   const classes = styles();
-  const berkasPnbpWilayah = useSelector(
-    (state) => state.pnbp.berkasPnbpWilayah
-  );
-  const berkasPnbpKantor = useSelector((state) => state.pnbp.berkasPnbpKantor);
+
+  const dispatch = useDispatch();
+  const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
+  const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
 
   const [years, setYears] = useState("2022");
   const [data, setData] = useState(dataTemp);
@@ -193,11 +195,20 @@ const RealisasiAnggaran = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dataFilter, setDataFilter] = useState([
-    { wilayah: "Kantor Wilayah Provinsi Jawa Barat" },
-    { wilayah: "Kantor Wilayah Provinsi Jambi" },
+    {
+      kode: "28",
+      kanwil: "Kantor Wilayah Provinsi Banten",
+    },
+    {
+      kode: "10",
+      kanwil: "Kantor Wilayah Provinsi Jawa Barat",
+    },
   ]);
   const [dataFilterKantor, setDataFilterKantor] = useState([
-    { kantor: "Kantor Pertanahan Kabupaten Bandung" },
+    {
+      kode: "2801",
+      kantor: "Kantor Pertanahan Kabupaten Serang",
+    },
   ]);
 
   const handleChangePage = (event, newPage) => {
@@ -218,13 +229,38 @@ const RealisasiAnggaran = () => {
     setOpen(false);
   };
 
+  const handleChangeFilter = (event) => {
+    if (event.length != 0) {
+      let temp = { kodeWilayah: [] };
+      event.map((item) => temp.kodeWilayah.push(item.kode));
+      dispatch(getKantorPNBP(temp));
+      setDataFilter([
+        ...dataFilter,
+        ...event.filter((option) => dataFilter.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilter([]);
+    }
+  };
+
+  const handleChangeFilterKantor = (event) => {
+    if (event.length != 0) {
+      setDataFilterKantor([
+        ...dataFilterKantor,
+        ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilterKantor([]);
+    }
+  };
+
   const getData = () => {
-    let temp = { kantor: [], wilayah: [] };
+    let temp = { kantor: [], kanwil: [] };
     dataFilterKantor && dataFilterKantor.length != 0
       ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
       : [];
     dataFilter && dataFilter.length != 0
-      ? dataFilter.map((item) => temp.wilayah.push(item.wilayah))
+      ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
       : [];
 
     axios.defaults.headers.post["Content-Type"] =
@@ -252,28 +288,6 @@ const RealisasiAnggaran = () => {
     getData();
   }, []);
 
-  const handleChangeFilter = (event) => {
-    if (event.length != 0) {
-      setDataFilter([
-        ...dataFilter,
-        ...event.filter((option) => dataFilter.indexOf(option) === -1),
-      ]);
-    } else {
-      setDataFilter([]);
-    }
-  };
-
-  const handleChangeFilterKantor = (event) => {
-    if (event.length != 0) {
-      setDataFilterKantor([
-        ...dataFilterKantor,
-        ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
-      ]);
-    } else {
-      setDataFilterKantor([]);
-    }
-  };
-
   const handleChange = (event) => {
     setYears(event.target.value);
   };
@@ -298,7 +312,7 @@ const RealisasiAnggaran = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">Tahun {label}</p>
+          <p className="label">{label}</p>
           <p
             className="desc"
             style={{ color: payload[0].color }}
@@ -347,7 +361,7 @@ const RealisasiAnggaran = () => {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="tahun"></XAxis>
+        <XAxis dataKey="label"></XAxis>
         <YAxis tickFormatter={DataFormater}>
           <Label
             value="Nilai Satuan 1 Juta"
@@ -393,13 +407,13 @@ const RealisasiAnggaran = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.tahun}>
+                    <StyledTableRow key={row.label}>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.tahun}
+                        {row.label}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         Rp{" "}
@@ -886,7 +900,7 @@ const RealisasiAnggaran = () => {
                       }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="tahun" />
+                      <XAxis dataKey="label" />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
                           value="Nilai Satuan 1 Juta"
@@ -956,7 +970,7 @@ const RealisasiAnggaran = () => {
                       id="demo-simple-select-outlined"
                       value={years}
                       onChange={handleChange}
-                      label="Bulan"
+                      label="Tahun"
                       className={classes.selectStyle}
                       disableUnderline
                     >
@@ -1001,7 +1015,7 @@ const RealisasiAnggaran = () => {
                     onChange={(event, newValue) => {
                       handleChangeFilter(newValue);
                     }}
-                    getOptionLabel={(option) => option.wilayah}
+                    getOptionLabel={(option) => option.kanwil || ""}
                     renderOption={(option, { selected }) => (
                       <React.Fragment>
                         <Checkbox
@@ -1011,12 +1025,14 @@ const RealisasiAnggaran = () => {
                           checked={
                             dataFilter && dataFilter.length != 0
                               ? dataFilter
-                                  .map((item) => item.wilayah)
-                                  .indexOf(option.wilayah) > -1
+                                  .map((item) => item.kanwil)
+                                  .indexOf(option.kanwil) > -1
                               : false
                           }
                         />
-                        {option.wilayah}
+                        {option.kode}
+                        {"  "}
+                        {option.kanwil}
                       </React.Fragment>
                     )}
                     renderTags={(selected) => {
@@ -1032,7 +1048,7 @@ const RealisasiAnggaran = () => {
                         }}
                         style={{ marginTop: 5 }}
                         placeholder={
-                          dataFilter.length != 0 ? "" : "Pilih Kantor"
+                          dataFilter.length != 0 ? "" : "Pilih Wilayah"
                         }
                       />
                     )}
@@ -1061,7 +1077,7 @@ const RealisasiAnggaran = () => {
                     onChange={(event, newValue) => {
                       handleChangeFilterKantor(newValue);
                     }}
-                    getOptionLabel={(option) => option.kantor}
+                    getOptionLabel={(option) => option.kantor || ""}
                     renderOption={(option, { selected }) => (
                       <React.Fragment>
                         <Checkbox
@@ -1076,6 +1092,8 @@ const RealisasiAnggaran = () => {
                               : false
                           }
                         />
+                        {option.kode}
+                        {"  "}
                         {option.kantor}
                       </React.Fragment>
                     )}
@@ -1092,7 +1110,7 @@ const RealisasiAnggaran = () => {
                         }}
                         style={{ marginTop: 5 }}
                         placeholder={
-                          dataFilterKantor.length != 0 ? "" : "Pilih Wilayah"
+                          dataFilterKantor.length != 0 ? "" : "Pilih Kantor"
                         }
                       />
                     )}

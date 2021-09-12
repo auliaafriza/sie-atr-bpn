@@ -3,6 +3,7 @@ import { getSatker, getKantor, getKanwil } from "../../actions/globalActions";
 import {
   getBerkasPnbpWilayahFilter,
   getBerkasPnbpKantorFilter,
+  getWilayahPNBP,
 } from "../../actions/pnbpAction";
 import { useDispatch } from "react-redux";
 import PnbpBerkasWilayah from "./sie-pnbp-berkas-wilayah";
@@ -30,6 +31,7 @@ const PnbpPage = () => {
     dispatch(getSatker());
     dispatch(getKantor());
     dispatch(getKanwil());
+    dispatch(getWilayahPNBP());
   }, []);
 
   return (
@@ -48,19 +50,19 @@ const PnbpPage = () => {
           zIndex: 1,
         }}
       >
-        <PnbpBerkasWilayah />
+        {/* <PnbpBerkasWilayah /> */}
         <PnbpBerkasPeringkat />
+        <RealisasiAnggaran />
       </div>
       {/* <PnbpBerkasPeringkatWilayah /> */}
-      <RealisasiAnggaran />
       <RealisasiPenggunaan />
-      <PersentaseRealisasiBelanja />
-      <RealisasiPenerimaan />
-      <RealisasiTargetPenerimaan />
+      {/* <PersentaseRealisasiBelanja /> */}
+      {/* <RealisasiPenerimaan /> */}
+      {/* <RealisasiTargetPenerimaan /> */}
       <PaguMp />
       <PaguMpOpsNon />
-      <AlokasiAnggaran />
-      <PeringkatRealisasi />
+      {/* <AlokasiAnggaran /> */}
+      {/* <PeringkatRealisasi /> */}
       {/* <PengembalianPNBP /> */}
       {/* <KinerjaBerkasPnbp /> */}
     </div>

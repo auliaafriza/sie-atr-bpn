@@ -32,3 +32,11 @@ export const getPnbpKinerjaBerkasFilterApi = () => {
     `Aset&Keuangan/PNBP/sie_pnbp_kinerja_peny_berkas_per_jabatan_filter_namaprofile`
   );
 };
+
+export const getWilayahPNBPApi = () => {
+  return apiClient.get(`MasterData/filter_wilayah`);
+};
+
+export const getKantorPNBPApi = (data) => {
+  return apiClient.post(`MasterData/filter_kantor`, data);
+};

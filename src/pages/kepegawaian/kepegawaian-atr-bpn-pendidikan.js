@@ -43,6 +43,7 @@ import {
   TablePagination,
   Button,
   TextField,
+  Checkbox,
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import {
@@ -60,20 +61,26 @@ import moment from "moment";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { BASE_URL } from "../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import { getKantorPNBP } from "../../actions/pnbpAction";
+
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const dataTemp = [
   {
     pendidikan: "",
-    jml_pegawai: 0,
+    jumlah: 0,
   },
   {
     pendidikan: "",
-    jml_pegawai: 0,
+    jumlah: 0,
   },
 ];
 
@@ -118,7 +125,7 @@ let nameColumn = [
   },
   {
     label: "Jumlah Pegawai",
-    value: "jml_pegawai",
+    value: "jumlah",
     isFixed: false,
     isLabel: false,
   },
@@ -130,14 +137,14 @@ let columnTable = [
     isFixed: false,
   },
   {
-    label: "jml_pegawai",
+    label: "jumlah",
     isFixed: false,
   },
 ];
 
 let grafikView = [
   {
-    dataKey: "jml_pegawai",
+    dataKey: "jumlah",
     fill: "#FFA07A",
   },
 ];
@@ -149,6 +156,21 @@ let axis = {
 
 const KepegawaianBpnPendidikan = () => {
   const classes = styles();
+  const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
+  const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
+  const dispatch = useDispatch();
+  const [dataFilter, setDataFilter] = useState([
+    {
+      kode: "02",
+      kanwil: "Kantor Wilayah Provinsi Sumatera Utara",
+    },
+  ]);
+  const [dataFilterKantor, setDataFilterKantor] = useState([
+    {
+      kode: "0201",
+      kantor: "Kantor Pertanahan Kota Medan",
+    },
+  ]);
   const [years, setYears] = useState("2022");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
@@ -179,10 +201,6 @@ const KepegawaianBpnPendidikan = () => {
     setPage(0);
   };
 
-  const satkerRed = useSelector((state) => state.globalReducer.satker);
-  const kantorRed = useSelector((state) => state.globalReducer.kantor);
-  const kanwilRed = useSelector((state) => state.globalReducer.kanwil);
-
   const handleOpen = (data) => {
     setOpen(true);
     setDataModal(data);
@@ -192,12 +210,46 @@ const KepegawaianBpnPendidikan = () => {
     setOpen(false);
   };
 
+  const handleChangeFilter = (event) => {
+    if (event.length != 0) {
+      let temp = { kodeWilayah: [] };
+      event.map((item) => temp.kodeWilayah.push(item.kode));
+      dispatch(getKantorPNBP(temp));
+      setDataFilter([
+        ...dataFilter,
+        ...event.filter((option) => dataFilter.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilter([]);
+    }
+  };
+
+  const handleChangeFilterKantor = (event) => {
+    if (event.length != 0) {
+      setDataFilterKantor([
+        ...dataFilterKantor,
+        ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilterKantor([]);
+    }
+  };
+
   const getData = () => {
+    let temp = { kantor: [], kanwil: [] };
+    dataFilterKantor && dataFilterKantor.length != 0
+      ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
+      : [];
+    dataFilter && dataFilter.length != 0
+      ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
+      : [];
+
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(
-        `${url}Kepegawaian/Pegawai/sie_pegawai_atr_bpn_pendidikan?tahunAwal=${tahunAwal}&tahunAkhir=${years}&kantor=${kantor}&kanwil=${kanwil}&satker=${satker}`
+      .post(
+        `${url}Kepegawaian/Pegawai/sie_pegawai_atr_bpn_pendidikan?tahunAwal=${tahunAwal}&tahunAkhir=${years}`,
+        temp
       )
       .then(function (response) {
         setData(response.data.data);
@@ -295,7 +347,7 @@ const KepegawaianBpnPendidikan = () => {
             <XAxis dataKey="pendidikan"></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Nilai Satuan 1 Juta"
+                value="Jumlah Pegawai"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
@@ -303,7 +355,7 @@ const KepegawaianBpnPendidikan = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="jml_pegawai" fill="#FFA07A" name="Jumlah Pegawai" />
+            <Bar dataKey="jumlah" fill="#FFA07A" name="Jumlah Pegawai" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -339,7 +391,7 @@ const KepegawaianBpnPendidikan = () => {
                         {row.pendidikan}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {row.jml_pegawai}
+                        {row.jumlah}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
@@ -825,7 +877,7 @@ const KepegawaianBpnPendidikan = () => {
                       <XAxis dataKey="pendidikan" />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
-                          value="Nilai Satuan 1 Juta"
+                          value="Jumlah Pegawai"
                           angle={-90}
                           position="insideBottomLeft"
                           offset={-5}
@@ -834,7 +886,7 @@ const KepegawaianBpnPendidikan = () => {
                       <Tooltip content={<CustomTooltip />} />
                       <Legend />
                       <Bar
-                        dataKey="jml_pegawai"
+                        dataKey="jumlah"
                         fill="#FFA07A"
                         name="Jumlah Pegawai"
                       />
@@ -853,7 +905,7 @@ const KepegawaianBpnPendidikan = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -881,7 +933,7 @@ const KepegawaianBpnPendidikan = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -909,7 +961,7 @@ const KepegawaianBpnPendidikan = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={4}>
+                {/* <Grid item xs={4}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -945,7 +997,7 @@ const KepegawaianBpnPendidikan = () => {
                       />
                     )}
                   />
-                </Grid>
+                </Grid> */}
               </Grid>
               <Grid
                 container
@@ -954,19 +1006,20 @@ const KepegawaianBpnPendidikan = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={4}>
+                <Grid item xs={5}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
-                    Pilih Kanwil
+                    Pilih Wilayah
                   </Typography>
                   <Autocomplete
-                    id="kanwil"
-                    name="kanwil"
+                    multiple
+                    id="kantor"
+                    name="kantor"
                     style={{ width: "100%", height: 50 }}
-                    options={kanwilRed}
+                    options={berkasPnbpWilayah}
                     classes={{
                       option: classes.option,
                     }}
@@ -974,10 +1027,32 @@ const KepegawaianBpnPendidikan = () => {
                     className={classes.formControl}
                     autoHighlight
                     onChange={(event, newValue) => {
-                      handleChangeKanwil(newValue);
+                      handleChangeFilter(newValue);
                     }}
                     getOptionLabel={(option) => option.kanwil || ""}
-                    defaultValue={kanwil}
+                    renderOption={(option, { selected }) => (
+                      <React.Fragment>
+                        <Checkbox
+                          icon={icon}
+                          checkedIcon={checkedIcon}
+                          style={{ marginRight: 8 }}
+                          checked={
+                            dataFilter && dataFilter.length != 0
+                              ? dataFilter
+                                  .map((item) => item.kanwil)
+                                  .indexOf(option.kanwil) > -1
+                              : false
+                          }
+                        />
+                        {option.kode}
+                        {"  "}
+                        {option.kanwil}
+                      </React.Fragment>
+                    )}
+                    renderTags={(selected) => {
+                      return `${selected.length} Terpilih`;
+                    }}
+                    defaultValue={dataFilter}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -986,12 +1061,14 @@ const KepegawaianBpnPendidikan = () => {
                           disableUnderline: true,
                         }}
                         style={{ marginTop: 5 }}
-                        placeholder={kanwil ? "" : "Kanwil"}
+                        placeholder={
+                          dataFilter.length != 0 ? "" : "Pilih Wilayah"
+                        }
                       />
                     )}
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={5}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1000,10 +1077,11 @@ const KepegawaianBpnPendidikan = () => {
                     Pilih Kantor
                   </Typography>
                   <Autocomplete
-                    id="kanwil"
-                    name="kanwil"
+                    multiple
+                    id="kantor"
+                    name="kantor"
                     style={{ width: "100%", height: 50 }}
-                    options={kantorRed}
+                    options={berkasPnbpKantor}
                     classes={{
                       option: classes.option,
                     }}
@@ -1011,10 +1089,32 @@ const KepegawaianBpnPendidikan = () => {
                     className={classes.formControl}
                     autoHighlight
                     onChange={(event, newValue) => {
-                      handleChangeKantor(newValue);
+                      handleChangeFilterKantor(newValue);
                     }}
                     getOptionLabel={(option) => option.kantor || ""}
-                    defaultValue={kantor}
+                    renderOption={(option, { selected }) => (
+                      <React.Fragment>
+                        <Checkbox
+                          icon={icon}
+                          checkedIcon={checkedIcon}
+                          style={{ marginRight: 8 }}
+                          checked={
+                            dataFilterKantor && dataFilterKantor.length != 0
+                              ? dataFilterKantor
+                                  .map((item) => item.kantor)
+                                  .indexOf(option.kantor) > -1
+                              : false
+                          }
+                        />
+                        {option.kode}
+                        {"  "}
+                        {option.kantor}
+                      </React.Fragment>
+                    )}
+                    renderTags={(selected) => {
+                      return `${selected.length} Terpilih`;
+                    }}
+                    defaultValue={dataFilterKantor}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -1023,7 +1123,9 @@ const KepegawaianBpnPendidikan = () => {
                           disableUnderline: true,
                         }}
                         style={{ marginTop: 5 }}
-                        placeholder={kantor ? "" : "Kantor"}
+                        placeholder={
+                          dataFilterKantor.length != 0 ? "" : "Pilih Kantor"
+                        }
                       />
                     )}
                   />
@@ -1034,14 +1136,14 @@ const KepegawaianBpnPendidikan = () => {
                   justifyContent="flex-start"
                   alignItems="center"
                   item
-                  xs={4}
-                  style={{ paddingTop: 40, paddingLeft: 20 }}
+                  xs={2}
+                  style={{ paddingLeft: 20 }}
                 >
                   <Button
                     variant="contained"
                     color="primary"
                     onClick={() => getData()}
-                    style={{ height: 57, width: "100%" }}
+                    style={{ height: 57, width: "100%", fontSize: 12 }}
                   >
                     Submit
                   </Button>
