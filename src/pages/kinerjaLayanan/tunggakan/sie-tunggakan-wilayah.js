@@ -528,16 +528,34 @@ const KepegawaianBpnJabatan = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.keterangan}>
+                    <StyledTableRow key={row.tahun}>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.keterangan}
+                        {row.tahun}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {row.nilai}
+                        {row.p2015}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {row.p2016}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {row.p2017}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {row.p2018}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {row.p2019}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {row.p2020}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {row.p2021}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}

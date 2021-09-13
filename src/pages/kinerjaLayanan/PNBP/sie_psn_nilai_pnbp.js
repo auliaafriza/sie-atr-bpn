@@ -55,19 +55,19 @@ import {
 } from "@material-ui/core/styles";
 import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
-import styles from "./styles";
+import styles from "../styles";
 import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
-import { tahunData, bulanData } from "../../functionGlobal/globalDataAsset";
-import { fileExport } from "../../functionGlobal/exports";
-import { loadDataColumnTable } from "../../functionGlobal/fileExports";
+import { tahunData, bulanData } from "../../../functionGlobal/globalDataAsset";
+import { fileExport } from "../../../functionGlobal/exports";
+import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
-import { BASE_URL } from "../../config/embed_conf";
+import { BASE_URL } from "../../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
-import "../psn/PTSL/node_modules/react-toastify/dist/ReactToastify.css";
+import "react-toastify/dist/ReactToastify.css";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 
@@ -519,7 +519,7 @@ const realisasiPenggunaan = () => {
     xAxis: "label",
     yAxis: "Nilai PNBP",
   };
-  const title = " PSN Nilai PNBP BPHTB";
+  const title = "PSN Nilai PNBP";
   const handlePrint = () => {
     history.push({
       pathname: "/PrintData",
@@ -528,7 +528,7 @@ const realisasiPenggunaan = () => {
         comment: comment,
         columnTable: columnTable,
         title: title,
-        grafik: "Bar",
+        grafik: "bar",
         nameColumn: nameColumn,
         grafikView: grafikView,
         axis: axis,

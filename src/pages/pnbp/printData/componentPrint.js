@@ -153,7 +153,7 @@ const ComponentPrint = () => {
       <div className={classes.barChart}>
         {" "}
         <ResponsiveContainer width="100%" height={250}>
-          {grafik == "bar" ? (
+          {grafik.toLowerCase() == "bar" ? (
             <BarChart
               width={500}
               height={300}
@@ -229,7 +229,7 @@ const ComponentPrint = () => {
                 );
               })}
             </BarChart>
-          ) : grafik == "line" ? (
+          ) : grafik.toLowerCase() == "line" ? (
             <LineChart
               width={500}
               height={800}
@@ -278,7 +278,7 @@ const ComponentPrint = () => {
                 );
               })}
             </LineChart>
-          ) : grafik == "area" ? (
+          ) : grafik.toLowerCase() == "area" ? (
             <AreaChart
               width={500}
               height={800}
