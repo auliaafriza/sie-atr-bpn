@@ -523,7 +523,7 @@ const RealisasiAnggaran = () => {
   return (
     <div
       style={{
-        backgroundColor: "rgb(244, 245, 250)",
+        // backgroundColor: "rgb(244, 245, 250)",
         paddingTop: 20,
         paddingBottom: 20,
         paddingLeft: 20,

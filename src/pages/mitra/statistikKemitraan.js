@@ -42,12 +42,14 @@ import {
   Avatar,
   TablePagination,
   Button,
+  TextField,
 } from "@material-ui/core";
 import {
   createTheme,
   ThemeProvider,
   withStyles,
 } from "@material-ui/core/styles";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "./styles";
@@ -62,6 +64,12 @@ import { useSelector } from "react-redux";
 import { BASE_URL } from "../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import { getKantorPNBP } from "../../actions/pnbpAction";
+
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const dataTemp = [
   {
@@ -176,7 +184,7 @@ const KepegawaianOrganisasi = () => {
     "Kantor Wilayah Provinsi Bali",
     "Kantor Wilayah Provinsi Sulawesi Tenggara",
   ]);
-  const [kantor, setKantor] = useState([""]);
+  const [kantor, setKantor] = useState([]);
   const [satker, setSatker] = useState("");
   const [kanwilDis, setKanwilDis] = useState("");
   const [kantorDis, setKantorDis] = useState("");
@@ -215,6 +223,28 @@ const KepegawaianOrganisasi = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleChangeKanwil = (event) => {
+    if (event.length != 0) {
+      setKanwil([
+        ...kanwil,
+        ...event.filter((option) => kanwil.indexOf(option) === -1),
+      ]);
+    } else {
+      setKanwil([]);
+    }
+  };
+
+  const handleChangeKantor = (event) => {
+    if (event.length != 0) {
+      setKantor([
+        ...kantor,
+        ...event.filter((option) => kantor.indexOf(option) === -1),
+      ]);
+    } else {
+      setKantor([]);
+    }
   };
 
   const getData = () => {
@@ -473,19 +503,6 @@ const KepegawaianOrganisasi = () => {
       },
       target: "_blank",
     });
-  };
-
-  const handleChangeKantor = (event) => {
-    setKantor(event.target.value);
-  };
-
-  const handleChangeKanwil = (event) => {
-    setKanwilDis(
-      event.target.value.length > 10
-        ? event.target.value.slice(0, 10)
-        : event.target.value
-    );
-    setKanwil(event.target.value);
   };
 
   const handleChangeSatket = (event) => {
@@ -989,7 +1006,7 @@ const KepegawaianOrganisasi = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={4}>
+              <Grid item xs={5}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -998,40 +1015,57 @@ const KepegawaianOrganisasi = () => {
                   Pilih Kantah
                 </Typography>
 
-                <FormControl className={classes.formControl}>
-                  <Select
-                    multiple
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={kantor}
-                    onChange={handleChangeKantor}
-                    label="Kantah"
-                    className={classes.selectStyle}
-                    renderValue={(selected) => {
-                      if (selected[0] == "") return "Kantah";
-                      else return `${selected.length} Terpilih`;
-                    }}
-                    disableUnderline
-                  >
-                    <MenuItem value="" disabled>
-                      Kantah
-                    </MenuItem>
-                    {kantahRed && kantahRed.length != 0
-                      ? kantahRed.map((item, i) => {
-                          return (
-                            <MenuItem value={item.kantah} key={i}>
-                              <Checkbox
-                                checked={kantor.indexOf(item.kantah) > -1}
-                              />
-                              <ListItemText primary={item.kantah} />
-                            </MenuItem>
-                          );
-                        })
-                      : null}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  multiple
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={kantahRed}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeKantor(newValue);
+                  }}
+                  getOptionLabel={(option) => option.kantah || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          kantor && kantor.length != 0
+                            ? kantor
+                                .map((item) => item.kantah)
+                                .indexOf(option.kantah) > -1
+                            : false
+                        }
+                      />
+                      {option.kantah}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return `${selected.length} Terpilih`;
+                  }}
+                  defaultValue={kantor}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={kantor.length != 0 ? "" : "Pilih Kantah"}
+                    />
+                  )}
+                />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={5}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1039,30 +1073,55 @@ const KepegawaianOrganisasi = () => {
                 >
                   Pilih Kanwil
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    multiple
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={kanwil}
-                    onChange={handleChangeKanwil}
-                    label="Kanwil"
-                    className={classes.selectStyle}
-                    renderValue={(selected) => `${selected.length} Terpilih`}
-                    disableUnderline
-                  >
-                    {kanwilRed.map((item, i) => {
-                      return (
-                        <MenuItem value={item.kanwil} key={i}>
-                          <Checkbox
-                            checked={kanwil.indexOf(item.kanwil) > -1}
-                          />
-                          <ListItemText primary={item.kanwil} />
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  multiple
+                  id="kanwil"
+                  name="kanwil"
+                  style={{ width: "100%", height: 50 }}
+                  options={kanwilRed}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeKanwil(newValue);
+                  }}
+                  getOptionLabel={(option) => option.kanwil || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          kanwil && kanwil.length != 0
+                            ? kanwil
+                                .map((item) => item.kanwil)
+                                .indexOf(option.kanwil) > -1
+                            : false
+                        }
+                      />
+                      {option.kanwil}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return `${selected.length} Terpilih`;
+                  }}
+                  defaultValue={kanwil}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={kanwil.length != 0 ? "" : "Pilih Kanwil"}
+                    />
+                  )}
+                />
               </Grid>
               <Grid
                 container
@@ -1070,7 +1129,7 @@ const KepegawaianOrganisasi = () => {
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={4}
+                xs={2}
                 style={{ paddingTop: 40, paddingLeft: 20 }}
               >
                 <Button
