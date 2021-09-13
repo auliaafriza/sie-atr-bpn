@@ -7,6 +7,7 @@ import {
 import {
   getBerkasPnbpWilayahFilter,
   getBerkasPnbpKantorFilter,
+  getWilayahPNBP,
 } from "../../../actions/pnbpAction";
 import { useDispatch } from "react-redux";
 import SieTunggakan from "./sie-tunggakan";
@@ -22,6 +23,7 @@ const LayananUmum = () => {
     dispatch(getSatker());
     dispatch(getKantor());
     dispatch(getKanwil());
+    dispatch(getWilayahPNBP());
   }, []);
 
   return (

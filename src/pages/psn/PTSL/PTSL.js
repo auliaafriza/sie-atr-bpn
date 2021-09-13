@@ -47,9 +47,9 @@ const PTSL = () => {
         {/* <SiePsnPtsl5Peringkat /> */}
         {/* <RealisasiPerkegiatan /> */}
       </div>
-      <NilaiHt />
+      {/* <NilaiHt />
       <NilaiJualBeli />
-      <NilaiTanahperKantah />
+      <NilaiTanahperKantah /> */}
     </div>
   );
 };

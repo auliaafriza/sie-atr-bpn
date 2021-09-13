@@ -77,11 +77,11 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const dataTemp = [
   {
     label: "Kab. Aceh Barat",
-    bphtb: 0,
+    pnbp: 0,
   },
   {
     label: "Kab. Aceh Barat",
-    bphtb: 10,
+    pnbp: 10,
   },
 ];
 
@@ -94,7 +94,7 @@ let nameColumn = [
   },
   {
     label: "Nilai PNBP",
-    value: "bphtb",
+    value: "pnbp",
     isFixed: false,
     isLabel: true,
   },
@@ -405,7 +405,7 @@ const realisasiPenggunaan = () => {
             {/* <Legend /> */}
             <Area
               type="monotone"
-              dataKey="bphtb"
+              dataKey="pnbp"
               stroke="#6EB5FF"
               activeDot={{ r: 8 }}
               strokeWidth={3}
@@ -437,7 +437,7 @@ const realisasiPenggunaan = () => {
                         {row.label}
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        {row.bphtb
+                        {row.pnbp
                           .toString()
                           .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}
                       </StyledTableCell>
@@ -509,14 +509,14 @@ const realisasiPenggunaan = () => {
       isFixed: false,
     },
     {
-      label: "bphtb",
+      label: "pnbp",
       isFixed: false,
     },
   ];
 
   let grafikView = [
     {
-      dataKey: "bphtb",
+      dataKey: "pnbp",
       fill: "#6EB5FF",
     },
   ];
@@ -948,7 +948,7 @@ const realisasiPenggunaan = () => {
                       {/* <Legend /> */}
                       <Area
                         type="monotone"
-                        dataKey="bphtb"
+                        dataKey="pnbp"
                         stroke="#6EB5FF"
                         activeDot={{ r: 8 }}
                         strokeWidth={3}

@@ -189,6 +189,46 @@ const ComponentPrint = () => {
                 );
               })}
             </BarChart>
+          ) : grafik == "barGroup" ? (
+            <BarChart
+              width={500}
+              height={300}
+              data={data}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+              padding={{
+                top: 15,
+                right: 10,
+                left: 10,
+                bottom: 15,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey={axis.xAxis}></XAxis>
+              <YAxis tickFormatter={DataFormater}>
+                <Label
+                  value={axis.yAxis}
+                  angle={-90}
+                  position="insideBottomLeft"
+                  offset={-5}
+                />
+              </YAxis>
+              {/* <Tooltip content={<CustomTooltip />} /> */}
+              <Legend />
+              {grafikView.map((grafikItem, i) => {
+                return (
+                  <Bar
+                    dataKey={grafikItem.dataKey}
+                    stackId="a"
+                    fill={grafikItem.fill}
+                  />
+                );
+              })}
+            </BarChart>
           ) : grafik == "line" ? (
             <LineChart
               width={500}

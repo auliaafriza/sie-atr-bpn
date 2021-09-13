@@ -76,59 +76,26 @@ import { getKantorPNBP } from "../../../actions/pnbpAction";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-const dataChart = [
-  {
-    name: "Page A",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "Page C",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "Page E",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "Page F",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
-
 const dataTemp = [
   {
-    keterangan: "",
-    nilai: 0,
+    tahun: "2017",
+    p2015: "0",
+    p2016: "0",
+    p2017: "10",
+    p2018: "10",
+    p2019: "20",
+    p2020: "20",
+    p2021: "20",
   },
   {
-    keterangan: "",
-    nilai: 0,
+    tahun: "2018",
+    p2015: "10",
+    p2016: "10",
+    p2017: "20",
+    p2018: "20",
+    p2019: "30",
+    p2020: "30",
+    p2021: "30",
   },
 ];
 
@@ -166,14 +133,50 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {
-    label: "Keterangan",
-    value: "keterangan",
+    label: "Tahun",
+    value: "tahun",
     isFixed: false,
     isLabel: false,
   },
   {
-    label: "Nilai Tunggakan",
-    value: "nilai",
+    label: "Nilai P2015",
+    value: "p2015",
+    isFixed: false,
+    isLabel: false,
+  },
+  {
+    label: "Nilai P2016",
+    value: "p2016",
+    isFixed: false,
+    isLabel: false,
+  },
+  {
+    label: "Nilai P2017",
+    value: "p2017",
+    isFixed: false,
+    isLabel: false,
+  },
+  {
+    label: "Nilai P2018",
+    value: "p2018",
+    isFixed: false,
+    isLabel: false,
+  },
+  {
+    label: "Nilai P2019",
+    value: "p2019",
+    isFixed: false,
+    isLabel: false,
+  },
+  {
+    label: "Nilai P2020",
+    value: "p2020",
+    isFixed: false,
+    isLabel: false,
+  },
+  {
+    label: "Nilai P2021",
+    value: "p2021",
     isFixed: false,
     isLabel: false,
   },
@@ -181,36 +184,86 @@ let nameColumn = [
 
 let columnTable = [
   {
-    label: "keterangan",
+    label: "tahun",
     isFixed: false,
   },
   {
-    label: "nilai",
+    label: "p2015",
+    isFixed: false,
+  },
+  {
+    label: "p2016",
+    isFixed: false,
+  },
+  {
+    label: "p2017",
+    isFixed: false,
+  },
+  {
+    label: "p2018",
+    isFixed: false,
+  },
+  {
+    label: "p2019",
+    isFixed: false,
+  },
+  {
+    label: "p2020",
+    isFixed: false,
+  },
+  {
+    label: "p2021",
     isFixed: false,
   },
 ];
 
 let grafikView = [
   {
-    dataKey: "nilai",
+    dataKey: "p2015",
     fill: "#8884d8",
+  },
+  {
+    dataKey: "p2016",
+    fill: "#82ca9d",
+  },
+  {
+    dataKey: "p2017",
+    fill: "#ffc658",
+  },
+  {
+    dataKey: "p2018",
+    fill: "#800000",
+  },
+  {
+    dataKey: "p2019",
+    fill: "#00CED1",
+  },
+  {
+    dataKey: "p2020",
+    fill: "#8B4513",
+  },
+  {
+    dataKey: "p2021",
+    fill: "#B0C4DE",
   },
 ];
 
 let axis = {
-  xAxis: "keterangan",
+  xAxis: "tahun",
   yAxis: "Nilai Tunggakan",
 };
 
 const KepegawaianBpnJabatan = () => {
   const classes = styles();
   const [dataFilter, setDataFilter] = useState({
-    namaprofile: "Petugas Kontrol Pengumuman",
+    kode: "09",
+    kanwil: "Kantor Wilayah Provinsi DKI Jakarta",
   });
+  const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
   const [years, setYears] = useState("2022");
+  const [tahunAwal, setTahunAwal] = useState("2017");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
-  const [tahunAwal, setTahunAwal] = useState("2017");
   const [kanwil, setKanwil] = useState({ kanwil: "" });
   const [kantor, setKantor] = useState({ kantor: "" });
   const [satker, setSatker] = useState({ satker: "" });
@@ -249,18 +302,78 @@ const KepegawaianBpnJabatan = () => {
   };
 
   const handleChangeFilter = (event) => {
+    // if (event.length != 0) {
+    //   setDataFilter([
+    //     ...dataFilter,
+    //     ...event.filter((option) => dataFilter.indexOf(option) === -1),
+    //   ]);
+    // } else {
+    //   setDataFilter([]);
+    // }
     setDataFilter(event);
   };
 
+  const chunkArrayInGroups = (arr, size) => {
+    var myArray = [];
+    for (var i = 0; i < arr.length; i += size) {
+      myArray.push(arr.slice(i, i + size));
+    }
+    return myArray;
+  };
+
+  const convertdata = (data) => {
+    let body = {
+      tahun: "",
+      p2015: "",
+      p2016: "",
+      p2017: "",
+      p2018: "",
+      p2019: "",
+      p2020: "",
+      p2021: "",
+    };
+    let temp = [];
+    let mapData = chunkArrayInGroups(data, 7);
+    mapData.map((item, i) => {
+      let pushData = { ...body };
+      pushData.tahun = item[0].tahun;
+      item.map((dataItem, i) => {
+        if (dataItem.tahuntunggakan == "p2015") pushData.p2015 = dataItem.nilai;
+        else if (dataItem.tahuntunggakan == "p2016")
+          pushData.p2016 = dataItem.nilai;
+        else if (dataItem.tahuntunggakan == "p2017")
+          pushData.p2017 = dataItem.nilai;
+        else if (dataItem.tahuntunggakan == "p2018")
+          pushData.p2018 = dataItem.nilai;
+        else if (dataItem.tahuntunggakan == "p2019")
+          pushData.p2019 = dataItem.nilai;
+        else if (dataItem.tahuntunggakan == "p2020")
+          pushData.p2020 = dataItem.nilai;
+        else if (dataItem.tahuntunggakan == "p2021")
+          pushData.p2021 = dataItem.nilai;
+      });
+      temp.push(pushData);
+    });
+    return temp;
+  };
+
   const getData = () => {
+    let temp = {
+      kanwil: [],
+    };
+    dataFilter && dataFilter.kanwil ? temp.kanwil.push(dataFilter.kanwil) : [];
+    // dataFilter && dataFilter.length != 0
+    //   ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
+    //   : [];
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(
-        `${url}KinerjaLayanan/Tunggakan/Tunggakan?namaprofile=${dataFilter.namaprofile}`
+      .post(
+        `${url}KinerjaLayanan/Tunggakan/Kanwil?tahunAwal=${tahunAwal}&tahunAkhir=${years}`,
+        temp
       )
       .then(function (response) {
-        setData(response.data.data);
+        setData(convertdata(response.data.data));
         setComment(response.data);
         console.log(response);
       })
@@ -304,11 +417,15 @@ const KepegawaianBpnJabatan = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">{label}</p>
-          <p
-            className="desc"
-            style={{ color: payload[0].color }}
-          >{`Nilai Tunggakan : ${payload[0].value}`}</p>
+          <p className="label">Tahun {label}</p>
+          {payload && payload.length != 0
+            ? payload.map((item, i) => (
+                <p
+                  className="desc"
+                  style={{ color: item.color }}
+                >{`${item.name} : ${item.value}`}</p>
+              ))
+            : null}
         </div>
       );
     }
@@ -352,7 +469,7 @@ const KepegawaianBpnJabatan = () => {
           <BarChart
             width={500}
             height={300}
-            data={dataChart}
+            data={data}
             margin={{
               top: 5,
               right: 30,
@@ -367,7 +484,7 @@ const KepegawaianBpnJabatan = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name"></XAxis>
+            <XAxis dataKey="tahun"></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value="Nilai Tunggakan"
@@ -378,9 +495,13 @@ const KepegawaianBpnJabatan = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="pv" stackId="a" fill="#8884d8" />
-            <Bar dataKey="amt" stackId="a" fill="#82ca9d" />
-            <Bar dataKey="uv" stackId="a" fill="#ffc658" />
+            <Bar dataKey="p2015" stackId="a" fill="#8884d8" />
+            <Bar dataKey="p2016" stackId="a" fill="#82ca9d" />
+            <Bar dataKey="p2017" stackId="a" fill="#ffc658" />
+            <Bar dataKey="p2018" stackId="a" fill="#800000" />
+            <Bar dataKey="p2019" stackId="a" fill="#00CED1" />
+            <Bar dataKey="p2020" stackId="a" fill="#8B4513" />
+            <Bar dataKey="p2021" stackId="a" fill="#B0C4DE" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -489,7 +610,7 @@ const KepegawaianBpnJabatan = () => {
         comment: comment,
         columnTable: columnTable,
         title: title,
-        grafik: "bar",
+        grafik: "barGroup",
         nameColumn: nameColumn,
         grafikView: grafikView,
         axis: axis,
@@ -882,13 +1003,79 @@ const KepegawaianBpnJabatan = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
+                  Tahun Awal
+                </Typography>
+                <FormControl className={classes.formControl}>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={tahunAwal}
+                    onChange={handleChangeAwal}
+                    label="Tahun Awal"
+                    className={classes.selectStyle}
+                    disableUnderline
+                  >
+                    {tahunData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Tahun Akhir
+                </Typography>
+                <FormControl className={classes.formControl}>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={years}
+                    onChange={handleChange}
+                    label="Tahun Akhir"
+                    className={classes.selectStyle}
+                    disableUnderline
+                  >
+                    {tahunData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
                   Pilih Wilayah
                 </Typography>
                 <Autocomplete
+                  // multiple
                   id="kantor"
                   name="kantor"
                   style={{ width: "100%", height: 50 }}
-                  options={profileList}
+                  options={berkasPnbpWilayah}
                   classes={{
                     option: classes.option,
                   }}
@@ -898,10 +1085,29 @@ const KepegawaianBpnJabatan = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilter(newValue);
                   }}
-                  getOptionLabel={(option) => option.namaprofile || ""}
+                  getOptionLabel={(option) => option.kanwil || ""}
                   renderOption={(option, { selected }) => (
-                    <React.Fragment>{option.namaprofile}</React.Fragment>
+                    <React.Fragment>
+                      {/* <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilter && dataFilter.length != 0
+                            ? dataFilter
+                                .map((item) => item.kanwil)
+                                .indexOf(option.kanwil) > -1
+                            : false
+                        }
+                      /> */}
+                      {option.kode}
+                      {"  "}
+                      {option.kanwil}
+                    </React.Fragment>
                   )}
+                  // renderTags={(selected) => {
+                  //   return `${selected.length} Terpilih`;
+                  // }}
                   defaultValue={dataFilter}
                   renderInput={(params) => (
                     <TextField
@@ -911,7 +1117,7 @@ const KepegawaianBpnJabatan = () => {
                         disableUnderline: true,
                       }}
                       style={{ marginTop: 5 }}
-                      placeholder={"Nama Profile"}
+                      placeholder={"Pilih Wilayah"}
                     />
                   )}
                 />
@@ -984,7 +1190,7 @@ const KepegawaianBpnJabatan = () => {
                   <BarChart
                     width={500}
                     height={300}
-                    data={dataChart}
+                    data={data}
                     margin={{
                       top: 5,
                       right: 30,
@@ -999,7 +1205,7 @@ const KepegawaianBpnJabatan = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
+                    <XAxis dataKey="tahun" />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
                         value="Nilai Tunggakan"
@@ -1010,9 +1216,13 @@ const KepegawaianBpnJabatan = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Bar dataKey="pv" stackId="a" fill="#8884d8" />
-                    <Bar dataKey="amt" stackId="a" fill="#82ca9d" />
-                    <Bar dataKey="uv" stackId="a" fill="#ffc658" />
+                    <Bar dataKey="p2015" stackId="a" fill="#8884d8" />
+                    <Bar dataKey="p2016" stackId="a" fill="#82ca9d" />
+                    <Bar dataKey="p2017" stackId="a" fill="#ffc658" />
+                    <Bar dataKey="p2018" stackId="a" fill="#800000" />
+                    <Bar dataKey="p2019" stackId="a" fill="#00CED1" />
+                    <Bar dataKey="p2020" stackId="a" fill="#8B4513" />
+                    <Bar dataKey="p2021" stackId="a" fill="#B0C4DE" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
