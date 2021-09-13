@@ -165,7 +165,7 @@ const AlokasiAnggaran = () => {
   const [years, setYears] = useState("2022");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
-  const [tipe, seTipe] = useState("OPS");
+  const [tipe, setTipe] = useState("OPS");
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",

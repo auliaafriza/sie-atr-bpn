@@ -1101,7 +1101,7 @@ const realisasiPenggunaan = () => {
                         }}
                         style={{ marginTop: 5 }}
                         placeholder={
-                          dataFilterKantor.length != 0 ? "" : "Pilih Wilayah"
+                          dataFilterKantor.length != 0 ? "" : "Pilih Kantor"
                         }
                       />
                     )}
