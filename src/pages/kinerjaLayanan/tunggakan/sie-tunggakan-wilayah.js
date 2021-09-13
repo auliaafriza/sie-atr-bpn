@@ -240,7 +240,7 @@ let grafikView = [
   },
   {
     dataKey: "p2020",
-    fill: "#8B4513",
+    fill: "#C71585",
   },
   {
     dataKey: "p2021",
@@ -500,7 +500,7 @@ const KepegawaianBpnJabatan = () => {
             <Bar dataKey="p2017" stackId="a" fill="#ffc658" />
             <Bar dataKey="p2018" stackId="a" fill="#800000" />
             <Bar dataKey="p2019" stackId="a" fill="#00CED1" />
-            <Bar dataKey="p2020" stackId="a" fill="#8B4513" />
+            <Bar dataKey="p2020" stackId="a" fill="#C71585" />
             <Bar dataKey="p2021" stackId="a" fill="#B0C4DE" />
           </BarChart>
         </ResponsiveContainer>
@@ -1221,7 +1221,7 @@ const KepegawaianBpnJabatan = () => {
                     <Bar dataKey="p2017" stackId="a" fill="#ffc658" />
                     <Bar dataKey="p2018" stackId="a" fill="#800000" />
                     <Bar dataKey="p2019" stackId="a" fill="#00CED1" />
-                    <Bar dataKey="p2020" stackId="a" fill="#8B4513" />
+                    <Bar dataKey="p2020" stackId="a" fill="#C71585" />
                     <Bar dataKey="p2021" stackId="a" fill="#B0C4DE" />
                   </BarChart>
                 </ResponsiveContainer>

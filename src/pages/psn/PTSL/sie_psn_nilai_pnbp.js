@@ -395,7 +395,7 @@ const realisasiPenggunaan = () => {
             />
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Nilai BPHTB"
+                value="Nilai PNBP"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
@@ -406,7 +406,7 @@ const realisasiPenggunaan = () => {
             <Area
               type="monotone"
               dataKey="pnbp"
-              stroke="#6EB5FF"
+              stroke="#00CED1"
               activeDot={{ r: 8 }}
               strokeWidth={3}
             />
@@ -517,13 +517,13 @@ const realisasiPenggunaan = () => {
   let grafikView = [
     {
       dataKey: "pnbp",
-      fill: "#6EB5FF",
+      fill: "#00CED1",
     },
   ];
 
   let axis = {
     xAxis: "label",
-    yAxis: "Nilai BPHTB",
+    yAxis: "Nilai PNBP",
   };
   const title = " PSN Nilai PNBP BPHTB";
   const handlePrint = () => {
@@ -864,7 +864,7 @@ const realisasiPenggunaan = () => {
                             )
                           : "",
                       type: "Bar",
-                      nameColumn: ["Kanwil", "Nilai BPHTB"],
+                      nameColumn: ["Kanwil", "Nilai PNBP"],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
@@ -938,7 +938,7 @@ const realisasiPenggunaan = () => {
                       />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
-                          value="Nilai BPHTB"
+                          value="Nilai PNBP"
                           angle={-90}
                           position="insideBottomLeft"
                           offset={-5}
@@ -949,7 +949,7 @@ const realisasiPenggunaan = () => {
                       <Area
                         type="monotone"
                         dataKey="pnbp"
-                        stroke="#6EB5FF"
+                        stroke="#00CED1"
                         activeDot={{ r: 8 }}
                         strokeWidth={3}
                       />
@@ -1201,7 +1201,7 @@ const realisasiPenggunaan = () => {
                               )
                             : "",
                         type: "Bar",
-                        nameColumn: ["Kanwil", "Nilai BPHTB"],
+                        nameColumn: ["Kanwil", "Nilai PNBP"],
                         listTop10Comment: comment.listTop10Comment,
                       })
                     }
