@@ -99,7 +99,8 @@ export default function CenteredGrid() {
                     gutterBottom
                     style={{ fontSize: 20 }}
                   >
-                    Jumlah tanah yang telah di Sertifikatkan
+                    Jumlah tanah yang telah di Sertifikatkan pada tahun 2000
+                    hingga sekarang
                   </Typography>
                 </Grid>
                 <Grid
@@ -135,7 +136,8 @@ export default function CenteredGrid() {
               >
                 <Grid item xs={4}>
                   <Typography className={classes.title} gutterBottom>
-                    Bidang tanah merupakan hasil redistribusi tanah
+                    Bidang tanah hasil redistribusi tanah pada tahun 2000 hingga
+                    sekarang
                   </Typography>
                 </Grid>
                 <Grid item xs={8}>
@@ -165,7 +167,8 @@ export default function CenteredGrid() {
               >
                 <Grid item xs={4}>
                   <Typography className={classes.title} gutterBottom>
-                    Tanah telah diukur dan dipetakan
+                    Tanah telah diukur dan dipetakan pada tahun 2000 hingga
+                    sekarang
                   </Typography>
                 </Grid>
                 <Grid item xs={8}>
@@ -194,8 +197,8 @@ export default function CenteredGrid() {
               >
                 <Grid item xs={6}>
                   <Typography className={classes.title} gutterBottom>
-                    Transaksi Hak Tanggungan Elektronik telah tercatat dengan
-                    nilai sebesar
+                    Transaksi Hak Tanggungan Elektronik telah tercatat pada
+                    tahun 2000 hingga sekarang sebesar
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
@@ -224,8 +227,9 @@ export default function CenteredGrid() {
               >
                 <Grid item xs={6}>
                   <Typography className={classes.title} gutterBottom>
-                    Telah terintegrasi dengan pemerintah daerah dan Dirjen Pajak
-                    untuk validasi pajak dan BPHTB secara online
+                    Pemerintah daerah dan Dirjen Pajak yang telah terintegrasi
+                    untuk validasi pajak dan BPHTB secara online pada tahun 2000
+                    hingga sekarang
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
