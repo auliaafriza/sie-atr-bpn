@@ -69,11 +69,11 @@ export const MENU_LIST = [
         name: "PNBP",
         link: "/AssetKeuangan/PNBP",
       },
-      // {
-      //   icon: <RiHandCoinFill size={24} />,
-      //   name: "BPHTB",
-      //   link: "/AssetKeuangan/BPHTB",
-      // },
+      {
+        icon: <RiHandCoinFill size={24} />,
+        name: "BPHTB",
+        link: "/AssetKeuangan/BPHTB",
+      },
     ],
   },
   {

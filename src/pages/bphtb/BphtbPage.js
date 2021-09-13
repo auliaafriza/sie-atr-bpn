@@ -1,6 +1,7 @@
 import React from "react";
 import BPHTBJumlahBerkas from "./bphtb-jumlah-berkas";
 import BPHTBJumlahIntegrasi from "./bphtb-jumlah-terintegrasi";
+import NilaiBPHTB from "./sie_psn_nilai_bphtb";
 import bgImg from "../../assets/img/asetKeuangan.jpg";
 
 const BPHTBPage = () => {
@@ -16,8 +17,9 @@ const BPHTBPage = () => {
         zIndex: 1,
       }}
     >
+      <NilaiBPHTB />
       {/* <BPHTBJumlahBerkas /> */}
-      <BPHTBJumlahIntegrasi />
+      {/* <BPHTBJumlahIntegrasi /> */}
     </div>
   );
 };
