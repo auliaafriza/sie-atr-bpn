@@ -69,6 +69,7 @@ import { BASE_URL } from "../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 
@@ -1113,7 +1114,14 @@ const KepegawaianBpnMutasi = () => {
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="kanwil" />
-                    <YAxis tickFormatter={DataFormater}>
+                    <YAxis
+                      tickFormatter={DataFormater}
+                      type="number"
+                      domain={[
+                        (dataMin) => 0 - Math.abs(dataMin),
+                        (dataMax) => dataMax * 2,
+                      ]}
+                    >
                       <Label
                         value="Nilai Satuan 1 Juta"
                         angle={-90}

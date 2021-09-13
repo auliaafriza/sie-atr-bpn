@@ -67,6 +67,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { tahunData } from "../../functionGlobal/globalDataAsset";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { getKantorPNBP } from "../../actions/pnbpAction";
@@ -259,6 +260,11 @@ const AlokasiAnggaran = () => {
   };
 
   useEffect(() => {
+    let temp = { kodeWilayah: [] };
+    dataFilter &&
+      dataFilter.length &&
+      dataFilter.map((item) => temp.kodeWilayah.push(item.kode));
+    dispatch(getKantorPNBP(temp));
     getData();
   }, []);
 

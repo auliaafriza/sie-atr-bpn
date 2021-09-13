@@ -262,6 +262,11 @@ const realisasiPenggunaan = () => {
   };
 
   useEffect(() => {
+    let temp = { kodeWilayah: [] };
+    dataFilter &&
+      dataFilter.length &&
+      dataFilter.map((item) => temp.kodeWilayah.push(item.kode));
+    dispatch(getKantorPNBP(temp));
     dispatch(getRealisasiPenggunaanFilter());
     getData();
   }, []);

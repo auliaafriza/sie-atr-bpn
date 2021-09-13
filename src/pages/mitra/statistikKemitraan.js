@@ -128,12 +128,6 @@ let nameColumn = [
     isLabel: false,
   },
   {
-    label: "Tipe Mitra",
-    value: "tipe_mitrakerja",
-    isFixed: false,
-    isLabel: false,
-  },
-  {
     label: "Jumlah",
     value: "jumlah",
     isFixed: false,
@@ -369,7 +363,7 @@ const KepegawaianOrganisasi = () => {
                 fontSize: 8,
               }}
               dataKey="tipe_mitrakerja"
-              tickFormatter={DataFormaterX}
+              // tickFormatter={DataFormaterX}
             />
             <YAxis tickFormatter={DataFormater}>
               <Label
@@ -418,9 +412,6 @@ const KepegawaianOrganisasi = () => {
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {row.kanwil}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.tipe_mitrakerja}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {row.jumlah}
@@ -914,7 +905,7 @@ const KepegawaianOrganisasi = () => {
                         fontSize: 8,
                       }}
                       dataKey="tipe_mitrakerja"
-                      tickFormatter={DataFormaterX}
+                      // tickFormatter={DataFormaterX}
                     />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
