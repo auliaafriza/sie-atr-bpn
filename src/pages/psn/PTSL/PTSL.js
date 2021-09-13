@@ -11,8 +11,8 @@ import {
 import { useDispatch } from "react-redux";
 import SiePsnPtsl5Peringkat from "./sie_psn_ptsl_5peringkat";
 import RealisasiPerkegiatan from "./sie_ptsl_realisasi_perkegiatan";
-import NilaiBPHTB from "./sie_psn_nilai_bphtb";
-import NilaiPNBP from "./sie_psn_nilai_pnbp";
+// import NilaiBPHTB from "./sie_psn_nilai_bphtb";
+// import NilaiPNBP from "./sie_psn_nilai_pnbp";
 import NilaiHt from "./sie_psn_nilai_ht";
 import NilaiJualBeli from "./sie_psn_nilai_jual_beli";
 import NilaiTanahperKantah from "./sie_psn_nilai_tanah_perkantah";
@@ -42,8 +42,8 @@ const PTSL = () => {
           zIndex: 1,
         }}
       >
-        <NilaiBPHTB />
-        <NilaiPNBP />
+        {/* <NilaiBPHTB />
+        <NilaiPNBP /> */}
         {/* <SiePsnPtsl5Peringkat /> */}
         {/* <RealisasiPerkegiatan /> */}
       </div>
