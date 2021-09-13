@@ -45,8 +45,8 @@ import SieSertifikasiLuasJumlah from "../pages/sertifikasi/statistikSertifikat/s
 import SieTunggakan from "../pages/kinerjaLayanan/tunggakan/sie-tunggakan";
 import SieIndexTanah from "../pages/psn/pengadaanTanah/psn-index-nilai-tanah";
 import SieTunggakanWilayah from "../pages/kinerjaLayanan/tunggakan/sie-tunggakan-wilayah";
-import SiePSNNilaiBPHTB from "../pages/psn/PTSL/sie_psn_nilai_bphtb";
-import SiePSNNilaiPNBP from "../pages/psn/PTSL/sie_psn_nilai_pnbp";
+import SiePSNNilaiBPHTB from "../pages/bphtb/sie_psn_nilai_bphtb";
+import SiePSNNilaiPNBP from "../pages/kinerjaLayanan/PNBP/sie_psn_nilai_pnbp";
 import SiePSNNilaiHt from "../pages/psn/PTSL/sie_psn_nilai_ht";
 import SiePSNNilaiJualBeli from "../pages/psn/PTSL/sie_psn_nilai_jual_beli";
 import SiePSNNilaiTanahPerKantah from "../pages/psn/PTSL/sie_psn_nilai_tanah_perkantah";
