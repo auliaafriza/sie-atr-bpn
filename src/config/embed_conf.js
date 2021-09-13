@@ -49,5 +49,11 @@ export const BASE_URL = {
     sie_sertifikasi_luas_jumlah: "sie-sertifikasi-luas-jumlah",
     sie_tunggakan: "sie-tunggakan",
     sie_index_tanah: "sie-index-tanah",
+    sie_tunggakan_wilayah: "sie-tunggakan-wilayah",
+    sie_psn_nilai_bphtb: "sie-psn-nilai-bphtb",
+    sie_psn_nilai_pnbp: "sie-psn-nilai-pnbp",
+    sie_psn_nilai_ht: "sie-psn-nilai-ht",
+    sie_psn_nilai_jual_beli: "sie-psn-nilai-jual-beli",
+    sie_psn_nilai_tanah_per_kantah: "sie-psn-nilai-tanah-perkantah",
   },
 };

@@ -146,11 +146,11 @@ export const MENU_LIST = [
       //   name: "Percepatan Rencana Detail Tata Ruang (RDTR)",
       //   link: "/PSN/RDTR",
       // },
-      // {
-      //   icon: <GrTableAdd size={22} />,
-      //   name: "Pendaftaran Tanah Sistematis Lengkap (PTSL)",
-      //   link: "/PSN/PTSL",
-      // },
+      {
+        icon: <GrTableAdd size={22} />,
+        name: "Pendaftaran Tanah Sistematis Lengkap (PTSL)",
+        link: "/PSN/PTSL",
+      },
       // {
       //   icon: <BiBuildingHouse size={24} />,
       //   name: "Reforma Agraria",
@@ -280,6 +280,12 @@ export const HIDE_HEADER = [
   "/embed/sie-sertifikasi-luas-jumlah",
   "/embed/sie-tunggakan",
   "/embed/sie-index-tanah",
+  "/embed/sie-tunggakan-wilayah",
+  "/embed/sie-psn-nilai-bphtb",
+  "/embed/sie-psn-nilai-pnbp",
+  "/embed/sie-psn-nilai-ht",
+  "/embed/sie-psn-nilai-jual-beli",
+  "/embed/sie-psn-nilai-tanah-perkantah",
 ];
 
 // *****************************************************
@@ -335,4 +341,10 @@ export const HIDE_FOOTER = [
   "/embed/sie-sertifikasi-luas-jumlah",
   "/embed/sie-tunggakan",
   "/embed/sie-index-tanah",
+  "/embed/sie-tunggakan-wilayah",
+  "/embed/sie-psn-nilai-bphtb",
+  "/embed/sie-psn-nilai-pnbp",
+  "/embed/sie-psn-nilai-ht",
+  "/embed/sie-psn-nilai-jual-beli",
+  "/embed/sie-psn-nilai-tanah-perkantah",
 ];

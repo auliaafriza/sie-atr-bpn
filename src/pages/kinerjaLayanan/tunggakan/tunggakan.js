@@ -10,6 +10,7 @@ import {
 } from "../../../actions/pnbpAction";
 import { useDispatch } from "react-redux";
 import SieTunggakan from "./sie-tunggakan";
+import SieTunggakanWilayah from "./sie-tunggakan-wilayah";
 import bgImg from "../../../assets/img/kinerja.jpg";
 
 const LayananUmum = () => {
@@ -29,7 +30,7 @@ const LayananUmum = () => {
         paddingBottom: 20,
         paddingTop: 20,
         backgroundImage: `url(${bgImg})`,
-        height: "100vh",
+        // height: "100vh",
         width: "100wh",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
@@ -37,6 +38,7 @@ const LayananUmum = () => {
       }}
     >
       <SieTunggakan />
+      <SieTunggakanWilayah />
     </div>
   );
 };

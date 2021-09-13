@@ -8,14 +8,21 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  LineChart,
+  Line,
   Label,
 } from "recharts";
 import {
   Typography,
   Grid,
+  FormControl,
+  Select,
+  InputLabel,
+  MenuItem,
   Card,
   ButtonGroup,
   IconButton,
+  Box,
   CardContent,
   Tooltip as TooltipMI,
   Modal,
@@ -31,50 +38,97 @@ import {
   ListItem,
   Divider,
   ListItemText,
+  ListItemAvatar,
+  Avatar,
   TablePagination,
   Button,
   TextField,
-  FormControl,
-  Select,
-  MenuItem,
   Checkbox,
 } from "@material-ui/core";
-import { createTheme, withStyles } from "@material-ui/core/styles";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import {
+  createTheme,
+  ThemeProvider,
+  withStyles,
+} from "@material-ui/core/styles";
 import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
-import styles from "./../styles";
+import styles from "../styles";
 import axios from "axios";
-import moment from "moment";
-import { fileExport } from "../../../functionGlobal/exports";
-import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
-import { useHistory } from "react-router-dom";
-// import { getSatker } from "../../actions/globalActions";
-
-import { BASE_URL } from "../../../config/embed_conf";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { ToastContainer, toast } from "react-toastify";
+import { useReactToPrint } from "react-to-print";
 import {
   tahunData,
   DataFormater,
 } from "../../../functionGlobal/globalDataAsset";
+import moment from "moment";
+import { fileExport } from "../../../functionGlobal/exports";
+import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
+import { useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { BASE_URL } from "../../../config/embed_conf";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import { getKantorPNBP } from "../../../actions/pnbpAction";
 
-import { useSelector } from "react-redux";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import {
-  CheckBoxOutlineBlank,
-  CheckBox as CheckBoxIcon,
-} from "@material-ui/icons/";
-
-const icon = <CheckBoxOutlineBlank fontSize="small" />;
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
-const dataTemp = [
+
+const dataChart = [
   {
-    nama: "",
-    jumlah_berkas: 0,
+    name: "Page A",
+    uv: 4000,
+    pv: 2400,
+    amt: 2400,
   },
   {
-    nama: "",
-    jumlah_berkas: 0,
+    name: "Page B",
+    uv: 3000,
+    pv: 1398,
+    amt: 2210,
+  },
+  {
+    name: "Page C",
+    uv: 2000,
+    pv: 9800,
+    amt: 2290,
+  },
+  {
+    name: "Page D",
+    uv: 2780,
+    pv: 3908,
+    amt: 2000,
+  },
+  {
+    name: "Page E",
+    uv: 1890,
+    pv: 4800,
+    amt: 2181,
+  },
+  {
+    name: "Page F",
+    uv: 2390,
+    pv: 3800,
+    amt: 2500,
+  },
+  {
+    name: "Page G",
+    uv: 3490,
+    pv: 4300,
+    amt: 2100,
+  },
+];
+
+const dataTemp = [
+  {
+    keterangan: "",
+    nilai: 0,
+  },
+  {
+    keterangan: "",
+    nilai: 0,
   },
 ];
 
@@ -112,55 +166,55 @@ let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {
-    label: "Nama",
-    value: "nama",
-    isLabel: true,
+    label: "Keterangan",
+    value: "keterangan",
+    isFixed: false,
+    isLabel: false,
   },
   {
-    label: "Jumlah Berkas",
-    value: "jumlah_berkas",
+    label: "Nilai Tunggakan",
+    value: "nilai",
+    isFixed: false,
+    isLabel: false,
   },
 ];
 
 let columnTable = [
   {
-    label: "nama",
+    label: "keterangan",
     isFixed: false,
   },
   {
-    label: "jumlah_berkas",
+    label: "nilai",
     isFixed: false,
   },
 ];
 
 let grafikView = [
   {
-    dataKey: "jumlah_berkas",
-    fill: "#C71585",
+    dataKey: "nilai",
+    fill: "#8884d8",
   },
 ];
 
 let axis = {
-  xAxis: "Nama",
-  yAxis: "Jumlah Berkas",
+  xAxis: "keterangan",
+  yAxis: "Nilai Tunggakan",
 };
-const title = "TOP 5 Jumlah Berkas PTSL";
-const SiePsnPtsl5Peringkat = () => {
+
+const KepegawaianBpnJabatan = () => {
   const classes = styles();
-  const berkasPnbpWilayah = useSelector(
-    (state) => state.pnbp.berkasPnbpWilayah
-  );
-  const berkasPnbpKantor = useSelector((state) => state.pnbp.berkasPnbpKantor);
-  const [dataFilter, setDataFilter] = useState([
-    { wilayah: "Kantor Wilayah Provinsi Jawa Barat" },
-    { wilayah: "Kantor Wilayah Provinsi Jambi" },
-  ]);
-  const [dataFilterKantor, setDataFilterKantor] = useState([
-    { kantor: "Kantor Pertanahan Kabupaten Bandung" },
-  ]);
-  const [tahun, setTahun] = useState("2016");
+  const [dataFilter, setDataFilter] = useState({
+    namaprofile: "Petugas Kontrol Pengumuman",
+  });
+  const [years, setYears] = useState("2022");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
+  const [tahunAwal, setTahunAwal] = useState("2017");
+  const [kanwil, setKanwil] = useState({ kanwil: "" });
+  const [kantor, setKantor] = useState({ kantor: "" });
+  const [satker, setSatker] = useState({ satker: "" });
+
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -170,8 +224,11 @@ const SiePsnPtsl5Peringkat = () => {
     type: "",
     listTop10Comment: [],
   });
+  const inputRef = useRef();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const [profileList, setProfileList] = useState([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -190,48 +247,22 @@ const SiePsnPtsl5Peringkat = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleChangeTahun = (event) => {
-    setTahun(event.target.value);
-  };
 
   const handleChangeFilter = (event) => {
-    if (event.length != 0) {
-      setDataFilter([
-        ...dataFilter,
-        ...event.filter((option) => dataFilter.indexOf(option) === -1),
-      ]);
-    } else {
-      setDataFilter([]);
-    }
-  };
-
-  const handleChangeFilterKantor = (event) => {
-    if (event.length != 0) {
-      setDataFilterKantor([
-        ...dataFilterKantor,
-        ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
-      ]);
-    } else {
-      setDataFilterKantor([]);
-    }
+    setDataFilter(event);
   };
 
   const getData = () => {
-    let temp = { kantor: [], wilayah: [] };
-    dataFilterKantor && dataFilterKantor.length != 0
-      ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
-      : [];
-    dataFilter && dataFilter.length != 0
-      ? dataFilter.map((item) => temp.wilayah.push(item.wilayah))
-      : [];
-
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(`${url}ProgramStrategisNasional/PTSL/sie_psn_ptsl_5_peringkat`)
+      .get(
+        `${url}KinerjaLayanan/Tunggakan/Tunggakan?namaprofile=${dataFilter.namaprofile}`
+      )
       .then(function (response) {
         setData(response.data.data);
         setComment(response.data);
+        console.log(response);
       })
       .catch(function (error) {
         // handle error
@@ -243,6 +274,21 @@ const SiePsnPtsl5Peringkat = () => {
   };
 
   useEffect(() => {
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .get(`${url}KinerjaLayanan/Tunggakan/tunggakan_filter_namaprofile`)
+      .then(function (response) {
+        setProfileList(response.data.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+
     getData();
   }, []);
 
@@ -254,18 +300,6 @@ const SiePsnPtsl5Peringkat = () => {
     setTahunAwal(event.target.value);
   };
 
-  const DataFormater = (number) => {
-    if (number > 1000000000) {
-      return (number / 1000000000).toString() + "M";
-    } else if (number > 1000000) {
-      return (number / 1000000).toString() + "Jt";
-    } else if (number > 1000) {
-      return (number / 1000).toString() + "Rb";
-    } else {
-      return number.toString();
-    }
-  };
-
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
@@ -274,9 +308,7 @@ const SiePsnPtsl5Peringkat = () => {
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Jumlah Berkas : ${payload[0].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+          >{`Nilai Tunggakan : ${payload[0].value}`}</p>
         </div>
       );
     }
@@ -285,8 +317,30 @@ const SiePsnPtsl5Peringkat = () => {
   };
 
   const exportData = () => {
-    fileExport(loadDataColumnTable(nameColumn), title, data, ".xlsx");
+    fileExport(
+      loadDataColumnTable(nameColumn),
+      "Data Tunggakan per Wilayah",
+      data,
+      ".xlsx"
+    );
   };
+
+  const handlePrint = useReactToPrint({
+    content: () => inputRef.current,
+  });
+
+  const [iframeIsOpen, setOpenIframe] = useState(false);
+  const [iframeWidth, setIframeWidth] = useState(600);
+  const [iframeHeight, setIframeHeight] = useState(600);
+
+  function handleIframe(status) {
+    setOpenIframe(status);
+  }
+
+  function handleIframeWidth(e) {
+    // alert(e.target.value + "");
+    setIframeWidth(e.target.value);
+  }
 
   const body = (
     <div className={classes.paper}>
@@ -298,7 +352,7 @@ const SiePsnPtsl5Peringkat = () => {
           <BarChart
             width={500}
             height={300}
-            data={dataModal.grafik}
+            data={dataChart}
             margin={{
               top: 5,
               right: 30,
@@ -313,10 +367,10 @@ const SiePsnPtsl5Peringkat = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="nama"></XAxis>
+            <XAxis dataKey="name"></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value={axis.yAxis}
+                value="Nilai Tunggakan"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
@@ -324,11 +378,9 @@ const SiePsnPtsl5Peringkat = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar
-              dataKey="jumlah_berkas"
-              fill="#C71585"
-              name="Jumlah Berkas"
-            ></Bar>
+            <Bar dataKey="pv" stackId="a" fill="#8884d8" />
+            <Bar dataKey="amt" stackId="a" fill="#82ca9d" />
+            <Bar dataKey="uv" stackId="a" fill="#ffc658" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -355,18 +407,16 @@ const SiePsnPtsl5Peringkat = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.nama}>
+                    <StyledTableRow key={row.keterangan}>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.nama}
+                        {row.keterangan}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {row.jumlah_berkas
-                          .toFixed(2)
-                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                        {row.nilai}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
@@ -431,7 +481,7 @@ const SiePsnPtsl5Peringkat = () => {
 
   const history = useHistory();
 
-  const handlePrint = () => {
+  const handlePrintData = (title, columnTable) => {
     history.push({
       pathname: "/PrintData",
       state: {
@@ -448,18 +498,17 @@ const SiePsnPtsl5Peringkat = () => {
     });
   };
 
-  const [iframeIsOpen, setOpenIframe] = useState(false);
-  const [iframeWidth, setIframeWidth] = useState(600);
-  const [iframeHeight, setIframeHeight] = useState(600);
+  const handleChangeKantor = (event) => {
+    setKantor(event);
+  };
 
-  function handleIframe(status) {
-    setOpenIframe(status);
-  }
+  const handleChangeKanwil = (event) => {
+    setKanwil(event);
+  };
 
-  function handleIframeWidth(e) {
-    // alert(e.target.value + "");
-    setIframeWidth(e.target.value);
-  }
+  const handleChangeSatket = (event) => {
+    setSatker(event);
+  };
 
   return (
     <div>
@@ -522,7 +571,7 @@ const SiePsnPtsl5Peringkat = () => {
                   ' src="' +
                   BASE_URL.domain +
                   "/embed/" +
-                  BASE_URL.path.sie_psn_ptsl_5_peringkat +
+                  BASE_URL.path.sie_tunggakan_wilayah +
                   '"></iframe>'
                 }
                 onCopy={() => toast.success("success copied to clipboard!")}
@@ -595,7 +644,7 @@ const SiePsnPtsl5Peringkat = () => {
                   ' src="' +
                   BASE_URL.domain +
                   "/embed/" +
-                  BASE_URL.path.sie_psn_ptsl_5_peringkat +
+                  BASE_URL.path.sie_tunggakan_wilayah +
                   '"></iframe>'
                 }
               />
@@ -688,7 +737,7 @@ const SiePsnPtsl5Peringkat = () => {
               src={
                 BASE_URL.domain +
                 "/embed/" +
-                BASE_URL.path.sie_psn_ptsl_5_peringkat
+                BASE_URL.path.sie_tunggakan_wilayah
               }
             ></iframe>
           </Grid>
@@ -718,9 +767,9 @@ const SiePsnPtsl5Peringkat = () => {
         direction="row"
         style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
       >
-        <Grid item xs={10}>
+        <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            {title}
+            Data Tunggakan per Wilayah
           </Typography>
         </Grid>
         <Grid
@@ -729,7 +778,7 @@ const SiePsnPtsl5Peringkat = () => {
           justifyContent="flex-end"
           alignItems="flex-end"
           item
-          xs={2}
+          xs={6}
         >
           {/* <ReactToPrint
             trigger={() => <button>Print this out!</button>}
@@ -755,7 +804,7 @@ const SiePsnPtsl5Peringkat = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title,
+                    title: "Data Tunggakan per Wilayah ",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -783,7 +832,13 @@ const SiePsnPtsl5Peringkat = () => {
               )}
               content={inputRef.current}
             > */}
-            <TooltipMI title="Print Data" placement="top" onClick={handlePrint}>
+            <TooltipMI
+              title="Print Data"
+              placement="top"
+              onClick={() =>
+                handlePrintData("Data Tunggakan per Wilayah", columnTable)
+              }
+            >
               <IconButton aria-label="delete" size="small">
                 <IoPrint />
               </IconButton>
@@ -811,213 +866,76 @@ const SiePsnPtsl5Peringkat = () => {
           margin: 10,
         }}
       />
-      <Grid container spacing={2} style={{ marginBottom: "10px" }}>
+      <Grid container spacing={2}>
         <Grid item xs={4}>
-          <Grid
-            container
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            spacing={2}
-          >
-            <Grid item xs={6}>
-              <Typography
-                className={classes.isiTextStyle}
-                variant="h2"
-                style={{ fontSize: 12 }}
-              >
-                Pilih Tahun
-              </Typography>
-
-              <FormControl className={classes.formControl}>
-                <Select
-                  labelId="demo-simple-select-outlined-label"
-                  id="demo-simple-select-outlined"
-                  value={tahun}
-                  onChange={handleChangeTahun}
-                  label="Tahun"
-                  className={classes.selectStyle}
-                  disableUnderline
-                >
-                  <MenuItem value="" disabled>
-                    Tahun
-                  </MenuItem>
-                  {tahunData.map((item, i) => {
-                    return (
-                      <MenuItem value={item.id} key={i}>
-                        {item.value}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* <Grid item xs={6}>
-              <Typography
-                className={classes.isiTextStyle}
-                variant="h2"
-                style={{ fontSize: 12 }}
-              >
-                Pilih Wilayah
-              </Typography>
-              <Autocomplete
-                multiple
-                id="kantor"
-                name="kantor"
-                style={{ width: "100%", height: 50 }}
-                options={berkasPnbpWilayah}
-                classes={{
-                  option: classes.option,
-                }}
-                disableUnderline
-                className={classes.formControl}
-                autoHighlight
-                onChange={(event, newValue) => {
-                  handleChangeFilter(newValue);
-                }}
-                getOptionLabel={(option) => option.wilayah}
-                renderOption={(option, { selected }) => (
-                  <React.Fragment>
-                    <Checkbox
-                      icon={icon}
-                      checkedIcon={checkedIcon}
-                      style={{ marginRight: 8 }}
-                      checked={
-                        dataFilter && dataFilter.length != 0
-                          ? dataFilter
-                              .map((item) => item.wilayah)
-                              .indexOf(option.wilayah) > -1
-                          : false
-                      }
-                    />
-                    {option.wilayah}
-                  </React.Fragment>
-                )}
-                renderTags={(selected) => {
-                  return `${selected.length} Terpilih`;
-                }}
-                defaultValue={dataFilter}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    InputProps={{
-                      ...params.InputProps,
-                      disableUnderline: true,
-                    }}
-                    style={{ marginTop: 5 }}
-                    placeholder={dataFilter.length != 0 ? "" : "Pilih Kantor"}
-                  />
-                )}
-              />
-            </Grid> */}
-            <Grid
-              container
-              direction="row"
-              justifyContent="flex-start"
-              alignItems="center"
-              item
-              xs={6}
-              style={{ paddingTop: 40, paddingLeft: 20 }}
-            >
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => getData()}
-                style={{ height: 57, width: "100%" }}
-              >
-                Submit
-              </Button>
-            </Grid>
-          </Grid>
-
-          {/* <Grid
-            container
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            spacing={2}
-          >
-            <Grid item xs={6}>
-              <Typography
-                className={classes.isiTextStyle}
-                variant="h2"
-                style={{ fontSize: 12 }}
-              >
-                Pilih Kantor
-              </Typography>
-              <Autocomplete
-                multiple
-                id="kantor"
-                name="kantor"
-                style={{ width: "100%", height: 50 }}
-                options={berkasPnbpKantor}
-                classes={{
-                  option: classes.option,
-                }}
-                disableUnderline
-                className={classes.formControl}
-                autoHighlight
-                onChange={(event, newValue) => {
-                  handleChangeFilterKantor(newValue);
-                }}
-                getOptionLabel={(option) => option.kantor}
-                renderOption={(option, { selected }) => (
-                  <React.Fragment>
-                    <Checkbox
-                      icon={icon}
-                      checkedIcon={checkedIcon}
-                      style={{ marginRight: 8 }}
-                      checked={
-                        dataFilterKantor && dataFilterKantor.length != 0
-                          ? dataFilterKantor
-                              .map((item) => item.kantor)
-                              .indexOf(option.kantor) > -1
-                          : false
-                      }
-                    />
-                    {option.kantor}
-                  </React.Fragment>
-                )}
-                renderTags={(selected) => {
-                  return `${selected.length} Terpilih`;
-                }}
-                defaultValue={dataFilterKantor}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    InputProps={{
-                      ...params.InputProps,
-                      disableUnderline: true,
-                    }}
-                    style={{ marginTop: 5 }}
-                    placeholder={
-                      dataFilterKantor.length != 0 ? "" : "Pilih Wilayah"
-                    }
-                  />
-                )}
-              />
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="flex-start"
-              alignItems="center"
-              item
-              xs={6}
-              style={{ paddingTop: 40, paddingLeft: 20 }}
-            >
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => getData()}
-                style={{ height: 57, width: "100%" }}
-              >
-                Submit
-              </Button>
-            </Grid>
-          </Grid> */}
           <div style={{ margin: 10, marginRight: 25 }}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Wilayah
+                </Typography>
+                <Autocomplete
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={profileList}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilter(newValue);
+                  }}
+                  getOptionLabel={(option) => option.namaprofile || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.namaprofile}</React.Fragment>
+                  )}
+                  defaultValue={dataFilter}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Nama Profile"}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+                item
+                xs={6}
+                style={{ paddingLeft: 20 }}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => getData()}
+                  style={{ height: 57, width: "100%", fontSize: 12 }}
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
+
             <Typography
               className={classes.isiContentTextStyle}
               variant="h2"
@@ -1030,12 +948,12 @@ const SiePsnPtsl5Peringkat = () => {
                 : ""}
               {comment &&
               comment.lastComment &&
-              comment.lastComment.analisisData.length > 500 ? (
+              comment.lastComment.analisisData.length > 100 ? (
                 <Link
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title,
+                      title: "Data Tunggakan per Wilayah ",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -1066,7 +984,7 @@ const SiePsnPtsl5Peringkat = () => {
                   <BarChart
                     width={500}
                     height={300}
-                    data={data}
+                    data={dataChart}
                     margin={{
                       top: 5,
                       right: 30,
@@ -1081,10 +999,10 @@ const SiePsnPtsl5Peringkat = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="nama"></XAxis>
+                    <XAxis dataKey="name" />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
-                        value={axis.yAxis}
+                        value="Nilai Tunggakan"
                         angle={-90}
                         position="insideBottomLeft"
                         offset={-5}
@@ -1092,11 +1010,9 @@ const SiePsnPtsl5Peringkat = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Bar
-                      dataKey="jumlah_berkas"
-                      fill="#C71585"
-                      name="Jumlah Berkas"
-                    />
+                    <Bar dataKey="pv" stackId="a" fill="#8884d8" />
+                    <Bar dataKey="amt" stackId="a" fill="#82ca9d" />
+                    <Bar dataKey="uv" stackId="a" fill="#ffc658" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -1108,4 +1024,4 @@ const SiePsnPtsl5Peringkat = () => {
   );
 };
 
-export default SiePsnPtsl5Peringkat;
+export default KepegawaianBpnJabatan;

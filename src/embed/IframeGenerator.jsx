@@ -44,6 +44,12 @@ import SieSertifikasiKonsolidasiKota from "../pages/sertifikasi/statistikSertifi
 import SieSertifikasiLuasJumlah from "../pages/sertifikasi/statistikSertifikat/sie_sertifikat_luas_jumlah";
 import SieTunggakan from "../pages/kinerjaLayanan/tunggakan/sie-tunggakan";
 import SieIndexTanah from "../pages/psn/pengadaanTanah/psn-index-nilai-tanah";
+import SieTunggakanWilayah from "../pages/kinerjaLayanan/tunggakan/sie-tunggakan-wilayah";
+import SiePSNNilaiBPHTB from "../pages/psn/PTSL/sie_psn_nilai_bphtb";
+import SiePSNNilaiPNBP from "../pages/psn/PTSL/sie_psn_nilai_pnbp";
+import SiePSNNilaiHt from "../pages/psn/PTSL/sie_psn_nilai_ht";
+import SiePSNNilaiJualBeli from "../pages/psn/PTSL/sie_psn_nilai_jual_beli";
+import SiePSNNilaiTanahPerKantah from "../pages/psn/PTSL/sie_psn_nilai_tanah_perkantah";
 import { Provider } from "react-redux";
 import store from "../config/store";
 
@@ -339,6 +345,7 @@ class IframeGenerator extends React.Component {
           </Provider>,
           document.getElementById("replace-tag")
         );
+        break;
       case "sie-tunggakan":
         ReactDOM.render(
           <Provider store={store}>
@@ -346,10 +353,59 @@ class IframeGenerator extends React.Component {
           </Provider>,
           document.getElementById("replace-tag")
         );
+        break;
       case "sie-index-tanah":
         ReactDOM.render(
           <Provider store={store}>
             <SieIndexTanah />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-tunggakan-wilayah":
+        ReactDOM.render(
+          <Provider store={store}>
+            <SieTunggakanWilayah />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-psn-nilai-bphtb":
+        ReactDOM.render(
+          <Provider store={store}>
+            <SiePSNNilaiBPHTB />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-psn-nilai-pnbp":
+        ReactDOM.render(
+          <Provider store={store}>
+            <SiePSNNilaiPNBP />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-psn-nilai-ht":
+        ReactDOM.render(
+          <Provider store={store}>
+            <SiePSNNilaiHt />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-psn-nilai-jual-beli":
+        ReactDOM.render(
+          <Provider store={store}>
+            <SiePSNNilaiJualBeli />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-psn-nilai-tanah-perkantah":
+        ReactDOM.render(
+          <Provider store={store}>
+            <SiePSNNilaiTanahPerKantah />
           </Provider>,
           document.getElementById("replace-tag")
         );

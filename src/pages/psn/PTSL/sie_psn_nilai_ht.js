@@ -76,37 +76,25 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const dataTemp = [
   {
-    keterangan: "Keterangan",
-    nilai: 0,
+    label: "Kab. Aceh Barat",
+    bphtb: 0,
   },
   {
-    keterangan: "Keterangan",
-    nilai: 10,
+    label: "Kab. Aceh Barat",
+    bphtb: 10,
   },
 ];
 
 let nameColumn = [
   {
-    label: "Alias Kanwil",
-    value: "aliaskanwil",
+    label: "Kanwil",
+    value: "label",
     isFixed: false,
     isLabel: true,
   },
   {
-    label: "Alias Kantah",
-    value: "aliaskantah",
-    isFixed: false,
-    isLabel: true,
-  },
-  {
-    label: "Keterangan",
-    value: "keterangan",
-    isFixed: false,
-    isLabel: true,
-  },
-  {
-    label: "Nilai Index",
-    value: "nilai",
+    label: "Nilai BPHTB ",
+    value: "bphtb",
     isFixed: false,
     isLabel: true,
   },
@@ -150,7 +138,8 @@ const realisasiPenggunaan = () => {
   const dispatch = useDispatch();
   const [kantahList, setKantahList] = useState([]);
   const [aliasList, setAliasList] = useState([]);
-  const [years, setYears] = useState("2021");
+  const [years, setYears] = useState("2022");
+  const [tahunAwal, setTahunAwal] = useState("2017");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [bulan, setBulan] = useState("Jan");
@@ -212,7 +201,7 @@ const realisasiPenggunaan = () => {
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}ProgramStrategisNasional/PengadaanTanah/filter_aliaskantah?AliasKanwil=${data}`
+        `${url}ProgramStrategisNasional/PTSL/filter_aliaskantah?AliasKanwil=${data}`
       )
       .then(function (response) {
         setKantahList(response.data.data);
@@ -269,7 +258,7 @@ const realisasiPenggunaan = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}ProgramStrategisNasional/PengadaanTanah/sie_psn_index_nilai_tanah?tahun=${years}`,
+        `${url}ProgramStrategisNasional/PTSL/sie_psn_nilai_ht?tahunAwal=${tahunAwal}&tahunAkhir=${years}`,
         temp
       )
       .then(function (response) {
@@ -290,7 +279,7 @@ const realisasiPenggunaan = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(`${url}ProgramStrategisNasional/PengadaanTanah/filter_aliaskanwil`)
+      .get(`${url}ProgramStrategisNasional/PTSL/filter_aliaskanwil`)
       .then(function (response) {
         setAliasList(response.data.data);
         console.log(response);
@@ -309,6 +298,10 @@ const realisasiPenggunaan = () => {
     setYears(event.target.value);
   };
 
+  const handleChangeAwal = (event) => {
+    setTahunAwal(event.target.value);
+  };
+
   const handleChangeBulan = (event) => {
     setBulan(event.target.value);
   };
@@ -316,7 +309,7 @@ const realisasiPenggunaan = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Index Nilai Tanah",
+      "PSN Nilai BPHTB",
       data,
       ".xlsx"
     );
@@ -343,7 +336,7 @@ const realisasiPenggunaan = () => {
             <p
               className="desc"
               style={{ color: payload[0].color }}
-            >{`Nilai Index : ${
+            >{`Nilai BPHTB : ${
               payload[0].value
                 ? payload[0].value
                     .toString()
@@ -387,7 +380,7 @@ const realisasiPenggunaan = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="keterangan"
+              dataKey="label"
               // angle={60}
               // interval={0}
               tick={{
@@ -402,7 +395,7 @@ const realisasiPenggunaan = () => {
             />
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Nilai Index"
+                value="Nilai BPHTB"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
@@ -412,7 +405,7 @@ const realisasiPenggunaan = () => {
             {/* <Legend /> */}
             <Area
               type="monotone"
-              dataKey="nilai"
+              dataKey="bphtb"
               stroke="#6EB5FF"
               activeDot={{ r: 8 }}
               strokeWidth={3}
@@ -439,18 +432,12 @@ const realisasiPenggunaan = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.keterangan}>
+                    <StyledTableRow key={row.label}>
                       <StyledTableCell align="left" component="th" scope="row">
-                        {row.aliaskanwil}
-                      </StyledTableCell>
-                      <StyledTableCell align="left" component="th" scope="row">
-                        {row.aliaskantah}
-                      </StyledTableCell>
-                      <StyledTableCell align="left" component="th" scope="row">
-                        {row.keterangan}
+                        {row.label}
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        {row.nilai
+                        {row.bphtb
                           .toString()
                           .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}
                       </StyledTableCell>
@@ -518,27 +505,27 @@ const realisasiPenggunaan = () => {
 
   let columnTable = [
     {
-      label: "keterangan",
+      label: "label",
       isFixed: false,
     },
     {
-      label: "nilai",
+      label: "bphtb",
       isFixed: false,
     },
   ];
 
   let grafikView = [
     {
-      dataKey: "nilai",
+      dataKey: "bphtb",
       fill: "#6EB5FF",
     },
   ];
 
   let axis = {
-    xAxis: "keterangan",
-    yAxis: "Nilai Index",
+    xAxis: "label",
+    yAxis: "Nilai BPHTB",
   };
-  const title = " Index Nilai Tanah";
+  const title = " PSN Nilai BPHTB BPHTB";
   const handlePrint = () => {
     history.push({
       pathname: "/PrintData",
@@ -637,7 +624,7 @@ const realisasiPenggunaan = () => {
                   ' src="' +
                   BASE_URL.domain +
                   "/embed/" +
-                  BASE_URL.path.sie_index_tanah +
+                  BASE_URL.path.sie_psn_nilai_ht +
                   '"></iframe>'
                 }
                 onCopy={() => toast.success("success copied to clipboard!")}
@@ -710,7 +697,7 @@ const realisasiPenggunaan = () => {
                   ' src="' +
                   BASE_URL.domain +
                   "/embed/" +
-                  BASE_URL.path.sie_index_tanah +
+                  BASE_URL.path.sie_psn_nilai_ht +
                   '"></iframe>'
                 }
               />
@@ -800,7 +787,7 @@ const realisasiPenggunaan = () => {
             <iframe
               width={iframeWidth}
               height={iframeHeight}
-              src={BASE_URL.domain + "/embed/" + BASE_URL.path.sie_index_tanah}
+              src={BASE_URL.domain + "/embed/" + BASE_URL.path.sie_psn_nilai_ht}
             ></iframe>
           </Grid>
         </div>
@@ -832,7 +819,7 @@ const realisasiPenggunaan = () => {
         >
           <Grid item xs={6}>
             <Typography className={classes.titleSection} variant="h2">
-              Index Nilai Tanah
+              PSN Nilai BPHTB
             </Typography>
           </Grid>
 
@@ -864,7 +851,7 @@ const realisasiPenggunaan = () => {
                   size="small"
                   onClick={() =>
                     handleOpen({
-                      title: "Index Nilai Tanah",
+                      title: "PSN Nilai BPHTB",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -875,12 +862,7 @@ const realisasiPenggunaan = () => {
                             )
                           : "",
                       type: "Bar",
-                      nameColumn: [
-                        "Alias Kanwil",
-                        "Alias Kantah",
-                        "Keterangan",
-                        "Nilai Index",
-                      ],
+                      nameColumn: ["Kanwil", "Nilai BPHTB"],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
@@ -939,7 +921,7 @@ const realisasiPenggunaan = () => {
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis
-                        dataKey="keterangan"
+                        dataKey="label"
                         // angle={60}
                         // interval={0}
                         tick={{
@@ -954,7 +936,7 @@ const realisasiPenggunaan = () => {
                       />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
-                          value="Nilai Index"
+                          value="Nilai BPHTB"
                           angle={-90}
                           position="insideBottomLeft"
                           offset={-5}
@@ -964,7 +946,7 @@ const realisasiPenggunaan = () => {
                       {/* <Legend /> */}
                       <Area
                         type="monotone"
-                        dataKey="nilai"
+                        dataKey="bphtb"
                         stroke="#6EB5FF"
                         activeDot={{ r: 8 }}
                         strokeWidth={3}
@@ -990,15 +972,15 @@ const realisasiPenggunaan = () => {
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
-                    Pilih Tahun
+                    Tahun Awal
                   </Typography>
                   <FormControl className={classes.formControl}>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
-                      value={years}
-                      onChange={handleChange}
-                      label="Tahun"
+                      value={tahunAwal}
+                      onChange={handleChangeAwal}
+                      label="Tahun Awal"
                       className={classes.selectStyle}
                       disableUnderline
                     >
@@ -1013,6 +995,42 @@ const realisasiPenggunaan = () => {
                   </FormControl>
                 </Grid>
                 <Grid item xs={6}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Tahun Akhir
+                  </Typography>
+                  <FormControl className={classes.formControl}>
+                    <Select
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={years}
+                      onChange={handleChange}
+                      label="Tahun Akhir"
+                      className={classes.selectStyle}
+                      disableUnderline
+                    >
+                      {tahunData.map((item, i) => {
+                        return (
+                          <MenuItem value={item.id} key={i}>
+                            {item.value}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={2}
+              >
+                <Grid item xs={5}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1070,15 +1088,7 @@ const realisasiPenggunaan = () => {
                     )}
                   />
                 </Grid>
-              </Grid>
-              <Grid
-                container
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                spacing={2}
-              >
-                <Grid item xs={6}>
+                <Grid item xs={5}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1147,7 +1157,7 @@ const realisasiPenggunaan = () => {
                   justifyContent="flex-start"
                   alignItems="center"
                   item
-                  xs={6}
+                  xs={2}
                   style={{ paddingLeft: 20 }}
                 >
                   <Button
@@ -1178,7 +1188,7 @@ const realisasiPenggunaan = () => {
                     href="#"
                     onClick={() =>
                       handleOpen({
-                        title: "Index Nilai Tanah",
+                        title: "PSN Nilai BPHTB",
                         grafik: data,
                         dataTable: "",
                         analisis:
@@ -1189,12 +1199,7 @@ const realisasiPenggunaan = () => {
                               )
                             : "",
                         type: "Bar",
-                        nameColumn: [
-                          "Alias Kanwil",
-                          "Alias Kantah",
-                          "Keterangan",
-                          "Nilai Index",
-                        ],
+                        nameColumn: ["Kanwil", "Nilai BPHTB"],
                         listTop10Comment: comment.listTop10Comment,
                       })
                     }

@@ -274,7 +274,7 @@ const KepegawaianBpnJabatan = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Data Tunggakan",
+      "Data Tunggakan per Jabatan per Jabatan",
       data,
       ".xlsx"
     );
@@ -718,7 +718,7 @@ const KepegawaianBpnJabatan = () => {
       >
         <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            Data Tunggakan
+            Data Tunggakan per Jabatan
           </Typography>
         </Grid>
         <Grid
@@ -753,7 +753,7 @@ const KepegawaianBpnJabatan = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Data Tunggakan ",
+                    title: "Data Tunggakan per Jabatan",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -784,7 +784,9 @@ const KepegawaianBpnJabatan = () => {
             <TooltipMI
               title="Print Data"
               placement="top"
-              onClick={() => handlePrintData("Data Tunggakan", columnTable)}
+              onClick={() =>
+                handlePrintData("Data Tunggakan per Jabatan", columnTable)
+              }
             >
               <IconButton aria-label="delete" size="small">
                 <IoPrint />
@@ -829,7 +831,7 @@ const KepegawaianBpnJabatan = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Wilayah
+                  Pilih Profile
                 </Typography>
                 <Autocomplete
                   id="kantor"
@@ -900,7 +902,7 @@ const KepegawaianBpnJabatan = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "Data Tunggakan ",
+                      title: "Data Tunggakan per Jabatan ",
                       grafik: data,
                       dataTable: "",
                       analisis:
