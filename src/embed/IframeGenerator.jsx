@@ -43,6 +43,7 @@ import SieSertifikasiJangkaWaktuHak from "../pages/sertifikasi/statistikSertifik
 import SieSertifikasiKonsolidasiKota from "../pages/sertifikasi/statistikSertifikat/sie_sertifikat_konsolidasi_kota";
 import SieSertifikasiLuasJumlah from "../pages/sertifikasi/statistikSertifikat/sie_sertifikat_luas_jumlah";
 import SieTunggakan from "../pages/kinerjaLayanan/tunggakan/sie-tunggakan";
+import SieIndexTanah from "../pages/psn/pengadaanTanah/psn-index-nilai-tanah";
 import { Provider } from "react-redux";
 import store from "../config/store";
 
@@ -342,6 +343,13 @@ class IframeGenerator extends React.Component {
         ReactDOM.render(
           <Provider store={store}>
             <SieTunggakan />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+      case "sie-index-tanah":
+        ReactDOM.render(
+          <Provider store={store}>
+            <SieIndexTanah />
           </Provider>,
           document.getElementById("replace-tag")
         );

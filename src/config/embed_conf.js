@@ -48,5 +48,6 @@ export const BASE_URL = {
     sie_sertifikasi_konsolidasi_kota: "sie-sertifikasi-konsolidasi-kota",
     sie_sertifikasi_luas_jumlah: "sie-sertifikasi-luas-jumlah",
     sie_tunggakan: "sie-tunggakan",
+    sie_index_tanah: "sie-index-tanah",
   },
 };

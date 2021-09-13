@@ -3,7 +3,7 @@ import "./index.css";
 import Login from "./pages/loginPage/login";
 import Dashboard from "./pages/dashboardPage/dashboard";
 import PrintData from "./pages/pnbp/printData/componentPrint";
-import { PTSL, SiePsnLuasPengadaanTanah, RA, RDTR } from "./pages/psn";
+import { PTSL, PengadaanTanah, RA, RDTR } from "./pages/psn";
 import {
   RealisasiAnggaran,
   PaguMp,
@@ -86,7 +86,7 @@ const Main = withRouter(({ location }) => {
           <PrintData />
         </Route>
         <Route path="/PSN/PengadaanTanah">
-          <SiePsnLuasPengadaanTanah />
+          <PengadaanTanah />
         </Route>
         <Route path="/PSN/PTSL">
           <PTSL />

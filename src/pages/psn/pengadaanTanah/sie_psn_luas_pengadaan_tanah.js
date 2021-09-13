@@ -453,11 +453,11 @@ const PengadaanTanah = () => {
         paddingTop: 20,
         paddingBottom: 20,
         width: "100%",
-        height: "100vh",
-        backgroundImage: `url(${bgImg})`,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        zIndex: 1,
+        // height: "100vh",
+        // backgroundImage: `url(${bgImg})`,
+        // backgroundSize: "cover",
+        // backgroundRepeat: "no-repeat",
+        // zIndex: 1,
       }}
     >
       <Modal

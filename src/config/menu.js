@@ -135,44 +135,44 @@ export const MENU_LIST = [
       // },
     ],
   },
-  // {
-  //   id: 5,
-  //   icon: <BiBriefcase size={24} />,
-  //   name: "PSN",
-  //   parentLink: "PSN",
-  //   subMenus: [
-  //     {
-  //       icon: <FaCalendarCheck size={22} />,
-  //       name: "Percepatan Rencana Detail Tata Ruang (RDTR)",
-  //       link: "/PSN/RDTR",
-  //     },
-  //     {
-  //       icon: <GrTableAdd size={22} />,
-  //       name: "Pendaftaran Tanah Sistematis Lengkap (PTSL)",
-  //       link: "/PSN/PTSL",
-  //     },
-  //     {
-  //       icon: <BiBuildingHouse size={24} />,
-  //       name: "Reforma Agraria",
-  //       link: "/PSN/RA",
-  //     },
-  //     {
-  //       icon: <MdAddShoppingCart size={24} />,
-  //       name: "Pengadaan Tanah",
-  //       link: "/PSN/PengadaanTanah",
-  //     },
-  //     // {
-  //     //   icon: <MdTransform size={24} />,
-  //     //   name: "Transformasi Digital & Layanan Elektronik",
-  //     //   link: null,
-  //     // },
-  //     // {
-  //     //   icon: <MdSettingsRemote size={24} />,
-  //     //   name: "Pengendalian dan Penanganan Sengketa",
-  //     //   link: null,
-  //     // },
-  //   ],
-  // },
+  {
+    id: 5,
+    icon: <BiBriefcase size={24} />,
+    name: "PSN",
+    parentLink: "PSN",
+    subMenus: [
+      // {
+      //   icon: <FaCalendarCheck size={22} />,
+      //   name: "Percepatan Rencana Detail Tata Ruang (RDTR)",
+      //   link: "/PSN/RDTR",
+      // },
+      // {
+      //   icon: <GrTableAdd size={22} />,
+      //   name: "Pendaftaran Tanah Sistematis Lengkap (PTSL)",
+      //   link: "/PSN/PTSL",
+      // },
+      // {
+      //   icon: <BiBuildingHouse size={24} />,
+      //   name: "Reforma Agraria",
+      //   link: "/PSN/RA",
+      // },
+      {
+        icon: <MdAddShoppingCart size={24} />,
+        name: "Pengadaan Tanah",
+        link: "/PSN/PengadaanTanah",
+      },
+      // {
+      //   icon: <MdTransform size={24} />,
+      //   name: "Transformasi Digital & Layanan Elektronik",
+      //   link: null,
+      // },
+      // {
+      //   icon: <MdSettingsRemote size={24} />,
+      //   name: "Pengendalian dan Penanganan Sengketa",
+      //   link: null,
+      // },
+    ],
+  },
   // {
   //   id: 6,
   //   icon: <FaCertificate size={24} />,
@@ -279,6 +279,7 @@ export const HIDE_HEADER = [
   "/embed/sie-sertifikasi-konsolidasi-kota",
   "/embed/sie-sertifikasi-luas-jumlah",
   "/embed/sie-tunggakan",
+  "/embed/sie-index-tanah",
 ];
 
 // *****************************************************
@@ -333,4 +334,5 @@ export const HIDE_FOOTER = [
   "/embed/sie-sertifikasi-konsolidasi-kota",
   "/embed/sie-sertifikasi-luas-jumlah",
   "/embed/sie-tunggakan",
+  "/embed/sie-index-tanah",
 ];
