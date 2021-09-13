@@ -112,7 +112,6 @@ export default function CenteredGrid() {
                   <Typography
                     style={{ fontSize: "1.51rem", fontWeight: "bold" }}
                   >
-                    Rp{" "}
                     {data && data.length != 0
                       ? data[0].value
                           .toString()
@@ -143,7 +142,6 @@ export default function CenteredGrid() {
                   <Typography
                     style={{ fontSize: "1.51rem", fontWeight: "bold" }}
                   >
-                    Rp{" "}
                     {data && data.length != 0
                       ? data[1].value
                           .toString()
@@ -174,7 +172,6 @@ export default function CenteredGrid() {
                   <Typography
                     style={{ fontSize: "1.51rem", fontWeight: "bold" }}
                   >
-                    Rp{" "}
                     {data && data.length != 0
                       ? data[2].value
                           .toString()
@@ -198,14 +195,13 @@ export default function CenteredGrid() {
                 <Grid item xs={6}>
                   <Typography className={classes.title} gutterBottom>
                     Transaksi Hak Tanggungan Elektronik telah tercatat dengan
-                    nilai sebesar Rp. 1.011 Triliun
+                    nilai sebesar
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <Typography
                     style={{ fontSize: "1.51rem", fontWeight: "bold" }}
                   >
-                    Rp{" "}
                     {data && data.length != 0
                       ? data[3].value
                           .toString()
@@ -236,7 +232,6 @@ export default function CenteredGrid() {
                   <Typography
                     style={{ fontSize: "1.51rem", fontWeight: "bold" }}
                   >
-                    Rp{" "}
                     {data && data.length != 0
                       ? data[4].value
                           .toString()

@@ -313,7 +313,7 @@ const AlokasiAnggaran = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "anggaran vs realisasi belanja",
+      "anggaran vs alokasi anggaran",
       data,
       ".xlsx"
     );
@@ -497,7 +497,7 @@ const AlokasiAnggaran = () => {
     xAxis: "label",
     yAxis: "Nilai Satuan 1 Juta",
   };
-  const title = "anggaran vs realisasi belanja";
+  const title = "anggaran vs alokasi anggaran";
   const handlePrint = () => {
     history.push({
       pathname: "/PrintData",
@@ -783,7 +783,7 @@ const AlokasiAnggaran = () => {
       >
         <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            anggaran vs realisasi belanja
+            anggaran vs alokasi anggaran
           </Typography>
         </Grid>
 
@@ -815,7 +815,7 @@ const AlokasiAnggaran = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "anggaran vs realisasi belanja",
+                    title: "anggaran vs alokasi anggaran",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -1131,7 +1131,7 @@ const AlokasiAnggaran = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "anggaran vs realisasi belanja",
+                      title: "anggaran vs alokasi anggaran",
                       grafik: data,
                       dataTable: "",
                       analisis:

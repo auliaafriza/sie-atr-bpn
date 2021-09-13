@@ -168,7 +168,7 @@ let grafikView = [
 
 let axis = {
   xAxis: "label",
-  yAxis: "Nilai Satuan 1 Juta",
+  yAxis: "Nilai Anggaran Realisasi",
 };
 
 const RealisasiAnggaran = () => {
@@ -364,7 +364,7 @@ const RealisasiAnggaran = () => {
         <XAxis dataKey="label"></XAxis>
         <YAxis tickFormatter={DataFormater}>
           <Label
-            value="Nilai Satuan 1 Juta"
+            value="Nilai Anggaran Realisasi"
             angle={-90}
             position="insideBottomLeft"
             offset={-5}
@@ -786,7 +786,7 @@ const RealisasiAnggaran = () => {
         >
           <Grid item xs={6}>
             <Typography className={classes.titleSection} variant="h2">
-              Anggaran & Realisasi (Satuan 1 Juta)
+              Anggaran & Realisasi
             </Typography>
           </Grid>
           <Grid
@@ -821,7 +821,7 @@ const RealisasiAnggaran = () => {
                   size="small"
                   onClick={() =>
                     handleOpen({
-                      title: "Anggaran & Realisasi (Satuan 1 Juta)",
+                      title: "Anggaran & Realisasi ",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -843,10 +843,7 @@ const RealisasiAnggaran = () => {
                 title="Print Data"
                 placement="top"
                 onClick={() =>
-                  handlePrintData(
-                    "Anggaran & Realisasi (Satuan 1 Juta)",
-                    columnTable
-                  )
+                  handlePrintData("Anggaran & Realisasi ", columnTable)
                 }
               >
                 <IconButton aria-label="delete" size="small">
@@ -903,7 +900,7 @@ const RealisasiAnggaran = () => {
                       <XAxis dataKey="label" />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
-                          value="Nilai Satuan 1 Juta"
+                          value="Nilai Anggaran Realisasi"
                           angle={-90}
                           position="insideBottomLeft"
                           offset={-5}
@@ -1153,7 +1150,7 @@ const RealisasiAnggaran = () => {
                     href="#"
                     onClick={() =>
                       handleOpen({
-                        title: "Anggaran & Realisasi (Satuan 1 Juta)",
+                        title: "Anggaran & Realisasi ",
                         grafik: data,
                         dataTable: "",
                         analisis:
