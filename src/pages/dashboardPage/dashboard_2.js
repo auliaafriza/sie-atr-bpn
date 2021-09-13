@@ -58,7 +58,7 @@ export default function CenteredGrid() {
     <div
       style={{
         backgroundImage: `url(${bgImg})`,
-        height: "100vh",
+        // height: "100vh",
         width: "100wh",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
@@ -89,7 +89,7 @@ export default function CenteredGrid() {
               >
                 <Grid
                   item
-                  xs={6}
+                  xs={8}
                   container
                   justifyContent="flex-start"
                   alignItems="center"
@@ -105,9 +105,9 @@ export default function CenteredGrid() {
                 </Grid>
                 <Grid
                   item
-                  xs={6}
+                  xs={4}
                   container
-                  justifyContent="flex-start"
+                  justifyContent="center"
                   alignItems="center"
                 >
                   <Typography
