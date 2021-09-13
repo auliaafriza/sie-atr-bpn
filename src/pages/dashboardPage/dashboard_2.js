@@ -197,19 +197,21 @@ export default function CenteredGrid() {
               >
                 <Grid item xs={6}>
                   <Typography className={classes.title} gutterBottom>
-                    Transaksi Hak Tanggungan Elektronik telah tercatat pada
-                    tahun 2000 hingga sekarang sebesar
+                    Nilai Hak Tanggungan Elektronik telah tercatat pada tahun
+                    2000 hingga sekarang sebesar
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <Typography
                     style={{ fontSize: "1.51rem", fontWeight: "bold" }}
                   >
+                    Rp{" "}
                     {data && data.length != 0
                       ? data[3].value
                           .toString()
                           .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-                      : 0}
+                      : 0}{" "}
+                    Triliun
                   </Typography>
                 </Grid>
               </Grid>
