@@ -69,11 +69,11 @@ export const MENU_LIST = [
         name: "PNBP",
         link: "/AssetKeuangan/PNBP",
       },
-      {
-        icon: <RiHandCoinFill size={24} />,
-        name: "BPHTB",
-        link: "/AssetKeuangan/BPHTB",
-      },
+      // {
+      //   icon: <RiHandCoinFill size={24} />,
+      //   name: "BPHTB",
+      //   link: "/AssetKeuangan/BPHTB",
+      // },
     ],
   },
   {
@@ -128,79 +128,79 @@ export const MENU_LIST = [
         name: "Tunggakan",
         link: "/KinerjaLayanan/Tunggakan",
       },
-      {
-        icon: <RiServiceFill size={24} />,
-        name: "Layanan Umum",
-        link: "/KinerjaLayanan/LayananUmum",
-      },
-    ],
-  },
-  {
-    id: 5,
-    icon: <BiBriefcase size={24} />,
-    name: "PSN",
-    parentLink: "PSN",
-    subMenus: [
-      {
-        icon: <FaCalendarCheck size={22} />,
-        name: "Percepatan Rencana Detail Tata Ruang (RDTR)",
-        link: "/PSN/RDTR",
-      },
-      {
-        icon: <GrTableAdd size={22} />,
-        name: "Pendaftaran Tanah Sistematis Lengkap (PTSL)",
-        link: "/PSN/PTSL",
-      },
-      {
-        icon: <BiBuildingHouse size={24} />,
-        name: "Reforma Agraria",
-        link: "/PSN/RA",
-      },
-      {
-        icon: <MdAddShoppingCart size={24} />,
-        name: "Pengadaan Tanah",
-        link: "/PSN/PengadaanTanah",
-      },
       // {
-      //   icon: <MdTransform size={24} />,
-      //   name: "Transformasi Digital & Layanan Elektronik",
-      //   link: null,
-      // },
-      // {
-      //   icon: <MdSettingsRemote size={24} />,
-      //   name: "Pengendalian dan Penanganan Sengketa",
-      //   link: null,
+      //   icon: <RiServiceFill size={24} />,
+      //   name: "Layanan Umum",
+      //   link: "/KinerjaLayanan/LayananUmum",
       // },
     ],
   },
-  {
-    id: 6,
-    icon: <FaCertificate size={24} />,
-    name: "Sertifikasi",
-    parentLink: "Sertifikasi",
-    subMenus: [
-      {
-        icon: <MdInsertChart size={24} />,
-        name: "Statistik Sertifikat",
-        link: "/Sertifikasi/StatistikSertifikat",
-      },
-      {
-        icon: <FaCertificate size={24} />,
-        name: "Tanah Aset Pemerintah",
-        link: "/Sertifikasi/TanahAssetPemerintah",
-      },
-      {
-        icon: <BiBuildings size={24} />,
-        name: "Hak Tanggungan Elektronik",
-        link: "/Sertifikasi/HakTanggunganElektronik",
-      },
-      // {
-      //   icon: <IoMdMap size={24} />,
-      //   name: "Peta Pendaftaran Tanah",
-      //   link: null,
-      // },
-    ],
-  },
+  // {
+  //   id: 5,
+  //   icon: <BiBriefcase size={24} />,
+  //   name: "PSN",
+  //   parentLink: "PSN",
+  //   subMenus: [
+  //     {
+  //       icon: <FaCalendarCheck size={22} />,
+  //       name: "Percepatan Rencana Detail Tata Ruang (RDTR)",
+  //       link: "/PSN/RDTR",
+  //     },
+  //     {
+  //       icon: <GrTableAdd size={22} />,
+  //       name: "Pendaftaran Tanah Sistematis Lengkap (PTSL)",
+  //       link: "/PSN/PTSL",
+  //     },
+  //     {
+  //       icon: <BiBuildingHouse size={24} />,
+  //       name: "Reforma Agraria",
+  //       link: "/PSN/RA",
+  //     },
+  //     {
+  //       icon: <MdAddShoppingCart size={24} />,
+  //       name: "Pengadaan Tanah",
+  //       link: "/PSN/PengadaanTanah",
+  //     },
+  //     // {
+  //     //   icon: <MdTransform size={24} />,
+  //     //   name: "Transformasi Digital & Layanan Elektronik",
+  //     //   link: null,
+  //     // },
+  //     // {
+  //     //   icon: <MdSettingsRemote size={24} />,
+  //     //   name: "Pengendalian dan Penanganan Sengketa",
+  //     //   link: null,
+  //     // },
+  //   ],
+  // },
+  // {
+  //   id: 6,
+  //   icon: <FaCertificate size={24} />,
+  //   name: "Sertifikasi",
+  //   parentLink: "Sertifikasi",
+  //   subMenus: [
+  //     {
+  //       icon: <MdInsertChart size={24} />,
+  //       name: "Statistik Sertifikat",
+  //       link: "/Sertifikasi/StatistikSertifikat",
+  //     },
+  //     {
+  //       icon: <FaCertificate size={24} />,
+  //       name: "Tanah Aset Pemerintah",
+  //       link: "/Sertifikasi/TanahAssetPemerintah",
+  //     },
+  //     {
+  //       icon: <BiBuildings size={24} />,
+  //       name: "Hak Tanggungan Elektronik",
+  //       link: "/Sertifikasi/HakTanggunganElektronik",
+  //     },
+  //     // {
+  //     //   icon: <IoMdMap size={24} />,
+  //     //   name: "Peta Pendaftaran Tanah",
+  //     //   link: null,
+  //     // },
+  //   ],
+  // },
   // {
   //   id: 7,
   //   icon: <Public />,
