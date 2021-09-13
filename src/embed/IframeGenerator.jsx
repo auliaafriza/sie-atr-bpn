@@ -64,16 +64,25 @@ class IframeGenerator extends React.Component {
     switch (embed) {
       case "sie-pnbp-realisasi-anggaran":
         ReactDOM.render(
-          <RealisasiAnggaran />,
+          <Provider store={store}>
+            <RealisasiAnggaran />
+          </Provider>,
           document.getElementById("replace-tag")
         );
         break;
       case "sie-pnbp-pagu-mp":
-        ReactDOM.render(<PaguMp />, document.getElementById("replace-tag"));
+        ReactDOM.render(
+          <Provider store={store}>
+            <PaguMp />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
         break;
       case "sie-pnbp-pagu-mp-ops-non":
         ReactDOM.render(
-          <PaguMpOpsNon />,
+          <Provider store={store}>
+            <PaguMpOpsNon />
+          </Provider>,
           document.getElementById("replace-tag")
         );
         break;
@@ -87,25 +96,33 @@ class IframeGenerator extends React.Component {
         break;
       case "sie-peringkat-realisasi":
         ReactDOM.render(
-          <PeringkatRealisasi />,
+          <Provider store={store}>
+            <PeringkatRealisasi />
+          </Provider>,
           document.getElementById("replace-tag")
         );
         break;
       case "sie-pnbp-alokasi-anggaran":
         ReactDOM.render(
-          <AlokasiAnggaran />,
+          <Provider store={store}>
+            <AlokasiAnggaran />
+          </Provider>,
           document.getElementById("replace-tag")
         );
         break;
       case "sie-pnbp-berkas-peringkat-wilayah":
         ReactDOM.render(
-          <PnbpBerkasPeringkatWilayah />,
+          <Provider store={store}>
+            <PnbpBerkasPeringkatWilayah />
+          </Provider>,
           document.getElementById("replace-tag")
         );
         break;
       case "sie-pnbp-berkas-peringkat":
         ReactDOM.render(
-          <PnbpBerkasPeringkat />,
+          <Provider store={store}>
+            <PnbpBerkasPeringkat />
+          </Provider>,
           document.getElementById("replace-tag")
         );
         break;
@@ -135,7 +152,9 @@ class IframeGenerator extends React.Component {
         break;
       case "sie-pnbp-realisasi-penerimaan":
         ReactDOM.render(
-          <RealisasiPenerimaan />,
+          <Provider store={store}>
+            <RealisasiPenerimaan />
+          </Provider>,
           document.getElementById("replace-tag")
         );
         break;
@@ -149,19 +168,25 @@ class IframeGenerator extends React.Component {
         break;
       case "sie-pnbp-realisasi-target-penerimaan":
         ReactDOM.render(
-          <RealisasiTargetPenerimaan />,
+          <Provider store={store}>
+            <RealisasiTargetPenerimaan />
+          </Provider>,
           document.getElementById("replace-tag")
         );
         break;
       case "sie-psn-ptsl-5-peringkat":
         ReactDOM.render(
-          <SiePsnPtsl5Peringkat />,
+          <Provider store={store}>
+            <SiePsnPtsl5Peringkat />
+          </Provider>,
           document.getElementById("replace-tag")
         );
         break;
       case "sie-layanan-jumlah-perjenis":
         ReactDOM.render(
-          <SieLayananJumlahPerjenis />,
+          <Provider store={store}>
+            <SieLayananJumlahPerjenis />
+          </Provider>,
           document.getElementById("replace-tag")
         );
         break;
@@ -175,7 +200,9 @@ class IframeGenerator extends React.Component {
         break;
       case "bphtb-jumlah-terintegrasi":
         ReactDOM.render(
-          <BPHTBDaerahTerintegrasi />,
+          <Provider store={store}>
+            <BPHTBDaerahTerintegrasi />
+          </Provider>,
           document.getElementById("replace-tag")
         );
         break;
@@ -237,7 +264,9 @@ class IframeGenerator extends React.Component {
         break;
       case "sie-layanan-kebutuhan-kantor-pertanahan":
         ReactDOM.render(
-          <SieLayananKebutuhanKantorPertanahan />,
+          <Provider store={store}>
+            <SieLayananKebutuhanKantorPertanahan />
+          </Provider>,
           document.getElementById("replace-tag")
         );
         break;
@@ -246,7 +275,9 @@ class IframeGenerator extends React.Component {
         break;
       case "sie-ptsl-realisasi-perkegiatan":
         ReactDOM.render(
-          <RealisasiPerkegiatan />,
+          <Provider store={store}>
+            <RealisasiPerkegiatan />
+          </Provider>,
           document.getElementById("replace-tag")
         );
         break;
@@ -260,25 +291,33 @@ class IframeGenerator extends React.Component {
         break;
       case "sie-psn-luas-pengadaaan-tanah":
         ReactDOM.render(
-          <PengadaanTanah />,
+          <Provider store={store}>
+            <PengadaanTanah />
+          </Provider>,
           document.getElementById("replace-tag")
         );
         break;
       case "sie-ht-ditutup-perkantor":
         ReactDOM.render(
-          <SieHtDitutupPerkantor />,
+          <Provider store={store}>
+            <SieHtDitutupPerkantor />
+          </Provider>,
           document.getElementById("replace-tag")
         );
         break;
       case "sie-ht-jumlah-kantor-tahun":
         ReactDOM.render(
-          <SieHtJumlahKantorTahun />,
+          <Provider store={store}>
+            <SieHtJumlahKantorTahun />
+          </Provider>,
           document.getElementById("replace-tag")
         );
         break;
       case "sie-ht-terbit-tanpa-periksa":
         ReactDOM.render(
-          <TerbitTanpaPeriksa />,
+          <Provider store={store}>
+            <TerbitTanpaPeriksa />
+          </Provider>,
           document.getElementById("replace-tag")
         );
         break;
