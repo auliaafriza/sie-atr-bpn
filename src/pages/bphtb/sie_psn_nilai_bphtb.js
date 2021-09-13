@@ -152,7 +152,7 @@ const realisasiPenggunaan = () => {
       aliaskantah: "Kab. Aceh Barat",
     },
   ]);
-
+  const [hideTextKantor, setHideTextKantor] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
     grafik: "",
@@ -1090,6 +1090,12 @@ const realisasiPenggunaan = () => {
                     classes={{
                       option: classes.option,
                     }}
+                    onInputChange={(_event, value, reason) => {
+                      if (reason == "input") setHideTextKantor(true);
+                      else {
+                        setHideTextKantor(false);
+                      }
+                    }}
                     disableUnderline
                     className={classes.formControl}
                     autoHighlight
@@ -1116,7 +1122,9 @@ const realisasiPenggunaan = () => {
                     )}
                     renderTags={(selected) => {
                       return selected.length != 0
-                        ? `${selected.length} Terpilih`
+                        ? hideTextKantor
+                          ? ""
+                          : `${selected.length} Terpilih`
                         : "";
                     }}
                     defaultValue={dataFilterKantor}

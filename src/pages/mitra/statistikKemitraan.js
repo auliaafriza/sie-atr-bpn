@@ -178,6 +178,8 @@ const KepegawaianOrganisasi = () => {
     "Kantor Wilayah Provinsi Bali",
     "Kantor Wilayah Provinsi Sulawesi Tenggara",
   ]);
+  const [hideText, setHideText] = useState(false);
+  const [hideTextKantor, setHideTextKantor] = useState(false);
   const [kantor, setKantor] = useState([]);
   const [satker, setSatker] = useState("");
   const [kanwilDis, setKanwilDis] = useState("");
@@ -1021,6 +1023,12 @@ const KepegawaianOrganisasi = () => {
                   onChange={(event, newValue) => {
                     handleChangeKantor(newValue);
                   }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setHideText(true);
+                    else {
+                      setHideText(false);
+                    }
+                  }}
                   getOptionLabel={(option) => option.kantah || ""}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
@@ -1040,8 +1048,13 @@ const KepegawaianOrganisasi = () => {
                     </React.Fragment>
                   )}
                   renderTags={(selected) => {
-                    return `${selected.length} Terpilih`;
+                    return selected.length != 0
+                      ? hideText
+                        ? ""
+                        : `${selected.length} Terpilih`
+                      : "";
                   }}
+                  value={kantor}
                   defaultValue={kantor}
                   renderInput={(params) => (
                     <TextField
@@ -1097,9 +1110,20 @@ const KepegawaianOrganisasi = () => {
                       {option.kanwil}
                     </React.Fragment>
                   )}
-                  renderTags={(selected) => {
-                    return `${selected.length} Terpilih`;
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setHideTextKantor(true);
+                    else {
+                      setHideTextKantor(false);
+                    }
                   }}
+                  renderTags={(selected) => {
+                    return selected.length != 0
+                      ? hideTextKantor
+                        ? ""
+                        : `${selected.length} Terpilih`
+                      : "";
+                  }}
+                  value={kanwil}
                   defaultValue={kanwil}
                   renderInput={(params) => (
                     <TextField

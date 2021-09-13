@@ -192,6 +192,9 @@ const KepegawaianBpnGol = () => {
       kantor: "Kantor Pertanahan Kota Medan",
     },
   ]);
+
+  const [hideText, setHideText] = useState(false);
+  const [hideTextKantor, setHideTextKantor] = useState(false);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -979,6 +982,12 @@ const KepegawaianBpnGol = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilter(newValue);
                   }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setHideText(true);
+                    else {
+                      setHideText(false);
+                    }
+                  }}
                   getOptionLabel={(option) => option.kanwil || ""}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
@@ -1000,8 +1009,13 @@ const KepegawaianBpnGol = () => {
                     </React.Fragment>
                   )}
                   renderTags={(selected) => {
-                    return `${selected.length} Terpilih`;
+                    return selected.length != 0
+                      ? hideText
+                        ? ""
+                        : `${selected.length} Terpilih`
+                      : "";
                   }}
+                  value={dataFilter}
                   defaultValue={dataFilter}
                   renderInput={(params) => (
                     <TextField
@@ -1041,6 +1055,12 @@ const KepegawaianBpnGol = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilterKantor(newValue);
                   }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setHideTextKantor(true);
+                    else {
+                      setHideTextKantor(false);
+                    }
+                  }}
                   getOptionLabel={(option) => option.kantor || ""}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
@@ -1062,8 +1082,13 @@ const KepegawaianBpnGol = () => {
                     </React.Fragment>
                   )}
                   renderTags={(selected) => {
-                    return `${selected.length} Terpilih`;
+                    return selected.length != 0
+                      ? hideTextKantor
+                        ? ""
+                        : `${selected.length} Terpilih`
+                      : "";
                   }}
+                  value={dataFilterKantor}
                   defaultValue={dataFilterKantor}
                   renderInput={(params) => (
                     <TextField
