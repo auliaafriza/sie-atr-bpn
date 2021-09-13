@@ -374,7 +374,7 @@ const realisasiPenggunaan = () => {
       <div className={classes.barChart}>
         {/* <img width={500} src={image} /> */}
         <ResponsiveContainer width="100%" height={250}>
-          <AreaChart
+          <BarChart
             width={500}
             height={800}
             data={dataModal.grafik}
@@ -410,14 +410,8 @@ const realisasiPenggunaan = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             {/* <Legend /> */}
-            <Area
-              type="monotone"
-              dataKey="nilai"
-              stroke="#6EB5FF"
-              activeDot={{ r: 8 }}
-              strokeWidth={3}
-            />
-          </AreaChart>
+            <Bar dataKey="nilai" fill="#6EB5FF" />
+          </BarChart>
         </ResponsiveContainer>
       </div>
       {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
@@ -547,7 +541,7 @@ const realisasiPenggunaan = () => {
         comment: comment,
         columnTable: columnTable,
         title: title,
-        grafik: "area",
+        grafik: "Bar",
         nameColumn: nameColumn,
         grafikView: grafikView,
         axis: axis,
@@ -926,7 +920,7 @@ const realisasiPenggunaan = () => {
               <CardContent>
                 <div className={classes.barChart}>
                   <ResponsiveContainer width="100%" height={250}>
-                    <AreaChart
+                    <BarChart
                       width={500}
                       height={800}
                       data={data}
@@ -962,14 +956,8 @@ const realisasiPenggunaan = () => {
                       </YAxis>
                       <Tooltip content={<CustomTooltip />} />
                       {/* <Legend /> */}
-                      <Area
-                        type="monotone"
-                        dataKey="nilai"
-                        stroke="#6EB5FF"
-                        activeDot={{ r: 8 }}
-                        strokeWidth={3}
-                      />
-                    </AreaChart>
+                      <Bar dataKey="nilai" fill="#6EB5FF" />
+                    </BarChart>
                   </ResponsiveContainer>
                 </div>
               </CardContent>

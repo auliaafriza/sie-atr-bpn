@@ -29,7 +29,7 @@ const PengadaanTanah = () => {
         paddingTop: 20,
         paddingBottom: 20,
         width: "100%",
-        // height: "100vh",
+        height: "100vh",
         backgroundImage: `url(${bgImg})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
