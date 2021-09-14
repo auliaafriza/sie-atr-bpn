@@ -39,9 +39,9 @@ const Header = (props) => {
   useEffect(() => {
     if (status == "success") {
       dispatch(resetWhoami());
-      userName
-        ? null
-        : window.location.replace("http://siedev.atrbpn.go.id/SIEBackend");
+      // userName
+      //   ? null
+      //   : window.location.replace("http://siedev.atrbpn.go.id/SIEBackend");
     } else if (status == "failed") {
       dispatch(resetWhoami());
       window.location.replace("http://siedev.atrbpn.go.id/SIEBackend");
