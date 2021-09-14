@@ -221,7 +221,7 @@ const Main = withRouter(({ location }) => {
 
 export default function App() {
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <Main />
     </Router>
   );
