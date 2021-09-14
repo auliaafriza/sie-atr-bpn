@@ -238,7 +238,7 @@ const PnbpBerkasPeringkat = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_berkas_peringkat?tahun=${years}&bulan=${bulan}`,
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_berkas_peringkat?jenisGroup=${viewData}&tahun=${years}&bulan=${bulan}`,
         temp
       )
       .then(function (response) {
