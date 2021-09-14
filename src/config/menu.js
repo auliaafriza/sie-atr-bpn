@@ -237,7 +237,6 @@ export const MENU_LIST = [
 // * navbar silahkan masukkan ke dalam array
 // *****************************************************
 export const HIDE_HEADER = [
-  "/",
   "/Login",
   "/PrintData",
   "/embed/sie-pnbp-pagu-mp",
@@ -298,7 +297,6 @@ export const HIDE_HEADER = [
 // * masukkan ke dalam array
 // *****************************************************
 export const HIDE_FOOTER = [
-  "/",
   "/Login",
   "/PrintData",
   "/embed/sie-pnbp-pagu-mp",
