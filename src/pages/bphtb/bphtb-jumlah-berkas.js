@@ -43,7 +43,9 @@ import {
   TablePagination,
   Button,
   Checkbox,
+  TextField,
 } from "@material-ui/core";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import {
   createTheme,
   ThemeProvider,
@@ -72,6 +74,11 @@ import { BASE_URL } from "../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import { getKantorPNBP } from "../../actions/pnbpAction";
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const dataTemp = [
   {
@@ -154,10 +161,29 @@ const StyledTableRow = withStyles((theme) => ({
 
 const BPHTBJumlahBerkas = () => {
   const classes = styles();
+
   const dispatch = useDispatch();
-  const bphtbBerkasFilter = useSelector(
-    (state) => state.bphtb.bphtbBerkasFilter
-  );
+  const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
+  const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
+  const [dataFilter, setDataFilter] = useState([
+    {
+      kode: "28",
+      kanwil: "Kantor Wilayah Provinsi Banten",
+    },
+    {
+      kode: "10",
+      kanwil: "Kantor Wilayah Provinsi Jawa Barat",
+    },
+  ]);
+  const [dataFilterKantor, setDataFilterKantor] = useState([
+    {
+      kode: "2801",
+      kantor: "Kantor Pertanahan Kabupaten Serang",
+    },
+  ]);
+
+  const [hideText, setHideText] = useState(false);
+  const [hideTextKantor, setHideTextKantor] = useState(false);
 
   const [years, setYears] = useState("2021");
   const [data, setData] = useState(dataTemp);
@@ -165,10 +191,6 @@ const BPHTBJumlahBerkas = () => {
   const [semester, setSemester] = useState(2);
   const [bulan, setBulan] = useState("04");
   const [open, setOpen] = useState(false);
-  const [dataFilter, setDataFilter] = useState([
-    "",
-    "Kantor Pertanahan Kabupaten Kampar",
-  ]);
 
   const DataFormaterX = (value) => {
     return (
@@ -216,26 +238,57 @@ const BPHTBJumlahBerkas = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Jumlah Pengembalian PNBP (Refund) per Kantor ",
+      "BPHTB Jumlah Berkas ",
       data,
       ".xlsx"
     );
   };
 
   const handleChangeFilter = (event) => {
-    setDataFilter(event.target.value);
+    if (event.length != 0) {
+      let temp = { kodeWilayah: [] };
+      event.map((item) => temp.kodeWilayah.push(item.kode));
+      dispatch(getKantorPNBP(temp));
+      setDataFilter([
+        ...dataFilter,
+        ...event.filter((option) => dataFilter.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilter([]);
+    }
+  };
+
+  const handleChangeFilterKantor = (event) => {
+    if (event.length != 0) {
+      setDataFilterKantor([
+        ...dataFilterKantor,
+        ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilterKantor([]);
+    }
   };
 
   const getData = () => {
-    let temp = { satker: [] };
-    temp.satker = dataFilter;
+    let temp = { kantor: [], kanwil: [] };
+    dataFilterKantor && dataFilterKantor.length != 0
+      ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
+      : [];
+    dataFilter && dataFilter.length != 0
+      ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
+      : [];
+
+    let tempSat = { satker: [] };
+    dataFilter && dataFilter.length != 0
+      ? dataFilter.map((item) => tempSat.satker.push(item.kanwil))
+      : [];
 
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
       .post(
         `${url}Aset&Keuangan/BPHTB/sie_pengembalian_pnbp?tahun=${years}&bulan=${bulan}`,
-        temp
+        tempSat
       )
       .then(function (response) {
         setData(response.data.data);
@@ -252,6 +305,11 @@ const BPHTBJumlahBerkas = () => {
   };
 
   useEffect(() => {
+    let temp = { kodeWilayah: [] };
+    dataFilter &&
+      dataFilter.length &&
+      dataFilter.map((item) => temp.kodeWilayah.push(item.kode));
+    dispatch(getKantorPNBP(temp));
     dispatch(getBphtbBerkasFilter());
     getData();
   }, []);
@@ -727,7 +785,7 @@ const BPHTBJumlahBerkas = () => {
       >
         <Grid item xs={9}>
           <Typography className={classes.titleSection} variant="h2">
-            Jumlah Pengembalian PNBP (Refund) per Kantor
+            BPHTB Jumlah Berkas
           </Typography>
         </Grid>
 
@@ -759,7 +817,7 @@ const BPHTBJumlahBerkas = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Jumlah Pengembalian PNBP (Refund) per Kantor ",
+                    title: "BPHTB Jumlah Berkas ",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -782,10 +840,7 @@ const BPHTBJumlahBerkas = () => {
               title="Print Data"
               placement="top"
               onClick={() =>
-                handlePrintData(
-                  "Jumlah Pengembalian PNBP (Refund) per Kantor ",
-                  columnTable
-                )
+                handlePrintData("BPHTB Jumlah Berkas ", columnTable)
               }
             >
               <IconButton aria-label="delete" size="small">
@@ -871,6 +926,7 @@ const BPHTBJumlahBerkas = () => {
                     className={classes.selectStyle}
                     disableUnderline
                   >
+                    <MenuItem value="all">Semua Bulan</MenuItem>
                     {bulanDataNumberic.map((item, i) => {
                       return (
                         <MenuItem value={item.id} key={i}>
@@ -889,7 +945,80 @@ const BPHTBJumlahBerkas = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={6}>
+              <Grid item xs={5}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Wilayah
+                </Typography>
+                <Autocomplete
+                  multiple
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={berkasPnbpWilayah}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilter(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setHideText(true);
+                    else {
+                      setHideText(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.kanwil || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilter && dataFilter.length != 0
+                            ? dataFilter
+                                .map((item) => item.kanwil)
+                                .indexOf(option.kanwil) > -1
+                            : false
+                        }
+                      />
+                      {option.kode}
+                      {"  "}
+                      {option.kanwil}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return selected.length != 0
+                      ? hideText
+                        ? ""
+                        : `${selected.length} Terpilih`
+                      : "";
+                  }}
+                  value={dataFilter}
+                  defaultValue={dataFilter}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={
+                        dataFilter.length != 0 ? "" : "Pilih Wilayah"
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={5}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -897,38 +1026,70 @@ const BPHTBJumlahBerkas = () => {
                 >
                   Pilih Kantor
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    multiple
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={dataFilter}
-                    onChange={handleChangeFilter}
-                    label="Kantor"
-                    className={classes.selectStyle}
-                    disableUnderline
-                    renderValue={(selected) => {
-                      if (selected.length > 1)
-                        return `${selected.length - 1} Terpilih`;
-                      else if (selected[0] == "") return "Kantor";
-                    }}
-                  >
-                    <MenuItem value="" disabled>
-                      Kantor
-                    </MenuItem>
-
-                    {bphtbBerkasFilter.map((item, i) => {
-                      return (
-                        <MenuItem value={item.satker} key={i}>
-                          <Checkbox
-                            checked={dataFilter.indexOf(item.satker) > -1}
-                          />
-                          <ListItemText primary={item.satker} />
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  multiple
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={berkasPnbpKantor}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilterKantor(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setHideTextKantor(true);
+                    else {
+                      setHideTextKantor(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.kantor || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilterKantor && dataFilterKantor.length != 0
+                            ? dataFilterKantor
+                                .map((item) => item.kantor)
+                                .indexOf(option.kantor) > -1
+                            : false
+                        }
+                      />
+                      {option.kode}
+                      {"  "}
+                      {option.kantor}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return selected.length != 0
+                      ? hideTextKantor
+                        ? ""
+                        : `${selected.length} Terpilih`
+                      : "";
+                  }}
+                  value={dataFilterKantor}
+                  defaultValue={dataFilterKantor}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={
+                        dataFilterKantor.length != 0 ? "" : "Pilih Kantor"
+                      }
+                    />
+                  )}
+                />
               </Grid>
               <Grid
                 container
@@ -936,14 +1097,14 @@ const BPHTBJumlahBerkas = () => {
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={6}
-                style={{ paddingTop: 40, paddingLeft: 20 }}
+                xs={2}
+                style={{ paddingLeft: 20 }}
               >
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => getData()}
-                  style={{ height: 57, width: "100%" }}
+                  style={{ height: 57, width: "100%", fontSize: 12 }}
                 >
                   Submit
                 </Button>
@@ -967,7 +1128,7 @@ const BPHTBJumlahBerkas = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "Jumlah Pengembalian PNBP (Refund) per Kantor ",
+                      title: "BPHTB Jumlah Berkas ",
                       grafik: data,
                       dataTable: "",
                       analisis:
