@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   AppBar,
   Toolbar,
@@ -7,12 +7,13 @@ import {
   Menu,
   MenuItem,
 } from "@material-ui/core";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { MoreVert, AccountCircle, Search } from "@material-ui/icons";
 import { AiOutlineLogout } from "react-icons/ai";
 // import PropTypes from "prop-types";
 import styles from "./styles";
 import Logo from "../assets/img/fav.png";
+import { resetWhoami, getWhoami } from "../actions/globalActions";
 
 const Header = (props) => {
   const classes = styles();
@@ -20,7 +21,9 @@ const Header = (props) => {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   // const [open, setOpen] = React.useState(false);
   const userName = useSelector((state) => state.globalReducer.whoAmI);
+  const status = useSelector((state) => state.globalReducer.status);
 
+  const dispatch = useDispatch();
   // let userName = localStorage.getItem("usernameSie");
   const isMenuOpen = Boolean(anchorEl);
   // const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -28,6 +31,22 @@ const Header = (props) => {
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  useEffect(() => {
+    dispatch(getWhoami());
+  }, []);
+
+  useEffect(() => {
+    if (status == "success") {
+      dispatch(resetWhoami());
+      // userName
+      //   ? null
+      //   : window.location.replace("http://siedev.atrbpn.go.id/SIEBackend");
+    } else if (status == "failed") {
+      dispatch(resetWhoami());
+      window.location.replace("http://siedev.atrbpn.go.id/SIEBackend");
+    }
+  }, [status]);
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -93,7 +112,11 @@ const Header = (props) => {
           >
             {userName}
           </Typography>
-          <IconButton edge="end" color="inherit" href="/Login">
+          <IconButton
+            edge="end"
+            color="inherit"
+            href="http://siedev.atrbpn.go.id/SIEBackend"
+          >
             <AiOutlineLogout />
           </IconButton>
         </div>

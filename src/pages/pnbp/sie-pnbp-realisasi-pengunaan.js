@@ -163,6 +163,8 @@ const realisasiPenggunaan = () => {
     },
   ]);
 
+  const [hideText, setHideText] = useState(false);
+  const [hideTextKantor, setHideTextKantor] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
     grafik: "",
@@ -998,8 +1000,8 @@ const realisasiPenggunaan = () => {
                   </Typography>
                   <Autocomplete
                     multiple
-                    id="label"
-                    name="label"
+                    id="kantor"
+                    name="kantor"
                     style={{ width: "100%", height: 50 }}
                     options={berkasPnbpWilayah}
                     classes={{
@@ -1010,6 +1012,12 @@ const realisasiPenggunaan = () => {
                     autoHighlight
                     onChange={(event, newValue) => {
                       handleChangeFilter(newValue);
+                    }}
+                    onInputChange={(_event, value, reason) => {
+                      if (reason == "input") setHideText(true);
+                      else {
+                        setHideText(false);
+                      }
                     }}
                     getOptionLabel={(option) => option.kanwil || ""}
                     renderOption={(option, { selected }) => (
@@ -1032,8 +1040,13 @@ const realisasiPenggunaan = () => {
                       </React.Fragment>
                     )}
                     renderTags={(selected) => {
-                      return `${selected.length} Terpilih`;
+                      return selected.length != 0
+                        ? hideText
+                          ? ""
+                          : `${selected.length} Terpilih`
+                        : "";
                     }}
+                    value={dataFilter}
                     defaultValue={dataFilter}
                     renderInput={(params) => (
                       <TextField
@@ -1073,7 +1086,13 @@ const realisasiPenggunaan = () => {
                     onChange={(event, newValue) => {
                       handleChangeFilterKantor(newValue);
                     }}
-                    getOptionLabel={(option) => option.kantor}
+                    onInputChange={(_event, value, reason) => {
+                      if (reason == "input") setHideTextKantor(true);
+                      else {
+                        setHideTextKantor(false);
+                      }
+                    }}
+                    getOptionLabel={(option) => option.kantor || ""}
                     renderOption={(option, { selected }) => (
                       <React.Fragment>
                         <Checkbox
@@ -1094,8 +1113,13 @@ const realisasiPenggunaan = () => {
                       </React.Fragment>
                     )}
                     renderTags={(selected) => {
-                      return `${selected.length} Terpilih`;
+                      return selected.length != 0
+                        ? hideTextKantor
+                          ? ""
+                          : `${selected.length} Terpilih`
+                        : "";
                     }}
+                    value={dataFilterKantor}
                     defaultValue={dataFilterKantor}
                     renderInput={(params) => (
                       <TextField

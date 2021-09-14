@@ -304,7 +304,7 @@ export default function CenteredGrid() {
                       : 0}
                   </Typography>
                   <Typography className={classes.title} gutterBottom>
-                    Bank
+                    Jasa Keuangan
                   </Typography>
                 </Grid>
                 <Divider orientation="vertical" flexItem />

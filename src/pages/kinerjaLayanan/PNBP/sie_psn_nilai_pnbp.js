@@ -152,7 +152,7 @@ const realisasiPenggunaan = () => {
       aliaskantah: "Kab. Aceh Barat",
     },
   ]);
-
+  const [hideTextKantor, setHideTextKantor] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
     grafik: "",
@@ -1119,9 +1119,17 @@ const realisasiPenggunaan = () => {
                         {option.aliaskantah}
                       </React.Fragment>
                     )}
+                    onInputChange={(_event, value, reason) => {
+                      if (reason == "input") setHideTextKantor(true);
+                      else {
+                        setHideTextKantor(false);
+                      }
+                    }}
                     renderTags={(selected) => {
                       return selected.length != 0
-                        ? `${selected.length} Terpilih`
+                        ? hideTextKantor
+                          ? ""
+                          : `${selected.length} Terpilih`
                         : "";
                     }}
                     defaultValue={dataFilterKantor}

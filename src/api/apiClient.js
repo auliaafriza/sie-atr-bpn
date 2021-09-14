@@ -6,3 +6,10 @@ export const apiClient = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+export const apiClientLogin = axios.create({
+  baseURL: "http://siedev.atrbpn.go.id/SIEBackend/",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});

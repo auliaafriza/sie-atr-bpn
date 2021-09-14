@@ -11,6 +11,7 @@ import {
   GET_KANWIL,
   GET_WILAYAH,
   GET_WHO_AM_I,
+  RESET_WHO_AM_I,
 } from "./actionTypes";
 
 export const getSatker = () => {
@@ -54,6 +55,14 @@ export const getWhoami = () => {
     return dispatch({
       type: GET_WHO_AM_I,
       payload: getWhoamiApi(),
+    });
+  };
+};
+
+export const resetWhoami = () => {
+  return (dispatch) => {
+    return dispatch({
+      type: RESET_WHO_AM_I,
     });
   };
 };

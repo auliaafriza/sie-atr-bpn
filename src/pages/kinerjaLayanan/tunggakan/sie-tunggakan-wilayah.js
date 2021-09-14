@@ -78,24 +78,18 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const dataTemp = [
   {
-    tahun: "2017",
-    p2015: "0",
-    p2016: "0",
-    p2017: "10",
-    p2018: "10",
-    p2019: "20",
-    p2020: "20",
-    p2021: "20",
+    label: "p2015",
+    2015: "0",
+    2016: "0",
+    2017: "10",
+    2018: "10",
   },
   {
-    tahun: "2018",
-    p2015: "10",
-    p2016: "10",
-    p2017: "20",
-    p2018: "20",
-    p2019: "30",
-    p2020: "30",
-    p2021: "30",
+    label: "p2016",
+    2015: "10",
+    2016: "10",
+    2017: "20",
+    2018: "20",
   },
 ];
 
@@ -131,125 +125,49 @@ const StyledTableRow = withStyles((theme) => ({
 
 let url = "http://10.20.57.234/SIEBackEnd/";
 
-let nameColumn = [
+let nameColumnTemp = [
   {
-    label: "Tahun",
-    value: "tahun",
-    isFixed: false,
-    isLabel: false,
-  },
-  {
-    label: "Nilai P2015",
-    value: "p2015",
-    isFixed: false,
-    isLabel: false,
-  },
-  {
-    label: "Nilai P2016",
-    value: "p2016",
-    isFixed: false,
-    isLabel: false,
-  },
-  {
-    label: "Nilai P2017",
-    value: "p2017",
-    isFixed: false,
-    isLabel: false,
-  },
-  {
-    label: "Nilai P2018",
-    value: "p2018",
-    isFixed: false,
-    isLabel: false,
-  },
-  {
-    label: "Nilai P2019",
-    value: "p2019",
-    isFixed: false,
-    isLabel: false,
-  },
-  {
-    label: "Nilai P2020",
-    value: "p2020",
-    isFixed: false,
-    isLabel: false,
-  },
-  {
-    label: "Nilai P2021",
-    value: "p2021",
+    label: "",
+    value: "",
     isFixed: false,
     isLabel: false,
   },
 ];
 
-let columnTable = [
+let columnTableTemp = [
   {
-    label: "tahun",
-    isFixed: false,
-  },
-  {
-    label: "p2015",
-    isFixed: false,
-  },
-  {
-    label: "p2016",
-    isFixed: false,
-  },
-  {
-    label: "p2017",
-    isFixed: false,
-  },
-  {
-    label: "p2018",
-    isFixed: false,
-  },
-  {
-    label: "p2019",
-    isFixed: false,
-  },
-  {
-    label: "p2020",
-    isFixed: false,
-  },
-  {
-    label: "p2021",
+    label: "",
     isFixed: false,
   },
 ];
 
-let grafikView = [
+let colors = [
+  "#8884d8",
+  "#82ca9d",
+  "#ffc658",
+  "#800000",
+  "#00CED1",
+  "#C71585",
+  "#B0C4DE",
+  "#FA8072",
+  "#808000",
+  "#006400",
+  "#2F4F4F",
+  "#6495ED",
+  "#4B0082",
+  "#FFB6C1",
+  "#BC8F8F",
+];
+
+let grafikViewTemp = [
   {
-    dataKey: "p2015",
-    fill: "#8884d8",
-  },
-  {
-    dataKey: "p2016",
-    fill: "#82ca9d",
-  },
-  {
-    dataKey: "p2017",
-    fill: "#ffc658",
-  },
-  {
-    dataKey: "p2018",
-    fill: "#800000",
-  },
-  {
-    dataKey: "p2019",
-    fill: "#00CED1",
-  },
-  {
-    dataKey: "p2020",
-    fill: "#C71585",
-  },
-  {
-    dataKey: "p2021",
-    fill: "#B0C4DE",
+    dataKey: "",
+    fill: "",
   },
 ];
 
 let axis = {
-  xAxis: "tahun",
+  xAxis: "label",
   yAxis: "Nilai Tunggakan",
 };
 
@@ -262,12 +180,14 @@ const KepegawaianBpnJabatan = () => {
   const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
   const [years, setYears] = useState("2022");
   const [tahunAwal, setTahunAwal] = useState("2017");
-  const [data, setData] = useState(dataTemp);
+  const [data, setData] = useState([]);
   const [comment, setComment] = useState("");
   const [kanwil, setKanwil] = useState({ kanwil: "" });
   const [kantor, setKantor] = useState({ kantor: "" });
   const [satker, setSatker] = useState({ satker: "" });
-
+  const [grafikView, setGrafikView] = useState([]);
+  const [columnTable, setColumnTable] = useState([]);
+  const [nameColumn, setNameColumn] = useState([]);
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -321,40 +241,88 @@ const KepegawaianBpnJabatan = () => {
     return myArray;
   };
 
-  const convertdata = (data) => {
-    let body = {
-      tahun: "",
-      p2015: "",
-      p2016: "",
-      p2017: "",
-      p2018: "",
-      p2019: "",
-      p2020: "",
-      p2021: "",
-    };
+  const getDataKey = (data) => {
     let temp = [];
+    data.map((item) => temp.push(item[0].tahun));
+    return temp;
+  };
+
+  const convertdata = (data) => {
+    let temp = [
+      {
+        label: "p2015",
+      },
+      {
+        label: "p2016",
+      },
+      {
+        label: "p2017",
+      },
+      {
+        label: "p2018",
+      },
+      {
+        label: "p2019",
+      },
+      {
+        label: "p2020",
+      },
+      {
+        label: "p2021",
+      },
+    ];
     let mapData = chunkArrayInGroups(data, 7);
     mapData.map((item, i) => {
-      let pushData = { ...body };
-      pushData.tahun = item[0].tahun;
       item.map((dataItem, i) => {
-        if (dataItem.tahuntunggakan == "p2015") pushData.p2015 = dataItem.nilai;
-        else if (dataItem.tahuntunggakan == "p2016")
-          pushData.p2016 = dataItem.nilai;
-        else if (dataItem.tahuntunggakan == "p2017")
-          pushData.p2017 = dataItem.nilai;
-        else if (dataItem.tahuntunggakan == "p2018")
-          pushData.p2018 = dataItem.nilai;
-        else if (dataItem.tahuntunggakan == "p2019")
-          pushData.p2019 = dataItem.nilai;
-        else if (dataItem.tahuntunggakan == "p2020")
-          pushData.p2020 = dataItem.nilai;
-        else if (dataItem.tahuntunggakan == "p2021")
-          pushData.p2021 = dataItem.nilai;
+        if (dataItem.tahuntunggakan == "p2015") {
+          temp[0][dataItem.tahun] = dataItem.nilai;
+        } else if (dataItem.tahuntunggakan == "p2016") {
+          temp[1][dataItem.tahun] = dataItem.nilai;
+        } else if (dataItem.tahuntunggakan == "p2017") {
+          temp[2][dataItem.tahun] = dataItem.nilai;
+        } else if (dataItem.tahuntunggakan == "p2018") {
+          temp[3][dataItem.tahun] = dataItem.nilai;
+        } else if (dataItem.tahuntunggakan == "p2019") {
+          temp[4][dataItem.tahun] = dataItem.nilai;
+        } else if (dataItem.tahuntunggakan == "p2020") {
+          temp[5][dataItem.tahun] = dataItem.nilai;
+        } else if (dataItem.tahuntunggakan == "p2021") {
+          temp[6][dataItem.tahun] = dataItem.nilai;
+        } else if (dataItem.tahuntunggakan == "p2015") {
+          temp[7][dataItem.tahun] = dataItem.nilai;
+        }
       });
-      temp.push(pushData);
     });
     return temp;
+  };
+
+  const prepareDataCol = (data) => {
+    let dataKey = chunkArrayInGroups(data, 7);
+    let keyDaya = getDataKey(dataKey);
+    let grafik = [];
+    let col = [];
+    let name = [];
+    keyDaya && keyDaya.length != 0
+      ? keyDaya.map((item, i) => {
+          let tempGrafik = { ...grafikViewTemp };
+          tempGrafik.dataKey = item;
+          tempGrafik.fill = colors[i];
+          grafik.push(tempGrafik);
+          let tempCol = { ...columnTableTemp };
+          tempCol.label = item;
+          tempCol.isFixed = false;
+          col.push(tempCol);
+          let tempName = { ...nameColumnTemp };
+          tempName.label = item;
+          tempName.value = item;
+          tempName.isFixed = false;
+          tempName.isLabel = false;
+          name.push(tempName);
+        })
+      : null;
+    setGrafikView(grafik);
+    setColumnTable(col);
+    setNameColumn(name);
   };
 
   const getData = () => {
@@ -374,6 +342,7 @@ const KepegawaianBpnJabatan = () => {
       )
       .then(function (response) {
         setData(convertdata(response.data.data));
+        prepareDataCol(response.data.data);
         setComment(response.data);
         console.log(response);
       })
@@ -484,7 +453,7 @@ const KepegawaianBpnJabatan = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="tahun"></XAxis>
+            <XAxis dataKey="label"></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value="Nilai Tunggakan"
@@ -495,13 +464,15 @@ const KepegawaianBpnJabatan = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="p2015" stackId="a" fill="#8884d8" />
-            <Bar dataKey="p2016" stackId="a" fill="#82ca9d" />
-            <Bar dataKey="p2017" stackId="a" fill="#ffc658" />
-            <Bar dataKey="p2018" stackId="a" fill="#800000" />
-            <Bar dataKey="p2019" stackId="a" fill="#00CED1" />
-            <Bar dataKey="p2020" stackId="a" fill="#C71585" />
-            <Bar dataKey="p2021" stackId="a" fill="#B0C4DE" />
+            {grafikView.map((grafikItem, i) => {
+              return (
+                <Bar
+                  dataKey={grafikItem.dataKey}
+                  stackId="a"
+                  fill={grafikItem.fill}
+                />
+              );
+            })}
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -525,40 +496,36 @@ const KepegawaianBpnJabatan = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {dataModal.grafik
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <StyledTableRow key={row.tahun}>
-                      <StyledTableCell
-                        align="center"
-                        component="th"
-                        scope="row"
-                      >
-                        {row.tahun}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.p2015}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.p2016}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.p2017}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.p2018}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.p2019}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.p2020}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.p2021}
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))}
+                {data.map((row, i) => (
+                  <StyledTableRow key={i}>
+                    {columnTable.map((item) => {
+                      return item.isFixed ? (
+                        <StyledTableCell align="center">
+                          Rp{" "}
+                          {row[item.label]
+                            .toFixed(2)
+                            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                        </StyledTableCell>
+                      ) : axis.xAxis == "bulan" && isFinite(item.label) ? (
+                        <StyledTableCell
+                          align="center"
+                          component="th"
+                          scope="row"
+                        >
+                          {NamaBulan[row[item.label] + 1]}
+                        </StyledTableCell>
+                      ) : (
+                        <StyledTableCell
+                          align="center"
+                          component="th"
+                          scope="row"
+                        >
+                          {row[item.label]}
+                        </StyledTableCell>
+                      );
+                    })}
+                  </StyledTableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -1223,7 +1190,7 @@ const KepegawaianBpnJabatan = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="tahun" />
+                    <XAxis dataKey="label" />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
                         value="Nilai Tunggakan"
@@ -1234,13 +1201,15 @@ const KepegawaianBpnJabatan = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Bar dataKey="p2015" stackId="a" fill="#8884d8" />
-                    <Bar dataKey="p2016" stackId="a" fill="#82ca9d" />
-                    <Bar dataKey="p2017" stackId="a" fill="#ffc658" />
-                    <Bar dataKey="p2018" stackId="a" fill="#800000" />
-                    <Bar dataKey="p2019" stackId="a" fill="#00CED1" />
-                    <Bar dataKey="p2020" stackId="a" fill="#C71585" />
-                    <Bar dataKey="p2021" stackId="a" fill="#B0C4DE" />
+                    {grafikView.map((grafikItem, i) => {
+                      return (
+                        <Bar
+                          dataKey={grafikItem.dataKey}
+                          stackId="a"
+                          fill={grafikItem.fill}
+                        />
+                      );
+                    })}
                   </BarChart>
                 </ResponsiveContainer>
               </div>
