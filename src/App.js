@@ -211,7 +211,7 @@ const Main = withRouter(({ location }) => {
         </Route>
         <Route path="/embed/:view" component={IframeGenerator} />
         <Route path="/" exact>
-          <Login />
+          <Dashboard />
         </Route>
       </Switch>
       {!noFooter && <Footer />}
