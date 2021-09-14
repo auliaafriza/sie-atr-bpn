@@ -69,10 +69,12 @@ const dataTemp = [
   {
     tahun: "2010",
     jumlah_daerah_terintegrasi: 0,
+    kum_jumlah_daerah_terintegrasi: 0,
   },
   {
     tahun: "2011",
     jumlah_daerah_terintegrasi: 10,
+    kum_jumlah_daerah_terintegrasi: 0,
   },
 ];
 
@@ -89,6 +91,12 @@ let nameColumn = [
     isFixed: false,
     isLabel: false,
   },
+  {
+    label: "Total Akumulasi",
+    value: "kum_jumlah_daerah_terintegrasi",
+    isFixed: false,
+    isLabel: false,
+  },
 ];
 
 let columnTable = [
@@ -100,12 +108,20 @@ let columnTable = [
     label: "jumlah_daerah_terintegrasi",
     isFixed: true,
   },
+  {
+    label: "kum_jumlah_daerah_terintegrasi",
+    isFixed: true,
+  },
 ];
 
 let grafikView = [
   {
     dataKey: "jumlah_daerah_terintegrasi",
     fill: "#C71585",
+  },
+  {
+    dataKey: "kum_jumlah_daerah_terintegrasi",
+    fill: "#ffc658",
   },
 ];
 
@@ -236,7 +252,7 @@ const BPHTBDaerahTerintegrasi = () => {
         comment: comment,
         columnTable: columnTable,
         title: title,
-        grafik: "bar",
+        grafik: "barStack",
         nameColumn: nameColumn,
         grafikView: grafikView,
         axis: axis,
@@ -260,6 +276,7 @@ const BPHTBDaerahTerintegrasi = () => {
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
+      console.log("tooltip", payload);
       return (
         <div className={classes.tooltipCustom}>
           <p className="label">Tahun {label}</p>
@@ -267,6 +284,10 @@ const BPHTBDaerahTerintegrasi = () => {
             className="desc"
             style={{ color: payload[0].color }}
           >{`Jumlah Daerah Terintegrasi : ${payload[0].value}`}</p>
+          <p
+            className="desc"
+            style={{ color: payload[1].color }}
+          >{`Total Akumulasi : ${payload[1].value}`}</p>
         </div>
       );
     }
@@ -319,7 +340,16 @@ const BPHTBDaerahTerintegrasi = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="jumlah_daerah_terintegrasi" fill="#C71585" />
+            <Bar
+              dataKey="jumlah_daerah_terintegrasi"
+              stackId="a"
+              fill="#C71585"
+            />
+            <Bar
+              dataKey="kum_jumlah_daerah_terintegrasi"
+              stackId="a"
+              fill="#ffc658"
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -804,7 +834,13 @@ const BPHTBDaerahTerintegrasi = () => {
                       <Legend />
                       <Bar
                         dataKey="jumlah_daerah_terintegrasi"
+                        stackId="a"
                         fill="#C71585"
+                      />
+                      <Bar
+                        dataKey="kum_jumlah_daerah_terintegrasi"
+                        stackId="a"
+                        fill="#ffc658"
                       />
                     </BarChart>
                   </ResponsiveContainer>
