@@ -7,8 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import bgImg from "../../assets/img/bg-content.jpg";
 import Divider from "@material-ui/core/Divider";
 import axios from "axios";
-
-let url = "http://10.20.57.234/SIEBackEnd/";
+import { url } from "../../api/apiClient";
 
 const useStyles = makeStyles((theme) => ({
   root: {

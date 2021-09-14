@@ -60,6 +60,7 @@ import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
 import { BASE_URL } from "../../config/embed_conf";
+import { url } from "../../api/apiClient";
 
 const dataTemp = [
   {
@@ -124,8 +125,6 @@ const StyledTableRow = withStyles((theme) => ({
     },
   },
 }))(TableRow);
-
-let url = "http://10.20.57.234/SIEBackEnd/";
 
 const PaguMpOpsNon = () => {
   const classes = styles();

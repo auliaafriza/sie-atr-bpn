@@ -6,6 +6,7 @@ import { MENU_LIST } from "../config/menu";
 import _ from "lodash";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
+import { url } from "../api/apiClient";
 
 import axios from "axios";
 
@@ -56,7 +57,7 @@ const NavBar = (props) => {
       "application/x-www-form-urlencoded";
     axios({
       method: "post",
-      url: "http://10.20.57.234/SIEBackEnd/ApiMenu/ByUsername",
+      url: `${url}ApiMenu/ByUsername`,
       data: {
         u: userName, //agung13
       },

@@ -63,6 +63,7 @@ import { getNamaProfile } from "../../../actions/sertifikasiAction";
 import { tahunData } from "../../../functionGlobal/globalDataAsset";
 import { useHistory } from "react-router-dom";
 import { BASE_URL } from "../../../config/embed_conf";
+import { url } from "../../../api/apiClient";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -143,8 +144,6 @@ const StyledTableRow = withStyles((theme) => ({
     },
   },
 }))(TableRow);
-
-let url = "http://10.20.57.234/SIEBackEnd/";
 
 const title = "Target dan realisasi sertifikasi";
 

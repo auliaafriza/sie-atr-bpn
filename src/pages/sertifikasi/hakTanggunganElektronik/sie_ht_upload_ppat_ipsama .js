@@ -64,6 +64,7 @@ import { useHistory } from "react-router-dom";
 // import { getSatker } from "../../actions/globalActions";
 import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../../../config/embed_conf";
+import { url } from "../../../api/apiClient";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -103,8 +104,6 @@ const StyledTableRow = withStyles((theme) => ({
     },
   },
 }))(TableRow);
-
-let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {

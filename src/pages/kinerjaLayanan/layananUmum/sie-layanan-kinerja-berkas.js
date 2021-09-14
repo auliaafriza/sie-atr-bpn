@@ -64,6 +64,7 @@ import { BASE_URL } from "../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { url } from "../../../api/apiClient";
 
 const dataTemp = [
   {
@@ -166,8 +167,6 @@ const StyledTableRow = withStyles((theme) => ({
     },
   },
 }))(TableRow);
-
-let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {
@@ -885,7 +884,7 @@ const KinerjaBerkasPnbp = () => {
                 >
                   Pilih Nama Profile
                 </Typography>
-                <FormControl  className={classes.formControl}>
+                <FormControl className={classes.formControl}>
                   <InputLabel
                     id="demo-simple-select-outlined-label"
                     htmlFor="outlined-Name"

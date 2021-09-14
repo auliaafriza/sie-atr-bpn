@@ -50,6 +50,7 @@ import {
 } from "@material-ui/core/styles";
 import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
+import { url } from "../../api/apiClient";
 import styles from "./styles";
 import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
@@ -150,8 +151,6 @@ const StyledTableRow = withStyles((theme) => ({
     },
   },
 }))(TableRow);
-
-let url = "http://10.20.57.234/SIEBackEnd/";
 
 const BPHTBDaerahTerintegrasi = () => {
   const classes = styles();

@@ -50,11 +50,10 @@ const PnbpPage = () => {
           zIndex: 1,
         }}
       >
-        {/* <PnbpBerkasWilayah /> */}
+        <PnbpBerkasWilayah />
         <PnbpBerkasPeringkat />
-        <RealisasiAnggaran />
       </div>
-      {/* <PnbpBerkasPeringkatWilayah /> */}
+      <RealisasiAnggaran />
       <RealisasiPenggunaan />
       {/* <PersentaseRealisasiBelanja /> */}
       {/* <RealisasiPenerimaan /> */}

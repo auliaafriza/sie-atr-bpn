@@ -62,6 +62,7 @@ import {
   semesterData,
   DataFormater,
 } from "../../functionGlobal/globalDataAsset";
+import { url } from "../../api/apiClient";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { useHistory, Link as LinkPrint } from "react-router-dom";
@@ -150,8 +151,6 @@ const StyledTableRow = withStyles((theme) => ({
     },
   },
 }))(TableRow);
-
-let url = "http://10.20.57.234/SIEBackEnd/";
 
 const BPHTBJumlahBerkas = () => {
   const classes = styles();
