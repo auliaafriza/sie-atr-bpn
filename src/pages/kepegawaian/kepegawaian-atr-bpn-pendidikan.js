@@ -66,6 +66,7 @@ import { BASE_URL } from "../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { url } from "../../api/apiClient";
 
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
@@ -114,8 +115,6 @@ const StyledTableRow = withStyles((theme) => ({
     },
   },
 }))(TableRow);
-
-let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {

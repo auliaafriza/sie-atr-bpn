@@ -68,6 +68,7 @@ import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../../config/embed_conf";
+import { url } from "../../api/apiClient";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -120,8 +121,6 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-let url = "http://10.20.57.234/SIEBackEnd/";
-
 let nameColumn = [
   {
     label: "Wilayah",
@@ -146,10 +145,9 @@ let nameColumn = [
 const PnbpBerkasWilayah = () => {
   const classes = styles();
   const dispatch = useDispatch();
-  const berkasPnbpWilayah = useSelector(
-    (state) => state.pnbp.berkasPnbpWilayah
-  );
-  const berkasPnbpKantor = useSelector((state) => state.pnbp.berkasPnbpKantor);
+  const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
+  const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
+
   const [years, setYears] = useState("2017");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
@@ -166,12 +164,25 @@ const PnbpBerkasWilayah = () => {
     listTop10Comment: [],
   });
   const [dataFilter, setDataFilter] = useState([
-    { wilayah: "Kantor Wilayah Provinsi Jawa Barat" },
-    { wilayah: "Kantor Wilayah Provinsi Jambi" },
+    {
+      kode: "28",
+      kanwil: "Kantor Wilayah Provinsi Banten",
+    },
+    {
+      kode: "10",
+      kanwil: "Kantor Wilayah Provinsi Jawa Barat",
+    },
   ]);
   const [dataFilterKantor, setDataFilterKantor] = useState([
-    { kantor: "Kantor Pertanahan Kabupaten Bandung" },
+    {
+      kode: "2801",
+      kantor: "Kantor Pertanahan Kabupaten Serang",
+    },
   ]);
+
+  const [hideText, setHideText] = useState(false);
+  const [hideTextKantor, setHideTextKantor] = useState(false);
+
   const inputRef = createRef(null);
   const [image, takeScreenshot] = useScreenshot({
     type: "image/jpeg",
@@ -199,8 +210,20 @@ const PnbpBerkasWilayah = () => {
     setOpen(false);
   };
 
+  const exportData = () => {
+    fileExport(
+      loadDataColumnTable(nameColumn),
+      "PNBP dan jumlah berkas per Kegiatan",
+      data,
+      ".xlsx"
+    );
+  };
+
   const handleChangeFilter = (event) => {
     if (event.length != 0) {
+      let temp = { kodeWilayah: [] };
+      event.map((item) => temp.kodeWilayah.push(item.kode));
+      dispatch(getKantorPNBP(temp));
       setDataFilter([
         ...dataFilter,
         ...event.filter((option) => dataFilter.indexOf(option) === -1),
@@ -221,23 +244,15 @@ const PnbpBerkasWilayah = () => {
     }
   };
 
-  const exportData = () => {
-    fileExport(
-      loadDataColumnTable(nameColumn),
-      "PNBP dan jumlah berkas per Kegiatan",
-      data,
-      ".xlsx"
-    );
-  };
-
   const getData = () => {
-    let temp = { kantor: [], wilayah: [] };
+    let temp = { kantor: [], kanwil: [] };
     dataFilterKantor && dataFilterKantor.length != 0
       ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
       : [];
     dataFilter && dataFilter.length != 0
-      ? dataFilter.map((item) => temp.wilayah.push(item.wilayah))
+      ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
       : [];
+
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
@@ -922,6 +937,7 @@ const PnbpBerkasWilayah = () => {
                     className={classes.selectStyle}
                     disableUnderline
                   >
+                    <MenuItem value="all">Semua Bulan</MenuItem>
                     {bulanData.map((item, i) => {
                       return (
                         <MenuItem value={item.id} key={i}>
@@ -991,7 +1007,13 @@ const PnbpBerkasWilayah = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilter(newValue);
                   }}
-                  getOptionLabel={(option) => option.wilayah}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setHideText(true);
+                    else {
+                      setHideText(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.kanwil || ""}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
@@ -1001,17 +1023,24 @@ const PnbpBerkasWilayah = () => {
                         checked={
                           dataFilter && dataFilter.length != 0
                             ? dataFilter
-                                .map((item) => item.wilayah)
-                                .indexOf(option.wilayah) > -1
+                                .map((item) => item.kanwil)
+                                .indexOf(option.kanwil) > -1
                             : false
                         }
                       />
-                      {option.wilayah}
+                      {option.kode}
+                      {"  "}
+                      {option.kanwil}
                     </React.Fragment>
                   )}
                   renderTags={(selected) => {
-                    return `${selected.length} Terpilih`;
+                    return selected.length != 0
+                      ? hideText
+                        ? ""
+                        : `${selected.length} Terpilih`
+                      : "";
                   }}
+                  value={dataFilter}
                   defaultValue={dataFilter}
                   renderInput={(params) => (
                     <TextField
@@ -1021,7 +1050,9 @@ const PnbpBerkasWilayah = () => {
                         disableUnderline: true,
                       }}
                       style={{ marginTop: 5 }}
-                      placeholder={dataFilter.length != 0 ? "" : "Pilih Kantor"}
+                      placeholder={
+                        dataFilter.length != 0 ? "" : "Pilih Wilayah"
+                      }
                     />
                   )}
                 />
@@ -1049,7 +1080,13 @@ const PnbpBerkasWilayah = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilterKantor(newValue);
                   }}
-                  getOptionLabel={(option) => option.kantor}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setHideTextKantor(true);
+                    else {
+                      setHideTextKantor(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.kantor || ""}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
@@ -1064,12 +1101,19 @@ const PnbpBerkasWilayah = () => {
                             : false
                         }
                       />
+                      {option.kode}
+                      {"  "}
                       {option.kantor}
                     </React.Fragment>
                   )}
                   renderTags={(selected) => {
-                    return `${selected.length} Terpilih`;
+                    return selected.length != 0
+                      ? hideTextKantor
+                        ? ""
+                        : `${selected.length} Terpilih`
+                      : "";
                   }}
+                  value={dataFilterKantor}
                   defaultValue={dataFilterKantor}
                   renderInput={(params) => (
                     <TextField
@@ -1080,7 +1124,7 @@ const PnbpBerkasWilayah = () => {
                       }}
                       style={{ marginTop: 5 }}
                       placeholder={
-                        dataFilterKantor.length != 0 ? "" : "Pilih Wilayah"
+                        dataFilterKantor.length != 0 ? "" : "Pilih Kantor"
                       }
                     />
                   )}

@@ -63,6 +63,7 @@ import { getKanwil, getTipeHak } from "../../../actions/sertifikasiAction";
 
 import { useHistory } from "react-router-dom";
 import { BASE_URL } from "../../../config/embed_conf";
+import { url } from "../../../api/apiClient";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -170,8 +171,6 @@ const StyledTableRow = withStyles((theme) => ({
     },
   },
 }))(TableRow);
-
-let url = "http://10.20.57.234/SIEBackEnd/";
 
 const title = "Jangka waktu hak sertifikat";
 const Sie_sertifikat_jangka_waktu_hak = () => {

@@ -56,6 +56,7 @@ import {
 // import { getSatker } from "../../actions/globalActions";
 import { useDispatch, useSelector } from "react-redux";
 
+import { url } from "../../../api/apiClient";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { BASE_URL } from "../../../config/embed_conf";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -108,8 +109,6 @@ const StyledTableRow = withStyles((theme) => ({
     },
   },
 }))(TableRow);
-
-let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {

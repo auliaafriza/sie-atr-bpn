@@ -50,19 +50,18 @@ const PnbpPage = () => {
           zIndex: 1,
         }}
       >
-        {/* <PnbpBerkasWilayah /> */}
+        <PnbpBerkasWilayah />
         <PnbpBerkasPeringkat />
-        <RealisasiAnggaran />
       </div>
-      {/* <PnbpBerkasPeringkatWilayah /> */}
+      <RealisasiAnggaran />
       <RealisasiPenggunaan />
       {/* <PersentaseRealisasiBelanja /> */}
       {/* <RealisasiPenerimaan /> */}
-      {/* <RealisasiTargetPenerimaan /> */}
+      <RealisasiTargetPenerimaan />
       <PaguMp />
-      {/* <PaguMpOpsNon /> */}
-      <AlokasiAnggaran />
-      {/* <PeringkatRealisasi /> */}
+      <PaguMpOpsNon />
+      {/* <AlokasiAnggaran /> */}
+      <PeringkatRealisasi />
       {/* <PengembalianPNBP /> */}
       {/* <KinerjaBerkasPnbp /> */}
     </div>

@@ -46,6 +46,7 @@ import {
   Checkbox,
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import { url } from "../../api/apiClient";
 import {
   createTheme,
   ThemeProvider,
@@ -114,8 +115,6 @@ const StyledTableRow = withStyles((theme) => ({
     },
   },
 }))(TableRow);
-
-let url = "http://10.20.57.234/SIEBackEnd/";
 
 let nameColumn = [
   {
