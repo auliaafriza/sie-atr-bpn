@@ -1,4 +1,4 @@
-import { apiClient } from "./apiClient";
+import { apiClient, apiClientLogin } from "./apiClient";
 
 export const getSatkerApi = () => {
   // apiClientRB.defaults.headers["Authorization"] = "Bearer " + token;
@@ -23,5 +23,5 @@ export const getWilayahApi = () => {
 };
 
 export const getWhoamiApi = () => {
-  return apiClient.get(`http://siedev.atrbpn.go.id/SIEBackend/ApiUsers/WhoAmI`);
+  return apiClientLogin.get(`ApiUsers/WhoAmI`);
 };

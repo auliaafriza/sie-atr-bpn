@@ -19,6 +19,7 @@ import {
   GET_WHO_AM_I_PENDING,
   GET_WHO_AM_I_FULFILLED,
   GET_WHO_AM_I_REJECTED,
+  RESET_WHO_AM_I,
 } from "../actions/actionTypes";
 
 const initialstate = {
@@ -29,6 +30,7 @@ const initialstate = {
   wilayah: [],
   whoAmI: "",
   error: {},
+  status: "",
 };
 
 const reducer = (state = initialstate, action) => {
@@ -136,6 +138,7 @@ const reducer = (state = initialstate, action) => {
         ...state,
         whoAmI: data,
         loading: false,
+        status: "success",
       };
     }
     case GET_WHO_AM_I_REJECTED: {
@@ -144,6 +147,15 @@ const reducer = (state = initialstate, action) => {
         loading: false,
         whoAmI: "",
         errors: action.payload.error,
+        status: "failed",
+      };
+    }
+    case RESET_WHO_AM_I: {
+      return {
+        ...state,
+        loading: false,
+        whoAmI: "",
+        status: "",
       };
     }
 
