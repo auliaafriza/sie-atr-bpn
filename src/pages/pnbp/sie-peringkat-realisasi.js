@@ -70,20 +70,15 @@ import "react-toastify/dist/ReactToastify.css";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { getKantorPNBP } from "../../actions/pnbpAction";
+import { tahunData } from "../../functionGlobal/globalDataAsset";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const dataTemp = [
   {
-    ranking: 1,
-    nama_satker: "Direktorat",
-    realisasi: 0,
-  },
-  {
-    ranking: 1,
-    nama_satker: "Direktorat",
-    realisasi: 10,
+    label: "Kantor",
+    value: 0,
   },
 ];
 
@@ -141,24 +136,17 @@ const PeringkatRealisasi = () => {
 
   const [dataFilter, setDataFilter] = useState([
     {
-      kode: "28",
-      kanwil: "Kantor Wilayah Provinsi Banten",
-    },
-    {
-      kode: "10",
-      kanwil: "Kantor Wilayah Provinsi Jawa Barat",
+      kode: "01",
+      kanwil: "Kantor Wilayah Provinsi Aceh",
     },
   ]);
-  const [dataFilterKantor, setDataFilterKantor] = useState([
-    {
-      kode: "2801",
-      kantor: "Kantor Pertanahan Kabupaten Serang",
-    },
-  ]);
+  const [dataFilterKantor, setDataFilterKantor] = useState([]);
 
   const [hideText, setHideText] = useState(false);
   const [hideTextKantor, setHideTextKantor] = useState(false);
 
+  const [tahunAwal, setTahunAwal] = useState("2021");
+  const [jenisGroup, setJenisGroup] = useState("kanwil");
   const [level, setLevel] = useState("Tertinggi");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
@@ -183,6 +171,19 @@ const PeringkatRealisasi = () => {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+  };
+
+  const handleChangeAwal = (event) => {
+    setTipe(event.target.value);
+  };
+
+  const handleChangeJenisGroup = (event) => {
+    setJenisGroup(event.target.value);
+    if (event.target.value == "kanwil") {
+      setDataFilterKantor([]);
+    } else {
+      setDataFilter([]);
+    }
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -226,18 +227,19 @@ const PeringkatRealisasi = () => {
   };
 
   const getData = () => {
-    let temp = { kantor: [], kanwil: [] };
+    let temp = { kantor: [], wilayah: [] };
     dataFilterKantor && dataFilterKantor.length != 0
       ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
       : [];
     dataFilter && dataFilter.length != 0
-      ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
+      ? dataFilter.map((item) => temp.wilayah.push(item.kanwil))
       : [];
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_peringkat_realisasi?peringkat=${level}`
+      .post(
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_peringkat_realisasi?peringkat=${level}& tahun=${tahunAwal}&jenisGroup=${jenisGroup}`,
+        temp
       )
       .then(function (response) {
         setData(response.data.data);
@@ -351,7 +353,7 @@ const PeringkatRealisasi = () => {
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
-                dataKey="nama_satker"
+                dataKey="label"
                 angle={60}
                 interval={0}
                 tick={{
@@ -374,7 +376,7 @@ const PeringkatRealisasi = () => {
               </YAxis>
               <Tooltip content={<CustomTooltip />} />
               {/* <Legend /> */}
-              <Bar dataKey="realisasi" fill="#8FBC8F" />
+              <Bar dataKey="value" fill="#8FBC8F" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -873,6 +875,69 @@ const PeringkatRealisasi = () => {
               alignItems="center"
               spacing={2}
             >
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={2}
+              >
+                <Grid item xs={6}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Tahun
+                  </Typography>
+                  <FormControl className={classes.formControl}>
+                    <Select
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={tahunAwal}
+                      onChange={handleChangeAwal}
+                      label="Tahun"
+                      className={classes.selectStyle}
+                      disableUnderline
+                    >
+                      {tahunData.map((item, i) => {
+                        return (
+                          <MenuItem value={item.id} key={i}>
+                            {item.value}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Jenis Group
+                  </Typography>
+                  <FormControl className={classes.formControl}>
+                    <Select
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={jenisGroup}
+                      onChange={handleChangeJenisGroup}
+                      label="Jenis Group"
+                      className={classes.selectStyle}
+                      disableUnderline
+                    >
+                      <MenuItem value={"kanwil"} key={"kanwil"}>
+                        kanwil
+                      </MenuItem>
+                      <MenuItem value={"kantor"} key={"kantor"}>
+                        kantor
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
               <Grid item xs={6}>
                 <Typography
                   className={classes.isiTextStyle}
@@ -1142,7 +1207,7 @@ const PeringkatRealisasi = () => {
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
-                      dataKey="nama_satker"
+                      dataKey="label"
                       angle={60}
                       interval={0}
                       tick={{
@@ -1165,7 +1230,7 @@ const PeringkatRealisasi = () => {
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     {/* <Legend /> */}
-                    <Bar dataKey="realisasi" fill="#8FBC8F" />
+                    <Bar dataKey="value" fill="#8FBC8F" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

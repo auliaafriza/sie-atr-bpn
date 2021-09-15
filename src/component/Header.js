@@ -44,7 +44,7 @@ const Header = (props) => {
       //   : window.location.replace("http://siedev.atrbpn.go.id/SIEBackend");
     } else if (status == "failed") {
       dispatch(resetWhoami());
-      window.location.replace("http://siedev.atrbpn.go.id/SIEBackend");
+      // window.location.replace("http://siedev.atrbpn.go.id/SIEBackend");
     }
   }, [status]);
 

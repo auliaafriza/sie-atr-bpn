@@ -71,39 +71,28 @@ import "react-toastify/dist/ReactToastify.css";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { getKantorPNBP } from "../../actions/pnbpAction";
+import { tahunData } from "../../functionGlobal/globalDataAsset";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const dataTemp = [
   {
-    tahun: "2010",
+    label: "Kantor",
     alokasi_anggaran: 0,
-    anggaran: 0,
-  },
-  {
-    tahun: "2011",
-    alokasi_anggaran: 10,
-    anggaran: 0,
   },
 ];
 
 let nameColumn = [
   {
-    label: "Tahun",
-    value: "tahun",
+    label: "Kantor",
+    value: "label",
     isFixed: false,
     isLabel: true,
   },
   {
     label: "Alokasi Anggaran",
     value: "alokasi_anggaran",
-    isFixed: true,
-    isLabel: true,
-  },
-  {
-    label: "Anggaran",
-    value: "anggaran",
     isFixed: true,
     isLabel: true,
   },
@@ -147,23 +136,25 @@ const PaguMpOpsNon = () => {
 
   const [dataFilter, setDataFilter] = useState([
     {
-      kode: "28",
-      kanwil: "Kantor Wilayah Provinsi Banten",
-    },
-    {
-      kode: "10",
-      kanwil: "Kantor Wilayah Provinsi Jawa Barat",
+      kode: "09",
+      kanwil: "Kantor Wilayah Provinsi DKI Jakarta",
     },
   ]);
   const [dataFilterKantor, setDataFilterKantor] = useState([
     {
-      kode: "2801",
-      kantor: "Kantor Pertanahan Kabupaten Serang",
+      kode: "0903",
+      kantor: "Kantor Pertanahan Kota Administrasi Jakarta Barat",
+    },
+    {
+      kode: "0901",
+      kantor: "Kantor Pertanahan Kota Administrasi Jakarta Pusat",
     },
   ]);
 
   const [hideText, setHideText] = useState(false);
   const [hideTextKantor, setHideTextKantor] = useState(false);
+  const [tahunAwal, setTahunAwal] = useState("2017");
+  const [years, setYears] = useState("2022");
 
   const [tipe, setTipe] = useState("OPS");
   const [data, setData] = useState(dataTemp);
@@ -241,7 +232,10 @@ const PaguMpOpsNon = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(`${url}Aset&Keuangan/PNBP/sie_pnbp_pagu_mp_ops_non?tipe=${tipe}`)
+      .post(
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_pagu_mp_ops_non?tipe=${tipe}&tahunAwal=${tahunAwal}&tahunAkhir=${years}`,
+        temp
+      )
       .then(function (response) {
         setData(response.data.data);
         setComment(response.data);
@@ -277,17 +271,11 @@ const PaguMpOpsNon = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">Tahun {label}</p>
+          <p className="label">{label}</p>
           <p
             className="desc"
             style={{ color: payload[0].color }}
           >{`Alokasi Anggaran : Rp ${payload[0].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
-          <p
-            className="desc"
-            style={{ color: payload[1].color }}
-          >{`Anggaran : Rp ${payload[1].value
             .toFixed(2)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
         </div>
@@ -322,9 +310,9 @@ const PaguMpOpsNon = () => {
       <div className={classes.barChart}>
         {/* <img width={500} src={image} /> */}
         <ResponsiveContainer width="100%" height={250}>
-          <LineChart
+          <BarChart
             width={500}
-            height={300}
+            height={800}
             data={data}
             margin={{
               top: 5,
@@ -332,33 +320,40 @@ const PaguMpOpsNon = () => {
               left: 20,
               bottom: 5,
             }}
+            padding={{
+              top: 15,
+              right: 10,
+              left: 10,
+              bottom: 15,
+            }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="tahun" />
+            <XAxis
+              dataKey="label"
+              // angle={60}
+              // interval={0}
+              tick={{
+                // angle: 90,
+                // transform: "rotate(-35)",
+                // textAnchor: "start",
+                // dominantBaseline: "ideographic",
+                fontSize: 8,
+              }}
+              height={100}
+              // tickFormatter={DataFormaterX}
+            ></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Nilai Satuan 1 Juta"
+                value="Alokasi Anggaran"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
               />
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="alokasi_anggaran"
-              stroke="#FFDEAD"
-              activeDot={{ r: 8 }}
-              strokeWidth={3}
-            />
-            <Line
-              type="monotone"
-              dataKey="anggaran"
-              stroke="#4B0082"
-              strokeWidth={3}
-            />
-          </LineChart>
+            {/* <Legend /> */}
+            <Bar dataKey="alokasi_anggaran" fill="#8884d8" />
+          </BarChart>
         </ResponsiveContainer>
       </div>
       {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
@@ -380,23 +375,17 @@ const PaguMpOpsNon = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.tahun}>
+                    <StyledTableRow key={row.label}>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.tahun}
+                        {row.label}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         Rp{" "}
                         {row.alokasi_anggaran
-                          .toFixed(2)
-                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Rp{" "}
-                        {row.anggaran
                           .toFixed(2)
                           .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                       </StyledTableCell>
@@ -465,12 +454,8 @@ const PaguMpOpsNon = () => {
 
   let columnTable = [
     {
-      label: "tahun",
+      label: data,
       isFixed: false,
-    },
-    {
-      label: "anggaran",
-      isFixed: true,
     },
     {
       label: "alokasi_anggaran",
@@ -481,17 +466,13 @@ const PaguMpOpsNon = () => {
   let grafikView = [
     {
       dataKey: "alokasi_anggaran",
-      fill: "#FFDEAD",
-    },
-    {
-      dataKey: "anggaran",
-      fill: "#4B0082",
+      fill: "#8884d8",
     },
   ];
 
   let axis = {
-    xAxis: "tahun",
-    yAxis: "Nilai Satuan 1 Juta",
+    xAxis: data,
+    yAxis: "Alokasi Anggaran",
   };
   const title = "MP dana PNBP vs Realisasi Belanja";
   const handlePrint = () => {
@@ -502,7 +483,7 @@ const PaguMpOpsNon = () => {
         comment: comment,
         columnTable: columnTable,
         title: title,
-        grafik: "line",
+        grafik: "bar",
         nameColumn: nameColumn,
         grafikView: grafikView,
         axis: axis,
@@ -834,7 +815,7 @@ const PaguMpOpsNon = () => {
                             )
                           : "",
                       type: "Line",
-                      nameColumn: ["Tahun", "Alokasi Anggaran", "Anggaran"],
+                      nameColumn: ["Kantor", "Alokasi Anggaran"],
 
                       listTop10Comment: comment.listTop10Comment,
                     })
@@ -882,9 +863,9 @@ const PaguMpOpsNon = () => {
               <CardContent>
                 <div className={classes.barChart}>
                   <ResponsiveContainer width="100%" height={250}>
-                    <LineChart
+                    <BarChart
                       width={500}
-                      height={300}
+                      height={800}
                       data={data}
                       margin={{
                         top: 5,
@@ -892,33 +873,40 @@ const PaguMpOpsNon = () => {
                         left: 20,
                         bottom: 5,
                       }}
+                      padding={{
+                        top: 15,
+                        right: 10,
+                        left: 10,
+                        bottom: 15,
+                      }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="tahun" />
+                      <XAxis
+                        dataKey="label"
+                        // angle={60}
+                        // interval={0}
+                        tick={{
+                          // angle: 90,
+                          // transform: "rotate(-35)",
+                          // textAnchor: "start",
+                          // dominantBaseline: "ideographic",
+                          fontSize: 8,
+                        }}
+                        height={100}
+                        // tickFormatter={DataFormaterX}
+                      ></XAxis>
                       <YAxis tickFormatter={DataFormater}>
                         <Label
-                          value="Nilai Satuan 1 Juta"
+                          value="Alokasi Anggaran"
                           angle={-90}
                           position="insideBottomLeft"
                           offset={-5}
                         />
                       </YAxis>
                       <Tooltip content={<CustomTooltip />} />
-                      <Legend />
-                      <Line
-                        type="monotone"
-                        dataKey="alokasi_anggaran"
-                        stroke="#FFDEAD"
-                        activeDot={{ r: 8 }}
-                        strokeWidth={3}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="anggaran"
-                        stroke="#4B0082"
-                        strokeWidth={3}
-                      />
-                    </LineChart>
+                      {/* <Legend /> */}
+                      <Bar dataKey="alokasi_anggaran" fill="#8884d8" />
+                    </BarChart>
                   </ResponsiveContainer>
                 </div>
               </CardContent>
@@ -933,6 +921,70 @@ const PaguMpOpsNon = () => {
                 alignItems="center"
                 spacing={2}
               >
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={2}
+                >
+                  <Grid item xs={6}>
+                    <Typography
+                      className={classes.isiTextStyle}
+                      variant="h2"
+                      style={{ fontSize: 12 }}
+                    >
+                      Tahun Awal
+                    </Typography>
+                    <FormControl className={classes.formControl}>
+                      <Select
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        value={tahunAwal}
+                        onChange={handleChangeAwal}
+                        label="Tahun"
+                        className={classes.selectStyle}
+                        disableUnderline
+                      >
+                        {tahunData.map((item, i) => {
+                          return (
+                            <MenuItem value={item.id} key={i}>
+                              {item.value}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography
+                      className={classes.isiTextStyle}
+                      variant="h2"
+                      style={{ fontSize: 12 }}
+                    >
+                      Tahun Akhir
+                    </Typography>
+                    <FormControl className={classes.formControl}>
+                      <Select
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        value={years}
+                        onChange={handleChange}
+                        label="Tahun"
+                        className={classes.selectStyle}
+                        disableUnderline
+                      >
+                        {tahunData.map((item, i) => {
+                          return (
+                            <MenuItem value={item.id} key={i}>
+                              {item.value}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
                 <Grid item xs={6}>
                   <Typography
                     className={classes.isiTextStyle}
@@ -1163,7 +1215,7 @@ const PaguMpOpsNon = () => {
                               )
                             : "",
                         type: "Line",
-                        nameColumn: ["Tahun", "Alokasi Anggaran", "Anggaran"],
+                        nameColumn: ["Kantor", "Alokasi Anggaran"],
                         listTop10Comment: comment.listTop10Comment,
                       })
                     }
