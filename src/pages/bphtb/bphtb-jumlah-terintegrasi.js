@@ -340,16 +340,8 @@ const BPHTBDaerahTerintegrasi = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar
-              dataKey="jumlah_daerah_terintegrasi"
-              stackId="a"
-              fill="#C71585"
-            />
-            <Bar
-              dataKey="kum_jumlah_daerah_terintegrasi"
-              stackId="a"
-              fill="#ffc658"
-            />
+            <Bar dataKey="jumlah_daerah_terintegrasi" fill="#C71585" />
+            <Bar dataKey="kum_jumlah_daerah_terintegrasi" fill="#ffc658" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -834,12 +826,10 @@ const BPHTBDaerahTerintegrasi = () => {
                       <Legend />
                       <Bar
                         dataKey="jumlah_daerah_terintegrasi"
-                        stackId="a"
                         fill="#C71585"
                       />
                       <Bar
                         dataKey="kum_jumlah_daerah_terintegrasi"
-                        stackId="a"
                         fill="#ffc658"
                       />
                     </BarChart>

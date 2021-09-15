@@ -1088,6 +1088,9 @@ const realisasiPenggunaan = () => {
                   <Autocomplete
                     multiple
                     id="kantor"
+                    getOptionDisabled={(options) =>
+                      dataFilterKantor.length >= 32 ? true : false
+                    }
                     name="kantor"
                     style={{ width: "100%", height: 50 }}
                     options={kantahList}

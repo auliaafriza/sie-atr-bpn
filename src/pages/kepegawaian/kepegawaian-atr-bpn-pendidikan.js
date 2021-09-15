@@ -1024,6 +1024,9 @@ const KepegawaianBpnPendidikan = () => {
                   </Typography>
                   <Autocomplete
                     multiple
+                    getOptionDisabled={(options) =>
+                      dataFilter.length >= 32 ? true : false
+                    }
                     id="kantor"
                     name="kantor"
                     style={{ width: "100%", height: 50 }}
@@ -1097,6 +1100,9 @@ const KepegawaianBpnPendidikan = () => {
                   </Typography>
                   <Autocomplete
                     multiple
+                    getOptionDisabled={(options) =>
+                      dataFilterKantor.length >= 32 ? true : false
+                    }
                     id="kantor"
                     name="kantor"
                     style={{ width: "100%", height: 50 }}

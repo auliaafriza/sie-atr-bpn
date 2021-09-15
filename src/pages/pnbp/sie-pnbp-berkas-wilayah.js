@@ -74,6 +74,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import { getKantorPNBP } from "../../actions/pnbpAction";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -213,7 +214,7 @@ const PnbpBerkasWilayah = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "PNBP dan jumlah berkas per Kegiatan",
+      "PNBP dan jumlah berkas layanan",
       data,
       ".xlsx"
     );
@@ -514,7 +515,7 @@ const PnbpBerkasWilayah = () => {
     xAxis: "wilayah",
     yAxis: "Jumlah Nilai PNBP dan berkas",
   };
-  const title = " PNBP dan jumlah berkas per Kegiatan";
+  const title = " PNBP dan jumlah berkas layanan";
   const handlePrint = () => {
     history.push({
       pathname: "/PrintData",
@@ -802,7 +803,7 @@ const PnbpBerkasWilayah = () => {
       >
         <Grid item xs={6}>
           <Typography className={classes.titleSection} variant="h2">
-            PNBP dan jumlah berkas per Kegiatan
+            PNBP dan jumlah berkas layanan
           </Typography>
         </Grid>
 
@@ -834,7 +835,7 @@ const PnbpBerkasWilayah = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "PNBP dan jumlah berkas per Kegiatan",
+                    title: "PNBP dan jumlah berkas layanan",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -1040,6 +1041,9 @@ const PnbpBerkasWilayah = () => {
                         : `${selected.length} Terpilih`
                       : "";
                   }}
+                  getOptionDisabled={(options) =>
+                    dataFilter.length >= 32 ? true : false
+                  }
                   value={dataFilter}
                   defaultValue={dataFilter}
                   renderInput={(params) => (
@@ -1067,6 +1071,9 @@ const PnbpBerkasWilayah = () => {
                 </Typography>
                 <Autocomplete
                   multiple
+                  getOptionDisabled={(options) =>
+                    dataFilterKantor.length >= 32 ? true : false
+                  }
                   id="kantor"
                   name="kantor"
                   style={{ width: "100%", height: 50 }}
@@ -1167,7 +1174,7 @@ const PnbpBerkasWilayah = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "PNBP dan jumlah berkas per Kegiatan",
+                      title: "PNBP dan jumlah berkas layanan",
                       grafik: data,
                       dataTable: "",
                       analisis:

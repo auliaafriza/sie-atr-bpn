@@ -288,7 +288,7 @@ const PaguMpOpsNon = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "MP dana PNBP vs Realisasi Belanja",
+      "Perbandingan Pagu vs MP OPS DAN NON OPS",
       data,
       ".xlsx"
     );
@@ -474,7 +474,7 @@ const PaguMpOpsNon = () => {
     xAxis: data,
     yAxis: "Alokasi Anggaran",
   };
-  const title = "MP dana PNBP vs Realisasi Belanja";
+  const title = "Perbandingan Pagu vs MP OPS DAN NON OPS";
   const handlePrint = () => {
     history.push({
       pathname: "/PrintData",
@@ -804,7 +804,7 @@ const PaguMpOpsNon = () => {
                   size="small"
                   onClick={() =>
                     handleOpen({
-                      title: "MP dana PNBP vs Realisasi Belanja",
+                      title: "Perbandingan Pagu vs MP OPS DAN NON OPS",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -995,6 +995,9 @@ const PaguMpOpsNon = () => {
                   </Typography>
                   <Autocomplete
                     multiple
+                    getOptionDisabled={(options) =>
+                      dataFilter.length >= 32 ? true : false
+                    }
                     id="kantor"
                     name="kantor"
                     style={{ width: "100%", height: 50 }}
@@ -1115,6 +1118,9 @@ const PaguMpOpsNon = () => {
                         : "";
                     }}
                     value={dataFilterKantor}
+                    getOptionDisabled={(options) =>
+                      dataFilterKantor.length >= 32 ? true : false
+                    }
                     defaultValue={dataFilterKantor}
                     renderInput={(params) => (
                       <TextField
@@ -1204,7 +1210,7 @@ const PaguMpOpsNon = () => {
                     href="#"
                     onClick={() =>
                       handleOpen({
-                        title: "MP dana PNBP vs Realisasi Belanja",
+                        title: "Perbandingan Pagu vs MP OPS DAN NON OPS",
                         grafik: data,
                         dataTable: "",
                         analisis:

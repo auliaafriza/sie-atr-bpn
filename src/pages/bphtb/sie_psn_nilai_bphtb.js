@@ -1127,6 +1127,9 @@ const realisasiPenggunaan = () => {
                         : "";
                     }}
                     defaultValue={dataFilterKantor}
+                    getOptionDisabled={(options) =>
+                      dataFilterKantor.length >= 32 ? true : false
+                    }
                     value={dataFilterKantor}
                     renderInput={(params) => (
                       <TextField

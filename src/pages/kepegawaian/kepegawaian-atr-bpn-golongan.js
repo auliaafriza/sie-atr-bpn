@@ -987,6 +987,9 @@ const KepegawaianBpnGol = () => {
                       setHideText(false);
                     }
                   }}
+                  getOptionDisabled={(options) =>
+                    dataFilter.length >= 32 ? true : false
+                  }
                   getOptionLabel={(option) => option.kanwil || ""}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
@@ -1060,6 +1063,9 @@ const KepegawaianBpnGol = () => {
                       setHideTextKantor(false);
                     }
                   }}
+                  getOptionDisabled={(options) =>
+                    dataFilterKantor.length >= 32 ? true : false
+                  }
                   getOptionLabel={(option) => option.kantor || ""}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>

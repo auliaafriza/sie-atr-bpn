@@ -1002,6 +1002,9 @@ const BPHTBJumlahBerkas = () => {
                       : "";
                   }}
                   value={dataFilter}
+                  getOptionDisabled={(options) =>
+                    dataFilter.length >= 32 ? true : false
+                  }
                   defaultValue={dataFilter}
                   renderInput={(params) => (
                     <TextField
@@ -1075,6 +1078,9 @@ const BPHTBJumlahBerkas = () => {
                       : "";
                   }}
                   value={dataFilterKantor}
+                  getOptionDisabled={(options) =>
+                    dataFilterKantor.length >= 32 ? true : false
+                  }
                   defaultValue={dataFilterKantor}
                   renderInput={(params) => (
                     <TextField

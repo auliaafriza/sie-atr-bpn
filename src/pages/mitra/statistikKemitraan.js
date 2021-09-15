@@ -1004,6 +1004,78 @@ const KepegawaianOrganisasi = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
+                  Pilih Kanwil
+                </Typography>
+                <Autocomplete
+                  multiple
+                  id="kanwil"
+                  name="kanwil"
+                  style={{ width: "100%", height: 50 }}
+                  options={kanwilRed}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeKanwil(newValue);
+                  }}
+                  getOptionLabel={(option) => option.kanwil || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          kanwil && kanwil.length != 0
+                            ? kanwil
+                                .map((item) => item.kanwil)
+                                .indexOf(option.kanwil) > -1
+                            : false
+                        }
+                      />
+                      {option.kanwil}
+                    </React.Fragment>
+                  )}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setHideTextKantor(true);
+                    else {
+                      setHideTextKantor(false);
+                    }
+                  }}
+                  renderTags={(selected) => {
+                    return selected.length != 0
+                      ? hideTextKantor
+                        ? ""
+                        : `${selected.length} Terpilih`
+                      : "";
+                  }}
+                  value={kanwil}
+                  getOptionDisabled={(options) =>
+                    kanwil.length >= 32 ? true : false
+                  }
+                  defaultValue={kanwil}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={kanwil.length != 0 ? "" : "Pilih Kanwil"}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={5}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
                   Pilih Kantah
                 </Typography>
 
@@ -1054,6 +1126,9 @@ const KepegawaianOrganisasi = () => {
                       : "";
                   }}
                   value={kantor}
+                  getOptionDisabled={(options) =>
+                    kantor.length >= 32 ? true : false
+                  }
                   defaultValue={kantor}
                   renderInput={(params) => (
                     <TextField
@@ -1064,75 +1139,6 @@ const KepegawaianOrganisasi = () => {
                       }}
                       style={{ marginTop: 5 }}
                       placeholder={kantor.length != 0 ? "" : "Pilih Kantah"}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={5}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Pilih Kanwil
-                </Typography>
-                <Autocomplete
-                  multiple
-                  id="kanwil"
-                  name="kanwil"
-                  style={{ width: "100%", height: 50 }}
-                  options={kanwilRed}
-                  classes={{
-                    option: classes.option,
-                  }}
-                  disableUnderline
-                  className={classes.formControl}
-                  autoHighlight
-                  onChange={(event, newValue) => {
-                    handleChangeKanwil(newValue);
-                  }}
-                  getOptionLabel={(option) => option.kanwil || ""}
-                  renderOption={(option, { selected }) => (
-                    <React.Fragment>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={
-                          kanwil && kanwil.length != 0
-                            ? kanwil
-                                .map((item) => item.kanwil)
-                                .indexOf(option.kanwil) > -1
-                            : false
-                        }
-                      />
-                      {option.kanwil}
-                    </React.Fragment>
-                  )}
-                  onInputChange={(_event, value, reason) => {
-                    if (reason == "input") setHideTextKantor(true);
-                    else {
-                      setHideTextKantor(false);
-                    }
-                  }}
-                  renderTags={(selected) => {
-                    return selected.length != 0
-                      ? hideTextKantor
-                        ? ""
-                        : `${selected.length} Terpilih`
-                      : "";
-                  }}
-                  value={kanwil}
-                  defaultValue={kanwil}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      InputProps={{
-                        ...params.InputProps,
-                        disableUnderline: true,
-                      }}
-                      style={{ marginTop: 5 }}
-                      placeholder={kanwil.length != 0 ? "" : "Pilih Kanwil"}
                     />
                   )}
                 />

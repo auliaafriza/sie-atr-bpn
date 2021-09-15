@@ -410,6 +410,10 @@ const KepegawaianBpnJabatan = () => {
     );
   };
 
+  const DataFormaterX = (val) => {
+    return val ? val.slice(1, 5) : val;
+  };
+
   const handlePrint = useReactToPrint({
     content: () => inputRef.current,
   });
@@ -452,7 +456,7 @@ const KepegawaianBpnJabatan = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="label"></XAxis>
+            <XAxis dataKey="label" tickFormatter={DataFormaterX}></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value="Nilai Tunggakan"
@@ -1189,7 +1193,7 @@ const KepegawaianBpnJabatan = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="label" />
+                    <XAxis dataKey="label" tickFormatter={DataFormaterX} />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
                         value="Nilai Tunggakan"
