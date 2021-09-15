@@ -314,6 +314,16 @@ const RealisasiAnggaran = () => {
     }
   };
 
+  const DataFormaterX = (val) => {
+    return val && val.indexOf("Kantor Pertanahan Kota") > -1
+      ? val.replace("Kantor Pertanahan Kota ", "")
+      : val && val.indexOf("Kantor Pertanahan Kabupaten") > -1
+      ? val.replace("Kantor Pertanahan Kabupaten ", "Kab ")
+      : val && val.indexOf("Kantor Pertanahan") > -1
+      ? val.replace("Kantor Pertanahan ", "")
+      : val;
+  };
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
@@ -367,7 +377,19 @@ const RealisasiAnggaran = () => {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="label"></XAxis>
+        <XAxis
+          dataKey="label"
+          interval={0}
+          tick={{
+            angle: 60,
+            transform: "rotate(-35)",
+            textAnchor: "start",
+            dominantBaseline: "ideographic",
+            fontSize: 8,
+          }}
+          height={100}
+          tickFormatter={DataFormaterX}
+        ></XAxis>
         <YAxis tickFormatter={DataFormater}>
           <Label
             value="Nilai Anggaran Realisasi"
@@ -903,7 +925,19 @@ const RealisasiAnggaran = () => {
                       }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="label" />
+                      <XAxis
+                        dataKey="label"
+                        interval={0}
+                        tick={{
+                          angle: 60,
+                          transform: "rotate(-35)",
+                          textAnchor: "start",
+                          dominantBaseline: "ideographic",
+                          fontSize: 8,
+                        }}
+                        height={100}
+                        tickFormatter={DataFormaterX}
+                      />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
                           value="Nilai Anggaran Realisasi"

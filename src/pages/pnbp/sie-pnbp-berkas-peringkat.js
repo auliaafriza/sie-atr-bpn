@@ -309,7 +309,7 @@ const PnbpBerkasPeringkat = () => {
     return value && value.indexOf("Kantor Pertanahan") > -1
       ? value.replace("Kantor Pertanahan ", "")
       : value && value.indexOf("Kantor Wilayah") > -1
-      ? value.replace("Kantor Wilayah Bpn Provinsi ", "")
+      ? value.replace("Kantor Wilayah ", "")
       : value && value.indexOf("Kantor Badan Pertanahan") > -1
       ? value.replace("Kantor Badan Pertanahan", "")
       : value && value.indexOf("Kantor Badan") > -1
@@ -354,16 +354,16 @@ const PnbpBerkasPeringkat = () => {
             <XAxis
               dataKey="label"
               // angle={60}
-              // interval={0}
+              interval={0}
               tick={{
-                // angle: 90,
-                // transform: "rotate(-35)",
-                // textAnchor: "start",
-                // dominantBaseline: "ideographic",
+                angle: 60,
+                transform: "rotate(-35)",
+                textAnchor: "start",
+                dominantBaseline: "ideographic",
                 fontSize: 8,
               }}
               height={100}
-              // tickFormatter={DataFormaterX}
+              tickFormatter={DataFormaterX}
             ></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
@@ -1197,16 +1197,16 @@ const PnbpBerkasPeringkat = () => {
                     <XAxis
                       dataKey="label"
                       // angle={60}
-                      // interval={0}
+                      interval={0}
                       tick={{
-                        // angle: 90,
-                        // transform: "rotate(-35)",
-                        // textAnchor: "start",
-                        // dominantBaseline: "ideographic",
+                        angle: 60,
+                        transform: "rotate(-35)",
+                        textAnchor: "start",
+                        dominantBaseline: "ideographic",
                         fontSize: 8,
                       }}
                       height={100}
-                      // tickFormatter={DataFormaterX}
+                      tickFormatter={DataFormaterX}
                     />
                     <YAxis tickFormatter={DataFormater}>
                       <Label

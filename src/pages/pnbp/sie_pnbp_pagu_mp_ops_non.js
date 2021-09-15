@@ -294,6 +294,14 @@ const PaguMpOpsNon = () => {
     );
   };
 
+  const DataFormaterX = (val) => {
+    return val && val.indexOf("Kantor Pertanahan Kota Administrasi") > -1
+      ? val.replace("Kantor Pertanahan Kota Administrasi ", "Adm ")
+      : val && val.indexOf("Kantor Pertanahan") > -1
+      ? val.replace("Kantor Pertanahan ", "")
+      : val;
+  };
+
   const body = (
     <div className={classes.paper}>
       <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
@@ -340,7 +348,7 @@ const PaguMpOpsNon = () => {
                 fontSize: 8,
               }}
               height={100}
-              // tickFormatter={DataFormaterX}
+              tickFormatter={DataFormaterX}
             ></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
@@ -893,7 +901,7 @@ const PaguMpOpsNon = () => {
                           fontSize: 8,
                         }}
                         height={100}
-                        // tickFormatter={DataFormaterX}
+                        tickFormatter={DataFormaterX}
                       ></XAxis>
                       <YAxis tickFormatter={DataFormater}>
                         <Label

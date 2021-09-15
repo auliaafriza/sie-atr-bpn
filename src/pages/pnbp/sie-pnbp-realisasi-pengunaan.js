@@ -200,11 +200,14 @@ const realisasiPenggunaan = () => {
     setOpen(false);
   };
 
-  const DataFormaterX = (value) => {
-    return (
-      value.replace("Kantor Pertanahan ", "") ||
-      value.replace("Kantor Wilayah ", "")
-    );
+  const DataFormaterX = (val) => {
+    return val && val.indexOf("Kantor Pertanahan Kota") > -1
+      ? val.replace("Kantor Pertanahan Kota ", "")
+      : val && val.indexOf("Kantor Pertanahan Kabupaten") > -1
+      ? val.replace("Kantor Pertanahan Kabupaten ", "Kab ")
+      : val && val.indexOf("Kantor Pertanahan") > -1
+      ? val.replace("Kantor Pertanahan ", "")
+      : val;
   };
 
   const handleChangeFilter = (event) => {
@@ -350,16 +353,16 @@ const realisasiPenggunaan = () => {
             <XAxis
               dataKey="label"
               // angle={60}
-              // interval={0}
+              interval={0}
               tick={{
-                // angle: 90,
-                // transform: "rotate(-35)",
-                // textAnchor: "start",
-                // dominantBaseline: "ideographic",
+                angle: 60,
+                transform: "rotate(-35)",
+                textAnchor: "start",
+                dominantBaseline: "ideographic",
                 fontSize: 8,
               }}
               height={100}
-              // tickFormatter={DataFormaterX}
+              tickFormatter={DataFormaterX}
             />
             <YAxis tickFormatter={DataFormater}>
               <Label
@@ -888,16 +891,16 @@ const realisasiPenggunaan = () => {
                       <XAxis
                         dataKey="label"
                         // angle={60}
-                        // interval={0}
+                        interval={0}
                         tick={{
-                          // angle: 90,
-                          // transform: "rotate(-35)",
-                          // textAnchor: "start",
-                          // dominantBaseline: "ideographic",
+                          angle: 60,
+                          transform: "rotate(-35)",
+                          textAnchor: "start",
+                          dominantBaseline: "ideographic",
                           fontSize: 8,
                         }}
                         height={100}
-                        // tickFormatter={DataFormaterX}
+                        tickFormatter={DataFormaterX}
                       />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
