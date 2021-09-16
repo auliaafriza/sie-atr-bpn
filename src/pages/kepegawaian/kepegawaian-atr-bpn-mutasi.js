@@ -354,7 +354,7 @@ const KepegawaianBpnMutasi = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="kanwil"></XAxis>
-            <YAxis tickFormatter={DataFormater}>
+            <YAxis tickFormatter={DataFormater} allowDecimals={false}>
               <Label
                 value="Nilai Satuan 1 Juta"
                 angle={-90}
@@ -1116,10 +1116,7 @@ const KepegawaianBpnMutasi = () => {
                     <YAxis
                       tickFormatter={DataFormater}
                       type="number"
-                      domain={[
-                        (dataMin) => 0 - Math.abs(dataMin),
-                        (dataMax) => dataMax * 2,
-                      ]}
+                      allowDecimals={false}
                     >
                       <Label
                         value="Nilai Satuan 1 Juta"

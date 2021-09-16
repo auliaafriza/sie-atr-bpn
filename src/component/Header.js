@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -13,16 +13,19 @@ import { AiOutlineLogout } from "react-icons/ai";
 // import PropTypes from "prop-types";
 import styles from "./styles";
 import Logo from "../assets/img/fav.png";
-import { resetWhoami, getWhoami } from "../actions/globalActions";
+import { resetWhoami, getWhoami, setUsername } from "../actions/globalActions";
+import queryString from "query-string";
 
 const Header = (props) => {
   const classes = styles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const parsed = queryString.parse(location.search);
   // const [open, setOpen] = React.useState(false);
-  const userName = useSelector((state) => state.globalReducer.whoAmI);
-  const status = useSelector((state) => state.globalReducer.status);
-
+  // const userName = useSelector((state) => state.globalReducer.whoAmI);
+  const userName = parsed ? parsed.u : null;
+  const user = useSelector((state) => state.globalReducer.user);
+  const [userNm, setUserNm] = useState("");
   const dispatch = useDispatch();
   // let userName = localStorage.getItem("usernameSie");
   const isMenuOpen = Boolean(anchorEl);
@@ -37,16 +40,22 @@ const Header = (props) => {
   }, []);
 
   useEffect(() => {
-    if (status == "success") {
-      dispatch(resetWhoami());
-      // userName
-      //   ? null
-      //   : window.location.replace("http://siedev.atrbpn.go.id/SIEBackend");
-    } else if (status == "failed") {
-      dispatch(resetWhoami());
-      // window.location.replace("http://siedev.atrbpn.go.id/SIEBackend");
+    // if (status == "success") {
+    //   dispatch(resetWhoami());
+    //   // userName
+    //   //   ? null
+    //   //   : window.location.replace("http://10.20.56.205:5000/Auth/Login");
+    // } else if (status == "failed") {
+    //   dispatch(resetWhoami());
+    //   // window.location.replace("http://10.20.56.205:5000/Auth/Login");
+    // }
+    if (userName) {
+      setUserNm(userName);
     }
-  }, [status]);
+    userName || userNm
+      ? null
+      : window.location.replace("http://10.20.56.205:5000/Auth/Login");
+  }, []);
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -110,7 +119,7 @@ const Header = (props) => {
             variant="h6"
             style={{ fontSize: "16px", marginTop: "10px", margin: "10px" }}
           >
-            {userName}
+            {userNm}
           </Typography>
           <IconButton
             edge="end"

@@ -272,10 +272,12 @@ const PeringkatRealisasi = () => {
     return value && value.indexOf("Kantor Pertanahan") > -1
       ? value.replace("Kantor Pertanahan ", "")
       : value && value.indexOf("Kantor Wilayah") > -1
-      ? value.replace("Kantor Wilayah Bpn Provinsi ", "")
+      ? value.replace("Kantor Wilayah ", "")
       : value && value.indexOf("Kantor Badan Pertanahan") > -1
       ? value.replace("Kantor Badan Pertanahan", "")
-      : value.replace("Kantor Badan ", "");
+      : value && value.indexOf("Kantor Badan") > -1
+      ? value.replace("Kantor Badan ", "")
+      : value;
   };
 
   const DataFormater = (number) => {
@@ -364,7 +366,7 @@ const PeringkatRealisasi = () => {
                   fontSize: 8,
                 }}
                 height={100}
-                // tickFormatter={DataFormaterX}
+                tickFormatter={DataFormaterX}
               ></XAxis>
               <YAxis tickFormatter={DataFormater}>
                 <Label
@@ -875,69 +877,69 @@ const PeringkatRealisasi = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid
-                container
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                spacing={2}
-              >
-                <Grid item xs={6}>
-                  <Typography
-                    className={classes.isiTextStyle}
-                    variant="h2"
-                    style={{ fontSize: 12 }}
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Tahun
+                </Typography>
+                <FormControl className={classes.formControl}>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={tahunAwal}
+                    onChange={handleChangeAwal}
+                    label="Tahun"
+                    className={classes.selectStyle}
+                    disableUnderline
                   >
-                    Tahun
-                  </Typography>
-                  <FormControl className={classes.formControl}>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={tahunAwal}
-                      onChange={handleChangeAwal}
-                      label="Tahun"
-                      className={classes.selectStyle}
-                      disableUnderline
-                    >
-                      {tahunData.map((item, i) => {
-                        return (
-                          <MenuItem value={item.id} key={i}>
-                            {item.value}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography
-                    className={classes.isiTextStyle}
-                    variant="h2"
-                    style={{ fontSize: 12 }}
-                  >
-                    Jenis Group
-                  </Typography>
-                  <FormControl className={classes.formControl}>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={jenisGroup}
-                      onChange={handleChangeJenisGroup}
-                      label="Jenis Group"
-                      className={classes.selectStyle}
-                      disableUnderline
-                    >
-                      <MenuItem value={"kanwil"} key={"kanwil"}>
-                        kanwil
-                      </MenuItem>
-                      <MenuItem value={"kantor"} key={"kantor"}>
-                        kantor
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
+                    {tahunData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
               </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Jenis Group
+                </Typography>
+                <FormControl className={classes.formControl}>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={jenisGroup}
+                    onChange={handleChangeJenisGroup}
+                    label="Jenis Group"
+                    className={classes.selectStyle}
+                    disableUnderline
+                  >
+                    <MenuItem value={"kanwil"} key={"kanwil"}>
+                      kanwil
+                    </MenuItem>
+                    <MenuItem value={"kantor"} key={"kantor"}>
+                      kantor
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
               <Grid item xs={6}>
                 <Typography
                   className={classes.isiTextStyle}
@@ -1224,7 +1226,7 @@ const PeringkatRealisasi = () => {
                         fontSize: 8,
                       }}
                       height={100}
-                      // tickFormatter={DataFormaterX}
+                      tickFormatter={DataFormaterX}
                     />
                     <YAxis tickFormatter={DataFormater}>
                       <Label

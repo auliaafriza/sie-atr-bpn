@@ -354,7 +354,18 @@ const KepegawaianBpnJabatan = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="jabatan"></XAxis>
+            <XAxis
+              dataKey="jabatan"
+              interval={0}
+              tick={{
+                angle: 60,
+                transform: "rotate(-35)",
+                textAnchor: "start",
+                dominantBaseline: "ideographic",
+                fontSize: 8,
+              }}
+              height={100}
+            ></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value="Jumlah Pegawai"
@@ -364,7 +375,7 @@ const KepegawaianBpnJabatan = () => {
               />
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
+            {/* <Legend /> */}
             <Bar dataKey="jumlah" fill="#8884d8" name="Jumlah Pegawai" />
           </BarChart>
         </ResponsiveContainer>
@@ -1200,7 +1211,18 @@ const KepegawaianBpnJabatan = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="jabatan" />
+                    <XAxis
+                      dataKey="jabatan"
+                      interval={0}
+                      tick={{
+                        angle: 60,
+                        transform: "rotate(-35)",
+                        textAnchor: "start",
+                        dominantBaseline: "ideographic",
+                        fontSize: 8,
+                      }}
+                      height={100}
+                    />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
                         value="Jumlah Pegawai"
@@ -1210,7 +1232,7 @@ const KepegawaianBpnJabatan = () => {
                       />
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
-                    <Legend />
+                    {/* <Legend /> */}
                     <Bar
                       dataKey="jumlah"
                       fill="#8884d8"

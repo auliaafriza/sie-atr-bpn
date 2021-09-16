@@ -37,10 +37,10 @@ const BPHTBPage = () => {
           maeginBottom: 20,
         }}
       >
-        <BPHTBJumlahBerkas />
+        {/* <BPHTBJumlahBerkas /> */}
         <BPHTBJumlahIntegrasi />
+        <NilaiBPHTB />
       </div>
-      <NilaiBPHTB />
     </div>
   );
 };

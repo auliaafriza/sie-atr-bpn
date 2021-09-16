@@ -74,11 +74,11 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const dataTemp = [
   {
-    tipe_mitrakerja: "",
+    tahun: "",
     jumlah: 0,
   },
   {
-    tipe_mitrakerja: "",
+    tahun: "",
     jumlah: 0,
   },
 ];
@@ -115,14 +115,8 @@ const StyledTableRow = withStyles((theme) => ({
 
 let nameColumn = [
   {
-    label: "Tipe Mitra Kerja",
-    value: "tipe_mitrakerja",
-    isFixed: false,
-    isLabel: false,
-  },
-  {
-    label: "Kanwil",
-    value: "kanwil",
+    label: "Tahun",
+    value: "tahun",
     isFixed: false,
     isLabel: false,
   },
@@ -136,7 +130,7 @@ let nameColumn = [
 
 let columnTable = [
   {
-    label: "tipe_mitrakerja",
+    label: "tahun",
     isFixed: false,
   },
   {
@@ -144,7 +138,7 @@ let columnTable = [
     isFixed: false,
   },
   {
-    label: "tipe_mitrakerja",
+    label: "tahun",
     isFixed: false,
   },
   {
@@ -161,7 +155,7 @@ let grafikView = [
 ];
 
 let axis = {
-  xAxis: "tipe_mitrakerja",
+  xAxis: "tahun",
   yAxis: "Jumlah",
 };
 
@@ -184,6 +178,7 @@ const KepegawaianOrganisasi = () => {
   const [kanwilDis, setKanwilDis] = useState("");
   const [kantorDis, setKantorDis] = useState("");
   const [satkerDis, setSatkerDis] = useState("");
+  const [jenis, setJenis] = useState("PPAT");
 
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
@@ -250,7 +245,7 @@ const KepegawaianOrganisasi = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}Mitra/StatistikKemitraan/sie_mitra_statistik_kemitraan?tahunAwal=${tahunAwal}&tahunAkhir=${years}`,
+        `${url}Mitra/StatistikKemitraan/sie_mitra_statistik_kemitraan?type=${jenis}&tahunAwal=${tahunAwal}&tahunAkhir=${years}`,
         temp
       )
       .then(function (response) {
@@ -279,11 +274,15 @@ const KepegawaianOrganisasi = () => {
     setTahunAwal(event.target.value);
   };
 
+  const handleChangeTipe = (event) => {
+    setJenis(event.target.value);
+  };
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">{label}</p>
+          <p className="label">Tahun {label}</p>
           <p
             className="desc"
             style={{ color: payload[0].color }}
@@ -355,15 +354,15 @@ const KepegawaianOrganisasi = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              angle={60}
-              interval={0}
-              tick={{
-                transform: "rotate(-35)",
-                textAnchor: "start",
-                dominantBaseline: "ideographic",
-                fontSize: 8,
-              }}
-              dataKey="tipe_mitrakerja"
+              // angle={60}
+              // interval={0}
+              // tick={{
+              //   transform: "rotate(-35)",
+              //   textAnchor: "start",
+              //   dominantBaseline: "ideographic",
+              //   fontSize: 8,
+              // }}
+              dataKey="tahun"
               // tickFormatter={DataFormaterX}
             />
             <YAxis tickFormatter={DataFormater}>
@@ -403,16 +402,13 @@ const KepegawaianOrganisasi = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.tipe_mitrakerja}>
+                    <StyledTableRow key={row.tahun}>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.tipe_mitrakerja}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.kanwil}
+                        {row.tahun}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {row.jumlah}
@@ -770,8 +766,8 @@ const KepegawaianOrganisasi = () => {
       >
         <Grid item xs={9}>
           <Typography className={classes.titleSection} variant="h2">
-            Statistik: jenis (ppat, surveryor berlisensi (mitra), penilai
-            pertanahan, jasa keuangan, lembaga permerintah pusat, perorangan)
+            Statistik: jenis (ppat, surveryor berlisensi (mitra) dan jasa
+            keuangan)
           </Typography>
         </Grid>
         <Grid
@@ -807,7 +803,7 @@ const KepegawaianOrganisasi = () => {
                 onClick={() =>
                   handleOpen({
                     title:
-                      "Statistik: jenis (ppat, surveryor berlisensi (mitra), penilai pertanahan, jasa keuangan, lembaga permerintah pusat, perorangan)",
+                      "Statistik: jenis (ppat, surveryor berlisensi (mitra) dan jasa keuangan)",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -840,7 +836,7 @@ const KepegawaianOrganisasi = () => {
               placement="top"
               onClick={() =>
                 handlePrintData(
-                  "Statistik: jenis (ppat, surveryor berlisensi (mitra), penilai pertanahan, jasa keuangan, lembaga permerintah pusat, perorangan)",
+                  "Statistik: jenis (ppat, surveryor berlisensi (mitra) dan jasa keuangan)",
                   columnTable
                 )
               }
@@ -897,15 +893,15 @@ const KepegawaianOrganisasi = () => {
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
-                      angle={60}
-                      interval={0}
-                      tick={{
-                        transform: "rotate(-35)",
-                        textAnchor: "start",
-                        dominantBaseline: "ideographic",
-                        fontSize: 8,
-                      }}
-                      dataKey="tipe_mitrakerja"
+                      // angle={60}
+                      // interval={0}
+                      // tick={{
+                      //   transform: "rotate(-35)",
+                      //   textAnchor: "start",
+                      //   dominantBaseline: "ideographic",
+                      //   fontSize: 8,
+                      // }}
+                      dataKey="tahun"
                       // tickFormatter={DataFormaterX}
                     />
                     <YAxis tickFormatter={DataFormater}>
@@ -998,7 +994,7 @@ const KepegawaianOrganisasi = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={5}>
+              <Grid item xs={6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1070,7 +1066,7 @@ const KepegawaianOrganisasi = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={5}>
+              <Grid item xs={6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1143,13 +1139,46 @@ const KepegawaianOrganisasi = () => {
                   )}
                 />
               </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Jenis Statistik
+                </Typography>
+                <FormControl className={classes.formControl}>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={jenis}
+                    onChange={handleChangeTipe}
+                    label="Jenis Statistik"
+                    className={classes.selectStyle}
+                    disableUnderline
+                  >
+                    <MenuItem value="PPAT">PPAT</MenuItem>
+                    <MenuItem value="SURVEYOR">Surveyor</MenuItem>
+                    <MenuItem value="BANK">Jasa Keuangan</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+
               <Grid
                 container
                 direction="row"
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={2}
+                xs={6}
                 style={{ paddingTop: 40, paddingLeft: 20 }}
               >
                 <Button
@@ -1179,7 +1208,7 @@ const KepegawaianOrganisasi = () => {
             onClick={() =>
               handleOpen({
                 title:
-                  "Statistik: jenis (ppat, surveryor berlisensi (mitra), penilai pertanahan, jasa keuangan, lembaga permerintah pusat, perorangan)",
+                  "Statistik: jenis (ppat, surveryor berlisensi (mitra) dan jasa keuangan)",
                 grafik: data,
                 dataTable: "",
                 analisis:

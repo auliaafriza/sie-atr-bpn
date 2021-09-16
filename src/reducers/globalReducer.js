@@ -20,6 +20,7 @@ import {
   GET_WHO_AM_I_FULFILLED,
   GET_WHO_AM_I_REJECTED,
   RESET_WHO_AM_I,
+  SET_USERNAME,
 } from "../actions/actionTypes";
 
 const initialstate = {
@@ -31,6 +32,7 @@ const initialstate = {
   whoAmI: "",
   error: {},
   status: "",
+  user: "",
 };
 
 const reducer = (state = initialstate, action) => {
@@ -156,6 +158,12 @@ const reducer = (state = initialstate, action) => {
         loading: false,
         whoAmI: "",
         status: "",
+      };
+    }
+    case SET_USERNAME: {
+      return {
+        ...state,
+        user: action.payload,
       };
     }
 

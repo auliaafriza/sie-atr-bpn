@@ -171,6 +171,7 @@ const PaguMp = () => {
     nameColumn: [],
     listTop10Comment: [],
   });
+  const [tipe, setTipe] = useState("wilayah");
   const inputRef = createRef(null);
   const [image, takeScreenshot] = useScreenshot({
     type: "image/jpeg",
@@ -238,7 +239,7 @@ const PaguMp = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_pagu_mp?tahunAwal=${tahunAwal}&tahunAkhir=${years}`,
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_pagu_mp?jenisGroup=${tipe}&tahun=${years}`,
         temp
       )
       .then(function (response) {
@@ -270,6 +271,10 @@ const PaguMp = () => {
 
   const handleChangeAwal = (event) => {
     setTahunAwal(event.target.value);
+  };
+
+  const handleChangeTipe = (event) => {
+    setTipe(event.target.value);
   };
 
   const DataFormater = (number) => {
@@ -946,7 +951,7 @@ const PaguMp = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={6}>
+                {/* <Grid item xs={4}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -973,14 +978,14 @@ const PaguMp = () => {
                       })}
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid> */}
                 <Grid item xs={6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
-                    Tahun Akhir
+                    Pilih Tahun
                   </Typography>
                   <FormControl className={classes.formControl}>
                     <Select
@@ -988,7 +993,7 @@ const PaguMp = () => {
                       id="demo-simple-select-outlined"
                       value={years}
                       onChange={handleChange}
-                      label="Bulan"
+                      label="Tahun"
                       className={classes.selectStyle}
                       disableUnderline
                     >
@@ -1003,35 +1008,29 @@ const PaguMp = () => {
                   </FormControl>
                 </Grid>
 
-                {/* <Grid item xs={4}>
+                <Grid item xs={6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
-                    Pilih Bulan
+                    Pilih Berdasarkan
                   </Typography>
                   <FormControl className={classes.formControl}>
                     <Select
                       labelId="demo-simple-select-outlined-label"
                       id="demo-simple-select-outlined"
-                      value={bulan}
-                      onChange={handleChangeBulan}
-                      label="Bulan"
+                      value={tipe}
+                      onChange={handleChangeTipe}
+                      label="Grafik Berdaasarkan"
                       className={classes.selectStyle}
                       disableUnderline
                     >
-                      <MenuItem value="all">Semua Bulan</MenuItem>
-                      {bulanData.map((item, i) => {
-                        return (
-                          <MenuItem value={item.id} key={i}>
-                            {item.name}
-                          </MenuItem>
-                        );
-                      })}
+                      <MenuItem value="wilayah">Grafik per Wilayah</MenuItem>
+                      <MenuItem value="kantor">Grafik per Kantor</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid> */}
+                </Grid>
               </Grid>
               <Grid
                 container

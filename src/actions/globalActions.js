@@ -12,6 +12,7 @@ import {
   GET_WILAYAH,
   GET_WHO_AM_I,
   RESET_WHO_AM_I,
+  SET_USERNAME,
 } from "./actionTypes";
 
 export const getSatker = () => {
@@ -63,6 +64,15 @@ export const resetWhoami = () => {
   return (dispatch) => {
     return dispatch({
       type: RESET_WHO_AM_I,
+    });
+  };
+};
+
+export const setUsername = (data) => {
+  return (dispatch) => {
+    return dispatch({
+      type: SET_USERNAME,
+      payload: data,
     });
   };
 };
