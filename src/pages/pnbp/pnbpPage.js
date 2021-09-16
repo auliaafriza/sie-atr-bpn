@@ -57,7 +57,7 @@ const PnbpPage = () => {
       <RealisasiPenggunaan />
       {/* <PersentaseRealisasiBelanja /> */}
       {/* <RealisasiPenerimaan /> */}
-      <RealisasiTargetPenerimaan />
+      {/* <RealisasiTargetPenerimaan /> */}
       <PaguMp />
       <PaguMpOpsNon />
       {/* <AlokasiAnggaran /> */}
