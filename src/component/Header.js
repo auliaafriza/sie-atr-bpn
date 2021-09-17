@@ -15,6 +15,7 @@ import styles from "./styles";
 import Logo from "../assets/img/fav.png";
 import { resetWhoami, getWhoami, setUsername } from "../actions/globalActions";
 import queryString from "query-string";
+import moment from "moment";
 
 const Header = (props) => {
   const classes = styles();
@@ -27,7 +28,12 @@ const Header = (props) => {
   const user = useSelector((state) => state.globalReducer.user);
   const [userNm, setUserNm] = useState("");
   const dispatch = useDispatch();
-  // let userName = localStorage.getItem("usernameSie");
+  let userExpired = localStorage.getItem("user")
+    ? localStorage.getItem("user")
+    : null;
+  let dateExpired = localStorage.getItem("date")
+    ? localStorage.getItem("date")
+    : null;
   const isMenuOpen = Boolean(anchorEl);
   // const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -49,12 +55,16 @@ const Header = (props) => {
     //   dispatch(resetWhoami());
     //   // window.location.replace("http://10.20.56.205:5000/Auth/Login");
     // }
+    let dateTime = moment(new Date()).format("DD/MM/YYYY");
     if (userName) {
+      localStorage.setItem("user", userName);
+      localStorage.setItem("date", dateTime);
       setUserNm(userName);
+    } else if (dateTime <= dateExpired) {
+      setUserNm(userExpired);
+    } else {
+      window.location.replace("http://10.20.56.205:5000/Auth/Login");
     }
-    userName || userNm
-      ? null
-      : window.location.replace("http://10.20.56.205:5000/Auth/Login");
   }, []);
 
   const handleMobileMenuClose = () => {
@@ -119,7 +129,7 @@ const Header = (props) => {
             variant="h6"
             style={{ fontSize: "16px", marginTop: "10px", margin: "10px" }}
           >
-            {userNm}
+            {userNm || userExpired}
           </Typography>
           <IconButton
             edge="end"

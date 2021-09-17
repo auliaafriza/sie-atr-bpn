@@ -123,11 +123,11 @@ export const MENU_LIST = [
       //   name: "IKK/IKU",
       //   link: null,
       // },
-      {
-        icon: <GrMoney size={24} />,
-        name: "PNBP",
-        link: "/KinerjaLayanan/PNBP",
-      },
+      // {
+      //   icon: <GrMoney size={24} />,
+      //   name: "PNBP",
+      //   link: "/KinerjaLayanan/PNBP",
+      // },
       {
         icon: <FcDebt size={24} />,
         name: "Tunggakan",

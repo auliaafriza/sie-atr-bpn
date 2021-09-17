@@ -138,22 +138,14 @@ const PaguMp = () => {
   const dispatch = useDispatch();
   const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
   const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
-  const [dataFilter, setDataFilter] = useState([
-    {
-      kode: "09",
-      kanwil: "Kantor Wilayah Provinsi DKI Jakarta",
-    },
-  ]);
-  const [dataFilterKantor, setDataFilterKantor] = useState([
-    {
-      kode: "0903",
-      kantor: "Kantor Pertanahan Kota Administrasi Jakarta Barat",
-    },
-    {
-      kode: "0901",
-      kantor: "Kantor Pertanahan Kota Administrasi Jakarta Pusat",
-    },
-  ]);
+  const [dataFilter, setDataFilter] = useState({
+    kode: "09",
+    kanwil: "Kantor Wilayah Provinsi DKI Jakarta",
+  });
+  const [dataFilterKantor, setDataFilterKantor] = useState({
+    kode: "0903",
+    kantor: "Kantor Pertanahan Kota Administrasi Jakarta Barat",
+  });
   const [hideText, setHideText] = useState(false);
   const [hideTextKantor, setHideTextKantor] = useState(false);
   const [years, setYears] = useState("2021");
@@ -204,42 +196,48 @@ const PaguMp = () => {
   };
 
   const handleChangeFilter = (event) => {
-    if (event.length != 0) {
-      let temp = { kodeWilayah: [] };
-      event.map((item) => temp.kodeWilayah.push(item.kode));
-      dispatch(getKantorPNBP(temp));
-      setDataFilter([
-        ...dataFilter,
-        ...event.filter((option) => dataFilter.indexOf(option) === -1),
-      ]);
-    } else {
-      setDataFilter([]);
-    }
+    setDataFilter(event);
+    // if (event.length != 0) {
+    //   let temp = { kodeWilayah: [] };
+    //   event.map((item) => temp.kodeWilayah.push(item.kode));
+    //   dispatch(getKantorPNBP(temp));
+    //   setDataFilter([
+    //     ...dataFilter,
+    //     ...event.filter((option) => dataFilter.indexOf(option) === -1),
+    //   ]);
+    // } else {
+    //   setDataFilter([]);
+    // }
   };
 
   const handleChangeFilterKantor = (event) => {
-    if (event.length != 0) {
-      setDataFilterKantor([
-        ...dataFilterKantor,
-        ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
-      ]);
-    } else {
-      setDataFilterKantor([]);
-    }
+    setDataFilterKantor(event);
+    // if (event.length != 0) {
+    //   setDataFilterKantor([
+    //     ...dataFilterKantor,
+    //     ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
+    //   ]);
+    // } else {
+    //   setDataFilterKantor([]);
+    // }
   };
   const getData = () => {
     let temp = { kantor: [], kanwil: [] };
-    dataFilterKantor && dataFilterKantor.length != 0
-      ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
+    dataFilterKantor && dataFilterKantor.kantor
+      ? temp.kantor.push(dataFilterKantor.kantor)
       : [];
-    dataFilter && dataFilter.length != 0
-      ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
-      : [];
+    dataFilter && dataFilter.kanwil ? temp.kanwil.push(dataFilter.kanwil) : [];
+    // dataFilterKantor && dataFilterKantor.length != 0
+    //   ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
+    //   : [];
+    // dataFilter && dataFilter.length != 0
+    //   ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
+    //   : [];
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_pagu_mp?jenisGroup=${tipe}&tahun=${years}`,
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_pagu_mp?tahun=${tahunAwal}&tahunAkhir=${years}`,
         temp
       )
       .then(function (response) {
@@ -301,7 +299,7 @@ const PaguMp = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">{label}</p>
+          <p className="label">Tahun {label}</p>
           <p
             className="desc"
             style={{ color: payload[0].color }}
@@ -358,7 +356,7 @@ const PaguMp = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="label" tickFormatter={DataFormaterX} />
+            <XAxis dataKey="label" />
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value="Nilai Satuan 1 Juta"
@@ -912,7 +910,7 @@ const PaguMp = () => {
                       }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="label" tickFormatter={DataFormaterX} />
+                      <XAxis dataKey="label" />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
                           value="Nilai Satuan 1 Juta"
@@ -951,7 +949,7 @@ const PaguMp = () => {
                 alignItems="center"
                 spacing={2}
               >
-                {/* <Grid item xs={4}>
+                <Grid item xs={6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -978,14 +976,14 @@ const PaguMp = () => {
                       })}
                     </Select>
                   </FormControl>
-                </Grid> */}
+                </Grid>
                 <Grid item xs={6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
-                    Pilih Tahun
+                    Tahun Akhir
                   </Typography>
                   <FormControl className={classes.formControl}>
                     <Select
@@ -993,7 +991,7 @@ const PaguMp = () => {
                       id="demo-simple-select-outlined"
                       value={years}
                       onChange={handleChange}
-                      label="Tahun"
+                      label="Bulan"
                       className={classes.selectStyle}
                       disableUnderline
                     >
@@ -1004,30 +1002,6 @@ const PaguMp = () => {
                           </MenuItem>
                         );
                       })}
-                    </Select>
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={6}>
-                  <Typography
-                    className={classes.isiTextStyle}
-                    variant="h2"
-                    style={{ fontSize: 12 }}
-                  >
-                    Pilih Berdasarkan
-                  </Typography>
-                  <FormControl className={classes.formControl}>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={tipe}
-                      onChange={handleChangeTipe}
-                      label="Grafik Berdaasarkan"
-                      className={classes.selectStyle}
-                      disableUnderline
-                    >
-                      <MenuItem value="wilayah">Grafik per Wilayah</MenuItem>
-                      <MenuItem value="kantor">Grafik per Kantor</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -1048,10 +1022,10 @@ const PaguMp = () => {
                     Pilih Wilayah
                   </Typography>
                   <Autocomplete
-                    multiple
-                    getOptionDisabled={(options) =>
-                      dataFilter.length >= 32 ? true : false
-                    }
+                    // multiple
+                    // getOptionDisabled={(options) =>
+                    //   dataFilter.length >= 32 ? true : false
+                    // }
                     id="kantor"
                     name="kantor"
                     style={{ width: "100%", height: 50 }}
@@ -1074,7 +1048,7 @@ const PaguMp = () => {
                     getOptionLabel={(option) => option.kanwil || ""}
                     renderOption={(option, { selected }) => (
                       <React.Fragment>
-                        <Checkbox
+                        {/* <Checkbox
                           icon={icon}
                           checkedIcon={checkedIcon}
                           style={{ marginRight: 8 }}
@@ -1085,19 +1059,19 @@ const PaguMp = () => {
                                   .indexOf(option.kanwil) > -1
                               : false
                           }
-                        />
+                        /> */}
                         {option.kode}
                         {"  "}
                         {option.kanwil}
                       </React.Fragment>
                     )}
-                    renderTags={(selected) => {
-                      return selected.length != 0
-                        ? hideText
-                          ? ""
-                          : `${selected.length} Terpilih`
-                        : "";
-                    }}
+                    // renderTags={(selected) => {
+                    //   return selected.length != 0
+                    //     ? hideText
+                    //       ? ""
+                    //       : `${selected.length} Terpilih`
+                    //     : "";
+                    // }}
                     value={dataFilter}
                     defaultValue={dataFilter}
                     renderInput={(params) => (
@@ -1108,9 +1082,7 @@ const PaguMp = () => {
                           disableUnderline: true,
                         }}
                         style={{ marginTop: 5 }}
-                        placeholder={
-                          dataFilter.length != 0 ? "" : "Pilih Wilayah"
-                        }
+                        placeholder={"Pilih Wilayah"}
                       />
                     )}
                   />
@@ -1124,7 +1096,7 @@ const PaguMp = () => {
                     Pilih Kantor
                   </Typography>
                   <Autocomplete
-                    multiple
+                    // multiple
                     id="kantor"
                     name="kantor"
                     style={{ width: "100%", height: 50 }}
@@ -1147,7 +1119,7 @@ const PaguMp = () => {
                     getOptionLabel={(option) => option.kantor || ""}
                     renderOption={(option, { selected }) => (
                       <React.Fragment>
-                        <Checkbox
+                        {/* <Checkbox
                           icon={icon}
                           checkedIcon={checkedIcon}
                           style={{ marginRight: 8 }}
@@ -1158,23 +1130,23 @@ const PaguMp = () => {
                                   .indexOf(option.kantor) > -1
                               : false
                           }
-                        />
+                        /> */}
                         {option.kode}
                         {"  "}
                         {option.kantor}
                       </React.Fragment>
                     )}
-                    renderTags={(selected) => {
-                      return selected.length != 0
-                        ? hideTextKantor
-                          ? ""
-                          : `${selected.length} Terpilih`
-                        : "";
-                    }}
+                    // renderTags={(selected) => {
+                    //   return selected.length != 0
+                    //     ? hideTextKantor
+                    //       ? ""
+                    //       : `${selected.length} Terpilih`
+                    //     : "";
+                    // }}
                     value={dataFilterKantor}
-                    getOptionDisabled={(options) =>
-                      dataFilterKantor.length >= 32 ? true : false
-                    }
+                    // getOptionDisabled={(options) =>
+                    //   dataFilterKantor.length >= 32 ? true : false
+                    // }
                     defaultValue={dataFilterKantor}
                     renderInput={(params) => (
                       <TextField
@@ -1184,9 +1156,7 @@ const PaguMp = () => {
                           disableUnderline: true,
                         }}
                         style={{ marginTop: 5 }}
-                        placeholder={
-                          dataFilterKantor.length != 0 ? "" : "Pilih Kantor"
-                        }
+                        placeholder={"Pilih Kantor"}
                       />
                     )}
                   />

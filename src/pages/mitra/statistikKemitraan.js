@@ -766,8 +766,8 @@ const KepegawaianOrganisasi = () => {
       >
         <Grid item xs={9}>
           <Typography className={classes.titleSection} variant="h2">
-            Statistik: jenis (ppat, surveryor berlisensi (mitra) dan jasa
-            keuangan)
+            Statistik: jenis (ppat, surveryor berlisensi (mitra), Pemilik dan
+            jasa keuangan)
           </Typography>
         </Grid>
         <Grid
@@ -803,7 +803,7 @@ const KepegawaianOrganisasi = () => {
                 onClick={() =>
                   handleOpen({
                     title:
-                      "Statistik: jenis (ppat, surveryor berlisensi (mitra) dan jasa keuangan)",
+                      "Statistik: jenis (ppat, surveryor berlisensi (mitra), Pemilik dan jasa keuangan)",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -836,7 +836,7 @@ const KepegawaianOrganisasi = () => {
               placement="top"
               onClick={() =>
                 handlePrintData(
-                  "Statistik: jenis (ppat, surveryor berlisensi (mitra) dan jasa keuangan)",
+                  "Statistik: jenis (ppat, surveryor berlisensi (mitra), Pemilik dan jasa keuangan)",
                   columnTable
                 )
               }
@@ -1168,6 +1168,7 @@ const KepegawaianOrganisasi = () => {
                     <MenuItem value="PPAT">PPAT</MenuItem>
                     <MenuItem value="SURVEYOR">Surveyor</MenuItem>
                     <MenuItem value="BANK">Jasa Keuangan</MenuItem>
+                    <MenuItem value="PEMILIK">Pemilik</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -1208,7 +1209,7 @@ const KepegawaianOrganisasi = () => {
             onClick={() =>
               handleOpen({
                 title:
-                  "Statistik: jenis (ppat, surveryor berlisensi (mitra) dan jasa keuangan)",
+                  "Statistik: jenis (ppat, surveryor berlisensi (mitra), Pemilik dan jasa keuangan)",
                 grafik: data,
                 dataTable: "",
                 analisis:

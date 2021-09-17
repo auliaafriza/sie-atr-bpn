@@ -57,6 +57,7 @@ const ComponentPrint = () => {
   const nameColumn = location.state.nameColumn;
   const grafikView = location.state.grafikView;
   const axis = location.state.axis;
+  const option = location.state.option ? location.state.option : null;
 
   useEffect(() => {
     let timer = setTimeout(() => window.print(), 2 * 1000);
@@ -151,7 +152,6 @@ const ComponentPrint = () => {
         {title}
       </h2>
       <div className={classes.barChart}>
-        {" "}
         <ResponsiveContainer width="100%" height={250}>
           {grafik.toLowerCase() == "bar" ? (
             <BarChart
@@ -416,6 +416,16 @@ const ComponentPrint = () => {
           )}
         </ResponsiveContainer>
       </div>
+      {option ? (
+        <Typography
+          className={classes.isiContentTextStyle}
+          variant="h2"
+          wrap
+          style={{ margin: 20, fontSize: 27 }}
+        >
+          Index Nilai Tanah : {option}
+        </Typography>
+      ) : null}
       {nameColumn && nameColumn.length != 0 ? (
         <>
           <TableContainer component={Paper} style={{ marginTop: 20 }}>

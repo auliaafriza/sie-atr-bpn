@@ -88,25 +88,13 @@ const dataTemp = [
 
 let nameColumn = [
   {
-    label: "Alias Kanwil",
-    value: "aliaskanwil",
-    isFixed: false,
-    isLabel: true,
-  },
-  {
-    label: "Alias Kantah",
-    value: "aliaskantah",
-    isFixed: false,
-    isLabel: true,
-  },
-  {
     label: "Keterangan",
     value: "keterangan",
     isFixed: false,
     isLabel: true,
   },
   {
-    label: "Nilai Index",
+    label: "Nilai",
     value: "nilai",
     isFixed: false,
     isLabel: true,
@@ -180,7 +168,7 @@ const realisasiPenggunaan = () => {
   });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
+  const [indexTanah, setIndexTanah] = useState("");
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -275,6 +263,7 @@ const realisasiPenggunaan = () => {
       .then(function (response) {
         setData(response.data.data);
         setComment(response.data);
+        setIndexTanah(response.data.indexNilaiTanah);
         console.log(response);
       })
       .catch(function (error) {
@@ -338,12 +327,11 @@ const realisasiPenggunaan = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">{label}</p>
           {payload && payload.length != 0 ? (
             <p
               className="desc"
               style={{ color: payload[0].color }}
-            >{`Nilai Index : ${
+            >{`${label} : ${
               payload[0].value
                 ? payload[0].value
                     .toString()
@@ -414,6 +402,14 @@ const realisasiPenggunaan = () => {
           </BarChart>
         </ResponsiveContainer>
       </div>
+      <Typography
+        className={classes.isiContentTextStyle}
+        variant="h2"
+        wrap
+        style={{ margin: 20, fontSize: 27 }}
+      >
+        Index Nilai Tanah : {indexTanah}
+      </Typography>
       {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
         <>
           <TableContainer
@@ -434,12 +430,6 @@ const realisasiPenggunaan = () => {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
                     <StyledTableRow key={row.keterangan}>
-                      <StyledTableCell align="left" component="th" scope="row">
-                        {row.aliaskanwil}
-                      </StyledTableCell>
-                      <StyledTableCell align="left" component="th" scope="row">
-                        {row.aliaskantah}
-                      </StyledTableCell>
                       <StyledTableCell align="left" component="th" scope="row">
                         {row.keterangan}
                       </StyledTableCell>
@@ -545,6 +535,7 @@ const realisasiPenggunaan = () => {
         nameColumn: nameColumn,
         grafikView: grafikView,
         axis: axis,
+        option: indexTanah,
       },
       target: "_blank",
     });
@@ -869,12 +860,7 @@ const realisasiPenggunaan = () => {
                             )
                           : "",
                       type: "Bar",
-                      nameColumn: [
-                        "Alias Kanwil",
-                        "Alias Kantah",
-                        "Keterangan",
-                        "Nilai Index",
-                      ],
+                      nameColumn: ["Keterangan", "Nilai"],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
@@ -962,6 +948,14 @@ const realisasiPenggunaan = () => {
                 </div>
               </CardContent>
             </Card>
+            <Typography
+              className={classes.isiContentTextStyle}
+              variant="h2"
+              wrap
+              style={{ margin: 20, fontSize: 27 }}
+            >
+              Index Nilai Tanah : {indexTanah}
+            </Typography>
           </Grid>
           <Grid item xs={4}>
             <div style={{ margin: 10, marginRight: 25 }}>
@@ -1188,12 +1182,7 @@ const realisasiPenggunaan = () => {
                               )
                             : "",
                         type: "Bar",
-                        nameColumn: [
-                          "Alias Kanwil",
-                          "Alias Kantah",
-                          "Keterangan",
-                          "Nilai Index",
-                        ],
+                        nameColumn: ["Keterangan", "Nilai"],
                         listTop10Comment: comment.listTop10Comment,
                       })
                     }

@@ -306,12 +306,7 @@ const realisasiPenggunaan = () => {
   };
 
   const exportData = () => {
-    fileExport(
-      loadDataColumnTable(nameColumn),
-      "PSN Nilai PNBP",
-      data,
-      ".xlsx"
-    );
+    fileExport(loadDataColumnTable(nameColumn), "Nilai PNBP", data, ".xlsx");
   };
 
   const DataFormater = (number) => {
@@ -518,7 +513,7 @@ const realisasiPenggunaan = () => {
     xAxis: "label",
     yAxis: "Nilai PNBP",
   };
-  const title = "PSN Nilai PNBP";
+  const title = "Nilai PNBP";
   const handlePrint = () => {
     history.push({
       pathname: "/PrintData",
@@ -814,7 +809,7 @@ const realisasiPenggunaan = () => {
         >
           <Grid item xs={6}>
             <Typography className={classes.titleSection} variant="h2">
-              PSN Nilai PNBP
+              Nilai PNBP
             </Typography>
           </Grid>
 
@@ -846,7 +841,7 @@ const realisasiPenggunaan = () => {
                   size="small"
                   onClick={() =>
                     handleOpen({
-                      title: "PSN Nilai PNBP",
+                      title: "Nilai PNBP",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -1188,7 +1183,7 @@ const realisasiPenggunaan = () => {
                     href="#"
                     onClick={() =>
                       handleOpen({
-                        title: "PSN Nilai PNBP",
+                        title: "Nilai PNBP",
                         grafik: data,
                         dataTable: "",
                         analisis:

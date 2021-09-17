@@ -39,7 +39,7 @@ const BPHTBPage = () => {
       >
         {/* <BPHTBJumlahBerkas /> */}
         <BPHTBJumlahIntegrasi />
-        <NilaiBPHTB />
+        {/* <NilaiBPHTB /> */}
       </div>
     </div>
   );
