@@ -42,6 +42,8 @@ import {
   Avatar,
   TablePagination,
   Button,
+  Checkbox,
+  TextField,
 } from "@material-ui/core";
 import {
   createTheme,
@@ -67,78 +69,101 @@ import { url } from "../../../api/apiClient";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import {
+  CheckBoxOutlineBlank,
+  CheckBox as CheckBoxIcon,
+} from "@material-ui/icons/";
+
+const icon = <CheckBoxOutlineBlank fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
+
+import { getKantorPNBP } from "../../../actions/pnbpAction";
+
 // Pagu & MP PNBP (Satuan 1 Juta)
 const dataTemp = [
   {
     kantah: "kantah",
-    nol: 0,
-    satutiga: 0,
-    tiga: 0,
+    satu_th: 0,
+    satutiga_th: 0,
+    tiga_th: 0,
   },
   {
     kantah: "kantah 2",
-    nol: 0,
-    satutiga: 0,
-    tiga: 0,
+    satu_th: 0,
+    satutiga_th: 0,
+    tiga_th: 0,
   },
 ];
 
 let nameColumn = [
   {
     label: "Kantah",
-    value: "kantah",
+    value: "label",
     isLabel: true,
   },
   {
+    label: "Tipe Hak",
+    value: "tipehak",
+    isLabel: false,
+  },
+  {
     label: "Kurang dari 1 tahun",
-    value: "nol",
+    value: "satu_th",
   },
   {
     label: "1 sampai 3 tahun",
-    value: "satutiga",
+    value: "satutiga_th",
   },
   {
     label: "lebih dari 3 tahun",
-    value: "tiga",
+    value: "tiga_th",
   },
 ];
 
 let columnTable = [
   {
-    label: "katah",
+    label: "label",
     isFixed: false,
   },
   {
-    label: "nol",
+    label: "tipehak",
     isFixed: false,
   },
   {
-    label: "satutiga",
+    label: "satu_th",
     isFixed: false,
   },
   {
-    label: "tiga",
+    label: "satutiga_th",
+    isFixed: false,
+  },
+  {
+    label: "tiga_th",
     isFixed: false,
   },
 ];
 
 let grafikView = [
   {
-    dataKey: "nol",
+    dataKey: "satu_th",
     fill: "#FFA07A",
+    name: "< 1 tahun",
   },
   {
-    dataKey: "satutiga",
+    dataKey: "satutiga_th",
     fill: "#20B2AA",
+    name: "1-3 tahun",
   },
   {
-    dataKey: "tiga",
+    dataKey: "tiga_th",
     fill: "#E54F6E",
+    name: ">3tahun",
   },
 ];
 
 let axis = {
-  xAxis: "Katah",
+  xAxis: "tipehak",
   yAxis: "Jumlah Sertifikat",
 };
 
@@ -177,8 +202,19 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
   const classes = styles();
   const dispatch = useDispatch();
   const history = useHistory();
-  const [kanwil, setKanwil] = useState("DKI");
-  const [tipeHak, setTipeHak] = useState("Hak Wakaf");
+  const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
+  const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
+  const [dataFilter, setDataFilter] = useState([
+    {
+      kode: "01",
+      kanwil: "Kantor Wilayah Provinsi Aceh",
+    },
+  ]);
+  const [dataFilterKantor, setDataFilterKantor] = useState([]);
+
+  const [hideText, setHideText] = useState(false);
+  const [hideTextKantor, setHideTextKantor] = useState(false);
+
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [open, setOpen] = useState(false);
@@ -198,13 +234,6 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
   });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  const kanwilList = useSelector((state) =>
-    generateOptions({ data: state.sertifikasi.kanwil.data, keyVal: "kanwil" })
-  );
-  const tipeHakList = useSelector((state) =>
-    generateOptions({ data: state.sertifikasi.tipeHak.data, keyVal: "tipehak" })
-  );
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -229,12 +258,46 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
     fileExport(loadDataColumnTable(nameColumn), title, data, ".xlsx");
   };
 
+  const handleChangeFilter = (event) => {
+    if (event.length != 0) {
+      let temp = { kodeWilayah: [] };
+      event.map((item) => temp.kodeWilayah.push(item.kode));
+      dispatch(getKantorPNBP(temp));
+      setDataFilter([
+        ...dataFilter,
+        ...event.filter((option) => dataFilter.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilter([]);
+    }
+  };
+
+  const handleChangeFilterKantor = (event) => {
+    if (event.length != 0) {
+      setDataFilterKantor([
+        ...dataFilterKantor,
+        ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilterKantor([]);
+    }
+  };
+
   const getData = () => {
+    let temp = { kantah: [], kanwil: [] };
+    dataFilterKantor && dataFilterKantor.length != 0
+      ? dataFilterKantor.map((item) => temp.kantah.push(item.kantor))
+      : [];
+    dataFilter && dataFilter.length != 0
+      ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
+      : [];
+
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(
-        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_jangka_waktu_hak?kanwil=${kanwil}&tipehak=${tipeHak}`
+      .post(
+        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_jangka_waktu_hak`,
+        temp
       )
       .then(function (response) {
         setData(response.data.data);
@@ -250,18 +313,13 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
   };
 
   useEffect(() => {
-    dispatch(getKanwil());
-    dispatch(getTipeHak());
+    let temp = { kodeWilayah: [] };
+    dataFilter &&
+      dataFilter.length &&
+      dataFilter.map((item) => temp.kodeWilayah.push(item.kode));
+    dispatch(getKantorPNBP(temp));
     getData();
   }, []);
-
-  const handleChangeKanwil = (event) => {
-    setKanwil(event.target.value);
-  };
-
-  const handleChangeTipeHak = (event) => {
-    setTipeHak(event.target.value);
-  };
 
   const DataFormater = (number) => {
     if (number > 1000000000) {
@@ -279,7 +337,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">Kantah {label}</p>
+          <p className="label">{label}</p>
           <p
             className="desc"
             style={{ color: payload[0].color }}
@@ -348,7 +406,18 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3 3" />
-            <XAxis dataKey="kantah" />
+            <XAxis
+              dataKey="tipehak"
+              interval={0}
+              tick={{
+                angle: 60,
+                transform: "rotate(-35)",
+                textAnchor: "start",
+                dominantBaseline: "ideographic",
+                fontSize: 8,
+              }}
+              height={100}
+            />
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value="Jumlah sertifikat"
@@ -361,30 +430,32 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
             <Legend />
             <Line
               type="monotone"
-              dataKey="nol"
+              dataKey="satu_th"
               stroke="#FFA07A"
               activeDot={{ r: 8 }}
               strokeWidth={3}
-              label="kurang dari 1 tahun"
+              name="<1 tahun"
             />
             <Line
               type="monotone"
-              dataKey="satutiga"
+              dataKey="satutiga_th"
               stroke="#20B2AA"
               activeDot={{ r: 8 }}
               strokeWidth={3}
+              name="1-3 tahun"
             />
             <Line
               type="monotone"
-              dataKey="tiga"
+              dataKey="tiga_th"
               stroke="#E54F6E"
               activeDot={{ r: 8 }}
               strokeWidth={3}
+              name=">3 tahun"
             />
           </LineChart>
         </ResponsiveContainer>
       </div>
-      {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
+      {nameColumn && nameColumn.length != 0 ? (
         <>
           <TableContainer component={Paper} style={{ marginTop: 20 }}>
             <Table
@@ -394,43 +465,51 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
             >
               <TableHead>
                 <TableRow>
-                  {dataModal.nameColumn.map((item, i) => (
-                    <StyledTableCell align="left" key={i}>
-                      {item}
-                    </StyledTableCell>
-                  ))}
+                  {nameColumn.map((item, i) => {
+                    return (
+                      <StyledTableCell align="center">
+                        {item.label}
+                      </StyledTableCell>
+                    );
+                  })}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {dataModal.grafik
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <StyledTableRow key={row.kantah}>
-                      <StyledTableCell align="left" component="th" scope="row">
-                        {row.kantah}
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
-                        {row.nol.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
-                        {row.satutiga
-                          .toFixed(2)
-                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                      </StyledTableCell>
-                      <StyledTableCell align="left">
-                        {row.tiga
-                          .toFixed(2)
-                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))}
+                {data && data.length != 0
+                  ? data
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row, i) => (
+                        <StyledTableRow key={i}>
+                          {columnTable.map((item) => {
+                            return item.isFixed ? (
+                              <StyledTableCell align="center">
+                                {row[item.label]
+                                  .toFixed(2)
+                                  .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                              </StyledTableCell>
+                            ) : (
+                              <StyledTableCell
+                                align="center"
+                                component="th"
+                                scope="row"
+                              >
+                                {row[item.label]}
+                              </StyledTableCell>
+                            );
+                          })}
+                        </StyledTableRow>
+                      ))
+                  : null}
               </TableBody>
             </Table>
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={[10, 25, 100]}
             component="div"
-            count={dataModal.grafik.length}
+            count={data.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -870,7 +949,18 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                       }}
                     >
                       <CartesianGrid strokeDasharray="3 3 3" />
-                      <XAxis dataKey="kantah" />
+                      <XAxis
+                        dataKey="tipehak"
+                        interval={0}
+                        tick={{
+                          angle: 60,
+                          transform: "rotate(-35)",
+                          textAnchor: "start",
+                          dominantBaseline: "ideographic",
+                          fontSize: 8,
+                        }}
+                        height={100}
+                      />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
                           value="Jumlah sertifikat"
@@ -883,24 +973,27 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                       <Legend />
                       <Line
                         type="monotone"
-                        dataKey="nol"
+                        dataKey="satu_th"
                         stroke="#FFA07A"
                         activeDot={{ r: 8 }}
                         strokeWidth={3}
+                        name="<1 tahun"
                       />
                       <Line
                         type="monotone"
-                        dataKey="satutiga"
+                        dataKey="satutiga_th"
                         stroke="#20B2AA"
                         activeDot={{ r: 8 }}
                         strokeWidth={3}
+                        name="1-3 tahun"
                       />
                       <Line
                         type="monotone"
-                        dataKey="tiga"
+                        dataKey="tiga_th"
                         stroke="#E54F6E"
                         activeDot={{ r: 8 }}
                         strokeWidth={3}
+                        name=">3 tahun"
                       />
                     </LineChart>
                   </ResponsiveContainer>
@@ -917,61 +1010,157 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={6}>
+                <Grid item xs={5}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
-                    Pilih Kanwil
+                    Pilih Wilayah
                   </Typography>
-                  <FormControl className={classes.formControl}>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={kanwil}
-                      onChange={handleChangeKanwil}
-                      label="Kanwil"
-                      className={classes.selectStyle}
-                      disableUnderline
-                    >
-                      {kanwilList.map((item, i) => {
-                        return (
-                          <MenuItem value={item.id} key={i}>
-                            {item.value}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
+                  <Autocomplete
+                    multiple
+                    id="kantor"
+                    getOptionDisabled={(options) =>
+                      dataFilter.length >= 32 ? true : false
+                    }
+                    name="kantor"
+                    style={{ width: "100%", height: 50 }}
+                    options={berkasPnbpWilayah}
+                    classes={{
+                      option: classes.option,
+                    }}
+                    disableUnderline
+                    className={classes.formControl}
+                    autoHighlight
+                    onChange={(event, newValue) => {
+                      handleChangeFilter(newValue);
+                    }}
+                    onInputChange={(_event, value, reason) => {
+                      if (reason == "input") setHideText(true);
+                      else {
+                        setHideText(false);
+                      }
+                    }}
+                    getOptionLabel={(option) => option.kanwil || ""}
+                    renderOption={(option, { selected }) => (
+                      <React.Fragment>
+                        <Checkbox
+                          icon={icon}
+                          checkedIcon={checkedIcon}
+                          style={{ marginRight: 8 }}
+                          checked={
+                            dataFilter && dataFilter.length != 0
+                              ? dataFilter
+                                  .map((item) => item.kanwil)
+                                  .indexOf(option.kanwil) > -1
+                              : false
+                          }
+                        />
+                        {option.kode}
+                        {"  "}
+                        {option.kanwil}
+                      </React.Fragment>
+                    )}
+                    renderTags={(selected) => {
+                      return selected.length != 0
+                        ? hideText
+                          ? ""
+                          : `${selected.length} Terpilih`
+                        : "";
+                    }}
+                    value={dataFilter}
+                    defaultValue={dataFilter}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        InputProps={{
+                          ...params.InputProps,
+                          disableUnderline: true,
+                        }}
+                        style={{ marginTop: 5 }}
+                        placeholder={
+                          dataFilter.length != 0 ? "" : "Pilih Wilayah"
+                        }
+                      />
+                    )}
+                  />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={5}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
-                    Pilih Tipe Hak
+                    Pilih Kantah
                   </Typography>
-                  <FormControl className={classes.formControl}>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={tipeHak}
-                      onChange={handleChangeTipeHak}
-                      label="Tipe Hak"
-                      className={classes.selectStyle}
-                      disableUnderline
-                    >
-                      {tipeHakList.map((item, i) => {
-                        return (
-                          <MenuItem value={item.id} key={i}>
-                            {item.value}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
+                  <Autocomplete
+                    multiple
+                    id="kantor"
+                    name="kantor"
+                    style={{ width: "100%", height: 50 }}
+                    getOptionDisabled={(options) =>
+                      dataFilterKantor.length >= 32 ? true : false
+                    }
+                    options={berkasPnbpKantor}
+                    classes={{
+                      option: classes.option,
+                    }}
+                    disableUnderline
+                    className={classes.formControl}
+                    autoHighlight
+                    onChange={(event, newValue) => {
+                      handleChangeFilterKantor(newValue);
+                    }}
+                    onInputChange={(_event, value, reason) => {
+                      if (reason == "input") setHideTextKantor(true);
+                      else {
+                        setHideTextKantor(false);
+                      }
+                    }}
+                    getOptionLabel={(option) => option.kantor || ""}
+                    renderOption={(option, { selected }) => (
+                      <React.Fragment>
+                        <Checkbox
+                          icon={icon}
+                          checkedIcon={checkedIcon}
+                          style={{ marginRight: 8 }}
+                          checked={
+                            dataFilterKantor && dataFilterKantor.length != 0
+                              ? dataFilterKantor
+                                  .map((item) => item.kantor)
+                                  .indexOf(option.kantor) > -1
+                              : false
+                          }
+                        />
+                        {option.kode}
+                        {"  "}
+                        {option.kantor}
+                      </React.Fragment>
+                    )}
+                    renderTags={(selected) => {
+                      return selected.length != 0
+                        ? hideTextKantor
+                          ? ""
+                          : `${selected.length} Terpilih`
+                        : "";
+                    }}
+                    value={dataFilterKantor}
+                    defaultValue={dataFilterKantor}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        InputProps={{
+                          ...params.InputProps,
+                          disableUnderline: true,
+                        }}
+                        style={{ marginTop: 5 }}
+                        placeholder={
+                          dataFilterKantor.length != 0 ? "" : "Pilih Kantah"
+                        }
+                      />
+                    )}
+                  />
                 </Grid>
                 <Grid
                   container
@@ -979,13 +1168,14 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                   justifyContent="flex-start"
                   alignItems="center"
                   item
-                  xs={6}
+                  xs={2}
                   style={{ paddingLeft: 20 }}
                 >
                   <Button
                     variant="contained"
                     color="primary"
                     onClick={() => getData()}
+                    style={{ height: 57, width: "100%", fontSize: 12 }}
                   >
                     Submit
                   </Button>

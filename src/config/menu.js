@@ -178,34 +178,34 @@ export const MENU_LIST = [
       // },
     ],
   },
-  // {
-  //   id: 6,
-  //   icon: <FaCertificate size={24} />,
-  //   name: "Sertifikasi",
-  //   parentLink: "Sertifikasi",
-  //   subMenus: [
-  //     {
-  //       icon: <MdInsertChart size={24} />,
-  //       name: "Statistik Sertifikat",
-  //       link: "/Sertifikasi/StatistikSertifikat",
-  //     },
-  //     {
-  //       icon: <FaCertificate size={24} />,
-  //       name: "Tanah Aset Pemerintah",
-  //       link: "/Sertifikasi/TanahAssetPemerintah",
-  //     },
-  //     {
-  //       icon: <BiBuildings size={24} />,
-  //       name: "Hak Tanggungan Elektronik",
-  //       link: "/Sertifikasi/HakTanggunganElektronik",
-  //     },
-  //     // {
-  //     //   icon: <IoMdMap size={24} />,
-  //     //   name: "Peta Pendaftaran Tanah",
-  //     //   link: null,
-  //     // },
-  //   ],
-  // },
+  {
+    id: 6,
+    icon: <FaCertificate size={24} />,
+    name: "Sertifikasi",
+    parentLink: "Sertifikasi",
+    subMenus: [
+      {
+        icon: <MdInsertChart size={24} />,
+        name: "Statistik Sertifikat",
+        link: "/Sertifikasi/StatistikSertifikat",
+      },
+      {
+        icon: <FaCertificate size={24} />,
+        name: "Tanah Aset Pemerintah",
+        link: "/Sertifikasi/TanahAssetPemerintah",
+      },
+      // {
+      //   icon: <BiBuildings size={24} />,
+      //   name: "Hak Tanggungan Elektronik",
+      //   link: "/Sertifikasi/HakTanggunganElektronik",
+      // },
+      // {
+      //   icon: <IoMdMap size={24} />,
+      //   name: "Peta Pendaftaran Tanah",
+      //   link: null,
+      // },
+    ],
+  },
   // {
   //   id: 7,
   //   icon: <Public />,

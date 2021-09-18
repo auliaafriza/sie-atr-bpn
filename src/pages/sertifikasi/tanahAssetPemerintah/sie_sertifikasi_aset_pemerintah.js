@@ -64,7 +64,7 @@ import { url } from "../../../api/apiClient";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import {
   CheckBoxOutlineBlank,
@@ -73,17 +73,18 @@ import {
 
 const icon = <CheckBoxOutlineBlank fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
+import { getKantorPNBP } from "../../../actions/pnbpAction";
 
 const dataTemp = [
   {
-    kanwil: "DKI",
-    luas_target: 0,
-    luas_realisasi: 10,
+    label: "DKI",
+    jml_luas: 0,
+    jml_sertifikat: 10,
   },
   {
-    kanwil: "Jabar",
-    luas_target: 0,
-    luas_realisasi: 10,
+    label: "Jabar",
+    jml_luas: 0,
+    jml_sertifikat: 10,
   },
 ];
 
@@ -125,14 +126,14 @@ let nameColumn = [
     isLabel: true,
   },
   {
-    label: "Luas Target",
-    value: "luas_target",
+    label: "Jumlah Luas",
+    value: "jml_luas",
     isFixed: false,
     isLabel: true,
   },
   {
-    label: "Realisasi",
-    value: "luas_realisasi",
+    label: "Jumlah Sertifkat",
+    value: "jml_sertifikat",
     isFixed: true,
     isLabel: false,
   },
@@ -144,34 +145,57 @@ let columnTable = [
     isFixed: false,
   },
   {
-    label: "luas_target",
+    label: "jml_luas",
     isFixed: false,
   },
   {
-    label: "luas_realisasi",
+    label: "jml_sertifikat",
     isFixed: true,
   },
 ];
 
 let grafikView = [
   {
-    dataKey: "luas_target",
+    dataKey: "jml_luas",
     fill: "#C71585",
   },
   {
-    dataKey: "luas_realisasi",
+    dataKey: "jml_sertifikat",
     fill: "#82ca9d",
   },
 ];
 
 let axis = {
-  xAxis: "kanwil",
-  yAxis: "Nilai Satuan 1 Juta",
+  xAxis: "label",
+  yAxis: "Nilai",
 };
 
 const AssetPemerintah = () => {
-  const wilayahRed = useSelector((state) => state.globalReducer.wilayah);
   const classes = styles();
+
+  const dispatch = useDispatch();
+  const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
+  const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
+  const [dataFilter, setDataFilter] = useState([
+    {
+      kode: "28",
+      kanwil: "Kantor Wilayah Provinsi Banten",
+    },
+    {
+      kode: "10",
+      kanwil: "Kantor Wilayah Provinsi Jawa Barat",
+    },
+  ]);
+  const [dataFilterKantor, setDataFilterKantor] = useState([
+    {
+      kode: "2801",
+      kantor: "Kantor Pertanahan Kabupaten Serang",
+    },
+  ]);
+
+  const [hideText, setHideText] = useState(false);
+  const [hideTextKantor, setHideTextKantor] = useState(false);
+
   const [years, setYears] = useState("2022");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
@@ -185,11 +209,6 @@ const AssetPemerintah = () => {
     type: "",
     listTop10Comment: [],
   });
-  // const [dataFilter, setDataFilter] = useState(["", "DKI", "Jabar"]);
-  const [dataFilter, setDataFilter] = useState([
-    { kanwil: "DKI" },
-    { kanwil: "Jabar" },
-  ]);
 
   const inputRef = useRef();
   const [page, setPage] = useState(0);
@@ -213,11 +232,40 @@ const AssetPemerintah = () => {
     setOpen(false);
   };
 
+  const handleChangeFilter = (event) => {
+    if (event.length != 0) {
+      let temp = { kodeWilayah: [] };
+      event.map((item) => temp.kodeWilayah.push(item.kode));
+      dispatch(getKantorPNBP(temp));
+      setDataFilter([
+        ...dataFilter,
+        ...event.filter((option) => dataFilter.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilter([]);
+    }
+  };
+
+  const handleChangeFilterKantor = (event) => {
+    if (event.length != 0) {
+      setDataFilterKantor([
+        ...dataFilterKantor,
+        ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilterKantor([]);
+    }
+  };
+
   const getData = () => {
-    let temp = { wilayah: [] };
-    dataFilter && dataFilter.length != 0
-      ? dataFilter.map((item) => temp.wilayah.push(item.kanwil))
+    let temp = { kantah: [], kanwil: [] };
+    dataFilterKantor && dataFilterKantor.length != 0
+      ? dataFilterKantor.map((item) => temp.kantah.push(item.kantor))
       : [];
+    dataFilter && dataFilter.length != 0
+      ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
+      : [];
+
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
@@ -240,19 +288,13 @@ const AssetPemerintah = () => {
   };
 
   useEffect(() => {
+    let temp = { kodeWilayah: [] };
+    dataFilter &&
+      dataFilter.length &&
+      dataFilter.map((item) => temp.kodeWilayah.push(item.kode));
+    dispatch(getKantorPNBP(temp));
     getData();
   }, []);
-
-  const handleChangeFilter = (event) => {
-    if (event.length != 0) {
-      setDataFilter([
-        ...dataFilter,
-        ...event.filter((option) => dataFilter.indexOf(option) === -1),
-      ]);
-    } else {
-      setDataFilter([]);
-    }
-  };
 
   const handleChange = (event) => {
     setYears(event.target.value);
@@ -274,29 +316,39 @@ const AssetPemerintah = () => {
     }
   };
 
+  const DataFormaterX = (val) => {
+    return val && val.indexOf("Kantor Wilayah Provinsi") > -1
+      ? val.replace("Kantor Wilayah Provinsi ", "Prov ")
+      : val && val.indexOf("Kantor Wilayah Kabupaten") > -1
+      ? val.replace("Kantor Wilayah Kabupaten ", "Kab ")
+      : val && val.indexOf("Kantor Wilayah") > -1
+      ? val.replace("Kantor Wilayah ", "")
+      : val;
+  };
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">Tahun {label}</p>
+          <p className="label">{label}</p>
           {payload.length > 1 ? (
             <>
               <p
                 className="desc"
                 style={{ color: payload[0].color }}
-              >{`Luas Target : ${payload[0].value}`}</p>
+              >{`Jumlah Luas : ${payload[0].value}`}</p>
               <p
                 className="desc"
                 style={{ color: payload[1].color }}
-              >{`Luas Realisasi : Rp ${payload[1].value
+              >{`Jumlah Sertifikat : ${payload[1].value
                 .toFixed(2)
                 .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
             </>
           ) : (
             <p className="desc" style={{ color: payload[0].fill }}>
-              {payload[0].name == "luas_taget"
-                ? `Luas Target : ${payload[0].value}`
-                : `Luas Realisasi : Rp ${payload[0].value}`}
+              {payload[0].name == "jml_luas"
+                ? `Jumlah Luas : ${payload[0].value}`
+                : `Jumlah Sertifikat : ${payload[0].value}`}
             </p>
           )}
         </div>
@@ -335,19 +387,31 @@ const AssetPemerintah = () => {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="tahun"></XAxis>
+        <XAxis
+          dataKey="label"
+          interval={0}
+          tick={{
+            angle: 60,
+            transform: "rotate(-35)",
+            textAnchor: "start",
+            dominantBaseline: "ideographic",
+            fontSize: 8,
+          }}
+          height={100}
+          tickFormatter={DataFormaterX}
+        ></XAxis>
         <YAxis tickFormatter={DataFormater}>
           <Label
-            value="Nilai Satuan 1 Juta"
+            value="Nilai"
             angle={-90}
             position="insideBottomLeft"
             offset={-5}
           />
         </YAxis>
         <Tooltip content={<CustomTooltip />} />
-        <Legend />
-        <Bar dataKey="luas_target" fill="#C71585" name="Luas Target" />
-        <Bar dataKey="luas_realisasi" fill="#82ca9d" name="Luas Realisasi" />
+        {/* <Legend /> */}
+        <Bar dataKey="jml_luas" fill="#C71585" name="Jumlah Luas" />
+        <Bar dataKey="jml_sertifikat" fill="#82ca9d" name="Jumlah Sertifikat" />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -387,14 +451,15 @@ const AssetPemerintah = () => {
                         component="th"
                         scope="row"
                       >
-                        {row.kanwil}
+                        {row.label}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {row.luas_target}
+                        {row.jml_luas
+                          .toFixed(2)
+                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        Rp{" "}
-                        {row.luas_realisasi
+                        {row.jml_sertifikat
                           .toFixed(2)
                           .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                       </StyledTableCell>
@@ -868,26 +933,38 @@ const AssetPemerintah = () => {
                       }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="kanwil" />
+                      <XAxis
+                        dataKey="label"
+                        interval={0}
+                        tick={{
+                          angle: 60,
+                          transform: "rotate(-35)",
+                          textAnchor: "start",
+                          dominantBaseline: "ideographic",
+                          fontSize: 8,
+                        }}
+                        height={100}
+                        tickFormatter={DataFormaterX}
+                      />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
-                          value="Nilai Satuan 1 Juta"
+                          value="Nilai"
                           angle={-90}
                           position="insideBottomLeft"
                           offset={-5}
                         />
                       </YAxis>
                       <Tooltip content={<CustomTooltip />} />
-                      <Legend />
+                      {/* <Legend /> */}
                       <Bar
-                        dataKey="luas_target"
+                        dataKey="jml_luas"
                         fill="#C71585"
-                        name="Luas Target"
+                        name="Jumlah Luas"
                       />
                       <Bar
-                        dataKey="luas_realisasi"
+                        dataKey="jml_sertifikat"
                         fill="#82ca9d"
-                        name="Luas Realisasi"
+                        name="Jumlah Sertifikat"
                       />
                     </BarChart>
                   </ResponsiveContainer>
@@ -974,7 +1051,7 @@ const AssetPemerintah = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={6}>
+                <Grid item xs={5}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -985,9 +1062,12 @@ const AssetPemerintah = () => {
                   <Autocomplete
                     multiple
                     id="kantor"
+                    getOptionDisabled={(options) =>
+                      dataFilter.length >= 32 ? true : false
+                    }
                     name="kantor"
                     style={{ width: "100%", height: 50 }}
-                    options={wilayahRed}
+                    options={berkasPnbpWilayah}
                     classes={{
                       option: classes.option,
                     }}
@@ -997,7 +1077,13 @@ const AssetPemerintah = () => {
                     onChange={(event, newValue) => {
                       handleChangeFilter(newValue);
                     }}
-                    getOptionLabel={(option) => option.kanwil}
+                    onInputChange={(_event, value, reason) => {
+                      if (reason == "input") setHideText(true);
+                      else {
+                        setHideText(false);
+                      }
+                    }}
+                    getOptionLabel={(option) => option.kanwil || ""}
                     renderOption={(option, { selected }) => (
                       <React.Fragment>
                         <Checkbox
@@ -1012,12 +1098,19 @@ const AssetPemerintah = () => {
                               : false
                           }
                         />
+                        {option.kode}
+                        {"  "}
                         {option.kanwil}
                       </React.Fragment>
                     )}
                     renderTags={(selected) => {
-                      return `${selected.length} Terpilih`;
+                      return selected.length != 0
+                        ? hideText
+                          ? ""
+                          : `${selected.length} Terpilih`
+                        : "";
                     }}
+                    value={dataFilter}
                     defaultValue={dataFilter}
                     renderInput={(params) => (
                       <TextField
@@ -1028,44 +1121,87 @@ const AssetPemerintah = () => {
                         }}
                         style={{ marginTop: 5 }}
                         placeholder={
-                          dataFilter.length != 0 ? "" : "Pilih Kantor"
+                          dataFilter.length != 0 ? "" : "Pilih Wilayah"
                         }
                       />
                     )}
                   />
-                  {/* <FormControl className={classes.formControl}>
-                   
-                    <Select
-                      multiple
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={dataFilter}
-                      onChange={handleChangeFilter}
-                      label="Wilayah"
-                      className={classes.selectStyle}
-                      renderValue={(selected) => {
-                        if (selected.length > 1)
-                          return `${selected.length - 1} Terpilih`;
-                        else if (selected[0] == "") return "Wilayah";
-                      }}
-                      disableUnderline
-                    >
-                      <MenuItem value="" disabled>
-                        Wilayah
-                      </MenuItem>
-
-                      {wilayahRed.map((item, i) => {
-                        return (
-                          <MenuItem value={item.kanwil} key={i}>
-                            <Checkbox
-                              checked={dataFilter.indexOf(item.kanwil) > -1}
-                            />
-                            <ListItemText primary={item.kanwil} />
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl> */}
+                </Grid>
+                <Grid item xs={5}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Pilih Kantah
+                  </Typography>
+                  <Autocomplete
+                    multiple
+                    id="kantor"
+                    name="kantor"
+                    style={{ width: "100%", height: 50 }}
+                    getOptionDisabled={(options) =>
+                      dataFilterKantor.length >= 32 ? true : false
+                    }
+                    options={berkasPnbpKantor}
+                    classes={{
+                      option: classes.option,
+                    }}
+                    disableUnderline
+                    className={classes.formControl}
+                    autoHighlight
+                    onChange={(event, newValue) => {
+                      handleChangeFilterKantor(newValue);
+                    }}
+                    onInputChange={(_event, value, reason) => {
+                      if (reason == "input") setHideTextKantor(true);
+                      else {
+                        setHideTextKantor(false);
+                      }
+                    }}
+                    getOptionLabel={(option) => option.kantor || ""}
+                    renderOption={(option, { selected }) => (
+                      <React.Fragment>
+                        <Checkbox
+                          icon={icon}
+                          checkedIcon={checkedIcon}
+                          style={{ marginRight: 8 }}
+                          checked={
+                            dataFilterKantor && dataFilterKantor.length != 0
+                              ? dataFilterKantor
+                                  .map((item) => item.kantor)
+                                  .indexOf(option.kantor) > -1
+                              : false
+                          }
+                        />
+                        {option.kode}
+                        {"  "}
+                        {option.kantor}
+                      </React.Fragment>
+                    )}
+                    renderTags={(selected) => {
+                      return selected.length != 0
+                        ? hideTextKantor
+                          ? ""
+                          : `${selected.length} Terpilih`
+                        : "";
+                    }}
+                    value={dataFilterKantor}
+                    defaultValue={dataFilterKantor}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        InputProps={{
+                          ...params.InputProps,
+                          disableUnderline: true,
+                        }}
+                        style={{ marginTop: 5 }}
+                        placeholder={
+                          dataFilterKantor.length != 0 ? "" : "Pilih Kantah"
+                        }
+                      />
+                    )}
+                  />
                 </Grid>
                 <Grid
                   container
@@ -1073,14 +1209,14 @@ const AssetPemerintah = () => {
                   justifyContent="flex-start"
                   alignItems="center"
                   item
-                  xs={6}
-                  style={{ paddingTop: 40, paddingLeft: 20 }}
+                  xs={2}
+                  style={{ paddingLeft: 20 }}
                 >
                   <Button
                     variant="contained"
                     color="primary"
                     onClick={() => getData()}
-                    style={{ height: 57, width: "100%" }}
+                    style={{ height: 57, width: "100%", fontSize: 12 }}
                   >
                     Submit
                   </Button>

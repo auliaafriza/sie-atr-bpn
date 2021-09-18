@@ -70,7 +70,7 @@ const NavBar = (props) => {
           let idxMenuApi = menuFromApi.findIndex(
             (e) => e.text.toLowerCase().search(menu.name.toLowerCase()) !== -1
           );
-          if (idxMenu === 0) {
+          if (idxMenu === 0 || idxMenu === 6) {
             accMenu.push(menu);
           } else if (idxMenuApi !== -1) {
             menu.subMenus = menu.subMenus.reduce((accSubMenu, subMenu) => {

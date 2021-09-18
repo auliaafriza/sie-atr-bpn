@@ -226,6 +226,16 @@ const KepegawaianBpnMutasi = () => {
     setOpen(false);
   };
 
+  const DataFormaterX = (val) => {
+    return val && val.indexOf("Kantor Wilayah Provinsi") > -1
+      ? val.replace("Kantor Wilayah Provinsi ", "Prov ")
+      : val && val.indexOf("Kantor Wilayah Kabupaten") > -1
+      ? val.replace("Kantor Wilayah Kabupaten ", "Kab ")
+      : val && val.indexOf("Kantor Wilayah") > -1
+      ? val.replace("Kantor Wilayah ", "")
+      : val;
+  };
+
   const handleChangeFilter = (event) => {
     if (event.length != 0) {
       setDataFilter([
@@ -353,7 +363,19 @@ const KepegawaianBpnMutasi = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="kanwil"></XAxis>
+            <XAxis
+              dataKey="kanwil"
+              interval={0}
+              tick={{
+                angle: 60,
+                transform: "rotate(-35)",
+                textAnchor: "start",
+                dominantBaseline: "ideographic",
+                fontSize: 8,
+              }}
+              height={100}
+              tickFormatter={DataFormaterX}
+            ></XAxis>
             <YAxis tickFormatter={DataFormater} allowDecimals={false}>
               <Label
                 value="Nilai Satuan 1 Juta"
@@ -1112,7 +1134,19 @@ const KepegawaianBpnMutasi = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="kanwil" />
+                    <XAxis
+                      dataKey="kanwil"
+                      interval={0}
+                      tick={{
+                        angle: 60,
+                        transform: "rotate(-35)",
+                        textAnchor: "start",
+                        dominantBaseline: "ideographic",
+                        fontSize: 8,
+                      }}
+                      height={100}
+                      tickFormatter={DataFormaterX}
+                    />
                     <YAxis
                       tickFormatter={DataFormater}
                       type="number"

@@ -22,10 +22,10 @@ const StatistikSertifikat = () => {
           // height: "100vh",
         }}
       >
-        <SieSertifikatKonsolidasiKota />
+        {/* <SieSertifikatKonsolidasiKota /> */}
         <SieSertifikatJangkaWaktuHak />
+        <SieSertifikatTahun />
       </div>
-      <SieSertifikatTahun />
       {/* <SieSertifikasiTargetRealisasi /> */}
       <SieSertifikatLuasJumlah />
     </>

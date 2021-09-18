@@ -80,6 +80,9 @@ import {
 
 const icon = <CheckBoxOutlineBlank fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
+
+import { getKantorPNBP } from "../../../actions/pnbpAction";
+
 const theme = createTheme({
   typography: {
     fontFamily: [
@@ -110,71 +113,45 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-const dataTemp = [{ kantah: "", luaspersil: 0 }];
+const dataTemp = [
+  { tipehak: "Hak Guna Bangunan", luas_bidang: 410742, jml_srtifikat: 195 },
+];
+
 let axis = {
-  xAxis: "Kantah",
-  yAxis: "",
+  xAxis: "tipehak",
+  yAxis: "Nilai",
 };
 const title = "Luas Bidang Berdasarkan Jenis Sertifikat";
+
 const SieSertifikatLuasJumlah = () => {
   const classes = styles();
+  const dispatch = useDispatch();
   const [years, setYears] = useState("2017");
   const [tahunAkhir, setTahunAkhir] = useState("2019");
 
-  const [semester, setSemester] = useState(2);
-  const [bulan, setBulan] = useState("07");
-  const [comment, setComment] = useState("");
-  const [dataFilterKanwil, setDataFilterKanwil] = useState([
-    { kanwil: "Aceh" },
+  const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
+  const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
+  const [dataFilter, setDataFilter] = useState([
+    {
+      kode: "28",
+      kanwil: "Kantor Wilayah Provinsi Banten",
+    },
+    {
+      kode: "10",
+      kanwil: "Kantor Wilayah Provinsi Jawa Barat",
+    },
   ]);
-  const [listKanwil, setListKanwil] = useState([]);
-  const [dataFilterKantah, setDataFilterKantah] = useState([
-    { kantah: "Kab. Pidie" },
+  const [dataFilterKantor, setDataFilterKantor] = useState([
+    {
+      kode: "2801",
+      kantor: "Kantor Pertanahan Kabupaten Serang",
+    },
   ]);
-  const [listKantah, setListKantah] = useState([]);
-  const [dataFilterTipeHak, setDataFilterTipeHak] = useState([
-    { tipehak: "Hak Milik" },
-  ]);
-  const [listtipeHak, setListTipeHak] = useState([]);
-  const [dataFilterTipePemilik, setDataFilterTipePemilik] = useState([
-    { tipepemilik: "PERORANGAN" },
-  ]);
-  const [listTipePemilik, setListTipePemilik] = useState([]);
-  const [dataFilterProduk, setDataFilterProduk] = useState([
-    { produk: "Rutin" },
-  ]);
-  const [listProduk, setListProduk] = useState([]);
 
-  const [dataFilterOutput, setDataFilterOutput] = useState([
-    { nama: "luaspersil" },
-  ]);
-  const [listOutput, setListOutput] = useState([
-    {
-      nama: "luaspersil",
-      label: "Luas Persil",
-      color: "#d53515",
-    },
-    {
-      nama: "luaspeta",
-      label: "Luas Peta",
-      color: "#2acaea",
-    },
-    {
-      nama: "luastertulis",
-      label: "Luas Tertulis",
-      color: "#ff84a3",
-    },
-    {
-      nama: "bataspersil",
-      label: "Batas Persil",
-      color: "#93a689",
-    },
-    {
-      nama: "persil",
-      label: "Persil",
-      color: "#7a4fa1",
-    },
-  ]);
+  const [hideText, setHideText] = useState(false);
+  const [hideTextKantor, setHideTextKantor] = useState(false);
+
+  const [comment, setComment] = useState("");
 
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
@@ -190,75 +167,49 @@ const SieSertifikatLuasJumlah = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const [data, setData] = useState(dataTemp);
-  const [nameColumn, setColumn] = useState([
+  const nameColumn = [
     {
       label: "Kantah",
-      value: "kantah",
+      value: "label",
       isLabel: true,
     },
-    { label: "Luas Persil", isFixed: false, value: "luaspersil" },
-  ]);
-  const [grafikView, setGrafikView] = useState([
-    { dataKey: "luaspersil", name: "Luas Persil", fill: "#d53515" },
-  ]);
-  const [columnTable, setColumnTable] = useState(
     {
-      label: "kantah",
+      label: "Tipe Hak",
+      value: "tipehak",
+      isLabel: false,
+    },
+    {
+      label: "Luas Bidang",
+      value: "luas_bidang",
+      isLabel: false,
+    },
+    { label: "Jumlah Sertifikat", isFixed: false, value: "jml_srtifikat" },
+  ];
+
+  const grafikView = [
+    { dataKey: "luas_bidang", name: "Luas Bidang", fill: "#d53515" },
+    { dataKey: "jml_srtifikat", name: "Jumlah Sertifikat", fill: "#8884d8" },
+  ];
+
+  const columnTable = [
+    {
+      label: "label",
       isFixed: false,
     },
     {
-      label: "luaspersil",
+      label: "tipehak",
       isFixed: false,
-    }
-  );
-  const updateGrafik = () => {
-    let nameColumn = dataFilterOutput.reduce(
-      (acc, e) => {
-        const selectedOutput = listOutput.find((lo) => lo.nama === e);
-        if (selectedOutput)
-          acc.push({ value: e, isFixed: false, label: selectedOutput.label });
-        return acc;
-      },
-      [
-        {
-          label: "Kantah",
-          value: "kantah",
-          isLabel: true,
-        },
-      ]
-    );
+    },
+    {
+      label: "luas_bidang",
+      isFixed: false,
+    },
+    {
+      label: "jml_srtifikat",
+      isFixed: false,
+    },
+  ];
 
-    let grafikView = dataFilterOutput.reduce((acc, e) => {
-      const selectedOutput = listOutput.find((lo) => lo.nama === e);
-      if (selectedOutput)
-        acc.push({
-          dataKey: e,
-          name: selectedOutput.label,
-          fill: selectedOutput.color,
-        });
-      return acc;
-    }, []);
-
-    let columnTable = dataFilterOutput.reduce(
-      (acc, e) => {
-        acc.push({ label: e, isFixed: false });
-        return acc;
-      },
-      [
-        {
-          label: "kantah",
-          isFixed: false,
-        },
-      ]
-    );
-    setColumn(nameColumn);
-    setGrafikView(grafikView);
-    setColumnTable(columnTable);
-  };
-  // const dispatch = useDispatch();
-  // const satkerRed = useSelector((state) => state.globalReducer.satker);
-
-  console.log({ columnTable });
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -277,133 +228,39 @@ const SieSertifikatLuasJumlah = () => {
     setOpen(false);
   };
 
-  const getKanwil = () => {
-    axios.defaults.headers.post["Content-Type"] =
-      "application/x-www-form-urlencoded";
-    axios
-      .get(
-        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_luas_jumlah_filter_kanwil`
-      )
-      .then(function (response) {
-        const listKanwilApi = response.data.data;
-
-        setListKanwil(listKanwilApi);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .then(function () {
-        // always executed
-      });
+  const handleChangeFilter = (event) => {
+    if (event.length != 0) {
+      let temp = { kodeWilayah: [] };
+      event.map((item) => temp.kodeWilayah.push(item.kode));
+      dispatch(getKantorPNBP(temp));
+      setDataFilter([
+        ...dataFilter,
+        ...event.filter((option) => dataFilter.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilter([]);
+    }
   };
 
-  const getKantah = () => {
-    axios.defaults.headers.post["Content-Type"] =
-      "application/x-www-form-urlencoded";
-    axios
-      .get(
-        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_luas_jumlah_filter_kantah`
-      )
-      .then(function (response) {
-        const listKantahApi = response.data.data;
-
-        setListKantah(listKantahApi);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .then(function () {
-        // always executed
-      });
-  };
-
-  const getTipeHak = () => {
-    axios.defaults.headers.post["Content-Type"] =
-      "application/x-www-form-urlencoded";
-    axios
-      .get(
-        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_luas_jumlah_filter_tipehak`
-      )
-      .then(function (response) {
-        const listTipeHakApi = response.data.data;
-
-        setListTipeHak(listTipeHakApi);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .then(function () {
-        // always executed
-      });
-  };
-  const getTipePemilik = () => {
-    axios.defaults.headers.post["Content-Type"] =
-      "application/x-www-form-urlencoded";
-    axios
-      .get(
-        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_luas_jumlah_filter_tipepemilik`
-      )
-      .then(function (response) {
-        const listTipePemilikApi = response.data.data;
-
-        setListTipePemilik(listTipePemilikApi);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .then(function () {
-        // always executed
-      });
-  };
-
-  const getProduk = () => {
-    axios.defaults.headers.post["Content-Type"] =
-      "application/x-www-form-urlencoded";
-    axios
-      .get(
-        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_luas_jumlah_filter_produk`
-      )
-      .then(function (response) {
-        const listProdukApi = response.data.data;
-
-        setListProduk(listProdukApi);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .then(function () {
-        // always executed
-      });
+  const handleChangeFilterKantor = (event) => {
+    if (event.length != 0) {
+      setDataFilterKantor([
+        ...dataFilterKantor,
+        ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilterKantor([]);
+    }
   };
 
   const getData = () => {
-    let temp = {
-      kanwil:
-        dataFilterKanwil && dataFilterKanwil.length != 0
-          ? dataFilterKanwil.map((item) => item.kanwil)
-          : [],
-      kantah:
-        dataFilterKantah && dataFilterKantah.length != 0
-          ? dataFilterKantah.map((item) => item.kantah)
-          : [],
-      tipehak:
-        dataFilterTipeHak && dataFilterTipeHak.length != 0
-          ? dataFilterTipeHak.map((item) => item.tipehak)
-          : [],
-      tipepemilik:
-        dataFilterTipePemilik && dataFilterTipePemilik.length != 0
-          ? dataFilterTipePemilik.map((item) => item.tipepemilik)
-          : [],
-      produk:
-        dataFilterProduk && dataFilterProduk.length != 0
-          ? dataFilterProduk.map((item) => item.produk)
-          : [],
-    };
+    let temp = { kantah: [], kanwil: [] };
+    dataFilterKantor && dataFilterKantor.length != 0
+      ? dataFilterKantor.map((item) => temp.kantah.push(item.kantor))
+      : [];
+    dataFilter && dataFilter.length != 0
+      ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
+      : [];
 
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
@@ -427,12 +284,11 @@ const SieSertifikatLuasJumlah = () => {
   };
 
   useEffect(() => {
-    // dispatch(getSatker());
-    getKanwil();
-    getKantah();
-    getTipeHak();
-    getTipePemilik();
-    getProduk();
+    let temp = { kodeWilayah: [] };
+    dataFilter &&
+      dataFilter.length &&
+      dataFilter.map((item) => temp.kodeWilayah.push(item.kode));
+    dispatch(getKantorPNBP(temp));
     getData();
   }, []);
 
@@ -460,7 +316,7 @@ const SieSertifikatLuasJumlah = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">Kantah {label}</p>
+          <p className="label">{label}</p>
           {grafikView.map((e, i) => (
             <p
               className="desc"
@@ -503,7 +359,18 @@ const SieSertifikatLuasJumlah = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="kantah"></XAxis>
+            <XAxis
+              dataKey="tipehak"
+              interval={0}
+              tick={{
+                angle: 60,
+                transform: "rotate(-35)",
+                textAnchor: "start",
+                dominantBaseline: "ideographic",
+                fontSize: 8,
+              }}
+              height={100}
+            ></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value={axis.yAxis}
@@ -515,7 +382,7 @@ const SieSertifikatLuasJumlah = () => {
             <Tooltip content={<CustomTooltip />} />
             <Legend />
             {grafikView.map((e) => (
-              <Bar dataKey={e.dataKey} fill={e.fill}></Bar>
+              <Bar dataKey={e.dataKey} fill={e.fill} name={e.name}></Bar>
             ))}
           </BarChart>
         </ResponsiveContainer>
@@ -530,13 +397,10 @@ const SieSertifikatLuasJumlah = () => {
             >
               <TableHead>
                 <TableRow>
-                  <StyledTableCell align="center" component="th" scope="row">
-                    kantah
-                  </StyledTableCell>
-                  {grafikView.map((item, i) => {
+                  {nameColumn.map((item, i) => {
                     return (
                       <StyledTableCell align="center">
-                        {item.name}
+                        {item.label}
                       </StyledTableCell>
                     );
                   })}
@@ -552,13 +416,29 @@ const SieSertifikatLuasJumlah = () => {
                         component="th"
                         scope="row"
                       >
-                        {row.kantah}
+                        {row.label}
                       </StyledTableCell>
-                      {grafikView.map((nc, inc) => (
-                        <StyledTableCell align="center">
-                          {row[nc.dataKey]}
-                        </StyledTableCell>
-                      ))}
+                      <StyledTableCell
+                        align="center"
+                        component="th"
+                        scope="row"
+                      >
+                        {row.tipehak}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        align="center"
+                        component="th"
+                        scope="row"
+                      >
+                        {row.luas_bidang}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        align="center"
+                        component="th"
+                        scope="row"
+                      >
+                        {row.jml_srtifikat}
+                      </StyledTableCell>
                     </StyledTableRow>
                   ))}
               </TableBody>
@@ -637,76 +517,6 @@ const SieSertifikatLuasJumlah = () => {
       },
       target: "_blank",
     });
-  };
-
-  const handleChangeFilterKanwil = (event) => {
-    // setDataFilterKanwil(event.target.value);
-    if (event.length != 0) {
-      setDataFilterKanwil([
-        ...dataFilterKanwil,
-        ...event.filter((option) => dataFilterKanwil.indexOf(option) === -1),
-      ]);
-    } else {
-      setDataFilterKanwil([]);
-    }
-  };
-
-  const handleChangeFilterKantah = (event) => {
-    // setDataFilterKantah(event.target.value);
-    if (event.length != 0) {
-      setDataFilterKantah([
-        ...dataFilterKantah,
-        ...event.filter((option) => dataFilterKantah.indexOf(option) === -1),
-      ]);
-    } else {
-      setDataFilterKantah([]);
-    }
-  };
-  const handleChangeFilterTipeHak = (event) => {
-    // setDataFilterTipeHak(event.target.value);
-    if (event.length != 0) {
-      setDataFilterTipeHak([
-        ...dataFilterTipeHak,
-        ...event.filter((option) => dataFilterTipeHak.indexOf(option) === -1),
-      ]);
-    } else {
-      setDataFilterTipeHak([]);
-    }
-  };
-  const handleChangeFilterTipePemilk = (event) => {
-    // setDataFilterTipePemilik(event.target.value);
-    if (event.length != 0) {
-      setDataFilterTipePemilik([
-        ...dataFilterTipePemilik,
-        ...event.filter(
-          (option) => dataFilterTipePemilik.indexOf(option) === -1
-        ),
-      ]);
-    } else {
-      setDataFilterTipePemilik([]);
-    }
-  };
-  const handleChangeFilterProduk = (event) => {
-    // setDataFilterProduk(event.target.value);
-    if (event.length != 0) {
-      setDataFilterProduk([
-        ...dataFilterProduk,
-        ...event.filter((option) => dataFilterProduk.indexOf(option) === -1),
-      ]);
-    } else {
-      setDataFilterProduk([]);
-    }
-  };
-  const handleChangeFilterOutput = (event) => {
-    // setDataFilterOutput(event.target.value);
-    if (event.length != 0) {
-      setDataFilterOutput([
-        ...dataFilterOutput,
-        ...event.filter((option) => dataFilterOutput.indexOf(option) === -1),
-      ]);
-    } else {
-      setDataFilterOutput([]);
-    }
   };
 
   const [iframeIsOpen, setOpenIframe] = useState(false);
@@ -1083,7 +893,7 @@ const SieSertifikatLuasJumlah = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1111,7 +921,7 @@ const SieSertifikatLuasJumlah = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1139,20 +949,31 @@ const SieSertifikatLuasJumlah = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={4}>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={5}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Kanwil
+                  Pilih Wilayah
                 </Typography>
                 <Autocomplete
                   multiple
                   id="kantor"
+                  getOptionDisabled={(options) =>
+                    dataFilter.length >= 32 ? true : false
+                  }
                   name="kantor"
                   style={{ width: "100%", height: 50 }}
-                  options={listKanwil}
+                  options={berkasPnbpWilayah}
                   classes={{
                     option: classes.option,
                   }}
@@ -1160,191 +981,43 @@ const SieSertifikatLuasJumlah = () => {
                   className={classes.formControl}
                   autoHighlight
                   onChange={(event, newValue) => {
-                    handleChangeFilterKanwil(newValue);
+                    handleChangeFilter(newValue);
                   }}
-                  getOptionLabel={(option) => option.kanwil}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setHideText(true);
+                    else {
+                      setHideText(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.kanwil || ""}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
                         icon={icon}
                         checkedIcon={checkedIcon}
-                        // onChange={() =>
-                        //   handleCheckedAutocomplete(
-                        //     setDataFilterKanwil,
-                        //     dataFilterKanwil,
-                        //     option.kanwil,
-                        //     "kanwil"
-                        //   )
-                        // }
-                        // name={option.kanwil}
                         style={{ marginRight: 8 }}
                         checked={
-                          dataFilterKanwil && dataFilterKanwil.length != 0
-                            ? dataFilterKanwil
+                          dataFilter && dataFilter.length != 0
+                            ? dataFilter
                                 .map((item) => item.kanwil)
                                 .indexOf(option.kanwil) > -1
                             : false
                         }
                       />
+                      {option.kode}
+                      {"  "}
                       {option.kanwil}
                     </React.Fragment>
                   )}
                   renderTags={(selected) => {
-                    return (
-                      <Typography style={{ fontSize: 14 }}>
-                        {`${selected.length} Terpilih`}
-                      </Typography>
-                    );
+                    return selected.length != 0
+                      ? hideText
+                        ? ""
+                        : `${selected.length} Terpilih`
+                      : "";
                   }}
-                  defaultValue={dataFilterKanwil}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      InputProps={{
-                        ...params.InputProps,
-                        disableUnderline: true,
-                      }}
-                      style={{ marginTop: 5 }}
-                      placeholder={dataFilterKanwil.length != 0 ? "" : "Pilih "}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Kantah
-                </Typography>
-                <Autocomplete
-                  multiple
-                  id="kantor"
-                  name="kantor"
-                  style={{ width: "100%", height: 50 }}
-                  options={listKantah}
-                  classes={{
-                    option: classes.option,
-                  }}
-                  disableUnderline
-                  className={classes.formControl}
-                  autoHighlight
-                  onChange={(event, newValue) => {
-                    handleChangeFilterKantah(newValue);
-                  }}
-                  getOptionLabel={(option) => option.kantah}
-                  renderOption={(option, { selected }) => (
-                    <React.Fragment>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={
-                          dataFilterKantah && dataFilterKantah.length != 0
-                            ? dataFilterKantah
-                                .map((item) => item.kantah)
-                                .indexOf(option.kantah) > -1
-                            : false
-                        }
-                      />
-                      {option.kantah}
-                    </React.Fragment>
-                  )}
-                  renderTags={(selected) => {
-                    return (
-                      <Typography style={{ fontSize: 14 }}>
-                        {`${selected.length} Terpilih`}
-                      </Typography>
-                    );
-                  }}
-                  defaultValue={dataFilterKantah}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      InputProps={{
-                        ...params.InputProps,
-                        disableUnderline: true,
-                      }}
-                      style={{ marginTop: 5 }}
-                      placeholder={dataFilterKantah.length != 0 ? "" : "Pilih "}
-                    />
-                  )}
-                />
-                {/* <FormControl className={classes.formControl}>
-                  <Select
-                    multiple
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={dataFilterKantah}
-                    onChange={handleChangeFilterKantah}
-                    label="Kantah"
-                    className={classes.selectStyle}
-                    renderValue={(selected) => `${selected.length} Terpilih`}
-                    disableUnderline
-                  >
-                    {listKantah.map((item, i) => {
-                      return (
-                        <MenuItem value={item.kantah} key={i}>
-                          <Checkbox
-                            checked={dataFilterKantah.indexOf(item.kantah) > -1}
-                          />
-                          <ListItemText primary={item.kantah} />
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl> */}
-              </Grid>
-              <Grid item xs={4}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Tipe Hak
-                </Typography>
-                <Autocomplete
-                  multiple
-                  id="kantor"
-                  name="kantor"
-                  style={{ width: "100%", height: 50 }}
-                  options={listtipeHak}
-                  classes={{
-                    option: classes.option,
-                  }}
-                  disableUnderline
-                  className={classes.formControl}
-                  autoHighlight
-                  onChange={(event, newValue) => {
-                    handleChangeFilterTipeHak(newValue);
-                  }}
-                  getOptionLabel={(option) => option.tipehak}
-                  renderOption={(option, { selected }) => (
-                    <React.Fragment>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={
-                          dataFilterTipeHak && dataFilterTipeHak.length != 0
-                            ? dataFilterTipeHak
-                                .map((item) => item.tipehak)
-                                .indexOf(option.tipehak) > -1
-                            : false
-                        }
-                      />
-                      {option.tipehak}
-                    </React.Fragment>
-                  )}
-                  renderTags={(selected) => {
-                    return (
-                      <Typography style={{ fontSize: 14 }}>
-                        {`${selected.length} Terpilih`}
-                      </Typography>
-                    );
-                  }}
-                  defaultValue={dataFilterTipeHak}
+                  value={dataFilter}
+                  defaultValue={dataFilter}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -1354,59 +1027,29 @@ const SieSertifikatLuasJumlah = () => {
                       }}
                       style={{ marginTop: 5 }}
                       placeholder={
-                        dataFilterTipeHak.length != 0 ? "" : "Pilih "
+                        dataFilter.length != 0 ? "" : "Pilih Wilayah"
                       }
                     />
                   )}
                 />
-                {/* <FormControl className={classes.formControl}>
-                  <Select
-                    multiple
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={dataFilterTipeHak}
-                    onChange={handleChangeFilterTipeHak}
-                    label="TipeHak"
-                    className={classes.selectStyle}
-                    renderValue={(selected) => {
-                      if (selected.length > 1)
-                        return `${selected.length - 1} Terpilih`;
-                      else if (selected[0] == "") return "Tipe Hak";
-                    }}
-                    disableUnderline
-                  >
-                    <MenuItem value="" disabled>
-                      Tipe Hak
-                    </MenuItem>
-                    {listtipeHak.map((item, i) => {
-                      return (
-                        <MenuItem value={item.tipehak} key={i}>
-                          <Checkbox
-                            checked={
-                              dataFilterTipeHak.indexOf(item.tipehak) > -1
-                            }
-                          />
-                          <ListItemText primary={item.tipehak} />
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl> */}
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={5}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Tipe Pemilik
+                  Pilih Kantah
                 </Typography>
                 <Autocomplete
                   multiple
                   id="kantor"
                   name="kantor"
                   style={{ width: "100%", height: 50 }}
-                  options={listTipePemilik}
+                  getOptionDisabled={(options) =>
+                    dataFilterKantor.length >= 32 ? true : false
+                  }
+                  options={berkasPnbpKantor}
                   classes={{
                     option: classes.option,
                   }}
@@ -1414,9 +1057,15 @@ const SieSertifikatLuasJumlah = () => {
                   className={classes.formControl}
                   autoHighlight
                   onChange={(event, newValue) => {
-                    handleChangeFilterTipePemilk(newValue);
+                    handleChangeFilterKantor(newValue);
                   }}
-                  getOptionLabel={(option) => option.tipepemilik}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setHideTextKantor(true);
+                    else {
+                      setHideTextKantor(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.kantor || ""}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
@@ -1424,25 +1073,27 @@ const SieSertifikatLuasJumlah = () => {
                         checkedIcon={checkedIcon}
                         style={{ marginRight: 8 }}
                         checked={
-                          dataFilterTipePemilik &&
-                          dataFilterTipePemilik.length != 0
-                            ? dataFilterTipePemilik
-                                .map((item) => item.tipepemilik)
-                                .indexOf(option.tipepemilik) > -1
+                          dataFilterKantor && dataFilterKantor.length != 0
+                            ? dataFilterKantor
+                                .map((item) => item.kantor)
+                                .indexOf(option.kantor) > -1
                             : false
                         }
                       />
-                      {option.tipepemilik}
+                      {option.kode}
+                      {"  "}
+                      {option.kantor}
                     </React.Fragment>
                   )}
                   renderTags={(selected) => {
-                    return (
-                      <Typography style={{ fontSize: 14 }}>
-                        {`${selected.length} Terpilih`}
-                      </Typography>
-                    );
+                    return selected.length != 0
+                      ? hideTextKantor
+                        ? ""
+                        : `${selected.length} Terpilih`
+                      : "";
                   }}
-                  defaultValue={dataFilterTipePemilik}
+                  value={dataFilterKantor}
+                  defaultValue={dataFilterKantor}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -1452,251 +1103,26 @@ const SieSertifikatLuasJumlah = () => {
                       }}
                       style={{ marginTop: 5 }}
                       placeholder={
-                        dataFilterTipePemilik.length != 0 ? "" : "Pilih "
+                        dataFilterKantor.length != 0 ? "" : "Pilih Kantah"
                       }
                     />
                   )}
                 />
-                {/* <FormControl className={classes.formControl}>
-                  <Select
-                    multiple
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={dataFilterTipePemilik}
-                    onChange={handleChangeFilterTipePemilk}
-                    label="TipePemilik"
-                    className={classes.selectStyle}
-                    renderValue={(selected) => {
-                      if (selected.length > 1)
-                        return `${selected.length - 1} Terpilih`;
-                      else if (selected[0] == "") return "Tipe Pemilik";
-                    }}
-                    disableUnderline
-                  >
-                    <MenuItem value="" disabled>
-                      Tipe Pemilik
-                    </MenuItem>
-                    {listTipePemilik.map((item, i) => {
-                      return (
-                        <MenuItem value={item.tipepemilik} key={i}>
-                          <Checkbox
-                            checked={
-                              dataFilterTipePemilik.indexOf(item.tipepemilik) >
-                              -1
-                            }
-                          />
-                          <ListItemText primary={item.tipepemilik} />
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl> */}
               </Grid>
-              <Grid item xs={4}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Produk
-                </Typography>
-                <Autocomplete
-                  multiple
-                  id="kantor"
-                  name="kantor"
-                  style={{ width: "100%", height: 50 }}
-                  options={listProduk}
-                  classes={{
-                    option: classes.option,
-                  }}
-                  disableUnderline
-                  className={classes.formControl}
-                  autoHighlight
-                  onChange={(event, newValue) => {
-                    handleChangeFilterProduk(newValue);
-                  }}
-                  getOptionLabel={(option) => option.produk}
-                  renderOption={(option, { selected }) => (
-                    <React.Fragment>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={
-                          dataFilterProduk && dataFilterProduk.length != 0
-                            ? dataFilterProduk
-                                .map((item) => item.produk)
-                                .indexOf(option.produk) > -1
-                            : false
-                        }
-                      />
-                      {option.produk}
-                    </React.Fragment>
-                  )}
-                  renderTags={(selected) => {
-                    return (
-                      <Typography style={{ fontSize: 14 }}>
-                        {`${selected.length} Terpilih`}
-                      </Typography>
-                    );
-                  }}
-                  defaultValue={dataFilterProduk}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      InputProps={{
-                        ...params.InputProps,
-                        disableUnderline: true,
-                      }}
-                      style={{ marginTop: 5 }}
-                      placeholder={dataFilterProduk.length != 0 ? "" : "Pilih "}
-                    />
-                  )}
-                />
-                {/* <FormControl className={classes.formControl}>
-                  <Select
-                    multiple
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={dataFilterProduk}
-                    onChange={handleChangeFilterProduk}
-                    label="produk"
-                    className={classes.selectStyle}
-                    renderValue={(selected) => {
-                      if (selected.length > 1)
-                        return `${selected.length - 1} Terpilih`;
-                      else if (selected[0] == "") return "Produk";
-                    }}
-                    disableUnderline
-                  >
-                    <MenuItem value="" disabled>
-                      Produk
-                    </MenuItem>
-
-                    {listProduk.map((item, i) => {
-                      return (
-                        <MenuItem value={item.produk} key={i}>
-                          <Checkbox
-                            checked={dataFilterProduk.indexOf(item.produk) > -1}
-                          />
-                          <ListItemText primary={item.produk} />
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl> */}
-              </Grid>
-              <Grid item xs={4}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Grafik
-                </Typography>
-                <Autocomplete
-                  multiple
-                  id="kantor"
-                  name="kantor"
-                  style={{ width: "100%", height: 50 }}
-                  options={listOutput}
-                  classes={{
-                    option: classes.option,
-                  }}
-                  disableUnderline
-                  className={classes.formControl}
-                  autoHighlight
-                  onChange={(event, newValue) => {
-                    handleChangeFilterOutput(newValue);
-                  }}
-                  getOptionLabel={(option) => option.nama}
-                  renderOption={(option, { selected }) => (
-                    <React.Fragment>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={
-                          dataFilterOutput && dataFilterOutput.length != 0
-                            ? dataFilterOutput
-                                .map((item) => item.nama)
-                                .indexOf(option.nama) > -1
-                            : false
-                        }
-                      />
-                      {option.nama}
-                    </React.Fragment>
-                  )}
-                  renderTags={(selected) => {
-                    return (
-                      <Typography style={{ fontSize: 14 }}>
-                        {`${selected.length} Terpilih`}
-                      </Typography>
-                    );
-                  }}
-                  defaultValue={dataFilterOutput}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      InputProps={{
-                        ...params.InputProps,
-                        disableUnderline: true,
-                      }}
-                      style={{ marginTop: 5 }}
-                      placeholder={dataFilterOutput.length != 0 ? "" : "Pilih "}
-                    />
-                  )}
-                />
-                {/* <FormControl className={classes.formControl}>
-                  <Select
-                    multiple
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={dataFilterOutput}
-                    onChange={handleChangeFilterOutput}
-                    label="output"
-                    className={classes.selectStyle}
-                    renderValue={(selected) => {
-                      if (selected.length > 1)
-                        return `${selected.length - 1} Terpilih`;
-                      else if (selected[0] == "") return "Grafik";
-                    }}
-                    disableUnderline
-                  >
-                    <MenuItem value="" disabled>
-                      Grafik
-                    </MenuItem>
-
-                    {listOutput.map((item, i) => {
-                      return (
-                        <MenuItem value={item.nama} key={i}>
-                          <Checkbox
-                            checked={dataFilterOutput.indexOf(item.nama) > -1}
-                          />
-                          <ListItemText primary={item.label} />
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl> */}
-              </Grid>
-
               <Grid
                 container
                 direction="row"
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={4}
-                style={{ paddingLeft: 20, paddingTop: 40 }}
+                xs={2}
+                style={{ paddingLeft: 20 }}
               >
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => {
-                    getData();
-                    updateGrafik();
-                  }}
+                  onClick={() => getData()}
+                  style={{ height: 57, width: "100%", fontSize: 12 }}
                 >
                   Submit
                 </Button>
@@ -1766,7 +1192,18 @@ const SieSertifikatLuasJumlah = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="kantah"></XAxis>
+                    <XAxis
+                      dataKey="tipehak"
+                      interval={0}
+                      tick={{
+                        angle: 60,
+                        transform: "rotate(-35)",
+                        textAnchor: "start",
+                        dominantBaseline: "ideographic",
+                        fontSize: 8,
+                      }}
+                      height={100}
+                    ></XAxis>
                     <YAxis tickFormatter={DataFormater}>
                       <Label
                         value={axis.yAxis}
@@ -1778,7 +1215,11 @@ const SieSertifikatLuasJumlah = () => {
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
                     {grafikView.map((e) => (
-                      <Bar dataKey={e.dataKey} fill={e.fill}></Bar>
+                      <Bar
+                        dataKey={e.dataKey}
+                        fill={e.fill}
+                        name={e.name}
+                      ></Bar>
                     ))}
                   </BarChart>
                 </ResponsiveContainer>

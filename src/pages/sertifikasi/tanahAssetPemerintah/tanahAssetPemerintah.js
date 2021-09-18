@@ -1,14 +1,28 @@
 import React, { useEffect } from "react";
-import AssetPemerintah from "./sie_sertifikasi_aset_pemerintah";
-import { getWilayah } from "../../../actions/globalActions";
+import {
+  getSatker,
+  getKantor,
+  getKanwil,
+} from "../../../actions/globalActions";
+import {
+  getBerkasPnbpWilayahFilter,
+  getBerkasPnbpKantorFilter,
+  getWilayahPNBP,
+} from "../../../actions/pnbpAction";
 import { useDispatch } from "react-redux";
+import AssetPemerintah from "./sie_sertifikasi_aset_pemerintah";
 import imgSertifikasi from "./../../../assets/img/sertifikasi.jpg";
 
 const PTSL = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getWilayah());
+    dispatch(getBerkasPnbpWilayahFilter());
+    dispatch(getBerkasPnbpKantorFilter());
+    dispatch(getSatker());
+    dispatch(getKantor());
+    dispatch(getKanwil());
+    dispatch(getWilayahPNBP());
   }, []);
 
   return (

@@ -80,10 +80,11 @@ import {
 
 const icon = <CheckBoxOutlineBlank fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
+import { getKantorPNBP } from "../../../actions/pnbpAction";
 
 const dataTemp = [
   {
-    nama: "",
+    nama_program: "",
     jumlah_sertifikat: 0,
     luastertulis: 0,
   },
@@ -121,9 +122,14 @@ const StyledTableRow = withStyles((theme) => ({
 
 let nameColumn = [
   {
-    label: "Nama",
-    value: "nama",
+    label: "Kantah",
+    value: "namlabela_program",
     isLabel: true,
+  },
+  {
+    label: "Nama Program",
+    value: "nama_program",
+    isLabel: false,
   },
   {
     label: "Jumlah Sertifikat",
@@ -137,7 +143,11 @@ let nameColumn = [
 
 let columnTable = [
   {
-    label: "nama",
+    label: "label",
+    isFixed: false,
+  },
+  {
+    label: "nama_program",
     isFixed: false,
   },
   {
@@ -165,25 +175,41 @@ let grafikView = [
 ];
 
 let axis = {
-  xAxis: "Nama",
+  xAxis: "nama_program",
   yAxis: "",
 };
 const title = "Jumlah Sertifikat dan Luas Berdasarkan Program";
 
 const SieSertifikatTahun = () => {
   const classes = styles();
-  const [years, setYears] = useState("2021");
-  const [data, setData] = useState(dataTemp);
+  const dispatch = useDispatch();
+  const [years, setYears] = useState("2017");
+  const [tahunAkhir, setTahunAkhir] = useState("2019");
+
+  const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
+  const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
+  const [dataFilter, setDataFilter] = useState([
+    {
+      kode: "28",
+      kanwil: "Kantor Wilayah Provinsi Banten",
+    },
+    {
+      kode: "10",
+      kanwil: "Kantor Wilayah Provinsi Jawa Barat",
+    },
+  ]);
+  const [dataFilterKantor, setDataFilterKantor] = useState([
+    {
+      kode: "2801",
+      kantor: "Kantor Pertanahan Kabupaten Serang",
+    },
+  ]);
+
+  const [hideText, setHideText] = useState(false);
+  const [hideTextKantor, setHideTextKantor] = useState(false);
+
   const [comment, setComment] = useState("");
-  const [dataFilter, setDataFilter] = useState([{ wilayah: "Sumut" }]);
-  const [listWilayah, setListWilayah] = useState([]);
-  // const [kanwil, setKanwil] = useState(
-  //   "Kementerian Agraria dan Tata Ruang/Badan Pertanahan Nasional "
-  // );
-  // const [kantor, setKantor] = useState("Jawa Tengah");
-  // const [satker, setSatker] = useState(
-  //   "Kantor Pertanahan Kabupaten Purbalingga "
-  // );
+
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -197,8 +223,7 @@ const SieSertifikatTahun = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // const dispatch = useDispatch();
-  // const satkerRed = useSelector((state) => state.globalReducer.satker);
+  const [data, setData] = useState(dataTemp);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -218,36 +243,45 @@ const SieSertifikatTahun = () => {
     setOpen(false);
   };
 
-  const getWilayah = () => {
-    axios.defaults.headers.post["Content-Type"] =
-      "application/x-www-form-urlencoded";
-    axios
-      .get(
-        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikasi_tahun_filter_wilayah`
-      )
-      .then(function (response) {
-        const listWilayahApi = response.data.data;
-
-        setListWilayah(listWilayahApi);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .then(function () {
-        // always executed
-      });
+  const handleChangeFilter = (event) => {
+    if (event.length != 0) {
+      let temp = { kodeWilayah: [] };
+      event.map((item) => temp.kodeWilayah.push(item.kode));
+      dispatch(getKantorPNBP(temp));
+      setDataFilter([
+        ...dataFilter,
+        ...event.filter((option) => dataFilter.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilter([]);
+    }
   };
+
+  const handleChangeFilterKantor = (event) => {
+    if (event.length != 0) {
+      setDataFilterKantor([
+        ...dataFilterKantor,
+        ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
+      ]);
+    } else {
+      setDataFilterKantor([]);
+    }
+  };
+
   const getData = () => {
-    let temp = { wilayah: [] };
-    dataFilter && dataFilter.length != 0
-      ? dataFilter.map((item) => temp.wilayah.push(item.wilayah))
+    let temp = { kantah: [], kanwil: [] };
+    dataFilterKantor && dataFilterKantor.length != 0
+      ? dataFilterKantor.map((item) => temp.kantah.push(item.kantor))
       : [];
+    dataFilter && dataFilter.length != 0
+      ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
+      : [];
+
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikasi_tahun?tahun=${years}`,
+        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikasi_tahun?tahunAwal=${years}&tahunAkhir=${tahunAkhir}`,
         temp
       )
       .then(function (response) {
@@ -265,13 +299,20 @@ const SieSertifikatTahun = () => {
   };
 
   useEffect(() => {
-    // dispatch(getSatker());
-    getWilayah();
+    let temp = { kodeWilayah: [] };
+    dataFilter &&
+      dataFilter.length &&
+      dataFilter.map((item) => temp.kodeWilayah.push(item.kode));
+    dispatch(getKantorPNBP(temp));
     getData();
   }, []);
 
   const handleChange = (event) => {
     setYears(event.target.value);
+  };
+
+  const handleChangeTahunAkhir = (event) => {
+    setTahunAkhir(event.target.value);
   };
 
   const DataFormater = (number) => {
@@ -323,7 +364,7 @@ const SieSertifikatTahun = () => {
         <ResponsiveContainer width="100%" height={250}>
           <BarChart
             width={500}
-            height={300}
+            height={400}
             data={dataModal.grafik}
             margin={{
               top: 5,
@@ -339,7 +380,18 @@ const SieSertifikatTahun = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="nama"></XAxis>
+            <XAxis
+              dataKey="nama_program"
+              interval={0}
+              tick={{
+                angle: 60,
+                transform: "rotate(-35)",
+                textAnchor: "start",
+                dominantBaseline: "ideographic",
+                fontSize: 8,
+              }}
+              height={100}
+            ></XAxis>
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value={axis.yAxis}
@@ -349,7 +401,7 @@ const SieSertifikatTahun = () => {
               />
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
+            {/* <Legend /> */}
             {grafikView.map((e) => (
               <Bar dataKey={e.dataKey} fill={e.fill} name={e.name}></Bar>
             ))}
@@ -379,13 +431,20 @@ const SieSertifikatTahun = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.nama}>
+                    <StyledTableRow key={row.nama_program}>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.nama}
+                        {row.label}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        align="center"
+                        component="th"
+                        scope="row"
+                      >
+                        {row.nama_program}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {row.jumlah_sertifikat
@@ -475,17 +534,6 @@ const SieSertifikatTahun = () => {
       },
       target: "_blank",
     });
-  };
-
-  const handleChangeFilter = (newValue) => {
-    if (newValue.length != 0) {
-      setDataFilter([
-        ...dataFilter,
-        ...newValue.filter((option) => dataFilter.indexOf(option) === -1),
-      ]);
-    } else {
-      setDataFilter([]);
-    }
   };
 
   const [iframeIsOpen, setOpenIframe] = useState(false);
@@ -863,7 +911,7 @@ const SieSertifikatTahun = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -872,9 +920,6 @@ const SieSertifikatTahun = () => {
                   Tahun Awal
                 </Typography>
                 <FormControl className={classes.formControl}>
-                  {/* <InputLabel id="demo-simple-select-outlined-label">
-                    Tahun Awal
-                  </InputLabel> */}
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -894,6 +939,42 @@ const SieSertifikatTahun = () => {
                   </Select>
                 </FormControl>
               </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Tahun Akhir
+                </Typography>
+                <FormControl className={classes.formControl}>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={tahunAkhir}
+                    onChange={handleChangeTahunAkhir}
+                    label="Tahun"
+                    className={classes.selectStyle}
+                    disableUnderline
+                  >
+                    {tahunData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
               <Grid item xs={5}>
                 <Typography
                   className={classes.isiTextStyle}
@@ -905,9 +986,12 @@ const SieSertifikatTahun = () => {
                 <Autocomplete
                   multiple
                   id="kantor"
+                  getOptionDisabled={(options) =>
+                    dataFilter.length >= 32 ? true : false
+                  }
                   name="kantor"
                   style={{ width: "100%", height: 50 }}
-                  options={listWilayah}
+                  options={berkasPnbpWilayah}
                   classes={{
                     option: classes.option,
                   }}
@@ -917,7 +1001,13 @@ const SieSertifikatTahun = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilter(newValue);
                   }}
-                  getOptionLabel={(option) => option.wilayah}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setHideText(true);
+                    else {
+                      setHideText(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.kanwil || ""}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
@@ -927,17 +1017,24 @@ const SieSertifikatTahun = () => {
                         checked={
                           dataFilter && dataFilter.length != 0
                             ? dataFilter
-                                .map((item) => item.wilayah)
-                                .indexOf(option.wilayah) > -1
+                                .map((item) => item.kanwil)
+                                .indexOf(option.kanwil) > -1
                             : false
                         }
                       />
-                      {option.wilayah}
+                      {option.kode}
+                      {"  "}
+                      {option.kanwil}
                     </React.Fragment>
                   )}
                   renderTags={(selected) => {
-                    return `${selected.length} Terpilih`;
+                    return selected.length != 0
+                      ? hideText
+                        ? ""
+                        : `${selected.length} Terpilih`
+                      : "";
                   }}
+                  value={dataFilter}
                   defaultValue={dataFilter}
                   renderInput={(params) => (
                     <TextField
@@ -947,7 +1044,85 @@ const SieSertifikatTahun = () => {
                         disableUnderline: true,
                       }}
                       style={{ marginTop: 5 }}
-                      placeholder={dataFilter.length != 0 ? "" : "Pilih Kantor"}
+                      placeholder={
+                        dataFilter.length != 0 ? "" : "Pilih Wilayah"
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={5}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Kantah
+                </Typography>
+                <Autocomplete
+                  multiple
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  getOptionDisabled={(options) =>
+                    dataFilterKantor.length >= 32 ? true : false
+                  }
+                  options={berkasPnbpKantor}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilterKantor(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setHideTextKantor(true);
+                    else {
+                      setHideTextKantor(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.kantor || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilterKantor && dataFilterKantor.length != 0
+                            ? dataFilterKantor
+                                .map((item) => item.kantor)
+                                .indexOf(option.kantor) > -1
+                            : false
+                        }
+                      />
+                      {option.kode}
+                      {"  "}
+                      {option.kantor}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return selected.length != 0
+                      ? hideTextKantor
+                        ? ""
+                        : `${selected.length} Terpilih`
+                      : "";
+                  }}
+                  value={dataFilterKantor}
+                  defaultValue={dataFilterKantor}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={
+                        dataFilterKantor.length != 0 ? "" : "Pilih Kantah"
+                      }
                     />
                   )}
                 />
@@ -958,13 +1133,14 @@ const SieSertifikatTahun = () => {
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={3}
-                style={{ paddingLeft: 20, paddingTop: 40 }}
+                xs={2}
+                style={{ paddingLeft: 20 }}
               >
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => getData()}
+                  style={{ height: 57, width: "100%", fontSize: 12 }}
                 >
                   Submit
                 </Button>
@@ -1018,7 +1194,7 @@ const SieSertifikatTahun = () => {
                 <ResponsiveContainer width="100%" height={250}>
                   <BarChart
                     width={500}
-                    height={300}
+                    height={400}
                     data={data}
                     margin={{
                       top: 5,
@@ -1034,7 +1210,18 @@ const SieSertifikatTahun = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="nama"></XAxis>
+                    <XAxis
+                      dataKey="nama_program"
+                      interval={0}
+                      tick={{
+                        angle: 60,
+                        transform: "rotate(-35)",
+                        textAnchor: "start",
+                        dominantBaseline: "ideographic",
+                        fontSize: 8,
+                      }}
+                      height={100}
+                    ></XAxis>
                     <YAxis tickFormatter={DataFormater}>
                       <Label
                         value={axis.yAxis}
@@ -1044,7 +1231,7 @@ const SieSertifikatTahun = () => {
                       />
                     </YAxis>
                     <Tooltip content={<CustomTooltip />} />
-                    <Legend />
+                    {/* <Legend /> */}
                     {grafikView.map((e) => (
                       <Bar
                         dataKey={e.dataKey}
