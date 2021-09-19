@@ -29,7 +29,7 @@ const BPHTBPage = () => {
         style={{
           paddingTop: 20,
           backgroundImage: `url(${bgImg})`,
-          // height: "100vh",
+          height: "100vh",
           width: "100wh",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",

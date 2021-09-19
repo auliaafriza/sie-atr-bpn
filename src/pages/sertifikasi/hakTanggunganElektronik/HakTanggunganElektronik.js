@@ -39,15 +39,14 @@ const HakTanggunganElektronik = () => {
           paddingBottom: 20,
           width: "100%",
           // opacity: "0.5",
-          // height: "100vh",
+          height: "100vh",
         }}
       >
-        <SieHTTanpaPeriksa />
-        <SieHTUploadPpatIpSama />
+        <SieHtJumlahKantorTahun />
+        {/* <SieHTTanpaPeriksa /> */}
+        {/* <SieHTUploadPpatIpSama /> */}
       </div>
-
-      <SieHtJumlahKantorTahun />
-      <SieHtDitutupPerkantor />
+      {/* <SieHtDitutupPerkantor /> */}
     </div>
   );
 };

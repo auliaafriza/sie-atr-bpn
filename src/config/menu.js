@@ -194,11 +194,11 @@ export const MENU_LIST = [
         name: "Tanah Aset Pemerintah",
         link: "/Sertifikasi/TanahAssetPemerintah",
       },
-      // {
-      //   icon: <BiBuildings size={24} />,
-      //   name: "Hak Tanggungan Elektronik",
-      //   link: "/Sertifikasi/HakTanggunganElektronik",
-      // },
+      {
+        icon: <BiBuildings size={24} />,
+        name: "Hak Tanggungan Elektronik",
+        link: "/Sertifikasi/HakTanggunganElektronik",
+      },
       // {
       //   icon: <IoMdMap size={24} />,
       //   name: "Peta Pendaftaran Tanah",
