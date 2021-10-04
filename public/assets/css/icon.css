@@ -1,0 +1,49 @@
+@font-face {
+    font-family: 'mitrecon';
+    src:  url('../fonts/mitrecon.eot?jrxbe5');
+    src:  url('../fonts/mitrecon.eot?jrxbe5#iefix') format('embedded-opentype'),
+      url('../fonts/mitrecon.ttf?jrxbe5') format('truetype'),
+      url('../fonts/mitrecon.woff?jrxbe5') format('woff'),
+      url('../fonts/mitrecon.svg?jrxbe5#mitrecon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+  }
+  
+  [class^="mitrecon-"], [class*=" mitrecon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'mitrecon' !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+  
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .mitrecon-siwastek:before {
+    content: "\e900";
+  }
+  .mitrecon-gugus-tugas:before {
+    content: "\e901";
+  }
+  .mitrecon-perpustakaan:before {
+    content: "\e902";
+  }
+  .mitrecon-statistik:before {
+    content: "\e903";
+  }
+  .mitrecon-jdih:before {
+    content: "\e904";
+  }
+  .mitrecon-peta-bidang:before {
+    content: "\e905";
+  }
+  .mitrecon-gistaru:before {
+    content: "\e906";
+  }
+  

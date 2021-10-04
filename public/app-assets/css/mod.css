@@ -1,0 +1,345 @@
+/*set root or variable*/
+    :root {
+        --base-color-1  : rgba(20, 27, 46, 1);
+        --fadeInUp      : slide from bottom;
+        --fadeInLeft    : slide from left;
+        --fadeInRight   : slide from right;
+    }
+/*end set root or variable*/
+
+/*css global*/
+    .horizontal-menu #main-menu-navigation ul li a:hover span,
+    .horizontal-menu #main-menu-navigation ul li a span .hover {
+        transform: translateX(4px);
+    }
+
+    .top-content.content,
+    .bottom-content.content {
+        min-height: unset;
+    }
+
+    .wow {
+        opacity: 0;
+    }
+
+    section.bottom-content .content-header.border-bottom {
+        border-color: #626e8261!important;
+    }
+
+    section.bottom-content .content-header .content-header-right .btn {
+        padding: 5px 10px;
+    }
+
+    section.bottom-content:nth-child(odd) {
+        background-color: var(--white);
+        box-shadow: 0 2px 18px 1px rgba(49, 53, 72, 0.1);
+    }
+
+    .btn-default-1,
+    .btn-default-1:focus {
+        border-color: var(--base-color-1);
+        background-color: var(--base-color-1);
+        color: var(--white);
+    }
+
+    .btn-default-1:hover {
+        border-color: #252c3f;
+        background-color: #252c3f;
+        color: var(--white);
+    }
+
+    .btn-outline-default-1,
+    .btn-outline-default-1:focus {
+        border-color: var(--base-color-1);
+        background-color: transparent;
+        color: var(--base-color-1);
+    }
+
+    .btn-outline-default-1:hover {
+        border-color: var(--base-color-1);
+        background-color: var(--base-color-1);
+        color: var(--white);
+    }
+
+    footer.footer-dark {
+        background: linear-gradient(90deg, rgb(2, 0, 36) 0%, rgb(20, 27, 46) 34%, rgb(0, 62, 105) 100%);
+    }
+
+    .back-to-top {
+        position: fixed;
+        color: #fff;
+        width: 44px;
+        height: 44px;
+        text-align: center;
+        line-height: 1;
+        right: 15px;
+        bottom: 15px;
+        transition: background 0.5s;
+        z-index: 9;
+        background: var(--base-color-1);
+        transition: all .5s;
+        padding: 4px;
+    }
+
+    .back-to-top:hover {
+        color: #fff;
+        transition: all .5s;        
+    }
+
+    .back-to-top .la {
+        font-size: 2.5rem;
+    }
+
+    .back-to-top {
+        opacity: 0;
+    }
+
+/*css global*/
+
+
+/*css login page*/
+    .login-page {
+        background: url(../../app-assets/images/img/bg-login.jpg) no-repeat center center fixed;
+        background-size: cover;
+    }
+    .login-page .card {
+        opacity: .7;
+    }
+/*css end login page*/
+    
+
+/*css header and menu*/
+    .navbar-nav li:first-child {
+        margin-left:auto;
+    } 
+
+    .navbar-nav li:last-child {
+        margin-right:auto;
+    }
+
+    .navbar-dark.navbar-horizontal,
+    .navbar-container.content {
+        background: linear-gradient(90deg, rgb(2, 0, 36) 0%, rgb(20, 27, 46) 34%, rgb(0, 62, 105) 100%);
+    }
+
+    .navbar-brand {
+        padding: 18px 0px;
+        margin-right: 0;
+    }
+
+    .brand-text {
+        display: inline;
+        padding-left: 6px;
+        font-weight: 500;
+        vertical-align: middle;
+        color:  #fff;
+    }
+
+    .brand-logo {
+        width: 36px;
+        border-radius: 100%;
+    }
+
+    .branding-logo {
+        display: inline;
+        padding-left: 6px;
+        font-weight: 500;
+        vertical-align: middle;
+    }
+
+    .toggle-menu {
+        display: none;
+    }
+/*end css header and menu*/
+
+
+/*css top content*/
+    .top-content {
+        background-position: center;
+        background-size: cover!important;
+    }
+
+    .top-content .card {
+        background: rgba(255, 255, 255, .7);
+        color: var(--base-color-1);
+    }
+
+    .top-content .card h3 {
+        color: var(--base-color-1);
+        font-weight: 600;
+    }
+/*css top content*/
+
+/*css export widget*/
+    .export-option {
+        background: rgb(2,0,36);
+        background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(20,27,46,1) 34%, rgba(193,201,223,1) 100%);
+        padding: 10px;
+        position: fixed;
+        top: 200px;
+        width: 138px;
+        transition: .3s;
+        z-index: 1;
+    }
+    .export-option-close {
+        right: -180px;
+        transition: .3s;
+    }
+    .export-option-open {
+        right: 0px!important;
+        transition: .3s;
+    }
+    .export-option button {
+        width: 100%;
+        background-color: #141b2e;
+        border-radius: .25em;
+        margin-bottom: 5px;
+        transition: .3s;
+        color: #fff;
+        border: 1px solid #aeaeb5;
+        text-align: inherit;
+    }
+    .export-option button:hover {
+        background-color: #fff;
+    }
+    .export-option button.active {
+        background-color: #fff;
+        color: #fdbe33;
+    }
+    .setting-widget {
+        opacity: 0;
+        position: fixed;
+        top: 200px;
+        z-index: 1;
+        transition: all .3s;
+    }
+    .setting-widget:hover {
+        opacity: 1!important;
+    }
+    .setting-widget a,
+    .setting-widget a:active,
+    .setting-widget a:focus {
+        background-color: #141b2e;
+        border-radius: 5px 0 0 5px;
+        color: #fff;
+    }
+    .setting-widget:hover a {
+        color: #fff;
+    }
+    .setting-widget .b-close{
+        display: none;
+        opacity: 1;
+    }
+    .setting-widget-close {
+        right: 0;
+        transition: .3s;
+    }
+    .setting-widget-open {
+        right: 138px;
+        transition: .3s;
+    }
+/*css export widget*/
+
+
+@media (max-width: 1200px) {
+    .toggle-menu {
+        display: block;
+    }
+
+    .main-menu.menu-light,
+    .main-menu.menu-light .navigation li,
+    .main-menu.menu-light .navigation > li ul li {
+        background: #141b2e;
+        text-align: left;
+    }
+    .main-menu.menu-light .navigation-main li,
+    .main-menu.menu-light .navigation-main li a span,
+    .main-menu.menu-light .navigation-main li a i,
+    .menu-toggle i {
+        color: #fff;
+    }
+
+    .navbar-light {
+        background: #141b2e;
+    }
+
+    .horizontal-layout.vertical-layout.vertical-overlay-menu .main-menu .navigation li.nav-item.menu-collapsed-open > a {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .form-control-position i{
+        color: #282829;
+    }
+
+    .top-content {
+        background-position: center;
+    }
+
+    .btn-outline-info i {
+        color :#3ea3e3;
+    }
+
+    .btn-outline-danger i {
+        color: #f2798a;
+    }
+
+    .line-on-side span {
+        color: #3e4160;
+    }
+
+    .navbar-header .float-right {
+        display: none;
+    } 
+
+    .export-option span:hover,
+    .export-option .d-md-block i:hover {
+        color: #6b6f82;
+    }
+
+}
+
+@media (min-width: 1200px) {
+    .horizontal-menu .navbar-horizontal .nav-item a span {
+        display: grid;
+        text-align:  center;
+    }
+
+    .horizontal-menu .navbar-horizontal .nav-item > a > i {
+        margin-right: 0;
+        margin-bottom: 5px;
+    }
+
+    .horizontal-menu .navbar-horizontal ul#main-menu-navigation > li > a {
+        padding: .8rem 1rem;
+        min-width: 100px;
+    }
+
+    .navbar-header {
+        display: none;
+    }
+}
+
+@media (min-width: 775px) {
+    .horizontal-menu .navbar-horizontal .nav-item a span {
+        display: grid;
+        text-align:  center;
+    }
+
+    .horizontal-menu .navbar-horizontal .nav-item > a > i {
+        margin-right: 0;
+        margin-bottom: 5px;
+    }
+
+    .horizontal-menu .navbar-horizontal ul#main-menu-navigation > li > a {
+        padding: .8rem 1rem;
+        min-width: 100px;
+    }
+
+    .export-option span:hover {
+        color: #6b6f82;
+    }
+
+    .export-option i:hover {
+        color: #6b6f82;
+    }
+}

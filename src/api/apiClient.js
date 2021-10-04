@@ -15,5 +15,6 @@ export const apiClientLogin = axios.create({
   },
 });
 
-export const url = "http://10.20.56.205:5000/";
+// export const url = "http://10.20.56.205:5000/";
+export const url = "https://sie.atrbpn.go.id/";
 // export const url = "http://10.20.57.234/SIEBackEnd/";

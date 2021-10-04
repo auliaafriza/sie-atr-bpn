@@ -1,0 +1,120 @@
+@font-face {
+  font-family: 'mtreicon';
+  src:  url('fonts/mtreicon.eot?jqmf8o');
+  src:  url('fonts/mtreicon.eot?jqmf8o#iefix') format('embedded-opentype'),
+    url('fonts/mtreicon.ttf?jqmf8o') format('truetype'),
+    url('fonts/mtreicon.woff?jqmf8o') format('woff'),
+    url('fonts/mtreicon.svg?jqmf8o#mtreicon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="mtreicon-"], [class*=" mtreicon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'mtreicon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.mtreicon-arrow-left:before {
+  content: "\e916";
+}
+.mtreicon-arrow-right:before {
+  content: "\e917";
+}
+.mtreicon-clock:before {
+  content: "\e918";
+}
+.mtreicon-log-out:before {
+  content: "\e919";
+}
+.mtreicon-log-in:before {
+  content: "\e91a";
+}
+.mtreicon-calendar:before {
+  content: "\e91b";
+}
+.mtreicon-calendar-clock:before {
+  content: "\e91c";
+}
+.mtreicon-book:before {
+  content: "\e91d";
+}
+.mtreicon-books:before {
+  content: "\e91e";
+}
+.mtreicon-assigment:before {
+  content: "\e900";
+}
+.mtreicon-checklist:before {
+  content: "\e901";
+}
+.mtreicon-conversation:before {
+  content: "\e902";
+}
+.mtreicon-diploma:before {
+  content: "\e903";
+}
+.mtreicon-graduated:before {
+  content: "\e904";
+}
+.mtreicon-graduation-cap:before {
+  content: "\e905";
+}
+.mtreicon-group:before {
+  content: "\e906";
+}
+.mtreicon-headset:before {
+  content: "\e907";
+}
+.mtreicon-home:before {
+  content: "\e908";
+}
+.mtreicon-information-1:before {
+  content: "\e909";
+}
+.mtreicon-information-2:before {
+  content: "\e90a";
+}
+.mtreicon-language:before {
+  content: "\e90b";
+}
+.mtreicon-leader:before {
+  content: "\e90c";
+}
+.mtreicon-loupe:before {
+  content: "\e90d";
+}
+.mtreicon-newspaper:before {
+  content: "\e90e";
+}
+.mtreicon-search-1:before {
+  content: "\e90f";
+}
+.mtreicon-search-2:before {
+  content: "\e910";
+}
+.mtreicon-team:before {
+  content: "\e911";
+}
+.mtreicon-translation:before {
+  content: "\e912";
+}
+.mtreicon-visitor:before {
+  content: "\e913";
+}
+.mtreicon-website-1:before {
+  content: "\e914";
+}
+.mtreicon-website-2:before {
+  content: "\e915";
+}

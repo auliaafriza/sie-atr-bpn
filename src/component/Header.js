@@ -23,7 +23,7 @@ const Header = (props) => {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const parsed = queryString.parse(location.search);
   // const [open, setOpen] = React.useState(false);
-  // const userName = useSelector((state) => state.globalReducer.whoAmI);
+  const userNameRed = useSelector((state) => state.globalReducer.whoAmI);
   const userName = parsed ? parsed.u : null;
   const user = useSelector((state) => state.globalReducer.user);
   const [userNm, setUserNm] = useState("");
@@ -37,34 +37,55 @@ const Header = (props) => {
   const isMenuOpen = Boolean(anchorEl);
   // const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+  const getCookie = (cname) => {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == " ") {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  };
+
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   useEffect(() => {
-    dispatch(getWhoami());
+    let user = getCookie(".atrbpn2409");
+    dispatch(getWhoami(user));
   }, []);
 
   useEffect(() => {
-    // if (status == "success") {
-    //   dispatch(resetWhoami());
-    //   // userName
-    //   //   ? null
-    //   //   : window.location.replace("http://10.20.56.205:5000/Auth/Login");
-    // } else if (status == "failed") {
-    //   dispatch(resetWhoami());
-    //   // window.location.replace("http://10.20.56.205:5000/Auth/Login");
-    // }
     let dateTime = moment(new Date()).format("DD/MM/YYYY");
-    if (userName) {
-      localStorage.setItem("user", userName);
+    if (status == "success") {
+      dispatch(resetWhoami());
+      localStorage.setItem("user", userNameRed);
       localStorage.setItem("date", dateTime);
-      setUserNm(userName);
-    } else if (dateTime <= dateExpired) {
-      setUserNm(userExpired);
-    } else {
-      window.location.replace("http://10.20.56.205:5000/Auth/Login");
+      setUserNm(userNameRed);
+      userNameRed
+        ? null
+        : window.location.replace("https://sie.atrbpn.go.id/Auth/Login");
+    } else if (status == "failed") {
+      dispatch(resetWhoami());
+      window.location.replace("https://sie.atrbpn.go.id/Auth/Login");
     }
+    // let dateTime = moment(new Date()).format("DD/MM/YYYY");
+    // if (userName) {
+    //   localStorage.setItem("user", userName);
+    //   localStorage.setItem("date", dateTime);
+    //   setUserNm(userName);
+    // } else if (dateTime <= dateExpired) {
+    //   setUserNm(userExpired);
+    // } else {
+    //   window.location.replace("https://sie.atrbpn.go.id/Auth/Login");
+    // }
   }, []);
 
   const handleMobileMenuClose = () => {
@@ -106,7 +127,7 @@ const Header = (props) => {
           className={classes.title}
           variant="h6"
           noWrap
-          style={{ marginLeft: 10 }}
+          style={{ marginLeft: 10, color: "white" }}
         >
           SIE ATR BPN
         </Typography>
@@ -127,14 +148,19 @@ const Header = (props) => {
           </div>
           <Typography
             variant="h6"
-            style={{ fontSize: "16px", marginTop: "10px", margin: "10px" }}
+            style={{
+              fontSize: "16px",
+              marginTop: "10px",
+              margin: "10px",
+              color: "white",
+            }}
           >
             {userNm || userExpired}
           </Typography>
           <IconButton
             edge="end"
             color="inherit"
-            href="http://siedev.atrbpn.go.id/SIEBackend"
+            href="https://sie.atrbpn.go.id/Auth/Login"
           >
             <AiOutlineLogout />
           </IconButton>

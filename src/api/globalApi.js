@@ -22,6 +22,6 @@ export const getWilayahApi = () => {
   );
 };
 
-export const getWhoamiApi = () => {
-  return apiClientLogin.get(`ApiUsers/WhoAmI`);
+export const getWhoamiApi = (user) => {
+  return apiClientLogin.get(`ApiUsers/WhoAmI?cookie=${user}`);
 };

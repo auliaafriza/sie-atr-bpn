@@ -291,6 +291,7 @@ const realisasiPenggunaan = () => {
       .then(function () {
         // always executed
       });
+    getKantah(dataFilter.aliaskanwil);
     getData();
   }, []);
 
