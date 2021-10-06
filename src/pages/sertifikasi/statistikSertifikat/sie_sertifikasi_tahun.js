@@ -59,6 +59,7 @@ import {
   tahunData,
   semesterData,
   bulanDataNumberic,
+  deleteDuplicates,
 } from "../../../functionGlobal/globalDataAsset";
 import moment from "moment";
 import { fileExport } from "../../../functionGlobal/exports";
@@ -243,15 +244,33 @@ const SieSertifikatTahun = () => {
     setOpen(false);
   };
 
+  const [dataKantor, setDataKantor] = useState([]);
+
+  const getListKantor = (temp) => {
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .post(`${url}MasterData/filter_kantor`, temp)
+      .then(function (response) {
+        setDataKantor(response.data.data.length != 0 ? response.data.data : []);
+      })
+      .catch(function (error) {
+        setDataKantor([]);
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
+
   const handleChangeFilter = (event) => {
     if (event.length != 0) {
       let temp = { kodeWilayah: [] };
       event.map((item) => temp.kodeWilayah.push(item.kode));
-      dispatch(getKantorPNBP(temp));
-      setDataFilter([
-        ...dataFilter,
-        ...event.filter((option) => dataFilter.indexOf(option) === -1),
-      ]);
+      getListKantor(temp);
+      let res = deleteDuplicates(event, "kode");
+      setDataFilter(res);
+      setDataFilterKantor([]);
     } else {
       setDataFilter([]);
     }
@@ -259,10 +278,8 @@ const SieSertifikatTahun = () => {
 
   const handleChangeFilterKantor = (event) => {
     if (event.length != 0) {
-      setDataFilterKantor([
-        ...dataFilterKantor,
-        ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
-      ]);
+      let res = deleteDuplicates(event, "kode");
+      setDataFilterKantor(res);
     } else {
       setDataFilterKantor([]);
     }
@@ -303,7 +320,7 @@ const SieSertifikatTahun = () => {
     dataFilter &&
       dataFilter.length &&
       dataFilter.map((item) => temp.kodeWilayah.push(item.kode));
-    dispatch(getKantorPNBP(temp));
+    getListKantor(temp);
     getData();
   }, []);
 
@@ -500,7 +517,10 @@ const SieSertifikatTahun = () => {
                       )}
                       secondary={
                         <React.Fragment>
-                          {history.analisisData.replace(/<[^>]+>/g, "")}
+                          {history.analisisData.replace(
+                            /<[^>]+>|&amp|&amp!|&nbsp/g,
+                            ""
+                          )}
                         </React.Fragment>
                       }
                     />
@@ -1067,7 +1087,7 @@ const SieSertifikatTahun = () => {
                   getOptionDisabled={(options) =>
                     dataFilterKantor.length >= 32 ? true : false
                   }
-                  options={berkasPnbpKantor}
+                  options={dataKantor}
                   classes={{
                     option: classes.option,
                   }}
@@ -1154,7 +1174,7 @@ const SieSertifikatTahun = () => {
             >
               {comment && comment.lastComment
                 ? comment.lastComment.analisisData
-                    .replace(/<[^>]+>/g, "")
+                    .replace(/<[^>]+>|&amp|&amp!|&nbsp/g, "")
                     .slice(0, 500)
                 : ""}
               {comment &&

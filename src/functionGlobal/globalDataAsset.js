@@ -1,3 +1,6 @@
+import axios from "axios";
+import { url } from "../api/apiClient";
+
 export const generateArrayOfYears = () => {
   let max = new Date().getFullYear();
   let minYears = max - 10;
@@ -72,4 +75,22 @@ export const DataFormater = (number) => {
   } else {
     return number.toString();
   }
+};
+
+export const getUniqueListBy = (arr, key) => {
+  return [...new Map(arr.map((item) => [item[key], item])).values()];
+};
+
+export const deleteDuplicates = (data, key) => {
+  const duplicateIds = data
+    .map((e) => e[key])
+    .map((e, i, final) => final.indexOf(e) !== i && i)
+    .filter((obj) => data[obj])
+    .map((e) => data[e][key]);
+  let result = [];
+  console.log("res", duplicateIds);
+  data.map((item, index) =>
+    item[key] == duplicateIds[0] ? null : result.push(item)
+  );
+  return result;
 };

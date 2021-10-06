@@ -59,7 +59,11 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
-import { tahunData, bulanData } from "../../functionGlobal/globalDataAsset";
+import {
+  tahunData,
+  bulanData,
+  deleteDuplicates,
+} from "../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
@@ -196,6 +200,10 @@ const PaguMp = () => {
   };
 
   const handleChangeFilter = (event) => {
+    let temp = { kodeWilayah: [] };
+    event && event.kode ? temp.kodeWilayah.push(event.kode) : null;
+    dispatch(getKantorPNBP(temp));
+    setDataFilterKantor({});
     setDataFilter(event);
     // if (event.length != 0) {
     //   let temp = { kodeWilayah: [] };
@@ -464,7 +472,10 @@ const PaguMp = () => {
                       )}
                       secondary={
                         <React.Fragment>
-                          {history.analisisData.replace(/<[^>]+>/g, "")}
+                          {history.analisisData.replace(
+                            /<[^>]+>|&amp|&amp!|&nbsp/g,
+                            ""
+                          )}
                         </React.Fragment>
                       }
                     />
@@ -1188,7 +1199,7 @@ const PaguMp = () => {
               >
                 {comment && comment.lastComment
                   ? comment.lastComment.analisisData
-                      .replace(/<[^>]+>/g, "")
+                      .replace(/<[^>]+>|&amp|&amp!|&nbsp/g, "")
                       .slice(0, 500)
                   : ""}
                 {comment &&
@@ -1204,7 +1215,7 @@ const PaguMp = () => {
                         analisis:
                           comment && comment.lastComment
                             ? comment.lastComment.analisisData.replace(
-                                /<[^>]+>/g,
+                                /<[^>]+>|&amp|&amp!|&nbsp/g,
                                 ""
                               )
                             : "",

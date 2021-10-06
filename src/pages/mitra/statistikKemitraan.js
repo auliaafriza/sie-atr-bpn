@@ -55,7 +55,11 @@ import { IoMdDownload } from "react-icons/io";
 import styles from "./styles";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
-import { tahunData, DataFormater } from "../../functionGlobal/globalDataAsset";
+import {
+  tahunData,
+  DataFormater,
+  deleteDuplicates,
+} from "../../functionGlobal/globalDataAsset";
 import moment from "moment";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
@@ -168,8 +172,8 @@ const KepegawaianOrganisasi = () => {
   const [comment, setComment] = useState("");
   const [tahunAwal, setTahunAwal] = useState("2017");
   const [kanwil, setKanwil] = useState([
-    "Kantor Wilayah Provinsi Bali",
-    "Kantor Wilayah Provinsi Sulawesi Tenggara",
+    { kanwil: "Kantor Wilayah Provinsi Bali" },
+    { kanwil: "Kantor Wilayah Provinsi Sulawesi Tenggara" },
   ]);
   const [hideText, setHideText] = useState(false);
   const [hideTextKantor, setHideTextKantor] = useState(false);
@@ -217,10 +221,8 @@ const KepegawaianOrganisasi = () => {
 
   const handleChangeKanwil = (event) => {
     if (event.length != 0) {
-      setKanwil([
-        ...kanwil,
-        ...event.filter((option) => kanwil.indexOf(option) === -1),
-      ]);
+      let res = deleteDuplicates(event, "kanwil");
+      setKanwil(res);
     } else {
       setKanwil([]);
     }
@@ -228,10 +230,8 @@ const KepegawaianOrganisasi = () => {
 
   const handleChangeKantor = (event) => {
     if (event.length != 0) {
-      setKantor([
-        ...kantor,
-        ...event.filter((option) => kantor.indexOf(option) === -1),
-      ]);
+      let res = deleteDuplicates(event, "kantah");
+      setKantor(res);
     } else {
       setKantor([]);
     }
@@ -239,8 +239,12 @@ const KepegawaianOrganisasi = () => {
 
   const getData = () => {
     let temp = { kantor: [], wilayah: [] };
-    temp.kantah = kantor && kantor.length == 1 && kantor[0] == "" ? [] : kantor;
-    temp.wilayah = kanwil;
+    kantor && kantor.length != 0
+      ? kantor.map((item) => temp.kantor.push(item.kantah))
+      : [];
+    kanwil && kanwil.length != 0
+      ? kanwil.map((item) => temp.wilayah.push(item.kanwil))
+      : [];
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
@@ -255,6 +259,7 @@ const KepegawaianOrganisasi = () => {
       })
       .catch(function (error) {
         // handle error
+        setData([]);
         console.log(error);
       })
       .then(function () {
@@ -457,7 +462,10 @@ const KepegawaianOrganisasi = () => {
                       )}
                       secondary={
                         <React.Fragment>
-                          {history.analisisData.replace(/<[^>]+>/g, "")}
+                          {history.analisisData.replace(
+                            /<[^>]+>|&amp|&amp!|&nbsp/g,
+                            ""
+                          )}
                         </React.Fragment>
                       }
                     />
@@ -1198,7 +1206,7 @@ const KepegawaianOrganisasi = () => {
       <Typography className={classes.isiContentTextStyle} variant="h2" wrap>
         {comment && comment.lastComment
           ? comment.lastComment.analisisData
-              .replace(/<[^>]+>/g, "")
+              .replace(/<[^>]+>|&amp|&amp!|&nbsp/g, "")
               .slice(0, 500)
           : ""}
         {comment &&
@@ -1214,7 +1222,10 @@ const KepegawaianOrganisasi = () => {
                 dataTable: "",
                 analisis:
                   comment && comment.lastComment
-                    ? comment.lastComment.analisisData.replace(/<[^>]+>/g, "")
+                    ? comment.lastComment.analisisData.replace(
+                        /<[^>]+>|&amp|&amp!|&nbsp/g,
+                        ""
+                      )
                     : "",
                 type: "Bar",
                 listTop10Comment: comment.listTop10Comment,

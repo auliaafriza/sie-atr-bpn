@@ -16,6 +16,7 @@ import Logo from "../assets/img/fav.png";
 import { resetWhoami, getWhoami, setUsername } from "../actions/globalActions";
 import queryString from "query-string";
 import moment from "moment";
+import Cookies from "universal-cookie";
 
 const Header = (props) => {
   const classes = styles();
@@ -24,6 +25,7 @@ const Header = (props) => {
   const parsed = queryString.parse(location.search);
   // const [open, setOpen] = React.useState(false);
   const userNameRed = useSelector((state) => state.globalReducer.whoAmI);
+  const statusRed = useSelector((state) => state.globalReducer.status);
   const userName = parsed ? parsed.u : null;
   const user = useSelector((state) => state.globalReducer.user);
   const [userNm, setUserNm] = useState("");
@@ -35,22 +37,26 @@ const Header = (props) => {
     ? localStorage.getItem("date")
     : null;
   const isMenuOpen = Boolean(anchorEl);
+  const cookies = new Cookies();
   // const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const getCookie = (cname) => {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(";");
-    for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == " ") {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
+    // let name = cname + "=";
+    // let decodedCookie = decodeURIComponent(document.cookie);
+    // let ca = decodedCookie.split(";");
+    // for (let i = 0; i < ca.length; i++) {
+    //   let c = ca[i];
+    //   while (c.charAt(0) == " ") {
+    //     c = c.substring(1);
+    //   }
+    //   if (c.indexOf(name) == 0) {
+    //     return c.substring(name.length, c.length);
+    //   }
+    // }
+    // return "";
+    let value = "";
+    value = cookies.get(cname);
+    return value;
   };
 
   const handleProfileMenuOpen = (event) => {
@@ -58,13 +64,13 @@ const Header = (props) => {
   };
 
   useEffect(() => {
-    let user = getCookie(".atrbpn2409");
-    dispatch(getWhoami(user));
+    // let user = getCookie(".atrbpn2409");
+    dispatch(getWhoami());
   }, []);
 
   useEffect(() => {
     let dateTime = moment(new Date()).format("DD/MM/YYYY");
-    if (status == "success") {
+    if (statusRed == "success") {
       dispatch(resetWhoami());
       localStorage.setItem("user", userNameRed);
       localStorage.setItem("date", dateTime);
@@ -72,7 +78,7 @@ const Header = (props) => {
       userNameRed
         ? null
         : window.location.replace("https://sie.atrbpn.go.id/Auth/Login");
-    } else if (status == "failed") {
+    } else if (statusRed == "failed") {
       dispatch(resetWhoami());
       window.location.replace("https://sie.atrbpn.go.id/Auth/Login");
     }
@@ -86,7 +92,7 @@ const Header = (props) => {
     // } else {
     //   window.location.replace("https://sie.atrbpn.go.id/Auth/Login");
     // }
-  }, []);
+  }, [statusRed]);
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -155,7 +161,7 @@ const Header = (props) => {
               color: "white",
             }}
           >
-            {userNm || userExpired}
+            {userNm}
           </Typography>
           <IconButton
             edge="end"

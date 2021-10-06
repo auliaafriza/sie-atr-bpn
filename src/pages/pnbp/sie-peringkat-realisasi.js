@@ -70,7 +70,10 @@ import "react-toastify/dist/ReactToastify.css";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { getKantorPNBP } from "../../actions/pnbpAction";
-import { tahunData } from "../../functionGlobal/globalDataAsset";
+import {
+  tahunData,
+  deleteDuplicates,
+} from "../../functionGlobal/globalDataAsset";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -144,7 +147,7 @@ const PeringkatRealisasi = () => {
 
   const [hideText, setHideText] = useState(false);
   const [hideTextKantor, setHideTextKantor] = useState(false);
-
+  const [dataKantor, setDataKantor] = useState([]);
   const [tahunAwal, setTahunAwal] = useState("2021");
   const [jenisGroup, setJenisGroup] = useState("kanwil");
   const [level, setLevel] = useState("Tertinggi");
@@ -174,7 +177,7 @@ const PeringkatRealisasi = () => {
   };
 
   const handleChangeAwal = (event) => {
-    setTipe(event.target.value);
+    setTahunAwal(event.target.value);
   };
 
   const handleChangeJenisGroup = (event) => {
@@ -201,15 +204,31 @@ const PeringkatRealisasi = () => {
     setOpen(false);
   };
 
+  const getListKantor = (temp) => {
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .post(`${url}MasterData/filter_kantor`, temp)
+      .then(function (response) {
+        setDataKantor(response.data.data.length != 0 ? response.data.data : []);
+      })
+      .catch(function (error) {
+        setDataKantor([]);
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
+
   const handleChangeFilter = (event) => {
     if (event.length != 0) {
       let temp = { kodeWilayah: [] };
       event.map((item) => temp.kodeWilayah.push(item.kode));
-      dispatch(getKantorPNBP(temp));
-      setDataFilter([
-        ...dataFilter,
-        ...event.filter((option) => dataFilter.indexOf(option) === -1),
-      ]);
+      getListKantor(temp);
+      let res = deleteDuplicates(event, "kode");
+      setDataFilter(res);
+      setDataFilterKantor([]);
     } else {
       setDataFilter([]);
     }
@@ -217,10 +236,8 @@ const PeringkatRealisasi = () => {
 
   const handleChangeFilterKantor = (event) => {
     if (event.length != 0) {
-      setDataFilterKantor([
-        ...dataFilterKantor,
-        ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
-      ]);
+      let res = deleteDuplicates(event, "kode");
+      setDataFilterKantor(res);
     } else {
       setDataFilterKantor([]);
     }
@@ -248,6 +265,7 @@ const PeringkatRealisasi = () => {
       })
       .catch(function (error) {
         // handle error
+        setData([]);
         console.log(error);
       })
       .then(function () {
@@ -260,7 +278,7 @@ const PeringkatRealisasi = () => {
     dataFilter &&
       dataFilter.length &&
       dataFilter.map((item) => temp.kodeWilayah.push(item.kode));
-    dispatch(getKantorPNBP(temp));
+    getListKantor(temp);
     getData();
   }, []);
 
@@ -459,7 +477,10 @@ const PeringkatRealisasi = () => {
                       )}
                       secondary={
                         <React.Fragment>
-                          {history.analisisData.replace(/<[^>]+>/g, "")}
+                          {history.analisisData.replace(
+                            /<[^>]+>|&amp|&amp!|&nbsp/g,
+                            ""
+                          )}
                         </React.Fragment>
                       }
                     />
@@ -1032,7 +1053,7 @@ const PeringkatRealisasi = () => {
                   id="kantor"
                   name="kantor"
                   style={{ width: "100%", height: 50 }}
-                  options={berkasPnbpKantor}
+                  options={dataKantor}
                   classes={{
                     option: classes.option,
                   }}
@@ -1157,7 +1178,7 @@ const PeringkatRealisasi = () => {
             >
               {comment && comment.lastComment
                 ? comment.lastComment.analisisData
-                    .replace(/<[^>]+>/g, "")
+                    .replace(/<[^>]+>|&amp|&amp!|&nbsp/g, "")
                     .slice(0, 500)
                 : ""}
               {comment &&

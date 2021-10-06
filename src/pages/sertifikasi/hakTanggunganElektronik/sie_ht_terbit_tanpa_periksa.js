@@ -429,7 +429,10 @@ const TerbitTanpaPeriksa = () => {
                       )}
                       secondary={
                         <React.Fragment>
-                          {history.analisisData.replace(/<[^>]+>/g, "")}
+                          {history.analisisData.replace(
+                            /<[^>]+>|&amp|&amp!|&nbsp/g,
+                            ""
+                          )}
                         </React.Fragment>
                       }
                     />
@@ -1088,7 +1091,7 @@ const TerbitTanpaPeriksa = () => {
       <Typography className={classes.isiContentTextStyle} variant="h2" wrap>
         {comment && comment.lastComment
           ? comment.lastComment.analisisData
-              .replace(/<[^>]+>/g, "")
+              .replace(/<[^>]+>|&amp|&amp!|&nbsp/g, "")
               .slice(0, 500)
           : ""}
         {comment &&
@@ -1103,7 +1106,10 @@ const TerbitTanpaPeriksa = () => {
                 dataTable: "",
                 analisis:
                   comment && comment.lastComment
-                    ? comment.lastComment.analisisData.replace(/<[^>]+>/g, "")
+                    ? comment.lastComment.analisisData.replace(
+                        /<[^>]+>|&amp|&amp!|&nbsp/g,
+                        ""
+                      )
                     : "",
                 type: "Bar",
                 listTop10Comment: comment.listTop10Comment,

@@ -60,7 +60,10 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
-import { tahunData, bulanData } from "../../../functionGlobal/globalDataAsset";
+import {
+  tahunData,
+  deleteDuplicates,
+} from "../../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
@@ -216,17 +219,6 @@ const realisasiPenggunaan = () => {
   };
 
   const handleChangeFilter = (event) => {
-    // if (event.length != 0) {
-    //   let temp = [];
-    //   event.map((item) => temp.push(item.aliaskanwil));
-    //   getKantah(temp);
-    //   setDataFilter([
-    //     ...dataFilter,
-    //     ...event.filter((option) => dataFilter.indexOf(option) === -1),
-    //   ]);
-    // } else {
-    //   setDataFilter([]);
-    // }
     event && event.aliaskanwil ? getKantah(event.aliaskanwil) : null;
     setDataFilterKantor([]);
     setDataFilter(event);
@@ -234,10 +226,8 @@ const realisasiPenggunaan = () => {
 
   const handleChangeFilterKantor = (event) => {
     if (event.length != 0) {
-      setDataFilterKantor([
-        ...dataFilterKantor,
-        ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
-      ]);
+      let res = deleteDuplicates(event, "aliaskantah");
+      setDataFilterKantor(res);
     } else {
       setDataFilterKantor([]);
     }
@@ -483,7 +473,10 @@ const realisasiPenggunaan = () => {
                       )}
                       secondary={
                         <React.Fragment>
-                          {history.analisisData.replace(/<[^>]+>/g, "")}
+                          {history.analisisData.replace(
+                            /<[^>]+>|&amp|&amp!|&nbsp/g,
+                            ""
+                          )}
                         </React.Fragment>
                       }
                     />
@@ -1103,8 +1096,10 @@ const realisasiPenggunaan = () => {
                       </React.Fragment>
                     )}
                     onInputChange={(_event, value, reason) => {
-                      if (reason == "input") setHideTextKantor(true);
-                      else {
+                      if (reason == "input") {
+                        setHideTextKantor(true);
+                        setDataFilterKantor([]);
+                      } else {
                         setHideTextKantor(false);
                       }
                     }}
@@ -1162,7 +1157,7 @@ const realisasiPenggunaan = () => {
               >
                 {comment && comment.lastComment
                   ? comment.lastComment.analisisData
-                      .replace(/<[^>]+>/g, "")
+                      .replace(/<[^>]+>|&amp|&amp!|&nbsp/g, "")
                       .slice(0, 500)
                   : ""}
                 {comment &&

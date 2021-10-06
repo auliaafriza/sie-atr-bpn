@@ -51,11 +51,11 @@ export const getWilayah = () => {
   };
 };
 
-export const getWhoami = (user) => {
+export const getWhoami = () => {
   return (dispatch) => {
     return dispatch({
       type: GET_WHO_AM_I,
-      payload: getWhoamiApi(user),
+      payload: getWhoamiApi(),
     });
   };
 };

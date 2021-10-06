@@ -249,10 +249,8 @@ const BPHTBJumlahBerkas = () => {
       let temp = { kodeWilayah: [] };
       event.map((item) => temp.kodeWilayah.push(item.kode));
       dispatch(getKantorPNBP(temp));
-      setDataFilter([
-        ...dataFilter,
-        ...event.filter((option) => dataFilter.indexOf(option) === -1),
-      ]);
+      setDataFilter(event);
+      setDataFilterKantor([]);
     } else {
       setDataFilter([]);
     }
@@ -260,10 +258,7 @@ const BPHTBJumlahBerkas = () => {
 
   const handleChangeFilterKantor = (event) => {
     if (event.length != 0) {
-      setDataFilterKantor([
-        ...dataFilterKantor,
-        ...event.filter((option) => dataFilterKantor.indexOf(option) === -1),
-      ]);
+      setDataFilterKantor(event);
     } else {
       setDataFilterKantor([]);
     }
@@ -511,7 +506,10 @@ const BPHTBJumlahBerkas = () => {
                       )}
                       secondary={
                         <React.Fragment>
-                          {history.analisisData.replace(/<[^>]+>/g, "")}
+                          {history.analisisData.replace(
+                            /<[^>]+>|&amp|&amp!|&nbsp/g,
+                            ""
+                          )}
                         </React.Fragment>
                       }
                     />
@@ -1124,7 +1122,7 @@ const BPHTBJumlahBerkas = () => {
             >
               {comment && comment.lastComment
                 ? comment.lastComment.analisisData
-                    .replace(/<[^>]+>/g, "")
+                    .replace(/<[^>]+>|&amp|&amp!|&nbsp/g, "")
                     .slice(0, 100)
                 : ""}
               {comment &&

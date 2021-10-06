@@ -424,7 +424,10 @@ const PSNRa = () => {
                       )}
                       secondary={
                         <React.Fragment>
-                          {history.analisisData.replace(/<[^>]+>/g, "")}
+                          {history.analisisData.replace(
+                            /<[^>]+>|&amp|&amp!|&nbsp/g,
+                            ""
+                          )}
                         </React.Fragment>
                       }
                     />
@@ -1088,7 +1091,7 @@ const PSNRa = () => {
               >
                 {comment && comment.lastComment
                   ? comment.lastComment.analisisData
-                      .replace(/<[^>]+>/g, "")
+                      .replace(/<[^>]+>|&amp|&amp!|&nbsp/g, "")
                       .slice(0, 500)
                   : ""}
                 {comment &&

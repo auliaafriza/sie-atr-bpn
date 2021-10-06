@@ -509,7 +509,7 @@ const ComponentPrint = () => {
                       )}
                       secondary={
                         <React.Fragment>
-                          {history.analisisData.replace(/<[^>]+>/g, "")}
+                          {history.analisisData.replace(/<[^>]+>|&amp|&amp!|&nbsp/g, "")}
                         </React.Fragment>
                       }
                     />

@@ -156,7 +156,6 @@ const reducer = (state = initialstate, action) => {
       return {
         ...state,
         loading: false,
-        whoAmI: "",
         status: "",
       };
     }
