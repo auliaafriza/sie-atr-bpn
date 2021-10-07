@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import LuasPengadaan from "./sie_psn_luas_pengadaan_tanah";
 import IndexTanah from "./psn-index-nilai-tanah";
 import bgImg from "../../../assets/img/psn.jpg";
+import { isMobile } from "react-device-detect";
 
 const PengadaanTanah = () => {
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ const PengadaanTanah = () => {
         paddingTop: 20,
         paddingBottom: 20,
         width: "100%",
-        height: "100vh",
+        height: isMobile ? "100%" : "100vh",
         backgroundImage: `url(${bgImg})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",

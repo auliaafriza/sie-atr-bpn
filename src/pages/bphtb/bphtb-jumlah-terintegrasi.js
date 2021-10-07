@@ -64,6 +64,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { DataFormater } from "../../functionGlobal/globalDataAsset";
+import { isMobile } from "react-device-detect";
 
 const dataTemp = [
   {
@@ -705,7 +706,7 @@ const BPHTBDaerahTerintegrasi = () => {
           direction="row"
           style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
         >
-          <Grid item xs={9}>
+          <Grid item xs={isMobile ? 12 : 9}>
             <Typography className={classes.titleSection} variant="h2">
               Jumlah daerah terintegrasi
             </Typography>
@@ -714,10 +715,10 @@ const BPHTBDaerahTerintegrasi = () => {
           <Grid
             container
             direction="row"
-            justifyContent="flex-end"
-            alignItems="flex-end"
+            justifyContent={isMobile ? "flex-start" : "flex-end"}
+            alignItems={isMobile ? "flex-start" : "flex-end"}
             item
-            xs={3}
+            xs={isMobile ? 12 : 3}
           >
             <ButtonGroup
               aria-label="outlined button group"
@@ -793,7 +794,7 @@ const BPHTBDaerahTerintegrasi = () => {
           }}
         />
         <Grid container spacing={2}>
-          <Grid item xs={8}>
+          <Grid item xs={isMobile ? 12 : 8}>
             <Card className={classes.root} variant="outlined">
               <CardContent>
                 <div className={classes.barChart}>
@@ -841,7 +842,7 @@ const BPHTBDaerahTerintegrasi = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={isMobile ? 12 : 4}>
             <div style={{ margin: 10, marginRight: 25 }}>
               {/* <Typography className={classes.isiTextStyle} variant="h2">
                 Pilih Tahun

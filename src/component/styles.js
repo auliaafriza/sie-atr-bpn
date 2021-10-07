@@ -66,6 +66,7 @@ const styles = makeStyles((theme) => ({
   header: {
     background:
       "linear-gradient(90deg, rgb(2, 0, 36) 0%, rgb(20, 27, 46) 34%, rgb(0, 62, 105) 100%)",
+    width: "100wh",
     // position: "fixed",
     // top: 0,
   },

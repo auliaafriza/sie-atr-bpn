@@ -75,6 +75,7 @@ import { url } from "../../api/apiClient";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { getKantorPNBP } from "../../actions/pnbpAction";
+import { isMobile } from "react-device-detect";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -769,24 +770,6 @@ const KepegawaianBpnUsia = () => {
       >
         {body}
       </Modal>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-        // className={classes.modalStyle1}
-        style={{
-          // display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          overflow: "scroll",
-          width: "90%",
-          height: "98%",
-          padding: "0 9em 0em 5em",
-        }}
-      >
-        {body}
-      </Modal>
       <Box
         style={{
           backgroundColor: "rgb(244, 245, 250)",
@@ -800,7 +783,7 @@ const KepegawaianBpnUsia = () => {
           direction="row"
           style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
         >
-          <Grid item xs={6}>
+          <Grid item xs={isMobile ? 12 : 6}>
             <Typography className={classes.titleSection} variant="h2">
               Jumlah Pegawai berdasarkan Usia
             </Typography>
@@ -808,10 +791,10 @@ const KepegawaianBpnUsia = () => {
           <Grid
             container
             direction="row"
-            justifyContent="flex-end"
-            alignItems="flex-end"
+            justifyContent={isMobile ? "flex-start" : "flex-end"}
+            alignItems={isMobile ? "flex-start" : "flex-end"}
             item
-            xs={6}
+            xs={isMobile ? 12 : 6}
           >
             {/* <ReactToPrint
             trigger={() => <button>Print this out!</button>}
@@ -903,7 +886,7 @@ const KepegawaianBpnUsia = () => {
           }}
         />
         <Grid container spacing={2}>
-          <Grid item xs={4}>
+          <Grid item xs={isMobile ? 12 : 4}>
             <div style={{ margin: 10, marginRight: 25 }}>
               <Grid
                 container
@@ -912,7 +895,7 @@ const KepegawaianBpnUsia = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={6}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -940,7 +923,7 @@ const KepegawaianBpnUsia = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1013,7 +996,7 @@ const KepegawaianBpnUsia = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={5}>
+                <Grid item xs={isMobile ? 12 : 5}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1089,7 +1072,7 @@ const KepegawaianBpnUsia = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={isMobile ? 12 : 5}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1171,7 +1154,7 @@ const KepegawaianBpnUsia = () => {
                   justifyContent="flex-start"
                   alignItems="center"
                   item
-                  xs={2}
+                  xs={isMobile ? 12 : 2}
                   style={{ paddingLeft: 20 }}
                 >
                   <Button
@@ -1225,8 +1208,15 @@ const KepegawaianBpnUsia = () => {
               </Typography>
             </div>
           </Grid>
-          <Grid item xs={8}>
-            <Card className={classes.root} variant="outlined">
+          <Grid
+            item
+            xs={isMobile ? 12 : 8}
+            style={{ margin: isMobile ? 20 : 0 }}
+          >
+            <Card
+              className={isMobile ? classes.rootMobile : classes.root}
+              variant="outlined"
+            >
               <CardContent>
                 <div className={classes.barChart}>
                   <ResponsiveContainer width="100%" height={250}>

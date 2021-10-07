@@ -32,7 +32,7 @@ const PegawaiAtr = () => {
         style={{
           backgroundImage: `url(${bgImg})`,
           height: "100%",
-          width: "90wh",
+          width: "100wh",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           zIndex: 1,

@@ -3,6 +3,7 @@ import StatistikKemitraan from "./statistikKemitraan";
 import { getTahun, getKantah, getKanwil } from "../../actions/mitraAction";
 import { useDispatch } from "react-redux";
 import bgImg from "../../assets/img/mitra.jpg";
+import { isMobile } from "react-device-detect";
 
 const Mitra = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const Mitra = () => {
         paddingTop: 20,
         paddingBottom: 20,
         width: "100%",
-        height: "100vh",
+        height: isMobile ? "100%" : "100vh",
       }}
     >
       <StatistikKemitraan />

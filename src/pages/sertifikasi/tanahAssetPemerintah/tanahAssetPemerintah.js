@@ -12,6 +12,7 @@ import {
 import { useDispatch } from "react-redux";
 import AssetPemerintah from "./sie_sertifikasi_aset_pemerintah";
 import imgSertifikasi from "./../../../assets/img/sertifikasi.jpg";
+import { isMobile } from "react-device-detect";
 
 const PTSL = () => {
   const dispatch = useDispatch();
@@ -33,7 +34,7 @@ const PTSL = () => {
         backgroundRepeat: "no-repeat",
         paddingBottom: 20,
         width: "100%",
-        height: "100vh",
+        height: isMobile ? "100%" : "100vh",
       }}
     >
       <AssetPemerintah />

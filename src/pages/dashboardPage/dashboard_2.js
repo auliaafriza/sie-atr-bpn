@@ -8,6 +8,7 @@ import bgImg from "../../assets/img/bg-content.jpg";
 import Divider from "@material-ui/core/Divider";
 import axios from "axios";
 import { url } from "../../api/apiClient";
+import { isMobile } from "react-device-detect";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,6 +35,21 @@ const useStyles = makeStyles((theme) => ({
 export default function CenteredGrid() {
   const classes = useStyles();
   const [data, setData] = useState([]);
+  const [dataMitra, setDataMitra] = useState([]);
+
+  const groupBymitra = (data) => {
+    let res = [];
+    data.map((item, index) => {
+      let label = item.label;
+      if (label.indexOf("Menjalin Kemitraan Dengan") > -1) {
+        res.push({
+          label: label.replace("Menjalin Kemitraan Dengan ", ""),
+          value: item.value,
+        });
+      }
+    });
+    return res;
+  };
 
   useEffect(() => {
     axios.defaults.headers.post["Content-Type"] =
@@ -42,6 +58,8 @@ export default function CenteredGrid() {
       .get(`${url}api/Dashboard/get_dashboard`)
       .then(function (response) {
         setData(response.data.data);
+        let dataTemp = groupBymitra(response.data.data);
+        setDataMitra(dataTemp);
         console.log(response);
       })
       .catch(function (error) {
@@ -96,7 +114,7 @@ export default function CenteredGrid() {
                   <Typography
                     className={classes.title}
                     gutterBottom
-                    style={{ fontSize: 20 }}
+                    style={{ fontSize: isMobile ? 9 : 20 }}
                   >
                     Jumlah tanah yang telah di Sertifikatkan pada tahun 2000
                     hingga sekarang
@@ -110,7 +128,10 @@ export default function CenteredGrid() {
                   alignItems="center"
                 >
                   <Typography
-                    style={{ fontSize: "1.51rem", fontWeight: "bold" }}
+                    style={{
+                      fontSize: isMobile ? 12 : "1.51rem",
+                      fontWeight: "bold",
+                    }}
                   >
                     {data && data.length != 0
                       ? data[0].value
@@ -123,7 +144,7 @@ export default function CenteredGrid() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={isMobile ? 12 : 6}>
           <Card className={classes.root}>
             <CardContent>
               <Grid
@@ -134,14 +155,23 @@ export default function CenteredGrid() {
                 style={{ paddingTop: 20 }}
               >
                 <Grid item xs={4}>
-                  <Typography className={classes.title} gutterBottom>
+                  <Typography
+                    className={classes.title}
+                    gutterBottom
+                    style={{
+                      fontSize: isMobile ? 9 : "1.51rem",
+                    }}
+                  >
                     Bidang tanah hasil redistribusi tanah pada tahun 2000 hingga
                     sekarang
                   </Typography>
                 </Grid>
                 <Grid item xs={8}>
                   <Typography
-                    style={{ fontSize: "1.51rem", fontWeight: "bold" }}
+                    style={{
+                      fontSize: isMobile ? 12 : "1.51rem",
+                      fontWeight: "bold",
+                    }}
                   >
                     {data && data.length != 0
                       ? data[1].value
@@ -154,7 +184,7 @@ export default function CenteredGrid() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={isMobile ? 12 : 6}>
           <Card className={classes.root}>
             <CardContent>
               <Grid
@@ -165,14 +195,23 @@ export default function CenteredGrid() {
                 style={{ paddingTop: 20 }}
               >
                 <Grid item xs={4}>
-                  <Typography className={classes.title} gutterBottom>
+                  <Typography
+                    className={classes.title}
+                    gutterBottom
+                    style={{
+                      fontSize: isMobile ? 9 : "1.51rem",
+                    }}
+                  >
                     Tanah telah diukur dan dipetakan pada tahun 2000 hingga
                     sekarang
                   </Typography>
                 </Grid>
                 <Grid item xs={8}>
                   <Typography
-                    style={{ fontSize: "1.51rem", fontWeight: "bold" }}
+                    style={{
+                      fontSize: isMobile ? 12 : "1.51rem",
+                      fontWeight: "bold",
+                    }}
                   >
                     {data && data.length != 0
                       ? data[2].value
@@ -185,7 +224,7 @@ export default function CenteredGrid() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={isMobile ? 12 : 6}>
           <Card className={classes.root} style={{ marginTop: 30 }}>
             <CardContent>
               <Grid
@@ -195,14 +234,23 @@ export default function CenteredGrid() {
                 spacing={2}
               >
                 <Grid item xs={6}>
-                  <Typography className={classes.title} gutterBottom>
+                  <Typography
+                    className={classes.title}
+                    gutterBottom
+                    style={{
+                      fontSize: isMobile ? 9 : "1.51rem",
+                    }}
+                  >
                     Nilai Hak Tanggungan Elektronik telah tercatat pada tahun
                     2000 hingga sekarang sebesar
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <Typography
-                    style={{ fontSize: "1.51rem", fontWeight: "bold" }}
+                    style={{
+                      fontSize: isMobile ? 12 : "1.51rem",
+                      fontWeight: "bold",
+                    }}
                   >
                     Rp{" "}
                     {data && data.length != 0
@@ -217,7 +265,7 @@ export default function CenteredGrid() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={isMobile ? 12 : 6}>
           <Card className={classes.root} style={{ marginTop: 30 }}>
             <CardContent>
               <Grid
@@ -227,7 +275,13 @@ export default function CenteredGrid() {
                 spacing={2}
               >
                 <Grid item xs={6}>
-                  <Typography className={classes.title} gutterBottom>
+                  <Typography
+                    className={classes.title}
+                    gutterBottom
+                    style={{
+                      fontSize: isMobile ? 9 : "1.51rem",
+                    }}
+                  >
                     Pemerintah daerah dan Dirjen Pajak yang telah terintegrasi
                     untuk validasi pajak dan BPHTB secara online pada tahun 2000
                     hingga sekarang
@@ -235,7 +289,10 @@ export default function CenteredGrid() {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography
-                    style={{ fontSize: "1.51rem", fontWeight: "bold" }}
+                    style={{
+                      fontSize: isMobile ? 12 : "1.51rem",
+                      fontWeight: "bold",
+                    }}
                   >
                     {data && data.length != 0
                       ? data[4].value
@@ -254,7 +311,7 @@ export default function CenteredGrid() {
             <CardContent>
               <Typography
                 style={{
-                  fontSize: "1.51rem",
+                  fontSize: isMobile ? 12 : "1.51rem",
                   fontWeight: "bold",
                   marginBottom: "1em",
                 }}
@@ -268,85 +325,49 @@ export default function CenteredGrid() {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={2}>
-                  <Typography className={classes.title} gutterBottom>
-                    {data && data.length != 0
-                      ? data[5].value
-                          .toString()
-                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-                      : 0}
-                  </Typography>
-                  <Typography className={classes.title} gutterBottom>
-                    Pemilik
-                  </Typography>
-                </Grid>{" "}
-                <Divider orientation="vertical" flexItem />
-                <Grid item xs={2}>
-                  <Typography className={classes.title} gutterBottom>
-                    {data && data.length != 0
-                      ? data[6].value
-                          .toString()
-                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-                      : 0}
-                  </Typography>
-                  <Typography className={classes.title} gutterBottom>
-                    PPAT
-                  </Typography>
-                </Grid>
-                <Divider orientation="vertical" flexItem />
-                <Grid item xs={2}>
-                  <Typography className={classes.title} gutterBottom>
-                    {data && data.length != 0
-                      ? data[7].value
-                          .toString()
-                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-                      : 0}
-                  </Typography>
-                  <Typography className={classes.title} gutterBottom>
-                    Jasa Keuangan
-                  </Typography>
-                </Grid>
-                <Divider orientation="vertical" flexItem />
-                <Grid item xs={2}>
-                  <Typography className={classes.title} gutterBottom>
-                    {data && data.length != 0
-                      ? data[8].value
-                          .toString()
-                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-                      : 0}
-                  </Typography>
-                  <Typography className={classes.title} gutterBottom>
-                    Surveyor
-                  </Typography>
-                </Grid>
+                {dataMitra && dataMitra.length != 0
+                  ? dataMitra.map((item, index) => {
+                      return (
+                        <>
+                          <Grid item xs={isMobile ? 12 : 2}>
+                            <Typography
+                              className={classes.title}
+                              gutterBottom
+                              style={{
+                                fontSize: isMobile ? 12 : "1",
+                              }}
+                            >
+                              {item.value
+                                ? item.value
+                                    .toString()
+                                    .replace(
+                                      /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
+                                      ","
+                                    )
+                                : 0}
+                            </Typography>
+                            <Typography
+                              className={classes.title}
+                              gutterBottom
+                              style={{
+                                fontSize: isMobile ? 12 : "1",
+                              }}
+                            >
+                              {item.label}
+                            </Typography>
+                          </Grid>{" "}
+                          {index ==
+                          dataMitra.length - 1 ? null : isMobile ? null : (
+                            <Divider orientation="vertical" flexItem />
+                          )}
+                        </>
+                      );
+                    })
+                  : null}
               </Grid>
             </CardContent>
           </Card>
         </Grid>
-        {/* <Grid item xs={12}>
-          <Card className={classes.root}>
-            <CardContent>
-              <Typography
-                style={{
-                  fontSize: "1.51rem",
-                  fontWeight: "bold",
-                  textAlign: "left",
-                }}
-              >
-                About this data
-              </Typography>
-              <Typography style={{ textAlign: "left" }}>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid> */}
       </Grid>
     </div>
   );

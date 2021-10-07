@@ -73,6 +73,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { url } from "../../api/apiClient";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import { isMobile } from "react-device-detect";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -770,7 +771,7 @@ const KepegawaianBpnMutasi = () => {
         direction="row"
         style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
       >
-        <Grid item xs={6}>
+        <Grid item xs={isMobile ? 12 : 6}>
           <Typography className={classes.titleSection} variant="h2">
             Jumlah Pegawai berdasarkan Mutasi
           </Typography>
@@ -778,10 +779,10 @@ const KepegawaianBpnMutasi = () => {
         <Grid
           container
           direction="row"
-          justifyContent="flex-end"
-          alignItems="flex-end"
+          justifyContent={isMobile ? "flex-start" : "flex-end"}
+          alignItems={isMobile ? "flex-start" : "flex-end"}
           item
-          xs={6}
+          xs={isMobile ? 12 : 6}
         >
           {/* <ReactToPrint
             trigger={() => <button>Print this out!</button>}
@@ -873,7 +874,7 @@ const KepegawaianBpnMutasi = () => {
         }}
       />
       <Grid container spacing={2}>
-        <Grid item xs={4}>
+        <Grid item xs={isMobile ? 12 : 4}>
           <div style={{ margin: 10, marginRight: 25 }}>
             <Grid
               container
@@ -882,7 +883,7 @@ const KepegawaianBpnMutasi = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={6}>
+              <Grid item xs={isMobile ? 12 : 6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -916,7 +917,7 @@ const KepegawaianBpnMutasi = () => {
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={6}
+                xs={isMobile ? 12 : 6}
                 style={{ paddingLeft: 20 }}
               >
                 <Button
@@ -1114,8 +1115,11 @@ const KepegawaianBpnMutasi = () => {
             </Typography>
           </div>
         </Grid>
-        <Grid item xs={8}>
-          <Card className={classes.root} variant="outlined">
+        <Grid item xs={isMobile ? 12 : 8} style={{ margin: isMobile ? 20 : 0 }}>
+          <Card
+            className={isMobile ? classes.rootMobile : classes.root}
+            variant="outlined"
+          >
             <CardContent>
               <div className={classes.barChart}>
                 <ResponsiveContainer width="100%" height={250}>

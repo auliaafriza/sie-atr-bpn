@@ -76,6 +76,7 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { getKantorPNBP } from "../../actions/pnbpAction";
 import { tahunData } from "../../functionGlobal/globalDataAsset";
+import { isMobile } from "react-device-detect";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -801,7 +802,7 @@ const PaguMpOpsNon = () => {
             paddingBottom: 5,
           }}
         >
-          <Grid item xs={6}>
+          <Grid item xs={isMobile ? 12 : 6}>
             <Typography className={classes.titleSection} variant="h2">
               {title}
             </Typography>
@@ -809,10 +810,10 @@ const PaguMpOpsNon = () => {
           <Grid
             container
             direction="row"
-            justifyContent="flex-end"
-            alignItems="flex-end"
+            justifyContent={isMobile ? "flex-start" : "flex-end"}
+            alignItems={isMobile ? "flex-start" : "flex-end"}
             item
-            xs={6}
+            xs={isMobile ? 12 : 6}
           >
             <ButtonGroup
               aria-label="outlined button group"
@@ -888,7 +889,7 @@ const PaguMpOpsNon = () => {
           }}
         />
         <Grid container>
-          <Grid item xs={7}>
+          <Grid item xs={isMobile ? 12 : 7}>
             <Card className={classes.rootOdd} variant="outlined">
               <CardContent>
                 <div className={classes.barChart}>
@@ -942,8 +943,8 @@ const PaguMpOpsNon = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={5}>
-            <div style={{ marginRight: 25 }}>
+          <Grid item xs={isMobile ? 12 : 5}>
+            <div style={{ marginRight: 25, marginLeft: isMobile ? 20 : 0 }}>
               <Grid
                 container
                 direction="row"
@@ -958,7 +959,7 @@ const PaguMpOpsNon = () => {
                   alignItems="center"
                   spacing={2}
                 >
-                  <Grid item xs={6}>
+                  <Grid item xs={isMobile ? 12 : 6}>
                     <Typography
                       className={classes.isiTextStyle}
                       variant="h2"
@@ -986,7 +987,7 @@ const PaguMpOpsNon = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={isMobile ? 12 : 6}>
                     <Typography
                       className={classes.isiTextStyle}
                       variant="h2"
@@ -1015,7 +1016,7 @@ const PaguMpOpsNon = () => {
                     </FormControl>
                   </Grid>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1091,7 +1092,7 @@ const PaguMpOpsNon = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1178,7 +1179,7 @@ const PaguMpOpsNon = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={6}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1212,7 +1213,7 @@ const PaguMpOpsNon = () => {
                   justifyContent="flex-start"
                   alignItems="center"
                   item
-                  xs={6}
+                  xs={isMobile ? 12 : 6}
                   style={{ paddingTop: 40, paddingLeft: 20 }}
                 >
                   <Button

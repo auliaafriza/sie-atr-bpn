@@ -76,6 +76,7 @@ import {
 
 const icon = <CheckBoxOutlineBlank fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
+import { isMobile } from "react-device-detect";
 import { getKantorPNBP } from "../../../actions/pnbpAction";
 
 const dataTemp = [
@@ -842,7 +843,7 @@ const AssetPemerintah = () => {
           direction="row"
           style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
         >
-          <Grid item xs={6}>
+          <Grid item xs={isMobile ? 12 : 6}>
             <Typography className={classes.titleSection} variant="h2">
               Tanah Asset Pemerintah
             </Typography>
@@ -850,10 +851,10 @@ const AssetPemerintah = () => {
           <Grid
             container
             direction="row"
-            justifyContent="flex-end"
-            alignItems="flex-end"
+            justifyContent={isMobile ? "flex-start" : "flex-end"}
+            alignItems={isMobile ? "flex-start" : "flex-end"}
             item
-            xs={6}
+            xs={isMobile ? 12 : 6}
           >
             {/* <ReactToPrint
             trigger={() => <button>Print this out!</button>}
@@ -932,7 +933,7 @@ const AssetPemerintah = () => {
           }}
         />
         <Grid container spacing={2}>
-          <Grid item xs={8}>
+          <Grid item xs={isMobile ? 12 : 8}>
             <Card className={classes.root} variant="outlined">
               <CardContent>
                 <div className={classes.barChart}>
@@ -994,7 +995,7 @@ const AssetPemerintah = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={isMobile ? 12 : 4}>
             <div style={{ margin: 10, marginRight: 25 }}>
               <Grid
                 container
@@ -1003,7 +1004,7 @@ const AssetPemerintah = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={6}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1034,7 +1035,7 @@ const AssetPemerintah = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1073,7 +1074,7 @@ const AssetPemerintah = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={5}>
+                <Grid item xs={isMobile ? 12 : 5}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1149,7 +1150,7 @@ const AssetPemerintah = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={isMobile ? 12 : 5}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1231,7 +1232,7 @@ const AssetPemerintah = () => {
                   justifyContent="flex-start"
                   alignItems="center"
                   item
-                  xs={2}
+                  xs={isMobile ? 12 : 2}
                   style={{ paddingLeft: 20 }}
                 >
                   <Button

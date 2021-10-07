@@ -75,6 +75,7 @@ import { url } from "../../api/apiClient";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { getKantorPNBP } from "../../actions/pnbpAction";
+import { isMobile } from "react-device-detect";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -780,7 +781,7 @@ const KepegawaianBpnPendidikan = () => {
           direction="row"
           style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
         >
-          <Grid item xs={6}>
+          <Grid item xs={isMobile ? 12 : 6}>
             <Typography className={classes.titleSection} variant="h2">
               Jumlah Pegawai berdasarkan Pendidikan
             </Typography>
@@ -788,10 +789,10 @@ const KepegawaianBpnPendidikan = () => {
           <Grid
             container
             direction="row"
-            justifyContent="flex-end"
-            alignItems="flex-end"
+            justifyContent={isMobile ? "flex-start" : "flex-end"}
+            alignItems={isMobile ? "flex-start" : "flex-end"}
             item
-            xs={6}
+            xs={isMobile ? 12 : 6}
           >
             {/* <ReactToPrint
             trigger={() => <button>Print this out!</button>}
@@ -883,7 +884,7 @@ const KepegawaianBpnPendidikan = () => {
           }}
         />
         <Grid container spacing={2}>
-          <Grid item xs={8}>
+          <Grid item xs={isMobile ? 12 : 8}>
             <Card className={classes.root} variant="outlined">
               <CardContent>
                 <div className={classes.barChart}>
@@ -928,7 +929,7 @@ const KepegawaianBpnPendidikan = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={isMobile ? 12 : 4}>
             <div style={{ margin: 10, marginRight: 25 }}>
               <Grid
                 container
@@ -937,7 +938,7 @@ const KepegawaianBpnPendidikan = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={6}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -965,7 +966,7 @@ const KepegawaianBpnPendidikan = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1038,7 +1039,7 @@ const KepegawaianBpnPendidikan = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={5}>
+                <Grid item xs={isMobile ? 12 : 5}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1114,7 +1115,7 @@ const KepegawaianBpnPendidikan = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={isMobile ? 12 : 5}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1196,7 +1197,7 @@ const KepegawaianBpnPendidikan = () => {
                   justifyContent="flex-start"
                   alignItems="center"
                   item
-                  xs={2}
+                  xs={isMobile ? 12 : 2}
                   style={{ paddingLeft: 20 }}
                 >
                   <Button

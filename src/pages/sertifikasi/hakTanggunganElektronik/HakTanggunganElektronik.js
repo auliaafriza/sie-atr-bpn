@@ -15,6 +15,8 @@ import SieHtJumlahKantorTahun from "./sie_ht_jumlah_kantor_tahun";
 import SieHTUploadPpatIpSama from "./sie_ht_upload_ppat_ipsama ";
 import SieHTTanpaPeriksa from "./sie_ht_terbit_tanpa_periksa";
 import imgSertifikasi from "./../../../assets/img/sertifikasi.jpg";
+import { isMobile } from "react-device-detect";
+
 const HakTanggunganElektronik = () => {
   const dispatch = useDispatch();
 
@@ -39,7 +41,7 @@ const HakTanggunganElektronik = () => {
           paddingBottom: 20,
           width: "100%",
           // opacity: "0.5",
-          height: "100vh",
+          height: isMobile ? "100%" : "100vh",
         }}
       >
         <SieHtJumlahKantorTahun />

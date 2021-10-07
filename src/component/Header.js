@@ -6,6 +6,7 @@ import {
   Typography,
   Menu,
   MenuItem,
+  Grid,
 } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import { MoreVert, AccountCircle, Search } from "@material-ui/icons";
@@ -17,6 +18,7 @@ import { resetWhoami, getWhoami, setUsername } from "../actions/globalActions";
 import queryString from "query-string";
 import moment from "moment";
 import Cookies from "universal-cookie";
+import { isMobile } from "react-device-detect";
 
 const Header = (props) => {
   const classes = styles();
@@ -40,31 +42,11 @@ const Header = (props) => {
   const cookies = new Cookies();
   // const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const getCookie = (cname) => {
-    // let name = cname + "=";
-    // let decodedCookie = decodeURIComponent(document.cookie);
-    // let ca = decodedCookie.split(";");
-    // for (let i = 0; i < ca.length; i++) {
-    //   let c = ca[i];
-    //   while (c.charAt(0) == " ") {
-    //     c = c.substring(1);
-    //   }
-    //   if (c.indexOf(name) == 0) {
-    //     return c.substring(name.length, c.length);
-    //   }
-    // }
-    // return "";
-    let value = "";
-    value = cookies.get(cname);
-    return value;
-  };
-
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   useEffect(() => {
-    // let user = getCookie(".atrbpn2409");
     dispatch(getWhoami());
   }, []);
 
@@ -127,23 +109,56 @@ const Header = (props) => {
 
   return (
     <AppBar position="static" className={classes.header}>
-      <Toolbar>
-        <img src={Logo} style={{ width: 35, height: 35 }}></img>
-        <Typography
-          className={classes.title}
-          variant="h6"
-          noWrap
-          style={{ marginLeft: 10, color: "white" }}
-        >
-          SIE ATR BPN
-        </Typography>
-        <div className={classes.grow} />
-        <div className={classes.sectionDesktop}>
-          <div className={classes.search} style={{ marginRight: "40px" }}>
-            {/* <div className={classes.searchIcon}>
+      {isMobile ? (
+        <Toolbar>
+          <Grid container direction="row" spacing={2}>
+            <Grid item xs={6}>
+              <Grid container direction="row">
+                <img src={Logo} style={{ width: 35, height: 35 }}></img>
+                <Typography
+                  variant="h6"
+                  noWrap
+                  style={{ marginLeft: 10, color: "white", marginTop: 5 }}
+                >
+                  SIE ATR BPN
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid
+              item
+              xs={6}
+              container
+              justifyContent="flex-end"
+              alignItems="flex-start"
+            >
+              <IconButton
+                edge="end"
+                color="inherit"
+                href="https://sie.atrbpn.go.id/Auth/Login"
+              >
+                <AiOutlineLogout />
+              </IconButton>
+            </Grid>
+          </Grid>
+        </Toolbar>
+      ) : (
+        <Toolbar>
+          <img src={Logo} style={{ width: 35, height: 35 }}></img>
+          <Typography
+            className={classes.title}
+            variant="h6"
+            noWrap
+            style={{ marginLeft: 10, color: "white" }}
+          >
+            SIE ATR BPN
+          </Typography>
+          <div className={classes.grow} />
+          <div className={classes.sectionDesktop}>
+            <div className={classes.search} style={{ marginRight: "40px" }}>
+              {/* <div className={classes.searchIcon}>
               <Search />
             </div> */}
-            {/* <InputBase
+              {/* <InputBase
               placeholder="Search…"
               classes={{
                 root: classes.inputRoot,
@@ -151,27 +166,27 @@ const Header = (props) => {
               }}
               inputProps={{ 'aria-label': 'search' }}
             /> */}
+            </div>
+            <Typography
+              variant="h6"
+              style={{
+                fontSize: "16px",
+                marginTop: "10px",
+                margin: "10px",
+                color: "white",
+              }}
+            >
+              {userNm}
+            </Typography>
+            <IconButton
+              edge="end"
+              color="inherit"
+              href="https://sie.atrbpn.go.id/Auth/Login"
+            >
+              <AiOutlineLogout />
+            </IconButton>
           </div>
-          <Typography
-            variant="h6"
-            style={{
-              fontSize: "16px",
-              marginTop: "10px",
-              margin: "10px",
-              color: "white",
-            }}
-          >
-            {userNm}
-          </Typography>
-          <IconButton
-            edge="end"
-            color="inherit"
-            href="https://sie.atrbpn.go.id/Auth/Login"
-          >
-            <AiOutlineLogout />
-          </IconButton>
-        </div>
-        {/* <div className={classes.sectionMobile}>
+          {/* <div className={classes.sectionMobile}>
           <IconButton
             aria-label="show more"
             aria-controls={mobileMenuId}
@@ -182,7 +197,8 @@ const Header = (props) => {
             <MoreVert />
           </IconButton>
         </div> */}
-      </Toolbar>
+        </Toolbar>
+      )}
       <div
         style={{
           borderTop: "0.5px solid #fff ",

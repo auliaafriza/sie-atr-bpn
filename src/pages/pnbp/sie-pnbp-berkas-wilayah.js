@@ -76,6 +76,7 @@ import "react-toastify/dist/ReactToastify.css";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { getKantorPNBP } from "../../actions/pnbpAction";
+import { isMobile } from "react-device-detect";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -825,7 +826,7 @@ const PnbpBerkasWilayah = () => {
         direction="row"
         style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
       >
-        <Grid item xs={6}>
+        <Grid item xs={isMobile ? 12 : 6}>
           <Typography className={classes.titleSection} variant="h2">
             PNBP dan jumlah berkas layanan
           </Typography>
@@ -834,10 +835,10 @@ const PnbpBerkasWilayah = () => {
         <Grid
           container
           direction="row"
-          justifyContent="flex-end"
-          alignItems="flex-end"
+          justifyContent={isMobile ? "flex-start" : "flex-end"}
+          alignItems={isMobile ? "flex-start" : "flex-end"}
           item
-          xs={6}
+          xs={isMobile ? 12 : 6}
         >
           <ButtonGroup
             aria-label="outlined button group"
@@ -907,7 +908,7 @@ const PnbpBerkasWilayah = () => {
         }}
       />
       <Grid container spacing={2}>
-        <Grid item xs={4}>
+        <Grid item xs={isMobile ? 12 : 4}>
           <div style={{ margin: 10, marginRight: 25 }}>
             <Grid
               container
@@ -973,7 +974,7 @@ const PnbpBerkasWilayah = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={isMobile ? 12 : 4}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1009,7 +1010,7 @@ const PnbpBerkasWilayah = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={5}>
+              <Grid item xs={isMobile ? 12 : 5}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1085,7 +1086,7 @@ const PnbpBerkasWilayah = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={5}>
+              <Grid item xs={isMobile ? 12 : 5}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1169,7 +1170,7 @@ const PnbpBerkasWilayah = () => {
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={2}
+                xs={isMobile ? 12 : 2}
                 style={{ paddingLeft: 20 }}
               >
                 <Button
@@ -1224,8 +1225,11 @@ const PnbpBerkasWilayah = () => {
             </Typography>
           </div>
         </Grid>
-        <Grid item xs={8}>
-          <Card className={classes.root} variant="outlined">
+        <Grid item xs={isMobile ? 12 : 8} style={{ margin: isMobile ? 20 : 0 }}>
+          <Card
+            className={isMobile ? classes.rootMobile : classes.root}
+            variant="outlined"
+          >
             <CardContent>
               <div className={classes.barChart}>
                 <ResponsiveContainer width="100%" height={250}>

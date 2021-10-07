@@ -78,6 +78,7 @@ import {
   CheckBoxOutlineBlank,
   CheckBox as CheckBoxIcon,
 } from "@material-ui/icons/";
+import { isMobile } from "react-device-detect";
 
 const icon = <CheckBoxOutlineBlank fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -863,7 +864,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
           direction="row"
           style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
         >
-          <Grid item xs={6}>
+          <Grid item xs={isMobile ? 12 : 6}>
             <Typography className={classes.titleSection} variant="h2">
               {title}
             </Typography>
@@ -872,10 +873,10 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
           <Grid
             container
             direction="row"
-            justifyContent="flex-end"
-            alignItems="flex-end"
+            justifyContent={isMobile ? "flex-start" : "flex-end"}
+            alignItems={isMobile ? "flex-start" : "flex-end"}
             item
-            xs={6}
+            xs={isMobile ? 12 : 6}
           >
             <ButtonGroup
               aria-label="outlined button group"
@@ -955,7 +956,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
           }}
         />
         <Grid container spacing={2}>
-          <Grid item xs={8}>
+          <Grid item xs={isMobile ? 12 : 8}>
             <Card className={classes.root} variant="outlined">
               <CardContent>
                 <div className={classes.barChart}>
@@ -1024,7 +1025,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={isMobile ? 12 : 4}>
             <div style={{ margin: 10, marginRight: 25 }}>
               <Grid
                 container
@@ -1033,7 +1034,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={5}>
+                <Grid item xs={isMobile ? 12 : 5}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1109,7 +1110,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={isMobile ? 12 : 5}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1191,7 +1192,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                   justifyContent="flex-start"
                   alignItems="center"
                   item
-                  xs={2}
+                  xs={isMobile ? 12 : 2}
                   style={{ paddingLeft: 20 }}
                 >
                   <Button
