@@ -59,6 +59,7 @@ import { useReactToPrint } from "react-to-print";
 import {
   tahunData,
   DataFormater,
+  deleteDuplicates,
 } from "../../../functionGlobal/globalDataAsset";
 import moment from "moment";
 import { fileExport } from "../../../functionGlobal/exports";
@@ -166,9 +167,12 @@ const KepegawaianBpnJabatan = () => {
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [tahunAwal, setTahunAwal] = useState("2017");
-  const [kanwil, setKanwil] = useState({ kanwil: "" });
-  const [kantor, setKantor] = useState({ kantor: "" });
-  const [satker, setSatker] = useState({ satker: "" });
+  const [kanwil, setKanwil] = useState({ aliaskanwil: "Bali" });
+  const [dataFilterKantor, setDataFilterKantor] = useState([
+    { aliaskantah: "Kota Denpasar" },
+  ]);
+  const [listKanwil, setListKanwil] = useState([]);
+  const [listKantor, setListKantor] = useState([]);
 
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
@@ -185,6 +189,8 @@ const KepegawaianBpnJabatan = () => {
 
   const [profileList, setProfileList] = useState([]);
 
+  const [hideText, setHideText] = useState(false);
+  const [hideTextKantor, setHideTextKantor] = useState(false);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -207,12 +213,57 @@ const KepegawaianBpnJabatan = () => {
     setDataFilter(event);
   };
 
-  const getData = () => {
+  const getKantah = (data) => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}KinerjaLayanan/Tunggakan/Tunggakan?namaprofile=${dataFilter.namaprofile}`
+        `${url}KinerjaLayanan/Tunggakan/filter_aliaskantah?aliaskanwil=${data}`
+      )
+      .then(function (response) {
+        setListKantor(response.data.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
+
+  const handleChangeFilterKanwil = (event) => {
+    getKantah(event ? event.aliaskanwil : "");
+    setKanwil(event);
+    setDataFilterKantor([]);
+  };
+
+  const handleChangeFilterKantor = (event) => {
+    if (event.length != 0) {
+      let res = deleteDuplicates(event, "aliaskantah");
+      setDataFilterKantor(res);
+    } else {
+      setDataFilterKantor([]);
+    }
+  };
+
+  const getData = () => {
+    let temp = {
+      aliaskanwil: [],
+      aliaskantah: [],
+    };
+    kanwil && kanwil.aliaskanwil
+      ? temp.aliaskanwil.push(kanwil.aliaskanwil)
+      : [];
+    dataFilterKantor && dataFilterKantor.length != 0
+      ? dataFilterKantor.map((item) => temp.aliaskantah.push(item.aliaskantah))
+      : [];
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .post(
+        `${url}KinerjaLayanan/Tunggakan/Tunggakan?namaprofile=${dataFilter.namaprofile}`,
+        temp
       )
       .then(function (response) {
         setData(response.data.data);
@@ -232,6 +283,18 @@ const KepegawaianBpnJabatan = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
+      .get(`${url}KinerjaLayanan/Tunggakan/filter_aliaskanwil`)
+      .then(function (response) {
+        setListKanwil(response.data.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+    axios
       .get(`${url}KinerjaLayanan/Tunggakan/tunggakan_filter_namaprofile`)
       .then(function (response) {
         setProfileList(response.data.data);
@@ -243,7 +306,7 @@ const KepegawaianBpnJabatan = () => {
       .then(function () {
         // always executed
       });
-
+    getKantah(kanwil ? kanwil.aliaskanwil : "");
     getData();
   }, []);
 
@@ -452,18 +515,6 @@ const KepegawaianBpnJabatan = () => {
       },
       target: "_blank",
     });
-  };
-
-  const handleChangeKantor = (event) => {
-    setKantor(event);
-  };
-
-  const handleChangeKanwil = (event) => {
-    setKanwil(event);
-  };
-
-  const handleChangeSatket = (event) => {
-    setSatker(event);
   };
 
   return (
@@ -834,6 +885,34 @@ const KepegawaianBpnJabatan = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
+                  Pilih Tahun
+                </Typography>
+                <FormControl className={classes.formControl}>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={tahunAwal}
+                    onChange={handleChangeAwal}
+                    label="Tahun"
+                    className={classes.selectStyle}
+                    disableUnderline
+                  >
+                    {tahunData.map((item, i) => {
+                      return (
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={isMobile ? 12 : 6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
                   Pilih Profile
                 </Typography>
                 <Autocomplete
@@ -868,13 +947,153 @@ const KepegawaianBpnJabatan = () => {
                   )}
                 />
               </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={isMobile ? 12 : 5}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Wilayah
+                </Typography>
+                <Autocomplete
+                  // multiple
+                  getOptionDisabled={(options) =>
+                    kanwil.length >= 32 ? true : false
+                  }
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={listKanwil}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilterKanwil(newValue);
+                  }}
+                  // onInputChange={(_event, value, reason) => {
+                  //   if (reason == "input") setHideText(true);
+                  //   else {
+                  //     setHideText(false);
+                  //   }
+                  // }}
+                  getOptionLabel={(option) => option.aliaskanwil || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.aliaskanwil}</React.Fragment>
+                  )}
+                  // renderTags={(selected) => {
+                  //   return selected.length != 0
+                  //     ? hideText
+                  //       ? ""
+                  //       : `${selected.length} Terpilih`
+                  //     : "";
+                  // }}
+                  value={kanwil}
+                  defaultValue={kanwil}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder="Pilih Wilayah"
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={isMobile ? 12 : 5}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Kantah
+                </Typography>
+                <Autocomplete
+                  multiple
+                  getOptionDisabled={(options) =>
+                    dataFilterKantor.length >= 32 ? true : false
+                  }
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={listKantor}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilterKantor(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setHideTextKantor(true);
+                    else {
+                      setHideTextKantor(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.aliaskantah || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilterKantor && dataFilterKantor.length != 0
+                            ? dataFilterKantor
+                                .map((item) => item.aliaskantah)
+                                .indexOf(option.aliaskantah) > -1
+                            : false
+                        }
+                      />
+                      {option.aliaskantah}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return selected.length != 0
+                      ? hideTextKantor
+                        ? ""
+                        : `${selected.length} Terpilih`
+                      : "";
+                  }}
+                  value={dataFilterKantor}
+                  defaultValue={dataFilterKantor}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={
+                        dataFilterKantor.length != 0 ? "" : "Pilih Kantah"
+                      }
+                    />
+                  )}
+                />
+              </Grid>
               <Grid
                 container
                 direction="row"
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={isMobile ? 12 : 6}
+                xs={isMobile ? 12 : 2}
                 style={{ paddingLeft: 20 }}
               >
                 <Button

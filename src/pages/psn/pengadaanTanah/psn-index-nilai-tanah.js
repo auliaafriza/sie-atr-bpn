@@ -141,7 +141,8 @@ const realisasiPenggunaan = () => {
   const dispatch = useDispatch();
   const [kantahList, setKantahList] = useState([]);
   const [aliasList, setAliasList] = useState([]);
-  const [years, setYears] = useState("2021");
+  const [years, setYears] = useState("2017");
+  const [yearsEnd, setYearsEnd] = useState("2021");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [bulan, setBulan] = useState("Jan");
@@ -248,7 +249,7 @@ const realisasiPenggunaan = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}ProgramStrategisNasional/PengadaanTanah/sie_psn_index_nilai_tanah?tahun=${years}`,
+        `${url}ProgramStrategisNasional/PengadaanTanah/sie_psn_index_nilai_tanah?tahunAwal=${years}&tahunAkhir=${yearsEnd}`,
         temp
       )
       .then(function (response) {
@@ -290,6 +291,10 @@ const realisasiPenggunaan = () => {
     setYears(event.target.value);
   };
 
+  const handleChangeEnd = (event) => {
+    setYearsEnd(event.target.value);
+  };
+
   const handleChangeBulan = (event) => {
     setBulan(event.target.value);
   };
@@ -297,7 +302,7 @@ const realisasiPenggunaan = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Index Nilai Tanah",
+      "Jumlah sertifikat terbit per program",
       data,
       ".xlsx"
     );
@@ -517,7 +522,7 @@ const realisasiPenggunaan = () => {
     xAxis: "keterangan",
     yAxis: "Nilai Index",
   };
-  const title = " Index Nilai Tanah";
+  const title = " Jumlah sertifikat terbit per program";
   const handlePrint = () => {
     history.push({
       pathname: "/PrintData",
@@ -812,7 +817,7 @@ const realisasiPenggunaan = () => {
         >
           <Grid item xs={isMobile ? 12 : 6}>
             <Typography className={classes.titleSection} variant="h2">
-              Index Nilai Tanah
+              Jumlah sertifikat terbit per program
             </Typography>
           </Grid>
 
@@ -844,7 +849,7 @@ const realisasiPenggunaan = () => {
                   size="small"
                   onClick={() =>
                     handleOpen({
-                      title: "Index Nilai Tanah",
+                      title: "Jumlah sertifikat terbit per program",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -967,7 +972,7 @@ const realisasiPenggunaan = () => {
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
-                    Pilih Tahun
+                    Tahun Awal
                   </Typography>
                   <FormControl className={classes.formControl}>
                     <Select
@@ -990,6 +995,42 @@ const realisasiPenggunaan = () => {
                   </FormControl>
                 </Grid>
                 <Grid item xs={isMobile ? 12 : 6}>
+                  <Typography
+                    className={classes.isiTextStyle}
+                    variant="h2"
+                    style={{ fontSize: 12 }}
+                  >
+                    Tahun Akhir
+                  </Typography>
+                  <FormControl className={classes.formControl}>
+                    <Select
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value={yearsEnd}
+                      onChange={handleChangeEnd}
+                      label="Tahun"
+                      className={classes.selectStyle}
+                      disableUnderline
+                    >
+                      {tahunData.map((item, i) => {
+                        return (
+                          <MenuItem value={item.id} key={i}>
+                            {item.value}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={2}
+              >
+                <Grid item xs={isMobile ? 12 : 5}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1047,15 +1088,7 @@ const realisasiPenggunaan = () => {
                     )}
                   />
                 </Grid>
-              </Grid>
-              <Grid
-                container
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                spacing={2}
-              >
-                <Grid item xs={isMobile ? 12 : 6}>
+                <Grid item xs={isMobile ? 12 : 5}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1137,7 +1170,7 @@ const realisasiPenggunaan = () => {
                   justifyContent="flex-start"
                   alignItems="center"
                   item
-                  xs={isMobile ? 12 : 6}
+                  xs={isMobile ? 12 : 2}
                   style={{ paddingLeft: 20 }}
                 >
                   <Button
@@ -1168,7 +1201,7 @@ const realisasiPenggunaan = () => {
                     href="#"
                     onClick={() =>
                       handleOpen({
-                        title: "Index Nilai Tanah",
+                        title: "Jumlah sertifikat terbit per program",
                         grafik: data,
                         dataTable: "",
                         analisis:
