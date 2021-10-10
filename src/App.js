@@ -2,6 +2,7 @@ import React from "react";
 import "./index.css";
 import Login from "./pages/loginPage/login";
 import Dashboard from "./pages/dashboardPage/dashboard";
+import Page404 from "./pages/dashboardPage/page404";
 import PrintData from "./pages/pnbp/printData/componentPrint";
 import { PTSL, PengadaanTanah, RA, RDTR } from "./pages/psn";
 import {
@@ -213,6 +214,9 @@ const Main = withRouter(({ location }) => {
         <Route path="/embed/:view" component={IframeGenerator} />
         <Route path="/" exact>
           <Dashboard />
+        </Route>
+        <Route>
+          <Page404 />
         </Route>
       </Switch>
       {!noFooter && <Footer />}

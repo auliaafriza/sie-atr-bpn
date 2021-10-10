@@ -132,13 +132,9 @@ const reducer = (state = initialstate, action) => {
       return { ...state, loading: true };
     }
     case GET_WHO_AM_I_FULFILLED: {
-      let data =
-        action.payload.data.data && action.payload.data.data.nama
-          ? action.payload.data.data.nama
-          : "";
       return {
         ...state,
-        whoAmI: data,
+        whoAmI: action.payload.data.data,
         loading: false,
         status: "success",
       };
@@ -147,7 +143,7 @@ const reducer = (state = initialstate, action) => {
       return {
         ...state,
         loading: false,
-        whoAmI: "",
+        whoAmI: null,
         errors: action.payload.error,
         status: "failed",
       };

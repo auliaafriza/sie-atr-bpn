@@ -111,7 +111,7 @@ export const MENU_LIST = [
     id: 4,
     icon: <BiLineChart size={24} />,
     name: "Kinerja Layanan",
-    parentLink: "KinerjaLayanan",
+    parentLink: "/KinerjaLayanan/",
     subMenus: [
       // {
       //   icon: <BsNewspaper size={22} />,
@@ -144,7 +144,7 @@ export const MENU_LIST = [
     id: 5,
     icon: <BiBriefcase size={24} />,
     name: "PSN",
-    parentLink: "PSN",
+    parentLink: "/PSN",
     subMenus: [
       // {
       //   icon: <FaCalendarCheck size={22} />,
@@ -182,7 +182,7 @@ export const MENU_LIST = [
     id: 6,
     icon: <FaCertificate size={24} />,
     name: "Sertifikasi",
-    parentLink: "Sertifikasi",
+    parentLink: "/Sertifikasi",
     subMenus: [
       {
         icon: <MdInsertChart size={24} />,

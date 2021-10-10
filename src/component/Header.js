@@ -26,9 +26,9 @@ const Header = (props) => {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const parsed = queryString.parse(location.search);
   // const [open, setOpen] = React.useState(false);
-  const userNameRed = useSelector((state) => state.globalReducer.whoAmI);
+  const [count, setCount] = React.useState(1);
+  const dataUser = useSelector((state) => state.globalReducer.whoAmI);
   const statusRed = useSelector((state) => state.globalReducer.status);
-  const userName = parsed ? parsed.u : null;
   const user = useSelector((state) => state.globalReducer.user);
   const [userNm, setUserNm] = useState("");
   const dispatch = useDispatch();
@@ -51,29 +51,31 @@ const Header = (props) => {
   }, []);
 
   useEffect(() => {
-    let dateTime = moment(new Date()).format("DD/MM/YYYY");
-    if (statusRed == "success") {
+    let dateTime = moment(new Date()).format("DD/MM/YYYY HH:mm");
+    if (dateTime <= dateExpired) {
       dispatch(resetWhoami());
-      localStorage.setItem("user", userNameRed);
-      localStorage.setItem("date", dateTime);
-      setUserNm(userNameRed);
-      userNameRed
+      setUserNm(userExpired);
+    } else if (statusRed == "success") {
+      dispatch(resetWhoami());
+      let expired =
+        dataUser && dataUser.expiredDate
+          ? moment(new Date(dataUser.expiredDate)).format("DD/MM/YYYY HH:mm")
+          : null;
+      localStorage.setItem("user", dataUser ? dataUser.nama : "");
+      localStorage.setItem("date", expired);
+      setUserNm(dataUser.nama);
+      dataUser.nama
         ? null
         : window.location.replace("https://sie.atrbpn.go.id/Auth/Login");
     } else if (statusRed == "failed") {
       dispatch(resetWhoami());
-      window.location.replace("https://sie.atrbpn.go.id/Auth/Login");
+      if (count >= 3) {
+        window.location.replace("https://sie.atrbpn.go.id/Auth/Login");
+      } else {
+        dispatch(getWhoami());
+        setCount(count + 1);
+      }
     }
-    // let dateTime = moment(new Date()).format("DD/MM/YYYY");
-    // if (userName) {
-    //   localStorage.setItem("user", userName);
-    //   localStorage.setItem("date", dateTime);
-    //   setUserNm(userName);
-    // } else if (dateTime <= dateExpired) {
-    //   setUserNm(userExpired);
-    // } else {
-    //   window.location.replace("https://sie.atrbpn.go.id/Auth/Login");
-    // }
   }, [statusRed]);
 
   const handleMobileMenuClose = () => {

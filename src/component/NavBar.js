@@ -66,32 +66,102 @@ const NavBar = (props) => {
       .then(function (response) {
         const menuFromApi = _.get(response, "data.data", []) || [];
         const copy_MENU_LIST = _.clone(MENU_LIST);
-        if (menuFromApi.length === 0) return setMenuList(copy_MENU_LIST);
-        const selectedMenu = copy_MENU_LIST.reduce((accMenu, menu, idxMenu) => {
-          let idxMenuApi = menuFromApi.findIndex(
-            (e) => e.text.toLowerCase().search(menu.name.toLowerCase()) !== -1
-          );
-          if (idxMenu === 0) {
-            accMenu.push(menu);
-          } else if (idxMenuApi !== -1) {
-            menu.subMenus = menu.subMenus.reduce((accSubMenu, subMenu) => {
-              let idxSubMenuApi = menuFromApi[
-                idxMenuApi
-              ]?.listSubMenu.findIndex(
-                (e) =>
-                  e.text.toLowerCase().search(subMenu.name.toLowerCase()) !== -1
-              );
-              if (idxSubMenuApi !== -1) {
-                accSubMenu.push(subMenu);
-              }
-              return accSubMenu;
-            }, []);
-            accMenu.push(menu);
-          }
-          return accMenu;
-        }, []);
-        // console.log({ menuFromApi, selectedMenu });
-        return setMenuList(selectedMenu);
+        if (menuFromApi.length === 0) {
+          return setMenuList(copy_MENU_LIST);
+        } else {
+          // const selectedMenu = copy_MENU_LIST.reduce((accMenu, menu, idxMenu) => {
+          //   let idxMenuApi = menuFromApi.findIndex(
+          //     (e) => e.text.toLowerCase().search(menu.name.toLowerCase()) !== -1
+          //   );
+          //   if (idxMenu === 0) {
+          //     accMenu.push(menu);
+          //   } else if (idxMenuApi !== -1) {
+          //     menu.subMenus = menu.subMenus.reduce((accSubMenu, subMenu) => {
+          //       let idxSubMenuApi = menuFromApi[
+          //         idxMenuApi
+          //       ]?.listSubMenu.findIndex(
+          //         (e) =>
+          //           e.text.toLowerCase().search(subMenu.name.toLowerCase()) !== -1
+          //       );
+          //       if (idxSubMenuApi !== -1) {
+          //         accSubMenu.push(subMenu);
+          //       }
+          //       return accSubMenu;
+          //     }, []);
+          //     accMenu.push(menu);
+          //   }
+          //   return accMenu;
+          // }, []);
+          let selectedMenu = [];
+          menuFromApi && menuFromApi.length != 0
+            ? menuFromApi.map((menu, index) => {
+                let dataMenu = {
+                  name: "",
+                  icon: "",
+                  parentLink: "/404",
+                  id: "",
+                  subMenus: [],
+                };
+                let submenuItem = {
+                  icon: "",
+                  link: "/404",
+                  name: "",
+                };
+                let menuName =
+                  menu.text == "Program Strategis Nasional (PSN)"
+                    ? "PSN"
+                    : menu.text;
+                let idxMenuApi = copy_MENU_LIST.findIndex(
+                  (e) =>
+                    e.name.toLowerCase().search(menuName.toLowerCase()) !== -1
+                );
+                index == 0 ? selectedMenu.push(copy_MENU_LIST[0]) : null;
+                if (idxMenuApi !== -1) {
+                  dataMenu.icon = copy_MENU_LIST[idxMenuApi].icon;
+                  dataMenu.parentLink = copy_MENU_LIST[idxMenuApi].parentLink;
+                  dataMenu.id = copy_MENU_LIST[idxMenuApi].id;
+                  dataMenu.name = copy_MENU_LIST[idxMenuApi].name;
+                  menu.listSubMenu && menu.listSubMenu.length != 0
+                    ? menu.listSubMenu.map((item, index) => {
+                        let idxSubMenuApi = copy_MENU_LIST[
+                          idxMenuApi
+                        ]?.subMenus.findIndex(
+                          (e) =>
+                            e.name
+                              .toLowerCase()
+                              .search(item.text.toLowerCase()) !== -1
+                        );
+                        if (idxSubMenuApi !== -1) {
+                          dataMenu.subMenus.push(
+                            copy_MENU_LIST[idxMenuApi]?.subMenus[idxSubMenuApi]
+                          );
+                        } else {
+                          submenuItem.name = item.text;
+                          submenuItem.link = `/${menu.text}/${item.text}`;
+                          dataMenu.subMenus.push(submenuItem);
+                        }
+                      })
+                    : null;
+                  selectedMenu.push(dataMenu);
+                } else {
+                  dataMenu.name = menu.text;
+                  dataMenu.link = `/${menu.text}`;
+                  dataMenu.parentLink = `/${menu.text}`;
+                  dataMenu.id = menu.id;
+                  menu.listSubMenu && menu.listSubMenu.length != 0
+                    ? menu.listSubMenu.map((item, index) => {
+                        submenuItem.name = item.text;
+                        submenuItem.link = `/${menu.text}/${item.text}`;
+                        dataMenu.subMenus.push(submenuItem);
+                      })
+                    : null;
+                  selectedMenu.push(dataMenu);
+                }
+              })
+            : null;
+          console.log(selectedMenu, "selectedMenu");
+          return setMenuList(selectedMenu);
+        }
       })
       .catch(function (error) {
         // handle error
