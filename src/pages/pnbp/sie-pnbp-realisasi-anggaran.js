@@ -73,7 +73,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import { getKantorPNBP } from "../../actions/pnbpAction";
+import { getKantorPNBP, getWilayahPNBP } from "../../actions/pnbpAction";
 import { isMobile } from "react-device-detect";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
@@ -306,6 +306,7 @@ const RealisasiAnggaran = () => {
   };
 
   useEffect(() => {
+    dispatch(getWilayahPNBP());
     let temp = { kodeWilayah: [] };
     dataFilter &&
       dataFilter.length &&
@@ -427,7 +428,7 @@ const RealisasiAnggaran = () => {
   );
 
   const body = (
-    <div className={classes.paper}>
+    <div className={classes.paper} style={{ marginLeft: "12%" }}>
       <h2 id="simple-modal-title" style={{ paddingBottom: 20 }}>
         {dataModal.title}
       </h2>

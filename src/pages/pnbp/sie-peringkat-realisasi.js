@@ -69,7 +69,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import { getKantorPNBP } from "../../actions/pnbpAction";
+import { getKantorPNBP, getWilayahPNBP } from "../../actions/pnbpAction";
 import {
   tahunData,
   deleteDuplicates,
@@ -275,6 +275,7 @@ const PeringkatRealisasi = () => {
   };
 
   useEffect(() => {
+    dispatch(getWilayahPNBP());
     let temp = { kodeWilayah: [] };
     dataFilter &&
       dataFilter.length &&

@@ -1,6 +1,6 @@
 export const BASE_URL = {
   // domain: "http://10.20.57.234:3000",
-  domain: "http://10.20.56.205/SIE_FE",
+  domain: "https://sie.atrbpn.go.id/SIE_FE",
   path: {
     realisasi_anggaran: "sie-pnbp-realisasi-anggaran",
     pagu_mp: "sie-pnbp-pagu-mp",

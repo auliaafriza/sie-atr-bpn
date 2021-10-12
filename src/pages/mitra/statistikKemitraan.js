@@ -64,7 +64,7 @@ import moment from "moment";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { BASE_URL } from "../../config/embed_conf";
 import { url } from "../../api/apiClient";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -73,6 +73,7 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { getKantorPNBP } from "../../actions/pnbpAction";
 import { isMobile } from "react-device-detect";
+import { getTahun, getKantah, getKanwil } from "../../actions/mitraAction";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -168,6 +169,8 @@ let kantahTemp = [];
 
 const KepegawaianOrganisasi = () => {
   const classes = styles();
+
+  const dispatch = useDispatch();
   const [years, setYears] = useState("2022");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
@@ -269,6 +272,9 @@ const KepegawaianOrganisasi = () => {
   };
 
   useEffect(() => {
+    dispatch(getKantah());
+    dispatch(getTahun());
+    dispatch(getKanwil());
     getData();
   }, []);
 

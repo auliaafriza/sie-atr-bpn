@@ -74,6 +74,7 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import bgImg from "../../../assets/img/psn.jpg";
 import { isMobile } from "react-device-detect";
 import { useSelector, useDispatch } from "react-redux";
+import { getWilayahPNBP } from "../../../actions/pnbpAction";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -182,6 +183,7 @@ const title =
   "Jumlah bidang dan luas pengadaan tanah PSN per wilayah per waktu";
 const PengadaanTanah = () => {
   const classes = styles();
+  const dispatch = useDispatch();
   const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
 
   const [years, setYears] = useState("2022");
@@ -322,6 +324,7 @@ const PengadaanTanah = () => {
   };
 
   useEffect(() => {
+    dispatch(getWilayahPNBP());
     let temp = { kodeWilayah: [] };
     dataFilter &&
       dataFilter.length &&

@@ -77,6 +77,7 @@ import {
   CheckBoxOutlineBlank,
   CheckBox as CheckBoxIcon,
 } from "@material-ui/icons/";
+import { getWilayahPNBP } from "../../../actions/pnbpAction";
 
 const icon = <CheckBoxOutlineBlank fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -303,6 +304,7 @@ const SieHtJumlahKantorTahun = () => {
   };
 
   useEffect(() => {
+    dispatch(getWilayahPNBP());
     let temp = { kodeWilayah: [] };
     dataFilter &&
       dataFilter.length &&

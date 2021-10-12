@@ -77,7 +77,7 @@ import {
 const icon = <CheckBoxOutlineBlank fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 import { isMobile } from "react-device-detect";
-import { getKantorPNBP } from "../../../actions/pnbpAction";
+import { getKantorPNBP, getWilayahPNBP } from "../../../actions/pnbpAction";
 
 const dataTemp = [
   {
@@ -308,6 +308,7 @@ const AssetPemerintah = () => {
   };
 
   useEffect(() => {
+    dispatch(getWilayahPNBP());
     let temp = { kodeWilayah: [] };
     dataFilter &&
       dataFilter.length &&

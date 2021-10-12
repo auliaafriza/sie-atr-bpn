@@ -83,7 +83,7 @@ import { isMobile } from "react-device-detect";
 const icon = <CheckBoxOutlineBlank fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-import { getKantorPNBP } from "../../../actions/pnbpAction";
+import { getKantorPNBP, getWilayahPNBP } from "../../../actions/pnbpAction";
 
 // Pagu & MP PNBP (Satuan 1 Juta)
 const dataTemp = [
@@ -334,6 +334,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
   };
 
   useEffect(() => {
+    dispatch(getWilayahPNBP());
     let temp = { kodeWilayah: [] };
     dataFilter &&
       dataFilter.length &&

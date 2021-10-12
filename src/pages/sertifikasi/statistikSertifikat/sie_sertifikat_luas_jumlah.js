@@ -83,7 +83,7 @@ import { isMobile } from "react-device-detect";
 const icon = <CheckBoxOutlineBlank fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-import { getKantorPNBP } from "../../../actions/pnbpAction";
+import { getKantorPNBP, getWilayahPNBP } from "../../../actions/pnbpAction";
 
 const theme = createTheme({
   typography: {
@@ -302,6 +302,7 @@ const SieSertifikatLuasJumlah = () => {
   };
 
   useEffect(() => {
+    dispatch(getWilayahPNBP());
     let temp = { kodeWilayah: [] };
     dataFilter &&
       dataFilter.length &&

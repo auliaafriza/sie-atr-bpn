@@ -65,6 +65,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { DataFormater } from "../../functionGlobal/globalDataAsset";
 import { isMobile } from "react-device-detect";
+import { getWilayahPNBP } from "../../actions/pnbpAction";
 
 const dataTemp = [
   {
