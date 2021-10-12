@@ -455,7 +455,10 @@ const AlokasiAnggaran = () => {
                       )}
                       secondary={
                         <React.Fragment>
-                          {history.analisisData.replace(/<[^>]+>|&amp|&amp!|&nbsp/g, "")}
+                          {history.analisisData.replace(
+                            /<[^>]+>|&amp|&amp!|&nbsp/g,
+                            ""
+                          )}
                         </React.Fragment>
                       }
                     />
@@ -771,7 +774,6 @@ const AlokasiAnggaran = () => {
         aria-describedby="simple-modal-description"
         // className={classes.modalStyle1}
         style={{
-          // display: "flex",
           alignItems: "center",
           justifyContent: "center",
           overflow: "scroll",

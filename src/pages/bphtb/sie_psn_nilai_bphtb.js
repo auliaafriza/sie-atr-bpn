@@ -473,7 +473,10 @@ const realisasiPenggunaan = () => {
                       )}
                       secondary={
                         <React.Fragment>
-                          {history.analisisData.replace(/<[^>]+>|&amp|&amp!|&nbsp/g, "")}
+                          {history.analisisData.replace(
+                            /<[^>]+>|&amp|&amp!|&nbsp/g,
+                            ""
+                          )}
                         </React.Fragment>
                       }
                     />
@@ -789,11 +792,11 @@ const realisasiPenggunaan = () => {
         aria-describedby="simple-modal-description"
         // className={classes.modalStyle1}
         style={{
-          // display: "flex",
+          display: "flex",
           alignItems: "center",
           justifyContent: "center",
           overflow: "scroll",
-          width: "90%",
+          width: "100%",
           height: "98%",
           padding: "0 9em 0em 5em",
         }}

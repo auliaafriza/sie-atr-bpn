@@ -701,7 +701,6 @@ const PengembalianPNBP = () => {
         aria-describedby="simple-modal-description"
         // className={classes.modalStyle1}
         style={{
-          // display: "flex",
           alignItems: "center",
           justifyContent: "center",
           overflow: "scroll",

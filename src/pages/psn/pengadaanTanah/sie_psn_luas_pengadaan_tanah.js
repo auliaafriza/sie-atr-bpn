@@ -42,12 +42,15 @@ import {
   Avatar,
   TablePagination,
   Button,
+  TextField,
+  Checkbox,
 } from "@material-ui/core";
 import {
   createTheme,
   ThemeProvider,
   withStyles,
 } from "@material-ui/core/styles";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
 import styles from "../styles";
@@ -55,7 +58,10 @@ import axios from "axios";
 import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
-import { tahunData } from "../../../functionGlobal/globalDataAsset";
+import {
+  tahunData,
+  deleteDuplicates,
+} from "../../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
 import { useHistory } from "react-router";
@@ -63,16 +69,24 @@ import { BASE_URL } from "../../../config/embed_conf";
 import { url } from "../../../api/apiClient";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import bgImg from "../../../assets/img/psn.jpg";
+import { isMobile } from "react-device-detect";
+import { useSelector, useDispatch } from "react-redux";
+
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
+
 // Pagu & MP PNBP (Satuan 1 Juta)
 const dataTemp = [
   {
-    kanwil: "kanwil",
+    label: "kanwil",
     jumlah_bidang: 0,
     luas_psn: 0,
   },
   {
-    kanwil: "kanwil 2",
+    label: "kanwil 2",
     jumlah_bidang: 0,
     luas_psn: 0,
   },
@@ -80,8 +94,13 @@ const dataTemp = [
 
 let nameColumn = [
   {
-    label: "Kanwil",
-    value: "kanwil",
+    label: "Wilayah",
+    value: "wilayah",
+    isLabel: true,
+  },
+  {
+    label: "Label",
+    value: "label",
     isLabel: true,
   },
   {
@@ -96,7 +115,11 @@ let nameColumn = [
 
 let columnTable = [
   {
-    label: "kanwil",
+    label: "wilayah",
+    isFixed: false,
+  },
+  {
+    label: "label",
     isFixed: false,
   },
   {
@@ -121,7 +144,7 @@ let grafikView = [
 ];
 
 let axis = {
-  xAxis: "Kanwil",
+  xAxis: "label",
   yAxis: "Nilai Satuan 1 Juta",
 };
 
@@ -159,6 +182,8 @@ const title =
   "Jumlah bidang dan luas pengadaan tanah PSN per wilayah per waktu";
 const PengadaanTanah = () => {
   const classes = styles();
+  const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
+
   const [years, setYears] = useState("2022");
   const [tahunAwal, setTahunAwal] = useState("2017");
   const [data, setData] = useState(dataTemp);
@@ -180,6 +205,30 @@ const PengadaanTanah = () => {
   });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [dataKantor, setDataKantor] = useState([]);
+  const [dataFilter, setDataFilter] = useState([
+    {
+      kode: "10",
+      kanwil: "Kantor Wilayah Provinsi Jawa Barat",
+    },
+  ]);
+  const [dataFilterKantor, setDataFilterKantor] = useState([
+    {
+      kantor: "Kantor Pertanahan Kabupaten Bekasi",
+      kanwil: "Kantor Wilayah Provinsi Jawa Barat",
+      kode: "1005",
+      kode_kanwil: "10",
+    },
+    {
+      kode_kanwil: "10",
+      kanwil: "Kantor Wilayah Provinsi Jawa Barat",
+      kode: "1028",
+      kantor: "Kantor Pertanahan Kota Cimahi",
+    },
+  ]);
+
+  const [hideText, setHideText] = useState(false);
+  const [hideTextKantor, setHideTextKantor] = useState(false);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -204,12 +253,60 @@ const PengadaanTanah = () => {
     fileExport(loadDataColumnTable(nameColumn), title, data, ".xlsx");
   };
 
-  const getData = () => {
+  const getListKantor = (temp) => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(
-        `${url}ProgramStrategisNasional/PengadaanTanah/sie_psn_ptsl?tahunAwal=${tahunAwal}&tahunAkhir=${years}`
+      .post(`${url}MasterData/filter_kantor`, temp)
+      .then(function (response) {
+        setDataKantor(response.data.data.length != 0 ? response.data.data : []);
+      })
+      .catch(function (error) {
+        setDataKantor([]);
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
+
+  const handleChangeFilter = (event) => {
+    if (event.length != 0) {
+      let temp = { kodeWilayah: [] };
+      event.map((item) => temp.kodeWilayah.push(item.kode));
+      getListKantor(temp);
+      let res = deleteDuplicates(event, "kode");
+      setDataFilter(res);
+      setDataFilterKantor([]);
+    } else {
+      setDataFilter([]);
+    }
+  };
+
+  const handleChangeFilterKantor = (event) => {
+    if (event.length != 0) {
+      let res = deleteDuplicates(event, "kode");
+      setDataFilterKantor(res);
+    } else {
+      setDataFilterKantor([]);
+    }
+  };
+
+  const getData = () => {
+    let temp = { kantor: [], kanwil: [] };
+    dataFilterKantor && dataFilterKantor.length != 0
+      ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
+      : [];
+    dataFilter && dataFilter.length != 0
+      ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
+      : [];
+
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .post(
+        `${url}ProgramStrategisNasional/PengadaanTanah/sie_psn_luas_pengadaan_tanah?tahun=${tahunAwal}`,
+        temp
       )
       .then(function (response) {
         setData(response.data.data);
@@ -225,6 +322,12 @@ const PengadaanTanah = () => {
   };
 
   useEffect(() => {
+    let temp = { kodeWilayah: [] };
+    dataFilter &&
+      dataFilter.length &&
+      dataFilter.map((item) => temp.kodeWilayah.push(item.kode));
+    getListKantor(temp);
+
     getData();
   }, []);
 
@@ -252,7 +355,7 @@ const PengadaanTanah = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">Kanwil {label}</p>
+          <p className="label">{label}</p>
           <p
             className="desc"
             style={{ color: payload[0].color }}
@@ -336,7 +439,7 @@ const PengadaanTanah = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="kanwil" />
+            <XAxis dataKey="label" />
             <YAxis tickFormatter={DataFormater}>
               <Label
                 value="Nilai Satuan 1 Juta"
@@ -371,9 +474,12 @@ const PengadaanTanah = () => {
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <StyledTableRow key={row.kanwil}>
+                    <StyledTableRow key={row.wilayah}>
                       <StyledTableCell align="left" component="th" scope="row">
-                        {row.kanwil}
+                        {row.wilayah}
+                      </StyledTableCell>
+                      <StyledTableCell align="left" component="th" scope="row">
+                        {row.label}
                       </StyledTableCell>
                       <StyledTableCell align="left">
                         {row.jumlah_bidang
@@ -696,7 +802,6 @@ const PengadaanTanah = () => {
         aria-describedby="simple-modal-description"
         // className={classes.modalStyle1}
         style={{
-          // display: "flex",
           alignItems: "center",
           justifyContent: "center",
           overflow: "scroll",
@@ -713,7 +818,7 @@ const PengadaanTanah = () => {
         direction="row"
         style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
       >
-        <Grid item xs={6}>
+        <Grid item xs={isMobile ? 12 : 6}>
           <Typography className={classes.titleSection} variant="h2">
             {title}
           </Typography>
@@ -722,10 +827,10 @@ const PengadaanTanah = () => {
         <Grid
           container
           direction="row"
-          justifyContent="flex-end"
-          alignItems="flex-end"
+          justifyContent={isMobile ? "flex-start" : "flex-end"}
+          alignItems={isMobile ? "flex-start" : "flex-end"}
           item
-          xs={6}
+          xs={isMobile ? 12 : 6}
         >
           <ButtonGroup
             aria-label="outlined button group"
@@ -758,7 +863,12 @@ const PengadaanTanah = () => {
                           )
                         : "",
                     type: "Bar",
-                    nameColumn: ["Kanwil", "Jumlah Bidang", "Luas PSN"],
+                    nameColumn: [
+                      "Wilayah",
+                      "Label",
+                      "Jumlah Bidang",
+                      "Luas PSN",
+                    ],
                     listTop10Comment: comment.listTop10Comment,
                   })
                 }
@@ -795,7 +905,7 @@ const PengadaanTanah = () => {
         }}
       />
       <Grid container spacing={2} style={{ marginBottom: "10px" }}>
-        <Grid item xs={4}>
+        <Grid item xs={isMobile ? 12 : 4}>
           <div style={{ margin: 10, marginRight: 25 }}>
             <Grid
               container
@@ -804,13 +914,13 @@ const PengadaanTanah = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={4}>
+              <Grid item xs={isMobile ? 12 : 6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Tahun Awal
+                  Tahun
                 </Typography>
                 <FormControl className={classes.formControl}>
                   <Select
@@ -832,33 +942,165 @@ const PengadaanTanah = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={isMobile ? 12 : 6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Tahun Akhir
+                  Pilih Wilayah
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={years}
-                    onChange={handleChange}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    {tahunData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  multiple
+                  id="kantor"
+                  getOptionDisabled={(options) =>
+                    dataFilter.length >= 32 ? true : false
+                  }
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={berkasPnbpWilayah}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilter(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setHideText(true);
+                    else {
+                      setHideText(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.kanwil || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilter && dataFilter.length != 0
+                            ? dataFilter
+                                .map((item) => item.kanwil)
+                                .indexOf(option.kanwil) > -1
+                            : false
+                        }
+                      />
+                      {option.kode}
+                      {"  "}
+                      {option.kanwil}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return selected.length != 0
+                      ? hideText
+                        ? ""
+                        : `${selected.length} Terpilih`
+                      : "";
+                  }}
+                  value={dataFilter}
+                  defaultValue={dataFilter}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={
+                        dataFilter.length != 0 ? "" : "Pilih Wilayah"
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={isMobile ? 12 : 6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Kantor
+                </Typography>
+                <Autocomplete
+                  multiple
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  getOptionDisabled={(options) =>
+                    dataFilterKantor.length >= 32 ? true : false
+                  }
+                  options={dataKantor}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilterKantor(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setHideTextKantor(true);
+                    else {
+                      setHideTextKantor(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.kantor || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilterKantor && dataFilterKantor.length != 0
+                            ? dataFilterKantor
+                                .map((item) => item.kantor)
+                                .indexOf(option.kantor) > -1
+                            : false
+                        }
+                      />
+                      {option.kode}
+                      {"  "}
+                      {option.kantor}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return selected.length != 0
+                      ? hideTextKantor
+                        ? ""
+                        : `${selected.length} Terpilih`
+                      : "";
+                  }}
+                  value={dataFilterKantor}
+                  defaultValue={dataFilterKantor}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={
+                        dataFilterKantor.length != 0 ? "" : "Pilih Kantor"
+                      }
+                    />
+                  )}
+                />
               </Grid>
               <Grid
                 container
@@ -866,18 +1108,20 @@ const PengadaanTanah = () => {
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={4}
-                style={{ paddingTop: 40, paddingLeft: 20 }}
+                xs={isMobile ? 12 : 6}
+                style={{ paddingLeft: 20 }}
               >
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => getData()}
+                  style={{ height: 57, width: "100%", fontSize: 12 }}
                 >
                   Submit
                 </Button>
               </Grid>
             </Grid>
+
             <Typography
               className={classes.isiContentTextStyle}
               variant="h2"
@@ -906,7 +1150,12 @@ const PengadaanTanah = () => {
                             )
                           : "",
                       type: "Bar",
-                      nameColumn: ["Kanwil", "Jumlah Bidang", "Luas PSN"],
+                      nameColumn: [
+                        "Wilayah",
+                        "Label",
+                        "Jumlah Bidang",
+                        "Luas PSN",
+                      ],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
@@ -919,7 +1168,7 @@ const PengadaanTanah = () => {
             </Typography>
           </div>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={isMobile ? 12 : 8}>
           <Card className={classes.root} variant="outlined">
             <CardContent>
               <div className={classes.barChart}>
@@ -942,7 +1191,7 @@ const PengadaanTanah = () => {
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="kanwil" />
+                    <XAxis dataKey="label" />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
                         value="Nilai Satuan 1 Juta"

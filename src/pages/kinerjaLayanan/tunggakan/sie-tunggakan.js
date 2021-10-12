@@ -262,7 +262,7 @@ const KepegawaianBpnJabatan = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}KinerjaLayanan/Tunggakan/Tunggakan?namaprofile=${dataFilter.namaprofile}`,
+        `${url}KinerjaLayanan/Tunggakan/Tunggakan?namaprofile=${dataFilter.namaprofile}&tahun=${tahunAwal}`,
         temp
       )
       .then(function (response) {
@@ -753,7 +753,6 @@ const KepegawaianBpnJabatan = () => {
         aria-describedby="simple-modal-description"
         // className={classes.modalStyle1}
         style={{
-          // display: "flex",
           alignItems: "center",
           justifyContent: "center",
           overflow: "scroll",
@@ -965,9 +964,6 @@ const KepegawaianBpnJabatan = () => {
                 </Typography>
                 <Autocomplete
                   // multiple
-                  getOptionDisabled={(options) =>
-                    kanwil.length >= 32 ? true : false
-                  }
                   id="kantor"
                   name="kantor"
                   style={{ width: "100%", height: 50 }}

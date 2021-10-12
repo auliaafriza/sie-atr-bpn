@@ -7,6 +7,7 @@ import {
 import {
   getBerkasPnbpWilayahFilter,
   getBerkasPnbpKantorFilter,
+  getWilayahPNBP,
 } from "../../../actions/pnbpAction";
 import { useDispatch } from "react-redux";
 import LuasPengadaan from "./sie_psn_luas_pengadaan_tanah";
@@ -18,7 +19,7 @@ const PengadaanTanah = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getBerkasPnbpWilayahFilter());
+    dispatch(getWilayahPNBP());
     dispatch(getBerkasPnbpKantorFilter());
     dispatch(getSatker());
     dispatch(getKantor());
@@ -30,14 +31,14 @@ const PengadaanTanah = () => {
         paddingTop: 20,
         paddingBottom: 20,
         width: "100%",
-        height: isMobile ? "100%" : "100vh",
+        // height: isMobile ? "100%" : "100vh",
         backgroundImage: `url(${bgImg})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         zIndex: 1,
       }}
     >
-      {/* <LuasPengadaan /> */}
+      <LuasPengadaan />
       <IndexTanah />
     </div>
   );

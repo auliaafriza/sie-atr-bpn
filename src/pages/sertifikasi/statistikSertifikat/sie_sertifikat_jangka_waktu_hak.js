@@ -846,7 +846,6 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
         aria-describedby="simple-modal-description"
         // className={classes.modalStyle1}
         style={{
-          // display: "flex",
           alignItems: "center",
           justifyContent: "center",
           overflow: "scroll",
