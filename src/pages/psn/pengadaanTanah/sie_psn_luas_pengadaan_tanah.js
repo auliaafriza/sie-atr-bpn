@@ -180,7 +180,7 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 const title =
-  "Jumlah bidang dan luas pengadaan tanah PSN per wilayah per waktu";
+  "Jumlah bidang dan luas pengadaan tanah PSN per wilayah per tahun";
 const PengadaanTanah = () => {
   const classes = styles();
   const dispatch = useDispatch();

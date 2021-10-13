@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, PureComponent } from "react";
 import PropTypes from "prop-types";
 import {
   ComposedChart,
@@ -16,6 +16,7 @@ import {
   Label,
   LineChart,
   AreaChart,
+  Treemap,
 } from "recharts";
 import {
   Typography,
@@ -44,6 +45,83 @@ import moment from "moment";
 import { useLocation } from "react-router-dom";
 import { render, createPortal } from "react-dom";
 
+const COLORS = [
+  "#8889DD",
+  "#9597E4",
+  "#8DC77B",
+  "#A5D297",
+  "#E2CF45",
+  "#F8C12D",
+];
+
+class CustomizedContent extends PureComponent {
+  render() {
+    const {
+      root,
+      depth,
+      x,
+      y,
+      width,
+      height,
+      index,
+      payload,
+      colors,
+      rank,
+      name,
+    } = this.props;
+
+    return (
+      <g>
+        <rect
+          x={x}
+          y={y}
+          width={width}
+          height={height}
+          style={{
+            fill:
+              depth < 2
+                ? colors[
+                    Math.floor(
+                      (root.childre && root.children.length
+                        ? index / root.children.length
+                        : 0) * 6
+                    )
+                  ]
+                : "none",
+            stroke: "#fff",
+            strokeWidth: 2 / (depth + 1e-10),
+            strokeOpacity: 1 / (depth + 1e-10),
+          }}
+        />
+        {depth === 1 ? (
+          width < height ? (
+            <text
+              x={y + width / 2 + 10}
+              y={(x - width) * -1}
+              textAnchor="middle"
+              fill="#fff"
+              fontSize={12}
+              transform="translate(100,100) rotate(90)"
+            >
+              {name}
+            </text>
+          ) : (
+            <text
+              x={x + width / 2}
+              y={y + height / 2 + 7}
+              textAnchor="middle"
+              fill="#fff"
+              fontSize={12}
+            >
+              {name}
+            </text>
+          )
+        ) : null}
+      </g>
+    );
+  }
+}
+
 const ComponentPrint = () => {
   const inputRef = useRef();
   const classes = styles();
@@ -58,6 +136,7 @@ const ComponentPrint = () => {
   const grafikView = location.state.grafikView;
   const axis = location.state.axis;
   const option = location.state.option ? location.state.option : null;
+  const treeMap = location.state.treeMap ? location.state.treeMap : null;
 
   useEffect(() => {
     let timer = setTimeout(() => window.print(), 2 * 1000);
@@ -153,7 +232,18 @@ const ComponentPrint = () => {
       </h2>
       <div className={classes.barChart}>
         <ResponsiveContainer width="100%" height={250}>
-          {grafik.toLowerCase() == "bar" ? (
+          {grafik.toLowerCase() == "tree" ? (
+            <Treemap
+              width={400}
+              height={200}
+              data={treeMap}
+              dataKey="size"
+              ratio={4 / 3}
+              stroke="#fff"
+              fill="#8884d8"
+              content={<CustomizedContent colors={COLORS} />}
+            ></Treemap>
+          ) : grafik.toLowerCase() == "bar" ? (
             <BarChart
               width={500}
               height={300}
@@ -509,7 +599,10 @@ const ComponentPrint = () => {
                       )}
                       secondary={
                         <React.Fragment>
-                          {history.analisisData.replace(/<[^>]+>|&amp|&amp!|&nbsp/g, "")}
+                          {history.analisisData.replace(
+                            /<[^>]+>|&amp|&amp!|&nbsp/g,
+                            ""
+                          )}
                         </React.Fragment>
                       }
                     />

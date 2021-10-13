@@ -52,10 +52,7 @@ const Header = (props) => {
 
   useEffect(() => {
     let dateTime = moment(new Date()).format("DD/MM/YYYY HH:mm");
-    if (dateTime <= dateExpired) {
-      dispatch(resetWhoami());
-      setUserNm(userExpired);
-    } else if (statusRed == "success") {
+    if (statusRed == "success") {
       dispatch(resetWhoami());
       let expired =
         dataUser && dataUser.expiredDate
@@ -65,11 +62,16 @@ const Header = (props) => {
       localStorage.setItem("date", expired);
       setUserNm(dataUser.nama);
       dataUser.nama
-        ? null
+        ? dataUser.nama == "-" && dateTime <= dateExpired
+          ? setUserNm(userExpired)
+          : null
         : window.location.replace("https://sie.atrbpn.go.id/Auth/Login");
     } else if (statusRed == "failed") {
-      dispatch(resetWhoami());
-      if (count >= 3) {
+      if (dateExpired && dateTime <= dateExpired) {
+        dispatch(resetWhoami());
+        setUserNm(userExpired);
+      } else if (count >= 3) {
+        dispatch(resetWhoami());
         window.location.replace("https://sie.atrbpn.go.id/Auth/Login");
       } else {
         dispatch(getWhoami());
@@ -137,6 +139,10 @@ const Header = (props) => {
                 edge="end"
                 color="inherit"
                 href="https://sie.atrbpn.go.id/Auth/Login"
+                onClick={() => {
+                  localStorage.setItem("user", "");
+                  localStorage.setItem("date", null);
+                }}
               >
                 <AiOutlineLogout />
               </IconButton>

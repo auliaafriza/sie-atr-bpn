@@ -4,11 +4,13 @@ import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-import bgImg from "../../assets/img/bg-content.jpg";
+import bgImg from "../../assets/img/bg-content-2.jpg";
 import Divider from "@material-ui/core/Divider";
 import axios from "axios";
 import { url } from "../../api/apiClient";
 import { isMobile } from "react-device-detect";
+import { FiMap, FiCheckCircle } from "react-icons/fi";
+import { BsListCheck } from "react-icons/bs";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -75,8 +77,8 @@ export default function CenteredGrid() {
     <div
       style={{
         backgroundImage: `url(${bgImg})`,
-        // height: "100vh",
-        width: "100wh",
+        height: isMobile ? "100%" : "100vh",
+        width: isMobile ? "100%" : "100wh",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         alignContent: "center",
@@ -84,291 +86,292 @@ export default function CenteredGrid() {
         zIndex: 1,
       }}
     >
-      <Grid
-        container
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
-        spacing={2}
-        style={{
-          padding: "3em",
-        }}
-      >
-        <Grid item xs={12}>
-          <Card className={classes.root}>
-            <CardContent>
-              <Grid
-                container
-                justifyContent="center"
-                alignItems="center"
-                spacing={2}
-                style={{ paddingTop: 25 }}
+      <div class="content-overlay"></div>
+      <div class="content-wrapper" style={{ paddingTop: isMobile ? 10 : 70 }}>
+        <div class="content-header row"></div>
+        <div class="content-body px-md-3">
+          <div class="row">
+            <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
+              <div
+                class="card pull-up bg-transparent shadow-none"
+                style={{ borderWidth: 0 }}
               >
-                <Grid
-                  item
-                  xs={8}
-                  container
-                  justifyContent="flex-start"
-                  alignItems="center"
-                >
-                  <Typography
-                    className={classes.title}
-                    gutterBottom
-                    style={{ fontSize: isMobile ? 9 : 20 }}
-                  >
-                    Jumlah tanah yang telah di Sertifikatkan pada tahun 2000
-                    hingga sekarang
-                  </Typography>
-                </Grid>
-                <Grid
-                  item
-                  xs={4}
-                  container
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Typography
-                    style={{
-                      fontSize: isMobile ? 12 : "1.51rem",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {data && data.length != 0
-                      ? data[0].value
-                          .toString()
-                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-                      : 0}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={isMobile ? 12 : 6}>
-          <Card className={classes.root}>
-            <CardContent>
-              <Grid
-                container
-                justifyContent="center"
-                alignItems="center"
-                spacing={2}
-                style={{ paddingTop: 20 }}
+                <div class="card-content">
+                  <div class="row">
+                    <div class="col-12 card-gradient-md-border border-right-lighten-3">
+                      <div class="card-body text-center">
+                        <h1
+                          class="display-4 white"
+                          style={{
+                            fontSize: isMobile ? 28 : 36,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          <FiMap size={isMobile ? 28 : 36} />{" "}
+                          {data && data.length != 0
+                            ? data[0].value
+                                .toString()
+                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                            : 0}
+                        </h1>
+                        <span
+                          class="white"
+                          style={{
+                            fontSize: 14,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          Jumlah tanah yang telah di Sertifikatkan pada tahun
+                          2000 hingga sekarang
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.2s">
+              <div
+                class="card pull-up bg-transparent shadow-none"
+                style={{ borderWidth: 0 }}
               >
-                <Grid item xs={4}>
-                  <Typography
-                    className={classes.title}
-                    gutterBottom
-                    style={{
-                      fontSize: isMobile ? 9 : "1.51rem",
-                    }}
-                  >
-                    Bidang tanah hasil redistribusi tanah pada tahun 2000 hingga
-                    sekarang
-                  </Typography>
-                </Grid>
-                <Grid item xs={8}>
-                  <Typography
-                    style={{
-                      fontSize: isMobile ? 12 : "1.51rem",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {data && data.length != 0
-                      ? data[1].value
-                          .toString()
-                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-                      : 0}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={isMobile ? 12 : 6}>
-          <Card className={classes.root}>
-            <CardContent>
-              <Grid
-                container
-                justifyContent="center"
-                alignItems="center"
-                spacing={2}
-                style={{ paddingTop: 20 }}
+                <div class="card-content">
+                  <div class="row">
+                    <div class="col-12 card-gradient-md-border border-right-lighten-3">
+                      <div class="card-body text-center">
+                        <h1
+                          class="display-4 white"
+                          style={{
+                            fontSize: isMobile ? 28 : 36,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          <FiMap size={isMobile ? 28 : 36} />{" "}
+                          {data && data.length != 0
+                            ? data[1].value
+                                .toString()
+                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                            : 0}
+                        </h1>
+                        <span
+                          class="white"
+                          style={{
+                            fontSize: 14,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          Bidang tanah hasil retribusi tanah pada tahun 2000
+                          hingga sekarang
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
+              <div
+                class="card pull-up bg-transparent shadow-none"
+                style={{ borderWidth: 0 }}
               >
-                <Grid item xs={4}>
-                  <Typography
-                    className={classes.title}
-                    gutterBottom
-                    style={{
-                      fontSize: isMobile ? 9 : "1.51rem",
-                    }}
-                  >
-                    Tanah telah diukur dan dipetakan pada tahun 2000 hingga
-                    sekarang
-                  </Typography>
-                </Grid>
-                <Grid item xs={8}>
-                  <Typography
-                    style={{
-                      fontSize: isMobile ? 12 : "1.51rem",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {data && data.length != 0
-                      ? data[2].value
-                          .toString()
-                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-                      : 0}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={isMobile ? 12 : 6}>
-          <Card className={classes.root} style={{ marginTop: 30 }}>
-            <CardContent>
-              <Grid
-                container
-                justifyContent="center"
-                alignItems="center"
-                spacing={2}
+                <div class="card-content">
+                  <div class="row">
+                    <div class="col-12 card-gradient-md-border border-right-lighten-3">
+                      <div class="card-body text-center">
+                        <h1
+                          class="display-4 white"
+                          style={{
+                            fontSize: isMobile ? 28 : 36,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          <FiMap size={isMobile ? 28 : 36} />{" "}
+                          {data && data.length != 0
+                            ? data[2].value
+                                .toString()
+                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                            : 0}
+                        </h1>
+                        <span
+                          class="white"
+                          style={{
+                            fontSize: 14,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          Tanah telah diukur dan dipetakan pada tahun 2000
+                          hingga sekarang
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.4s">
+              <div
+                class="card pull-up bg-transparent shadow-none"
+                style={{ borderWidth: 0 }}
               >
-                <Grid item xs={6}>
-                  <Typography
-                    className={classes.title}
-                    gutterBottom
-                    style={{
-                      fontSize: isMobile ? 9 : "1.51rem",
-                    }}
-                  >
-                    Nilai Hak Tanggungan Elektronik telah tercatat pada tahun
-                    2000 hingga sekarang sebesar
-                  </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography
-                    style={{
-                      fontSize: isMobile ? 12 : "1.51rem",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Rp{" "}
-                    {data && data.length != 0
-                      ? data[3].value
-                          .toString()
-                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-                      : 0}{" "}
-                    Triliun
-                  </Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={isMobile ? 12 : 6}>
-          <Card className={classes.root} style={{ marginTop: 30 }}>
-            <CardContent>
-              <Grid
-                container
-                justifyContent="center"
-                alignItems="center"
-                spacing={2}
+                <div class="card-content">
+                  <div class="row">
+                    <div class="col-12 card-gradient-md-border border-right-lighten-3">
+                      <div class="card-body text-center">
+                        <h1
+                          class="display-4 white"
+                          style={{
+                            fontSize: isMobile ? 28 : 36,
+                            marginTop: isMobile ? 10 : 40,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          <BsListCheck size={isMobile ? 28 : 36} /> Rp{" "}
+                          {data && data.length != 0
+                            ? data[3].value
+                                .toString()
+                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                            : 0}{" "}
+                          Triliun
+                        </h1>
+                        <span
+                          class="white"
+                          style={{
+                            fontSize: 14,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          Nilai hak tanggungan elektronik telah tercatat pada
+                          tahun 2000 hingga sekarang
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
+              <div
+                class="card pull-up bg-transparent shadow-none"
+                style={{ borderWidth: 0 }}
               >
-                <Grid item xs={6}>
-                  <Typography
-                    className={classes.title}
-                    gutterBottom
-                    style={{
-                      fontSize: isMobile ? 9 : "1.51rem",
-                    }}
-                  >
-                    Pemerintah daerah dan Dirjen Pajak yang telah terintegrasi
-                    untuk validasi pajak dan BPHTB secara online pada tahun 2000
-                    hingga sekarang
-                  </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography
-                    style={{
-                      fontSize: isMobile ? 12 : "1.51rem",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {data && data.length != 0
-                      ? data[4].value
-                          .toString()
-                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-                      : 0}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
+                <div class="card-content">
+                  <div class="row">
+                    <div class="col-12 card-gradient-md-border border-right-lighten-3">
+                      <div class="card-body text-center">
+                        <h1
+                          class="display-4 white"
+                          style={{
+                            fontSize: isMobile ? 28 : 36,
+                            marginTop: isMobile ? 10 : 40,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          <FiCheckCircle size={isMobile ? 28 : 36} />{" "}
+                          {data && data.length != 0
+                            ? data[4].value
+                                .toString()
+                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                            : 0}
+                        </h1>
+                        <span
+                          class="white"
+                          style={{
+                            fontSize: 14,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          Pemerintah daerah dan Dirjen Pajak yang telah
+                          terintegrasi untuk validasi pajak dan BPHTB secara
+                          online pada tahun 2000 hingga sekarang
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <Grid item xs={12} style={{ marginTop: 30 }}>
-          <Card className={classes.root}>
-            <CardContent>
-              <Typography
-                style={{
-                  fontSize: isMobile ? 12 : "1.51rem",
-                  fontWeight: "bold",
-                  marginBottom: "1em",
-                }}
+          <div class="row">
+            <div class="col-12 wow fadeInUp">
+              <div
+                class="card pull-up bg-transparent shadow-none"
+                style={{ borderWidth: 0 }}
               >
-                - Menjalin Kemitraan Dengan -
-              </Typography>
-              <Grid
-                container
-                direction="row"
-                justifyContent="center"
-                alignItems="center"
-                spacing={2}
-              >
-                {dataMitra && dataMitra.length != 0
-                  ? dataMitra.map((item, index) => {
-                      return (
-                        <>
-                          <Grid item xs={isMobile ? 12 : 2}>
-                            <Typography
-                              className={classes.title}
-                              gutterBottom
-                              style={{
-                                fontSize: isMobile ? 12 : "1",
-                              }}
+                <div class="card-content">
+                  <h3
+                    class="text-center p-1 mb-20 white"
+                    style={{
+                      fontSize: 26,
+                      marginTop: isMobile ? 10 : 40,
+                      fontWeight: "bold",
+                      textShadow: "1px 2px 2px #000",
+                      fontFamily: "Open Sans",
+                    }}
+                  >
+                    - Menjalin Kemitraan Dengan -
+                  </h3>
+                  <div class="row">
+                    {dataMitra && dataMitra.length != 0
+                      ? dataMitra.map((item, index) => {
+                          return (
+                            <div
+                              class={
+                                index != dataMitra.length - 1
+                                  ? "col-lg-4 col-md-6 col-sm-12 card-gradient-md-border border-right-white border-right-lighten-3"
+                                  : "col-lg-3 col-md-6 col-sm-12"
+                              }
                             >
-                              {item.value
-                                ? item.value
-                                    .toString()
-                                    .replace(
-                                      /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
-                                      ","
-                                    )
-                                : 0}
-                            </Typography>
-                            <Typography
-                              className={classes.title}
-                              gutterBottom
-                              style={{
-                                fontSize: isMobile ? 12 : "1",
-                              }}
-                            >
-                              {item.label}
-                            </Typography>
-                          </Grid>{" "}
-                          {index ==
-                          dataMitra.length - 1 ? null : isMobile ? null : (
-                            <Divider orientation="vertical" flexItem />
-                          )}
-                        </>
-                      );
-                    })
-                  : null}
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+                              <div class="card-body text-center">
+                                <h1
+                                  class="white"
+                                  style={{
+                                    fontSize: 28,
+                                    textShadow: "1px 2px 2px #000",
+                                    fontFamily: "Open Sans",
+                                  }}
+                                >
+                                  {item.value
+                                    ? item.value
+                                        .toString()
+                                        .replace(
+                                          /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
+                                          ","
+                                        )
+                                    : 0}
+                                </h1>
+                                <span
+                                  class="white"
+                                  style={{
+                                    fontSize: 14,
+                                    textShadow: "1px 2px 2px #000",
+                                    fontFamily: "Open Sans",
+                                  }}
+                                >
+                                  {item.label}
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })
+                      : null}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

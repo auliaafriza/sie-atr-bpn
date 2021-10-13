@@ -1,5 +1,12 @@
 import React, { useEffect } from "react";
-import { AppBar, MenuItem, Tab, Tabs, Menu } from "@material-ui/core";
+import {
+  AppBar,
+  MenuItem,
+  Tab,
+  Tabs,
+  Menu,
+  withStyles,
+} from "@material-ui/core";
 import PropTypes from "prop-types";
 import styles from "./styles";
 import { MENU_LIST } from "../config/menu";
@@ -10,6 +17,17 @@ import { url } from "../api/apiClient";
 import { isMobile } from "react-device-detect";
 
 import axios from "axios";
+
+const StyledTabs = withStyles({
+  root: {
+    minWidth: 100,
+    fontSize: 12,
+    backgroundColor: "transparent",
+    "&:hover": {
+      backgroundColor: "rgba(255, 255, 255, 0.05)",
+    },
+  },
+})(Tab);
 
 const TabPanel = (props) => {
   const { children, value, index } = props;
@@ -216,10 +234,11 @@ const NavBar = (props) => {
           centered
           variant={isMobile ? "scrollable" : "standard"}
           scrollButtons="auto"
+          style={{ minWidth: 100, fontSize: 12 }}
         >
           {menuList.map((menu) => (
             <>
-              <Tab
+              <StyledTabs
                 textColor="inherit"
                 icon={menu.icon}
                 label={menu.name}

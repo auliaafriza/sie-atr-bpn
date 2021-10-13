@@ -266,9 +266,7 @@ const PaguMp = () => {
   useEffect(() => {
     dispatch(getWilayahPNBP());
     let temp = { kodeWilayah: [] };
-    dataFilter &&
-      dataFilter.length &&
-      dataFilter.map((item) => temp.kodeWilayah.push(item.kode));
+    dataFilter && dataFilter.kode ? temp.kodeWilayah.push(dataFilter.kode) : [];
     dispatch(getKantorPNBP(temp));
     getData();
   }, []);
