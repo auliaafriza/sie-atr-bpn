@@ -132,7 +132,7 @@ const styles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     minWidth: "100%",
     border: "1px solid rgba(0, 0, 0, 1)",
-    borderRadius: "10px",
+    borderRadius: "5px",
     borderWidth: 1,
     paddingLeft: 5,
   },

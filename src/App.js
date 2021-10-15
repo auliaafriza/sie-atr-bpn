@@ -4,7 +4,7 @@ import Login from "./pages/loginPage/login";
 import Dashboard from "./pages/dashboardPage/dashboard";
 import Page404 from "./pages/dashboardPage/page404";
 import PrintData from "./pages/pnbp/printData/componentPrint";
-import { PTSL, PengadaanTanah, RA, RDTR } from "./pages/psn";
+import { PTSL, PengadaanTanah, RA, RDTR, IndexTanah } from "./pages/psn";
 import {
   RealisasiAnggaran,
   PaguMp,
@@ -89,6 +89,9 @@ const Main = withRouter(({ location }) => {
         </Route>
         <Route path="/PSN/PengadaanTanah">
           <PengadaanTanah />
+        </Route>
+        <Route path="/PSN/IndexTanah">
+          <IndexTanah />
         </Route>
         <Route path="/PSN/PTSL">
           <PTSL />

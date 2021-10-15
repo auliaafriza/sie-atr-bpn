@@ -166,6 +166,11 @@ export const MENU_LIST = [
         name: "Pengadaan Tanah",
         link: "/PSN/PengadaanTanah",
       },
+      {
+        icon: <MdLandscape size={24} />,
+        name: "Index Tanah",
+        link: "/PSN/IndexTanah",
+      },
       // {
       //   icon: <MdTransform size={24} />,
       //   name: "Transformasi Digital & Layanan Elektronik",

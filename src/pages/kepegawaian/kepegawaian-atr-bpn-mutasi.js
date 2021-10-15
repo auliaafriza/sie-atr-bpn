@@ -187,6 +187,7 @@ class CustomizedContent extends PureComponent {
       colors,
       rank,
       name,
+      value,
     } = this.props;
 
     return (
@@ -201,7 +202,7 @@ class CustomizedContent extends PureComponent {
               depth < 2
                 ? colors[
                     Math.floor(
-                      (root.childre && root.children.length
+                      (root.children && root.children.length
                         ? index / root.children.length
                         : 0) * 6
                     )
@@ -213,29 +214,22 @@ class CustomizedContent extends PureComponent {
           }}
         />
         {depth === 1 ? (
-          width < height ? (
-            <text
-              x={y + width / 2 + 10}
-              y={(x - width) * -1}
-              textAnchor="middle"
-              fill="#fff"
-              fontSize={12}
-              transform="translate(100,100) rotate(90)"
-            >
-              {name}
-            </text>
-          ) : (
-            <text
-              x={x + width / 2}
-              y={y + height / 2 + 7}
-              textAnchor="middle"
-              fill="#fff"
-              fontSize={12}
-            >
-              {name}
-            </text>
-          )
-        ) : null}
+          <text
+            x={x + width / 2}
+            y={y + height / 2 + 7}
+            textAnchor="middle"
+            fill="#fff"
+            fontSize={12}
+            fontWeight="lighter"
+          >
+            {name} (
+            {root.children && root.children.length
+              ? root.children[index].size
+              : 0}
+            )
+          </text>
+        ) : // )
+        null}
       </g>
     );
   }
@@ -326,7 +320,11 @@ const KepegawaianBpnMutasi = () => {
     axios
       .post(`${url}MasterData/filter_kantor`, temp)
       .then(function (response) {
-        setDataKantor(response.data.data.length != 0 ? response.data.data : []);
+        setDataKantor(
+          response.data.data && response.data.data.length != 0
+            ? response.data.data
+            : []
+        );
       })
       .catch(function (error) {
         setDataKantor([]);
@@ -339,8 +337,12 @@ const KepegawaianBpnMutasi = () => {
 
   const handleChangeFilter = (event) => {
     let temp = { kodeWilayah: [] };
-    event && event.kode ? temp.kodeWilayah.push(event.kode) : null;
-    dispatch(getKantorPNBP(temp));
+    event && event.kode
+      ? event.kode == "Semua"
+        ? null
+        : temp.kodeWilayah.push(event.kode)
+      : null;
+    getListKantor(temp);
     setDataFilterKantor({});
     setDataFilter(event);
   };
@@ -364,7 +366,7 @@ const KepegawaianBpnMutasi = () => {
 
   const getData = () => {
     let temp = { kantah: [], kanwil: [] };
-    dataFilterKantor && dataFilterKantor.kantah
+    dataFilterKantor && dataFilterKantor.kantor
       ? temp.kantah.push(dataFilterKantor.kantor)
       : [];
     dataFilter && dataFilter.kanwil ? temp.kanwil.push(dataFilter.kanwil) : [];
@@ -420,7 +422,11 @@ const KepegawaianBpnMutasi = () => {
       });
     dispatch(getWilayahPNBP());
     let temp = { kodeWilayah: [] };
-    dataFilter && dataFilter.kode ? temp.kodeWilayah.push(dataFilter.kode) : [];
+    dataFilter && dataFilter.kode
+      ? dataFilter.kode == "Semua"
+        ? []
+        : temp.kodeWilayah.push(dataFilter.kode)
+      : [];
     getListKantor(temp);
     getData();
   }, []);
@@ -449,7 +455,7 @@ const KepegawaianBpnMutasi = () => {
                 ? payload[0].color
                 : payload[0].payload.fill,
             }}
-          >{`Jumlah Mutasi : ${payload[0].value}`}</p>
+          >{`Jumlah Pensiun : ${payload[0].value}`}</p>
         </div>
       );
     }
@@ -465,7 +471,7 @@ const KepegawaianBpnMutasi = () => {
       isLabel: false,
     },
     {
-      label: "Jumlah Mutasi",
+      label: "Jumlah Pensiun",
       value: "jumlah",
       isFixed: false,
       isLabel: false,
@@ -1263,8 +1269,13 @@ const KepegawaianBpnMutasi = () => {
               variant="h2"
               wrap
             >
-              di {dataFilterKantor ? dataFilterKantor.kantor : ""} Tahun {years}{" "}
-              Triwulan {triwulan}
+              di{" "}
+              {dataFilterKantor && dataFilterKantor.kantor
+                ? dataFilterKantor.kantor
+                : dataFilter && dataFilter.kanwil
+                ? dataFilter.kanwil
+                : ""}{" "}
+              Tahun {years} Triwulan {triwulan}
             </Typography>
           </Grid>
           <Card

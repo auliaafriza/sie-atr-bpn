@@ -10,8 +10,8 @@ import {
   getWilayahPNBP,
 } from "../../../actions/pnbpAction";
 import { useDispatch } from "react-redux";
-import LuasPengadaan from "./sie_psn_luas_pengadaan_tanah";
 import IndexTanah from "./psn-index-nilai-tanah";
+import IndexTanahKantah from "./psn-index-nilai-tanah-kantah";
 import bgImg from "../../../assets/img/psn.jpg";
 import { isMobile } from "react-device-detect";
 
@@ -31,15 +31,15 @@ const PengadaanTanah = () => {
         paddingTop: 20,
         paddingBottom: 20,
         width: "100%",
-        height: isMobile ? "100%" : "100vh",
+        // height: isMobile ? "100%" : "100vh",
         backgroundImage: `url(${bgImg})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         zIndex: 1,
       }}
     >
-      <LuasPengadaan />
-      {/* <IndexTanah /> */}
+      <IndexTanah />
+      <IndexTanahKantah />
     </div>
   );
 };
