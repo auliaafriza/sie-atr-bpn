@@ -92,14 +92,14 @@ const dataTemp = [
 
 let nameColumn = [
   {
-    label: "Keterangan",
-    value: "keterangan",
+    label: "Tahun",
+    value: "tahun",
     isFixed: false,
     isLabel: true,
   },
   {
-    label: "Nilai",
-    value: "nilai",
+    label: "Index Nilai Pertumbuhan",
+    value: "index_pertumbuhan_nilai_tanah",
     isFixed: false,
     isLabel: true,
   },
@@ -205,7 +205,7 @@ const realisasiPenggunaan = () => {
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}ProgramStrategisNasional/PengadaanTanah/filter_aliaskantah?AliasKanwil=${data}`
+        `${url}rogramStrategisNasional/indexTanah/sie_psn_index_pertumbuhan_nilai_tanah_filter_aliaskantah?AliasKanwil=${data}`
       )
       .then(function (response) {
         setKantahList(response.data.data);
@@ -249,7 +249,7 @@ const realisasiPenggunaan = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}ProgramStrategisNasional/PengadaanTanah/sie_psn_index_nilai_tanah?tahunAwal=${years}&tahunAkhir=${yearsEnd}`,
+        `${url}ProgramStrategisNasional/indexTanah/sie_psn_index_pertumbuhan_nilai_tanah?tahunAkhir=${yearsEnd}&tahunAwal=${years}`,
         temp
       )
       .then(function (response) {
@@ -271,7 +271,9 @@ const realisasiPenggunaan = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(`${url}ProgramStrategisNasional/PengadaanTanah/filter_aliaskanwil`)
+      .get(
+        `${url}ProgramStrategisNasional/indexTanah/sie_psn_index_pertumbuhan_nilai_tanah_filter_aliaskanwil`
+      )
       .then(function (response) {
         setAliasList(response.data.data);
         console.log(response);
@@ -359,10 +361,10 @@ const realisasiPenggunaan = () => {
       <div className={classes.barChart}>
         {/* <img width={500} src={image} /> */}
         <ResponsiveContainer width="100%" height={250}>
-          <BarChart
+          <LineChart
             width={500}
-            height={800}
-            data={dataModal.grafik}
+            height={300}
+            data={data}
             margin={{
               top: 5,
               right: 30,
@@ -371,42 +373,80 @@ const realisasiPenggunaan = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="keterangan"
-              // angle={60}
-              // interval={0}
-              tick={{
-                // angle: 90,
-                // transform: "rotate(-35)",
-                // textAnchor: "start",
-                // dominantBaseline: "ideographic",
-                fontSize: 8,
-              }}
-              height={100}
-              // tickFormatter={DataFormaterX}
-            />
+            <XAxis dataKey="tahun" />
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Nilai Index"
+                value="Nilai"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
               />
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
-            {/* <Legend /> */}
-            <Bar dataKey="nilai" fill="#6EB5FF" />
-          </BarChart>
+            <Legend />
+            <Line
+              type="monotone"
+              dataKey="index_pertumbuhan_nilai_tanah"
+              stroke="#6EB5FF"
+              activeDot={{ r: 8 }}
+              strokeWidth={3}
+            />
+          </LineChart>
         </ResponsiveContainer>
       </div>
-      <Typography
-        className={classes.isiContentTextStyle}
-        variant="h2"
-        wrap
-        style={{ margin: 20, fontSize: 27 }}
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+        spacing={2}
+        style={{ paddingTop: 30 }}
       >
-        Index Nilai Tanah : {indexTanah}
-      </Typography>
+        <Grid item xs={isMobile ? 12 : 6}>
+          <Card
+            className={classes.root}
+            variant="outlined"
+            style={{ backgroundColor: "#A9A9A9" }}
+          >
+            <Typography
+              className={classes.isiContentTextStyle}
+              variant="h2"
+              wrap
+              style={{ margin: 5, fontSize: 14, color: "white" }}
+            >
+              Rata-rata index Pertumbuhan :{" "}
+              {comment
+                ? comment.rata_rata
+                    .toFixed(2)
+                    .replace(/\d(?=(\d{3})+\.)/g, "$&,")
+                : 0}
+            </Typography>
+          </Card>
+        </Grid>
+        <Grid item xs={isMobile ? 12 : 6}>
+          <Card
+            className={classes.root}
+            variant="outlined"
+            style={{ backgroundColor: "#A9A9A9" }}
+          >
+            <Typography
+              className={classes.isiContentTextStyle}
+              variant="h2"
+              wrap
+              style={{ margin: 5, fontSize: 14, color: "white" }}
+            >
+              Terjadi{" "}
+              {comment && comment.pertumbuhan ? "Kenaikan" : "Penurunan"} :{" "}
+              {comment
+                ? comment.pertumbuhan
+                    .toFixed(2)
+                    .replace(/\d(?=(\d{3})+\.)/g, "$&,")
+                : 0}{" "}
+              ({comment ? comment.pertumbuhan_dalam_persen : 0}%)
+            </Typography>
+          </Card>
+        </Grid>
+      </Grid>
       {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
         <>
           <TableContainer
@@ -428,10 +468,10 @@ const realisasiPenggunaan = () => {
                   .map((row) => (
                     <StyledTableRow key={row.keterangan}>
                       <StyledTableCell align="left" component="th" scope="row">
-                        {row.keterangan}
+                        {row.tahun}
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        {row.nilai
+                        {row.index_pertumbuhan_nilai_tanah
                           .toString()
                           .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}
                       </StyledTableCell>
@@ -859,7 +899,7 @@ const realisasiPenggunaan = () => {
                             )
                           : "",
                       type: "Bar",
-                      nameColumn: ["Keterangan", "Nilai"],
+                      nameColumn: ["Tahun", "Index Nilai Pertumbuhan"],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
@@ -917,10 +957,10 @@ const realisasiPenggunaan = () => {
                       }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="keterangan" />
+                      <XAxis dataKey="tahun" />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
-                          value="Nilai Index"
+                          value="Nilai"
                           angle={-90}
                           position="insideBottomLeft"
                           offset={-5}
@@ -930,15 +970,9 @@ const realisasiPenggunaan = () => {
                       <Legend />
                       <Line
                         type="monotone"
-                        dataKey="nilai"
+                        dataKey="index_pertumbuhan_nilai_tanah"
                         stroke="#6EB5FF"
                         activeDot={{ r: 8 }}
-                        strokeWidth={3}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="nilai"
-                        stroke="#FCB9AA"
                         strokeWidth={3}
                       />
                     </LineChart>
@@ -966,7 +1000,12 @@ const realisasiPenggunaan = () => {
                     wrap
                     style={{ margin: 5, fontSize: 14, color: "white" }}
                   >
-                    Rata-rata index Pertumbuhan : {indexTanah}
+                    Rata-rata index Pertumbuhan :{" "}
+                    {comment
+                      ? comment.rata_rata
+                          .toFixed(2)
+                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")
+                      : 0}
                   </Typography>
                 </Card>
               </Grid>
@@ -982,7 +1021,15 @@ const realisasiPenggunaan = () => {
                     wrap
                     style={{ margin: 5, fontSize: 14, color: "white" }}
                   >
-                    Terjadi Kenaikan : {indexTanah}
+                    Terjadi{" "}
+                    {comment && comment.pertumbuhan ? "Kenaikan" : "Penurunan"}{" "}
+                    :{" "}
+                    {comment
+                      ? comment.pertumbuhan
+                          .toFixed(2)
+                          .replace(/\d(?=(\d{3})+\.)/g, "$&,")
+                      : 0}{" "}
+                    ({comment ? comment.pertumbuhan_dalam_persen : 0}%)
                   </Typography>
                 </Card>
               </Grid>

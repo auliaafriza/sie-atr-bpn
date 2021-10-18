@@ -15,6 +15,7 @@ import SieSertifikatJangkaWaktuHak from "./sie_sertifikat_jangka_waktu_hak";
 import SieSertifikasiTargetRealisasi from "./sie_sertifikasi_target_realisasi";
 import SieSertifikatTahun from "./sie_sertifikasi_tahun";
 import SieSertifikatLuasJumlah from "./sie_sertifikat_luas_jumlah";
+import SieSeritifikatDiagunkan from "./sie_sertifikat_diagunkan";
 import imgSertifikasi from "./../../../assets/img/sertifikasi.jpg";
 
 const StatistikSertifikat = () => {
@@ -49,6 +50,7 @@ const StatistikSertifikat = () => {
         <SieSertifikatTahun />
       </div>
       {/* <SieSertifikasiTargetRealisasi /> */}
+      <SieSeritifikatDiagunkan />
       <SieSertifikatLuasJumlah />
     </>
   );

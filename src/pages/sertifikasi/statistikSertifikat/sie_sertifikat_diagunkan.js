@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, PureComponent } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   BarChart,
   Bar,
@@ -11,7 +11,10 @@ import {
   LineChart,
   Line,
   Label,
-  Treemap,
+  PieChart,
+  Pie,
+  Sector,
+  Cell,
 } from "recharts";
 import {
   Typography,
@@ -43,9 +46,9 @@ import {
   Avatar,
   TablePagination,
   Button,
+  Checkbox,
   TextField,
 } from "@material-ui/core";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 import {
   createTheme,
   ThemeProvider,
@@ -53,72 +56,39 @@ import {
 } from "@material-ui/core/styles";
 import { IoEye, IoPrint, IoCopySharp } from "react-icons/io5";
 import { IoMdDownload } from "react-icons/io";
-import styles from "./styles";
+import styles from "./../styles";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
 import {
   tahunData,
-  bulanData,
-  DataFormater,
+  semesterData,
+  bulanDataNumberic,
   deleteDuplicates,
-} from "../../functionGlobal/globalDataAsset";
+} from "../../../functionGlobal/globalDataAsset";
 import moment from "moment";
-import { fileExport } from "../../functionGlobal/exports";
-import { loadDataColumnTable } from "../../functionGlobal/fileExports";
+import { fileExport } from "../../../functionGlobal/exports";
+import { loadDataColumnTable } from "../../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { BASE_URL } from "../../config/embed_conf";
+// import { getSatker } from "../../actions/globalActions";
+import { useDispatch, useSelector } from "react-redux";
+import { generateOptions } from "../../../functionGlobal/generateOptionSelect";
+import { BASE_URL } from "../../../config/embed_conf";
+import { url } from "../../../api/apiClient";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-import { url } from "../../api/apiClient";
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import { getKantorPNBP, getWilayahPNBP } from "../../actions/pnbpAction";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import {
+  CheckBoxOutlineBlank,
+  CheckBox as CheckBoxIcon,
+  Event,
+} from "@material-ui/icons/";
 import { isMobile } from "react-device-detect";
 
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const icon = <CheckBoxOutlineBlank fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-const dataTemp = [
-  {
-    kantor: "",
-    jumlah_mutasi: 0,
-  },
-  {
-    kantor: "",
-    jumlah_mutasi: 0,
-  },
-];
-
-const listBerdasar = [
-  {
-    label: "Pendidikan",
-    value: "pendidikan",
-  },
-  {
-    label: "Golongan",
-    value: "golongan",
-  },
-  {
-    label: "Eselon",
-    value: "eselon",
-  },
-  {
-    label: "Tipe Pegawai",
-    value: "tipe",
-  },
-];
-
-const COLORS = [
-  "#8889DD",
-  "#9597E4",
-  "#8DC77B",
-  "#A5D297",
-  "#E2CF45",
-  "#F8C12D",
-];
+import { getKantorPNBP, getWilayahPNBP } from "../../../actions/pnbpAction";
 
 const theme = createTheme({
   typography: {
@@ -150,118 +120,41 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-let columnTable = [
-  {
-    label: "label",
-    isFixed: false,
-  },
-  {
-    label: "jumlah",
-    isFixed: false,
-  },
-];
-
-let grafikView = [
-  {
-    dataKey: "jumlah",
-    fill: "#F0E68C",
-  },
+const dataTemp = [
+  { tipehak: "Hak Guna Bangunan", luas_bidang: 410742, jml_srtifikat: 195 },
 ];
 
 let axis = {
-  xAxis: "kantor",
-  yAxis: "Jumlah Mutasi",
+  xAxis: "tipehak",
+  yAxis: "Nilai",
 };
+const title = "Sertipikat Diagunkan";
 
-class CustomizedContent extends PureComponent {
-  render() {
-    const {
-      root,
-      depth,
-      x,
-      y,
-      width,
-      height,
-      index,
-      payload,
-      colors,
-      rank,
-      name,
-      value,
-    } = this.props;
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
-    return (
-      <g>
-        <rect
-          x={x}
-          y={y}
-          width={width}
-          height={height}
-          style={{
-            fill:
-              depth < 2
-                ? colors[
-                    Math.floor(
-                      (root.children && root.children.length
-                        ? index / root.children.length
-                        : 0) * 6
-                    )
-                  ]
-                : "none",
-            stroke: "#fff",
-            strokeWidth: 2 / (depth + 1e-10),
-            strokeOpacity: 1 / (depth + 1e-10),
-          }}
-        />
-        {depth === 1 ? (
-          <text
-            x={x + width / 2}
-            y={y + height / 2 + 7}
-            textAnchor="middle"
-            fill="#fff"
-            fontSize={12}
-            fontWeight="lighter"
-          >
-            {name} (
-            {root.children && root.children.length
-              ? root.children[index].size
-              : 0}
-            )
-          </text>
-        ) : // )
-        null}
-      </g>
-    );
-  }
-}
+const RADIAN = Math.PI / 180;
 
-const KepegawaianBpnMutasi = () => {
+const SieSertifikatLuasJumlah = () => {
   const classes = styles();
-  const [years, setYears] = useState("2020");
-  const [data, setData] = useState(dataTemp);
-  const [comment, setComment] = useState("");
-  const [bulan, setBulan] = useState("Nov");
-  const [dataTriwulan, setDataTriwulan] = useState([]);
-  const [dataBerdasar, setDataBerdasar] = useState([]);
-  const [triwulan, setTriwulan] = useState(2);
-  const [berdasar, setBerdasar] = useState("pendidikan");
-  const [dataTreeMap, setDataTreeMap] = useState([
-    { name: "X", size: 2138 },
-    { name: "Y", size: 3824 },
-    { name: "Z", size: 1353 },
-  ]);
+  const dispatch = useDispatch();
+  const [years, setYears] = useState("2017");
+  const [tahunAkhir, setTahunAkhir] = useState("2019");
 
   const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
   const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
-  const dispatch = useDispatch();
   const [dataFilter, setDataFilter] = useState({
-    kode: "11",
-    kanwil: "Kantor Wilayah Provinsi Jawa Tengah",
+    kode: "28",
+    kanwil: "Kantor Wilayah Provinsi Banten",
   });
-  const [dataFilterKantor, setDataFilterKantor] = useState(null);
+  const [dataFilterKantor, setDataFilterKantor] = useState({
+    kode: "2801",
+    kantor: "Kantor Pertanahan Kabupaten Serang",
+  });
 
   const [hideText, setHideText] = useState(false);
   const [hideTextKantor, setHideTextKantor] = useState(false);
+
+  const [comment, setComment] = useState("");
 
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
@@ -276,11 +169,53 @@ const KepegawaianBpnMutasi = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const [data, setData] = useState(dataTemp);
+  const nameColumn = [
+    {
+      label: "Kantah",
+      value: "label",
+      isLabel: true,
+    },
+    {
+      label: "Tipe Hak",
+      value: "tipehak",
+      isLabel: false,
+    },
+    {
+      label: "Luas Bidang",
+      value: "luas_bidang",
+      isLabel: false,
+    },
+    { label: "Jumlah Sertifikat", isFixed: false, value: "jml_srtifikat" },
+  ];
+
+  const grafikView = [
+    { dataKey: "luas_bidang", name: "Luas Bidang", fill: "#d53515" },
+    { dataKey: "jml_srtifikat", name: "Jumlah Sertifikat", fill: "#8884d8" },
+  ];
+
+  const columnTable = [
+    {
+      label: "label",
+      isFixed: false,
+    },
+    {
+      label: "tipehak",
+      isFixed: false,
+    },
+    {
+      label: "luas_bidang",
+      isFixed: false,
+    },
+    {
+      label: "jml_srtifikat",
+      isFixed: false,
+    },
+  ];
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
-  const tahunMutasi = useSelector((state) => state.kepegawaian.tahunMutasi);
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
@@ -296,22 +231,6 @@ const KepegawaianBpnMutasi = () => {
     setOpen(false);
   };
 
-  const DataFormaterX = (val) => {
-    return val && val.indexOf("Kantor Wilayah Provinsi") > -1
-      ? val.replace("Kantor Wilayah Provinsi ", "Prov ")
-      : val && val.indexOf("Kantor Wilayah Kabupaten") > -1
-      ? val.replace("Kantor Wilayah Kabupaten ", "Kab ")
-      : val && val.indexOf("Kantor Wilayah") > -1
-      ? val.replace("Kantor Wilayah ", "")
-      : val && val.indexOf("Kantor Pertanahan Kabupaten") > -1
-      ? val.replace("Kantor Pertanahan Kabupaten ", "Kab ")
-      : val && val.indexOf("Kantor Pertanahan Kota") > -1
-      ? val.replace("Kantor Pertanahan Kota ", "Kota ")
-      : val && val.indexOf("Kantor Pertanahan") > -1
-      ? val.replace("Kantor Pertanahan ", "")
-      : val;
-  };
-
   const [dataKantor, setDataKantor] = useState([]);
 
   const getListKantor = (temp) => {
@@ -320,11 +239,7 @@ const KepegawaianBpnMutasi = () => {
     axios
       .post(`${url}MasterData/filter_kantor`, temp)
       .then(function (response) {
-        setDataKantor(
-          response.data.data && response.data.data.length != 0
-            ? response.data.data
-            : []
-        );
+        setDataKantor(response.data.data.length != 0 ? response.data.data : []);
       })
       .catch(function (error) {
         setDataKantor([]);
@@ -337,27 +252,23 @@ const KepegawaianBpnMutasi = () => {
 
   const handleChangeFilter = (event) => {
     let temp = { kodeWilayah: [] };
-    event && event.kode
-      ? event.kode == "Semua"
-        ? null
-        : temp.kodeWilayah.push(event.kode)
-      : null;
+    event ? temp.kodeWilayah.push(event.kode) : null;
     getListKantor(temp);
-    setDataFilterKantor({});
-    setDataFilter(event);
+    setDataFilter(Event);
+    setDataFilterKantor(null);
   };
 
   const handleChangeFilterKantor = (event) => {
     setDataFilterKantor(event);
   };
 
-  const convertDataTree = (data) => {
+  const convertDataPie = (data) => {
     let res = [];
     data && data.length != 0
       ? data.map((item, i) => {
           res.push({
             name: item.label,
-            size: item.jumlah,
+            value: item.Nilai,
           });
         })
       : null;
@@ -370,20 +281,18 @@ const KepegawaianBpnMutasi = () => {
       ? temp.kantah.push(dataFilterKantor.kantor)
       : [];
     dataFilter && dataFilter.kanwil ? temp.kanwil.push(dataFilter.kanwil) : [];
+
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
-    let triwulanData = triwulan == 0 ? "" : triwulan;
     axios
       .post(
-        `${url}Kepegawaian/Pegawai/sie_pegawai_pensiun?tahun=${years}&triwulan=${triwulanData}&berdasarkan=${berdasar}`,
+        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_luas_jumlah?tahunAwal=${years}&tahunAkhir=${tahunAkhir}`,
         temp
       )
       .then(function (response) {
         setData(response.data.data);
         setComment(response.data);
-        let convertData = convertDataTree(response.data.data);
-        setDataTreeMap(convertData);
-        console.log(response);
+        console.log(response.data);
       })
       .catch(function (error) {
         // handle error
@@ -395,39 +304,9 @@ const KepegawaianBpnMutasi = () => {
   };
 
   useEffect(() => {
-    axios
-      .get(`${url}MasterData/filter_triwulan`)
-      .then(function (response) {
-        setDataTriwulan(response.data.data);
-        console.log(response);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .then(function () {
-        // always executed
-      });
-    axios
-      .get(`${url}MasterData/filter_berdasarkan`)
-      .then(function (response) {
-        setDataBerdasar(response.data.data);
-        console.log(response);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .then(function () {
-        // always executed
-      });
     dispatch(getWilayahPNBP());
     let temp = { kodeWilayah: [] };
-    dataFilter && dataFilter.kode
-      ? dataFilter.kode == "Semua"
-        ? []
-        : temp.kodeWilayah.push(dataFilter.kode)
-      : [];
+    dataFilter && dataFilter.kode && temp.kodeWilayah.push(dataFilter.kode);
     getListKantor(temp);
     getData();
   }, []);
@@ -436,27 +315,38 @@ const KepegawaianBpnMutasi = () => {
     setYears(event.target.value);
   };
 
-  const handleChangeBerdasar = (event) => {
-    setBerdasar(event.target.value);
+  const handleChangeTahunAkhir = (event) => {
+    setTahunAkhir(event.target.value);
   };
 
-  const handleChangeTriwulan = (event) => {
-    setTriwulan(event.target.value);
+  const DataFormater = (number) => {
+    if (number > 1000000000) {
+      return (number / 1000000000).toString() + "M";
+    } else if (number > 1000000) {
+      return (number / 1000000).toString() + "Jt";
+    } else if (number > 1000) {
+      return (number / 1000).toString() + "Rb";
+    } else {
+      return number.toString();
+    }
   };
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">{label ? label : payload[0].payload.name}</p>
-          <p
-            className="desc"
-            style={{
-              color: payload[0].color
-                ? payload[0].color
-                : payload[0].payload.fill,
-            }}
-          >{`Jumlah Pensiun : ${payload[0].value}`}</p>
+          <p className="label">{label}</p>
+          {payload.map((e, i) => (
+            <div key={i}>
+              <p className="desc" style={{ color: e.payload.fill }}>
+                {e.payload.tipehak}
+              </p>
+              <p
+                className="desc"
+                style={{ color: e.payload.fill }}
+              >{`${e.dataKey} : ${e.value}`}</p>
+            </div>
+          ))}
         </div>
       );
     }
@@ -464,46 +354,9 @@ const KepegawaianBpnMutasi = () => {
     return null;
   };
 
-  let nameColumn = [
-    {
-      label: berdasar,
-      value: "label",
-      isFixed: false,
-      isLabel: false,
-    },
-    {
-      label: "Jumlah Pensiun",
-      value: "jumlah",
-      isFixed: false,
-      isLabel: false,
-    },
-  ];
-
   const exportData = () => {
-    fileExport(
-      loadDataColumnTable(nameColumn),
-      "Prediksi Pegawai Pensiun",
-      data,
-      ".xlsx"
-    );
+    fileExport(loadDataColumnTable(nameColumn), title, data, ".xlsx");
   };
-
-  const handlePrint = useReactToPrint({
-    content: () => inputRef.current,
-  });
-
-  const [iframeIsOpen, setOpenIframe] = useState(false);
-  const [iframeWidth, setIframeWidth] = useState(600);
-  const [iframeHeight, setIframeHeight] = useState(600);
-
-  function handleIframe(status) {
-    setOpenIframe(status);
-  }
-
-  function handleIframeWidth(e) {
-    // alert(e.target.value + "");
-    setIframeWidth(e.target.value);
-  }
 
   const body = (
     <div className={classes.paper}>
@@ -512,18 +365,36 @@ const KepegawaianBpnMutasi = () => {
       </h2>
       <div className={classes.barChart}>
         <ResponsiveContainer width="100%" height={250}>
-          <Treemap
-            width={400}
-            height={200}
-            data={dataTreeMap}
-            dataKey="size"
-            ratio={4 / 3}
-            stroke="#fff"
-            fill="#8884d8"
-            content={<CustomizedContent colors={COLORS} />}
-          >
+          <PieChart width={400} height={400}>
+            <Pie
+              dataKey="jml_srtifikat"
+              isAnimationActive={false}
+              data={data}
+              cx="50%"
+              cy="50%"
+              outerRadius={80}
+              fill="#8884d8"
+              label
+            />
+            <Pie
+              data={data}
+              cx="50%"
+              cy="50%"
+              isAnimationActive={false}
+              label
+              outerRadius={80}
+              fill="#8884d8"
+              dataKey="jml_srtifikat"
+            >
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Pie>
             <Tooltip content={<CustomTooltip />} />
-          </Treemap>
+          </PieChart>
         </ResponsiveContainer>
       </div>
       {nameColumn && nameColumn.length != 0 ? (
@@ -548,8 +419,8 @@ const KepegawaianBpnMutasi = () => {
               <TableBody>
                 {dataModal.grafik
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <StyledTableRow key={row.label}>
+                  .map((row, i) => (
+                    <StyledTableRow key={i}>
                       <StyledTableCell
                         align="center"
                         component="th"
@@ -557,8 +428,26 @@ const KepegawaianBpnMutasi = () => {
                       >
                         {row.label}
                       </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {row.jumlah}
+                      <StyledTableCell
+                        align="center"
+                        component="th"
+                        scope="row"
+                      >
+                        {row.tipehak}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        align="center"
+                        component="th"
+                        scope="row"
+                      >
+                        {row.luas_bidang}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        align="center"
+                        component="th"
+                        scope="row"
+                      >
+                        {row.jml_srtifikat}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
@@ -626,7 +515,7 @@ const KepegawaianBpnMutasi = () => {
 
   const history = useHistory();
 
-  const handlePrintData = (title, columnTable) => {
+  const handlePrint = () => {
     history.push({
       pathname: "/PrintData",
       state: {
@@ -634,16 +523,27 @@ const KepegawaianBpnMutasi = () => {
         comment: comment,
         columnTable: columnTable,
         title: title,
-        grafik: "tree",
+        grafik: "bar",
         nameColumn: nameColumn,
         grafikView: grafikView,
         axis: axis,
-        treeMap: dataTreeMap,
       },
       target: "_blank",
     });
   };
 
+  const [iframeIsOpen, setOpenIframe] = useState(false);
+  const [iframeWidth, setIframeWidth] = useState(600);
+  const [iframeHeight, setIframeHeight] = useState(600);
+
+  function handleIframe(status) {
+    setOpenIframe(status);
+  }
+
+  function handleIframeWidth(e) {
+    // alert(e.target.value + "");
+    setIframeWidth(e.target.value);
+  }
   return (
     <div>
       <Modal
@@ -705,7 +605,7 @@ const KepegawaianBpnMutasi = () => {
                   ' src="' +
                   BASE_URL.domain +
                   "/embed/" +
-                  BASE_URL.path.kepegawaian_bpn_mutasi +
+                  BASE_URL.path.sie_sertifikasi_luas_jumlah +
                   '"></iframe>'
                 }
                 onCopy={() => toast.success("success copied to clipboard!")}
@@ -778,7 +678,7 @@ const KepegawaianBpnMutasi = () => {
                   ' src="' +
                   BASE_URL.domain +
                   "/embed/" +
-                  BASE_URL.path.kepegawaian_bpn_mutasi +
+                  BASE_URL.path.sie_sertifikasi_luas_jumlah +
                   '"></iframe>'
                 }
               />
@@ -871,12 +771,13 @@ const KepegawaianBpnMutasi = () => {
               src={
                 BASE_URL.domain +
                 "/embed/" +
-                BASE_URL.path.kepegawaian_bpn_mutasi
+                BASE_URL.path.sie_sertifikasi_luas_jumlah
               }
             ></iframe>
           </Grid>
         </div>
       </Modal>
+
       <Modal
         open={open}
         onClose={handleClose}
@@ -900,9 +801,9 @@ const KepegawaianBpnMutasi = () => {
         direction="row"
         style={{ padding: 10, paddingTop: 20, paddingBottom: 5 }}
       >
-        <Grid item xs={isMobile ? 12 : 6}>
+        <Grid item xs={isMobile ? 12 : 10}>
           <Typography className={classes.titleSection} variant="h2">
-            Prediksi Pegawai Pensiun
+            {title}
           </Typography>
         </Grid>
         <Grid
@@ -911,7 +812,7 @@ const KepegawaianBpnMutasi = () => {
           justifyContent={isMobile ? "flex-start" : "flex-end"}
           alignItems={isMobile ? "flex-start" : "flex-end"}
           item
-          xs={isMobile ? 12 : 6}
+          xs={isMobile ? 12 : 2}
         >
           {/* <ReactToPrint
             trigger={() => <button>Print this out!</button>}
@@ -932,12 +833,13 @@ const KepegawaianBpnMutasi = () => {
                 <IoCopySharp />
               </IconButton>
             </TooltipMI>
+
             <TooltipMI title="Lihat Detail" placement="top">
               <IconButton
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Prediksi Pegawai Pensiun",
+                    title,
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -965,13 +867,7 @@ const KepegawaianBpnMutasi = () => {
               )}
               content={inputRef.current}
             > */}
-            <TooltipMI
-              title="Print Data"
-              placement="top"
-              onClick={() =>
-                handlePrintData("Prediksi Pegawai Pensiun", columnTable)
-              }
-            >
+            <TooltipMI title="Print Data" placement="top" onClick={handlePrint}>
               <IconButton aria-label="delete" size="small">
                 <IoPrint />
               </IconButton>
@@ -999,7 +895,7 @@ const KepegawaianBpnMutasi = () => {
           margin: 10,
         }}
       />
-      <Grid container spacing={2}>
+      <Grid container spacing={2} style={{ marginBottom: "10px" }}>
         <Grid item xs={isMobile ? 12 : 4}>
           <div style={{ margin: 10, marginRight: 25 }}>
             <Grid
@@ -1027,10 +923,10 @@ const KepegawaianBpnMutasi = () => {
                     className={classes.selectStyle}
                     disableUnderline
                   >
-                    {tahunMutasi.map((item, i) => {
+                    {tahunData.map((item, i) => {
                       return (
-                        <MenuItem value={item.tahun} key={i}>
-                          {item.tahun}
+                        <MenuItem value={item.id} key={i}>
+                          {item.value}
                         </MenuItem>
                       );
                     })}
@@ -1043,27 +939,72 @@ const KepegawaianBpnMutasi = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Triwulan
+                  Pilih Wilayah
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={triwulan}
-                    onChange={handleChangeTriwulan}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    {dataTriwulan.map((item, i) => {
-                      return (
-                        <MenuItem value={item.value} key={i}>
-                          {item.key}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  // multiple
+                  id="kantor"
+                  // getOptionDisabled={(options) =>
+                  //   dataFilter.length >= 32 ? true : false
+                  // }
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={berkasPnbpWilayah}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChangeFilter(newValue);
+                  }}
+                  // onInputChange={(_event, value, reason) => {
+                  //   if (reason == "input") setHideText(true);
+                  //   else {
+                  //     setHideText(false);
+                  //   }
+                  // }}
+                  getOptionLabel={(option) => option.kanwil || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      {/* <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilter && dataFilter.length != 0
+                            ? dataFilter
+                                .map((item) => item.kanwil)
+                                .indexOf(option.kanwil) > -1
+                            : false
+                        }
+                      /> */}
+                      {option.kode}
+                      {"  "}
+                      {option.kanwil}
+                    </React.Fragment>
+                  )}
+                  // renderTags={(selected) => {
+                  //   return selected.length != 0
+                  //     ? hideText
+                  //       ? ""
+                  //       : `${selected.length} Terpilih`
+                  //     : "";
+                  // }}
+                  value={dataFilter}
+                  defaultValue={dataFilter}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Wilayah"}
+                    />
+                  )}
+                />
               </Grid>
             </Grid>
             <Grid
@@ -1079,58 +1020,9 @@ const KepegawaianBpnMutasi = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Kanwil
-                </Typography>
-                <Autocomplete
-                  id="kantor"
-                  name="kantor"
-                  style={{ width: "100%", height: 50 }}
-                  options={berkasPnbpWilayah}
-                  // classes={{
-                  //   option: classes.option,
-                  // }}
-                  disableUnderline
-                  className={classes.formControl}
-                  autoHighlight
-                  onChange={(event, newValue) => {
-                    handleChangeFilter(newValue);
-                  }}
-                  getOptionLabel={(option) => option.kanwil || ""}
-                  renderOption={(option, { selected }) => (
-                    <React.Fragment>
-                      {option.kode}
-                      {"  "}
-                      {option.kanwil}
-                    </React.Fragment>
-                  )}
-                  value={dataFilter}
-                  defaultValue={dataFilter}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      InputProps={{
-                        ...params.InputProps,
-                        disableUnderline: true,
-                      }}
-                      style={{ marginTop: 5 }}
-                      placeholder={"Pilih Kanwil"}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={isMobile ? 12 : 6}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
                   Pilih Kantah
                 </Typography>
                 <Autocomplete
-                  // multiple
-                  // getOptionDisabled={(options) =>
-                  //   dataFilterKantor.length >= 32 ? true : false
-                  // }
                   id="kantor"
                   name="kantor"
                   style={{ width: "100%", height: 50 }}
@@ -1144,39 +1036,14 @@ const KepegawaianBpnMutasi = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilterKantor(newValue);
                   }}
-                  // onInputChange={(_event, value, reason) => {
-                  //   if (reason == "input") setHideTextKantor(true);
-                  //   else {
-                  //     setHideTextKantor(false);
-                  //   }
-                  // }}
                   getOptionLabel={(option) => option.kantor || ""}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
-                      {/* <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={
-                          dataFilterKantor && dataFilterKantor.length != 0
-                            ? dataFilterKantor
-                                .map((item) => item.kantor)
-                                .indexOf(option.kantor) > -1
-                            : false
-                        }
-                      /> */}
                       {option.kode}
                       {"  "}
                       {option.kantor}
                     </React.Fragment>
                   )}
-                  // renderTags={(selected) => {
-                  //   return selected.length != 0
-                  //     ? hideTextKantor
-                  //       ? ""
-                  //       : `${selected.length} Terpilih`
-                  //     : "";
-                  // }}
                   value={dataFilterKantor}
                   defaultValue={dataFilterKantor}
                   renderInput={(params) => (
@@ -1191,42 +1058,6 @@ const KepegawaianBpnMutasi = () => {
                     />
                   )}
                 />
-              </Grid>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={isMobile ? 12 : 6}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Pilih Berdasar
-                </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={berdasar}
-                    onChange={handleChangeBerdasar}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    {dataBerdasar.map((item, i) => {
-                      return (
-                        <MenuItem value={item.value} key={i}>
-                          {item.key}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
               </Grid>
               <Grid
                 container
@@ -1247,6 +1078,45 @@ const KepegawaianBpnMutasi = () => {
                 </Button>
               </Grid>
             </Grid>
+
+            <Typography
+              className={classes.isiContentTextStyle}
+              variant="h2"
+              wrap
+            >
+              {comment && comment.lastComment
+                ? comment.lastComment.analisisData
+                    .replace(/<[^>]+>|&amp|&amp!|&nbsp/g, "")
+                    .slice(0, 500)
+                : ""}
+              {comment &&
+              comment.lastComment &&
+              comment.lastComment.analisisData.length > 500 ? (
+                <Link
+                  href="#"
+                  onClick={() =>
+                    handleOpen({
+                      title,
+                      grafik: data,
+                      dataTable: "",
+                      analisis:
+                        comment && comment.lastComment
+                          ? comment.lastComment.analisisData.replace(
+                              /<[^>]+>/g,
+                              ""
+                            )
+                          : "",
+                      type: "Bar",
+                      listTop10Comment: comment.listTop10Comment,
+                    })
+                  }
+                  variant="body2"
+                >
+                  {" "}
+                  More
+                </Link>
+              ) : null}
+            </Typography>
           </div>
         </Grid>
         <Grid item xs={isMobile ? 12 : 8} style={{ margin: isMobile ? 20 : 0 }}>
@@ -1263,7 +1133,7 @@ const KepegawaianBpnMutasi = () => {
               variant="h2"
               wrap
             >
-              Prediksi Pegawai Pensiun Berdasar {berdasar}
+              Sertipikat diagunkan
             </Typography>
             <Typography
               className={classes.isiContentTextStyle}
@@ -1276,7 +1146,7 @@ const KepegawaianBpnMutasi = () => {
                 : dataFilter && dataFilter.kanwil
                 ? dataFilter.kanwil
                 : ""}{" "}
-              Tahun {years} Triwulan {triwulan}
+              Tahun {years}
             </Typography>
           </Grid>
           <Card
@@ -1286,69 +1156,36 @@ const KepegawaianBpnMutasi = () => {
             <CardContent>
               <div className={classes.barChart}>
                 <ResponsiveContainer width="100%" height={250}>
-                  <Treemap
-                    width={400}
-                    height={200}
-                    data={dataTreeMap}
-                    dataKey="size"
-                    ratio={4 / 3}
-                    stroke="#fff"
-                    fill="#8884d8"
-                    content={<CustomizedContent colors={COLORS} />}
-                  >
-                    <Tooltip content={<CustomTooltip />} />
-                  </Treemap>
-                  {/* <BarChart
-                    width={500}
-                    height={300}
-                    data={data}
-                    margin={{
-                      top: 5,
-                      right: 30,
-                      left: 20,
-                      bottom: 5,
-                    }}
-                    padding={{
-                      top: 15,
-                      right: 10,
-                      left: 10,
-                      bottom: 15,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                      dataKey="kantor"
-                      interval={0}
-                      tick={{
-                        angle: 60,
-                        transform: "rotate(-35)",
-                        textAnchor: "start",
-                        dominantBaseline: "ideographic",
-                        fontSize: 8,
-                      }}
-                      height={100}
-                      tickFormatter={DataFormaterX}
+                  <PieChart width={400} height={400}>
+                    <Pie
+                      dataKey="jml_srtifikat"
+                      isAnimationActive={false}
+                      data={data}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      fill="#8884d8"
+                      label
                     />
-                    <YAxis
-                      tickFormatter={DataFormater}
-                      type="number"
-                      allowDecimals={false}
+                    <Pie
+                      data={data}
+                      cx="50%"
+                      cy="50%"
+                      isAnimationActive={false}
+                      label
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="jml_srtifikat"
                     >
-                      <Label
-                        value="Nilai Mutasi"
-                        angle={-90}
-                        position="insideBottomLeft"
-                        offset={-5}
-                      />
-                    </YAxis>
+                      {data.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
                     <Tooltip content={<CustomTooltip />} />
-                    <Legend />
-                    <Bar
-                      dataKey="jumlah_mutasi"
-                      fill="#F0E68C"
-                      name="Jumlah Mutasi"
-                    />
-                  </BarChart> */}
+                  </PieChart>
                 </ResponsiveContainer>
               </div>
             </CardContent>
@@ -1359,4 +1196,4 @@ const KepegawaianBpnMutasi = () => {
   );
 };
 
-export default KepegawaianBpnMutasi;
+export default SieSertifikatLuasJumlah;

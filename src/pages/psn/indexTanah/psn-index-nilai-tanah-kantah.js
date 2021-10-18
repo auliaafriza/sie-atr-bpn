@@ -359,10 +359,54 @@ const realisasiPenggunaan = () => {
       <div className={classes.barChart}>
         {/* <img width={500} src={image} /> */}
         <ResponsiveContainer width="100%" height={250}>
+          <LineChart
+            width={500}
+            height={300}
+            data={data}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="keterangan" />
+            <YAxis tickFormatter={DataFormater}>
+              <Label
+                value="Nilai Index"
+                angle={-90}
+                position="insideBottomLeft"
+                offset={-5}
+              />
+            </YAxis>
+            <Tooltip content={<CustomTooltip />} />
+            <Legend />
+            <Line
+              type="monotone"
+              dataKey="nilai"
+              stroke="#6EB5FF"
+              activeDot={{ r: 8 }}
+              strokeWidth={3}
+            />
+            <Line
+              type="monotone"
+              dataKey="nilai"
+              stroke="#FCB9AA"
+              strokeWidth={3}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+      <div
+        className={classes.barChart}
+        style={{ marginTop: 30, marginBottom: 0 }}
+      >
+        <ResponsiveContainer width="100%" height={250}>
           <BarChart
             width={500}
             height={800}
-            data={dataModal.grafik}
+            data={data}
             margin={{
               top: 5,
               right: 30,
@@ -399,14 +443,46 @@ const realisasiPenggunaan = () => {
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <Typography
-        className={classes.isiContentTextStyle}
-        variant="h2"
-        wrap
-        style={{ margin: 20, fontSize: 27 }}
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+        spacing={2}
       >
-        Index Nilai Tanah : {indexTanah}
-      </Typography>
+        <Grid item xs={isMobile ? 12 : 6}>
+          <Card
+            className={classes.root}
+            variant="outlined"
+            style={{ backgroundColor: "#A9A9A9" }}
+          >
+            <Typography
+              className={classes.isiContentTextStyle}
+              variant="h2"
+              wrap
+              style={{ margin: 5, fontSize: 14, color: "white" }}
+            >
+              Rata-rata Pertumbuhan Nilai Tanah : {indexTanah}
+            </Typography>
+          </Card>
+        </Grid>
+        <Grid item xs={isMobile ? 12 : 6}>
+          <Card
+            className={classes.root}
+            variant="outlined"
+            style={{ backgroundColor: "#A9A9A9" }}
+          >
+            <Typography
+              className={classes.isiContentTextStyle}
+              variant="h2"
+              wrap
+              style={{ margin: 5, fontSize: 14, color: "white" }}
+            >
+              Kenaikan Terbesar Pada : {indexTanah}
+            </Typography>
+          </Card>
+        </Grid>
+      </Grid>
       {dataModal.nameColumn && dataModal.nameColumn.length != 0 ? (
         <>
           <TableContainer
