@@ -38,6 +38,11 @@ import {
   KepegawaianOrganisasi,
   PegawaiAtr,
   Organisasi,
+  PegawaiAtrGol,
+  PegawaiAtrJabatan,
+  PegawaiAtrJK,
+  PegawaiAtrPensiun,
+  PegawaiAtrPendidikan,
 } from "./pages/kepegawaian";
 import {
   StatistikSertifikat,
@@ -111,7 +116,6 @@ const Main = withRouter(({ location }) => {
         <Route path="/Sertifikasi/TanahAssetPemerintah">
           <TanahAssetPemerintah />
         </Route>
-
         {/* Start Route PNBP */}
         <Route path="/AssetKeuangan/PNBP/RealisasiAnggaran">
           <RealisasiAnggaran />
@@ -197,10 +201,24 @@ const Main = withRouter(({ location }) => {
         <Route path="/Kepegawaian/PegawaiAtr">
           <PegawaiAtr />
         </Route>
+        <Route path="/Kepegawaian/JumlahPegawaperPendidikanAtr">
+          <PegawaiAtrPendidikan />
+        </Route>
+        <Route path="/Kepegawaian/PrediksiPegawaiAtrPensiun">
+          <PegawaiAtrPensiun />
+        </Route>
+        <Route path="/Kepegawaian/JumlahPegawaperJenisKelaminAtr">
+          <PegawaiAtrJK />
+        </Route>
+        <Route path="/Kepegawaian/JumlahPegawaperJabatanAtr">
+          <PegawaiAtrJabatan />
+        </Route>
+        <Route path="/Kepegawaian/JumlahPegawaperGolonganAtr">
+          <PegawaiAtrGol />
+        </Route>
         <Route path="/Kepegawaian/Organisasi">
           <Organisasi />
         </Route>
-
         <Route path="/Kepegawaian/Organisasi/KepegawaianOrganisasi">
           <KepegawaianOrganisasi />
         </Route>

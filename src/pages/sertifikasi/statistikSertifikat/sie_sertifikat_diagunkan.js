@@ -120,12 +120,10 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-const dataTemp = [
-  { tipehak: "Hak Guna Bangunan", luas_bidang: 410742, jml_srtifikat: 195 },
-];
+const dataTemp = [{ name: "Hak Guna Bangunan", value: 0 }];
 
 let axis = {
-  xAxis: "tipehak",
+  xAxis: "name",
   yAxis: "Nilai",
 };
 const title = "Sertipikat Diagunkan";
@@ -133,6 +131,78 @@ const title = "Sertipikat Diagunkan";
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const RADIAN = Math.PI / 180;
+const renderActiveShape = (props) => {
+  const {
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    startAngle,
+    endAngle,
+    fill,
+    payload,
+    percent,
+    value,
+  } = props;
+  const sin = Math.sin(-RADIAN * midAngle);
+  const cos = Math.cos(-RADIAN * midAngle);
+  const sx = cx + (outerRadius + 10) * cos;
+  const sy = cy + (outerRadius + 10) * sin;
+  const mx = cx + (outerRadius + 30) * cos;
+  const my = cy + (outerRadius + 30) * sin;
+  const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+  const ey = my;
+  const textAnchor = cos >= 0 ? "start" : "end";
+
+  return (
+    <g>
+      <Sector
+        cx={cx}
+        cy={cy}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        fill={fill}
+      />
+      <Sector
+        cx={cx}
+        cy={cy}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        innerRadius={outerRadius + 6}
+        outerRadius={outerRadius + 10}
+        fill={fill}
+      />
+      <path
+        d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`}
+        stroke={fill}
+        fill="none"
+      />
+      <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
+      <text
+        x={ex + (cos >= 0 ? 1 : -1) * 12}
+        y={ey}
+        textAnchor={textAnchor}
+        fill="#333"
+      >
+        {payload.name}
+      </text>
+      <text
+        x={ex + (cos >= 0 ? 1 : -1) * 12}
+        y={ey}
+        dy={18}
+        textAnchor={textAnchor}
+        fill="#999"
+      >
+        {`Jumlah Sertipikat: ${value
+          .toFixed(2)
+          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+      </text>
+    </g>
+  );
+};
 
 const SieSertifikatLuasJumlah = () => {
   const classes = styles();
@@ -143,16 +213,16 @@ const SieSertifikatLuasJumlah = () => {
   const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
   const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
   const [dataFilter, setDataFilter] = useState({
-    kode: "28",
-    kanwil: "Kantor Wilayah Provinsi Banten",
+    kanwil: "Aceh",
   });
-  const [dataFilterKantor, setDataFilterKantor] = useState({
-    kode: "2801",
-    kantor: "Kantor Pertanahan Kabupaten Serang",
-  });
-
+  const [dataFilterKantor, setDataFilterKantor] = useState();
+  const [kanwilList, setAliasList] = useState([]);
   const [hideText, setHideText] = useState(false);
   const [hideTextKantor, setHideTextKantor] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const onPieEnter = (_, index) => {
+    setActiveIndex(index);
+  };
 
   const [comment, setComment] = useState("");
 
@@ -172,43 +242,24 @@ const SieSertifikatLuasJumlah = () => {
   const [data, setData] = useState(dataTemp);
   const nameColumn = [
     {
-      label: "Kantah",
-      value: "label",
-      isLabel: true,
-    },
-    {
-      label: "Tipe Hak",
-      value: "tipehak",
+      label: "Nama",
+      value: "name",
       isLabel: false,
     },
-    {
-      label: "Luas Bidang",
-      value: "luas_bidang",
-      isLabel: false,
-    },
-    { label: "Jumlah Sertifikat", isFixed: false, value: "jml_srtifikat" },
+    { label: "Jumlah Sertifikat", isFixed: false, value: "value" },
   ];
 
   const grafikView = [
-    { dataKey: "luas_bidang", name: "Luas Bidang", fill: "#d53515" },
-    { dataKey: "jml_srtifikat", name: "Jumlah Sertifikat", fill: "#8884d8" },
+    { dataKey: "value", name: "Jumlah Sertifikat", fill: "#8884d8" },
   ];
 
   const columnTable = [
     {
-      label: "label",
+      label: "name",
       isFixed: false,
     },
     {
-      label: "tipehak",
-      isFixed: false,
-    },
-    {
-      label: "luas_bidang",
-      isFixed: false,
-    },
-    {
-      label: "jml_srtifikat",
+      label: "value",
       isFixed: false,
     },
   ];
@@ -252,7 +303,7 @@ const SieSertifikatLuasJumlah = () => {
 
   const handleChangeFilter = (event) => {
     let temp = { kodeWilayah: [] };
-    event ? temp.kodeWilayah.push(event.kode) : null;
+    event && event.kode != "-" ? temp.kodeWilayah.push(event.kode) : null;
     getListKantor(temp);
     setDataFilter(Event);
     setDataFilterKantor(null);
@@ -265,32 +316,40 @@ const SieSertifikatLuasJumlah = () => {
   const convertDataPie = (data) => {
     let res = [];
     data && data.length != 0
-      ? data.map((item, i) => {
-          res.push({
-            name: item.label,
-            value: item.Nilai,
-          });
-        })
-      : null;
+      ? res.push(
+          { name: "Sudah diroya", value: data[0].sudah_roya },
+          { name: "Sedang Diagunkan", value: data[0].belum_roya }
+        )
+      : res.push(
+          { name: "Sudah diroya", value: 0 },
+          { name: "Sedang Diagunkan", value: 0 }
+        );
     return res;
   };
 
   const getData = () => {
     let temp = { kantah: [], kanwil: [] };
     dataFilterKantor && dataFilterKantor.kantor
-      ? temp.kantah.push(dataFilterKantor.kantor)
+      ? dataFilterKantor.kantah == "pilih semua" ||
+        dataFilterKantor.kantah == "-"
+        ? []
+        : temp.kantah.push(dataFilterKantor.kantah)
       : [];
-    dataFilter && dataFilter.kanwil ? temp.kanwil.push(dataFilter.kanwil) : [];
-
+    dataFilter && dataFilter.kanwil
+      ? dataFilter.kanwil == "pilih semua" || dataFilter.kanwil == "-"
+        ? []
+        : temp.kanwil.push(dataFilter.kanwil)
+      : [];
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_luas_jumlah?tahunAwal=${years}&tahunAkhir=${tahunAkhir}`,
+        `${url}Sertifikasi/StatistikSertifikat/sie_psn_roya_blm_roya?tahun=${years}`,
         temp
       )
       .then(function (response) {
-        setData(response.data.data);
+        let dataTemp = convertDataPie(response.data.data);
+        setData(dataTemp);
         setComment(response.data);
         console.log(response.data);
       })
@@ -304,7 +363,23 @@ const SieSertifikatLuasJumlah = () => {
   };
 
   useEffect(() => {
-    dispatch(getWilayahPNBP());
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .get(
+        `${url}Sertifikasi/StatistikSertifikat/sie_psn_roya_blm_roya_filter_kanwil`
+      )
+      .then(function (response) {
+        setAliasList(response.data.data);
+        console.log(response);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
     let temp = { kodeWilayah: [] };
     dataFilter && dataFilter.kode && temp.kodeWilayah.push(dataFilter.kode);
     getListKantor(temp);
@@ -335,16 +410,12 @@ const SieSertifikatLuasJumlah = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">{label}</p>
           {payload.map((e, i) => (
             <div key={i}>
-              <p className="desc" style={{ color: e.payload.fill }}>
-                {e.payload.tipehak}
-              </p>
               <p
                 className="desc"
                 style={{ color: e.payload.fill }}
-              >{`${e.dataKey} : ${e.value}`}</p>
+              >{`${e.name} : ${e.value}`}</p>
             </div>
           ))}
         </div>
@@ -366,7 +437,7 @@ const SieSertifikatLuasJumlah = () => {
       <div className={classes.barChart}>
         <ResponsiveContainer width="100%" height={250}>
           <PieChart width={400} height={400}>
-            <Pie
+            {/* <Pie
               dataKey="jml_srtifikat"
               isAnimationActive={false}
               data={data}
@@ -375,16 +446,19 @@ const SieSertifikatLuasJumlah = () => {
               outerRadius={80}
               fill="#8884d8"
               label
-            />
+            /> */}
             <Pie
               data={data}
               cx="50%"
               cy="50%"
-              isAnimationActive={false}
-              label
+              // isAnimationActive={false}
+              // label
               outerRadius={80}
               fill="#8884d8"
-              dataKey="jml_srtifikat"
+              dataKey="value"
+              activeIndex={activeIndex}
+              activeShape={renderActiveShape}
+              onMouseEnter={onPieEnter}
             >
               {data.map((entry, index) => (
                 <Cell
@@ -393,7 +467,7 @@ const SieSertifikatLuasJumlah = () => {
                 />
               ))}
             </Pie>
-            <Tooltip content={<CustomTooltip />} />
+            {/* <Tooltip content={<CustomTooltip />} /> */}
           </PieChart>
         </ResponsiveContainer>
       </div>
@@ -426,28 +500,14 @@ const SieSertifikatLuasJumlah = () => {
                         component="th"
                         scope="row"
                       >
-                        {row.label}
+                        {row.name}
                       </StyledTableCell>
                       <StyledTableCell
                         align="center"
                         component="th"
                         scope="row"
                       >
-                        {row.tipehak}
-                      </StyledTableCell>
-                      <StyledTableCell
-                        align="center"
-                        component="th"
-                        scope="row"
-                      >
-                        {row.luas_bidang}
-                      </StyledTableCell>
-                      <StyledTableCell
-                        align="center"
-                        component="th"
-                        scope="row"
-                      >
-                        {row.jml_srtifikat}
+                        {row.value}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
@@ -905,7 +965,7 @@ const SieSertifikatLuasJumlah = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={isMobile ? 12 : 6}>
+              <Grid item xs={12}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -933,7 +993,7 @@ const SieSertifikatLuasJumlah = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={isMobile ? 12 : 6}>
+              <Grid item xs={12}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -949,7 +1009,7 @@ const SieSertifikatLuasJumlah = () => {
                   // }
                   name="kantor"
                   style={{ width: "100%", height: 50 }}
-                  options={berkasPnbpWilayah}
+                  options={kanwilList}
                   classes={{
                     option: classes.option,
                   }}
@@ -1014,7 +1074,7 @@ const SieSertifikatLuasJumlah = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={isMobile ? 12 : 6}>
+              {/* <Grid item xs={isMobile ? 12 : 6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1058,14 +1118,14 @@ const SieSertifikatLuasJumlah = () => {
                     />
                   )}
                 />
-              </Grid>
+              </Grid> */}
               <Grid
                 container
                 direction="row"
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={isMobile ? 12 : 6}
+                xs={12}
                 style={{ paddingLeft: 20 }}
               >
                 <Button
@@ -1157,25 +1217,31 @@ const SieSertifikatLuasJumlah = () => {
               <div className={classes.barChart}>
                 <ResponsiveContainer width="100%" height={250}>
                   <PieChart width={400} height={400}>
-                    <Pie
+                    {/* <Pie
                       dataKey="jml_srtifikat"
-                      isAnimationActive={false}
+                      // isAnimationActive={false}
                       data={data}
                       cx="50%"
                       cy="50%"
                       outerRadius={80}
                       fill="#8884d8"
-                      label
-                    />
+                      // label
+                      activeIndex={activeIndex}
+                      activeShape={renderActiveShape}
+                      onMouseEnter={() => onPieEnter()}
+                    /> */}
                     <Pie
                       data={data}
                       cx="50%"
                       cy="50%"
-                      isAnimationActive={false}
-                      label
+                      // isAnimationActive={false}
+                      // label
                       outerRadius={80}
                       fill="#8884d8"
-                      dataKey="jml_srtifikat"
+                      dataKey="value"
+                      activeIndex={activeIndex}
+                      activeShape={renderActiveShape}
+                      onMouseEnter={onPieEnter}
                     >
                       {data.map((entry, index) => (
                         <Cell
@@ -1184,7 +1250,7 @@ const SieSertifikatLuasJumlah = () => {
                         />
                       ))}
                     </Pie>
-                    <Tooltip content={<CustomTooltip />} />
+                    {/* <Tooltip content={<CustomTooltip />} /> */}
                   </PieChart>
                 </ResponsiveContainer>
               </div>

@@ -237,14 +237,14 @@ class CustomizedContent extends PureComponent {
 
 const KepegawaianBpnMutasi = () => {
   const classes = styles();
-  const [years, setYears] = useState("2020");
+  const [years, setYears] = useState(new Date().getFullYear());
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [bulan, setBulan] = useState("Nov");
   const [dataTriwulan, setDataTriwulan] = useState([]);
   const [dataBerdasar, setDataBerdasar] = useState([]);
-  const [triwulan, setTriwulan] = useState(2);
-  const [berdasar, setBerdasar] = useState("pendidikan");
+  const [triwulan, setTriwulan] = useState(0);
+  const [berdasar, setBerdasar] = useState("eselon");
   const [dataTreeMap, setDataTreeMap] = useState([
     { name: "X", size: 2138 },
     { name: "Y", size: 3824 },
@@ -254,10 +254,7 @@ const KepegawaianBpnMutasi = () => {
   const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
   const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
   const dispatch = useDispatch();
-  const [dataFilter, setDataFilter] = useState({
-    kode: "11",
-    kanwil: "Kantor Wilayah Provinsi Jawa Tengah",
-  });
+  const [dataFilter, setDataFilter] = useState(null);
   const [dataFilterKantor, setDataFilterKantor] = useState(null);
 
   const [hideText, setHideText] = useState(false);
@@ -338,7 +335,7 @@ const KepegawaianBpnMutasi = () => {
   const handleChangeFilter = (event) => {
     let temp = { kodeWilayah: [] };
     event && event.kode
-      ? event.kode == "Semua"
+      ? event.kode == "-"
         ? null
         : temp.kodeWilayah.push(event.kode)
       : null;
@@ -367,9 +364,16 @@ const KepegawaianBpnMutasi = () => {
   const getData = () => {
     let temp = { kantah: [], kanwil: [] };
     dataFilterKantor && dataFilterKantor.kantor
-      ? temp.kantah.push(dataFilterKantor.kantor)
+      ? dataFilterKantor.kantor == "pilih semua" ||
+        dataFilterKantor.kantor == "-"
+        ? []
+        : temp.kantah.push(dataFilterKantor.kantor)
       : [];
-    dataFilter && dataFilter.kanwil ? temp.kanwil.push(dataFilter.kanwil) : [];
+    dataFilter && dataFilter.kanwil
+      ? dataFilter.kanwil == "pilih semua" || dataFilter.kanwil == "-"
+        ? []
+        : temp.kanwil.push(dataFilter.kanwil)
+      : [];
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     let triwulanData = triwulan == 0 ? "" : triwulan;
@@ -1276,7 +1280,8 @@ const KepegawaianBpnMutasi = () => {
                 : dataFilter && dataFilter.kanwil
                 ? dataFilter.kanwil
                 : ""}{" "}
-              Tahun {years} Triwulan {triwulan}
+              Tahun {years} {triwulan == 0 ? "Semua Triwulan" : "Triwulan"}{" "}
+              {triwulan == 0 ? "" : triwulan}
             </Typography>
           </Grid>
           <Card

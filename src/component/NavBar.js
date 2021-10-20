@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { url } from "../api/apiClient";
 import { isMobile } from "react-device-detect";
+import { StickyContainer, Sticky } from "react-sticky";
 
 import axios from "axios";
 
@@ -57,9 +58,24 @@ const NavBar = (props) => {
   const [value, setValue] = React.useState(0);
   const [id, setId] = React.useState("");
   const [menuList, setMenuList] = React.useState([]);
+  const [isScroll, setIsScroll] = React.useState(false);
 
   useEffect(() => {
     getListMenu();
+    const header = document.getElementById("myHeader");
+    const sticky = header.offsetTop;
+    const scrollCallBack = window.addEventListener("scroll", () => {
+      if (window.pageYOffset > sticky) {
+        header.classList.add("sticky");
+        setIsScroll(true);
+      } else {
+        header.classList.remove("sticky");
+        setIsScroll(false);
+      }
+    });
+    return () => {
+      window.removeEventListener("scroll", scrollCallBack);
+    };
   }, []);
 
   // ============= NOTE ===========================
@@ -224,10 +240,11 @@ const NavBar = (props) => {
       <AppBar
         className={classes.header}
         color="primary"
-        position="static"
+        position={isScroll ? "fixed" : "sticky"}
         elevation={0}
         component="nav"
         variant="dense"
+        id="myHeader"
       >
         <Tabs
           value={value}
@@ -261,8 +278,14 @@ const NavBar = (props) => {
                   open={id === a11yProps(menu.id).id}
                   onClose={handleCloseSubMenu}
                   getContentAnchorEl={null}
-                  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-                  transformOrigin={{ vertical: "top", horizontal: "center" }}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
                 >
                   {menu.subMenus.map((subMenu, idx) => (
                     <MenuItem

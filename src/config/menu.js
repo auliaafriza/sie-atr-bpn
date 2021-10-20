@@ -18,6 +18,7 @@ import {
   MdLandscape,
 } from "react-icons/md";
 import { GiOrganigram, GiMoneyStack, GiEarthAsiaOceania } from "react-icons/gi";
+import { GoGraph } from "react-icons/go";
 import { BsNewspaper } from "react-icons/bs";
 import { FcDebt } from "react-icons/fc";
 import { IoMdMap } from "react-icons/io";
@@ -83,9 +84,34 @@ export const MENU_LIST = [
     parentLink: "/Kepegawaian",
     subMenus: [
       {
+        icon: <GoGraph size={24} />,
+        name: "Landing Page Pegawai",
+        link: "/Kepegawaian/LandingPagePegawaiAtr",
+      },
+      {
         icon: <MdPeople size={24} />,
-        name: "Pegawai ATR/BPN",
-        link: "/Kepegawaian/PegawaiAtr",
+        name: "Jumlah Pegawai per Golongan",
+        link: "/Kepegawaian/JumlahPegawaperGolonganAtr",
+      },
+      {
+        icon: <MdPeople size={24} />,
+        name: "Jumlah Pegawai per Pendidikan",
+        link: "/Kepegawaian/JumlahPegawaperPendidikanAtr",
+      },
+      {
+        icon: <MdPeople size={24} />,
+        name: "PJumlah Pegawai per Jabatan",
+        link: "/Kepegawaian/JumlahPegawaperJabatanAtr",
+      },
+      {
+        icon: <MdPeople size={24} />,
+        name: "Jumlah Pegawai per Jenis Kelamin",
+        link: "/Kepegawaian/JumlahPegawaperJenisKelaminAtr",
+      },
+      {
+        icon: <MdPeople size={24} />,
+        name: "Prediksi Pegawai Pensiun",
+        link: "/Kepegawaian/PrediksiPegawaiAtrPensiun",
       },
       // {
       //   icon: <GiOrganigram size={24} />,
@@ -191,7 +217,7 @@ export const MENU_LIST = [
     subMenus: [
       {
         icon: <MdInsertChart size={24} />,
-        name: "Statistik Sertifikat",
+        name: "Statistik Sertipikat",
         link: "/Sertifikasi/StatistikSertifikat",
       },
       {

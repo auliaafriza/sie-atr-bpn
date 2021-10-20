@@ -46,11 +46,11 @@ const StatistikSertifikat = () => {
         }}
       >
         {/* <SieSertifikatKonsolidasiKota /> */}
-        <SieSertifikatJangkaWaktuHak />
+        <SieSeritifikatDiagunkan />
         <SieSertifikatTahun />
       </div>
       {/* <SieSertifikasiTargetRealisasi /> */}
-      <SieSeritifikatDiagunkan />
+      <SieSertifikatJangkaWaktuHak />
       <SieSertifikatLuasJumlah />
     </>
   );

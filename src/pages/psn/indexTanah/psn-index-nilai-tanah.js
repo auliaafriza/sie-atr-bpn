@@ -205,7 +205,7 @@ const realisasiPenggunaan = () => {
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}rogramStrategisNasional/indexTanah/sie_psn_index_pertumbuhan_nilai_tanah_filter_aliaskantah?AliasKanwil=${data}`
+        `${url}ProgramStrategisNasional/indexTanah/sie_psn_index_pertumbuhan_nilai_tanah_filter_aliaskantah?AliasKanwil=${data}`
       )
       .then(function (response) {
         setKantahList(response.data.data);
@@ -221,7 +221,12 @@ const realisasiPenggunaan = () => {
   };
 
   const handleChangeFilter = (event) => {
-    event && event.aliaskanwil ? getKantah(event.aliaskanwil) : null;
+    event &&
+    event.aliaskanwil &&
+    event.aliaskanwil != "pilih semua" &&
+    event.aliaskanwil != "-"
+      ? getKantah(event.aliaskanwil)
+      : null;
     setDataFilterKantor([]);
     setDataFilter(event);
   };
@@ -235,15 +240,27 @@ const realisasiPenggunaan = () => {
     }
   };
 
+  const findAll = (data) => {
+    let found = data.find(
+      (element) => element.aliaskantah == "pilih semua" || element == "-"
+    );
+    return found ? false : true;
+  };
+
   const getData = () => {
     let temp = { aliaskantah: [], aliaskanwil: [] };
-    dataFilterKantor && dataFilterKantor.length != 0
+    let foundData =
+      dataFilterKantor && dataFilterKantor.length != 0
+        ? findAll(dataFilterKantor)
+        : false;
+    foundData
       ? dataFilterKantor.map((item) => temp.aliaskantah.push(item.aliaskantah))
       : [];
-    // dataFilter && dataFilter.length != 0
-    //   ? dataFilter.map((item) => temp.aliaskanwil.push(item.aliaskanwil))
-    //   : [];
-    temp.aliaskanwil.push(dataFilter.aliaskanwil);
+    dataFilter && dataFilter.aliaskanwil
+      ? dataFilter.aliaskanwil == "pilih semua" || dataFilter.aliaskanwil == "-"
+        ? []
+        : temp.aliaskanwil.push(dataFilter.aliaskanwil)
+      : [];
 
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
@@ -357,6 +374,23 @@ const realisasiPenggunaan = () => {
           </IconButton>
         </TooltipMI>
       </Grid> */}
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        item
+        xs={10}
+      >
+        <Typography className={classes.isiContentTextStyle} variant="h2" wrap>
+          Index Pertumbuhan Nilai Tanah
+        </Typography>
+        <Typography className={classes.isiContentTextStyle} variant="h2" wrap>
+          di{" "}
+          {dataFilter && dataFilter.aliaskanwil ? dataFilter.aliaskanwil : ""}{" "}
+          Tahun {years} - {yearsEnd}
+        </Typography>
+      </Grid>
 
       <div className={classes.barChart}>
         {/* <img width={500} src={image} /> */}
@@ -941,6 +975,33 @@ const realisasiPenggunaan = () => {
         />
         <Grid container spacing={2}>
           <Grid item xs={isMobile ? 12 : 8}>
+            <Grid
+              container
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+              item
+              xs={10}
+            >
+              <Typography
+                className={classes.isiContentTextStyle}
+                variant="h2"
+                wrap
+              >
+                Index Pertumbuhan Nilai Tanah
+              </Typography>
+              <Typography
+                className={classes.isiContentTextStyle}
+                variant="h2"
+                wrap
+              >
+                di{" "}
+                {dataFilter && dataFilter.aliaskanwil
+                  ? dataFilter.aliaskanwil
+                  : ""}{" "}
+                Tahun {years} - {yearsEnd}
+              </Typography>
+            </Grid>
             <Card className={classes.root} variant="outlined">
               <CardContent>
                 <div className={classes.barChart}>

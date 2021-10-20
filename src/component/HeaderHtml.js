@@ -6,6 +6,10 @@ import {
   Typography,
   Menu,
   MenuItem,
+  Grid,
+  Tab,
+  Tabs,
+  withStyles,
 } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import { MoreVert, AccountCircle, Search } from "@material-ui/icons";
@@ -17,16 +21,55 @@ import { resetWhoami, getWhoami, setUsername } from "../actions/globalActions";
 import queryString from "query-string";
 import moment from "moment";
 import Cookies from "universal-cookie";
+import { isMobile } from "react-device-detect";
+import PropTypes from "prop-types";
+import { MENU_LIST } from "../config/menu";
+import _ from "lodash";
+import { useHistory } from "react-router";
+import { url } from "../api/apiClient";
+import { StickyContainer, Sticky } from "react-sticky";
 
-const HeaderHtml = (props) => {
+import axios from "axios";
+
+const StyledTabs = withStyles({
+  root: {
+    minWidth: 100,
+    fontSize: 12,
+    backgroundColor: "transparent",
+    "&:hover": {
+      backgroundColor: "rgba(255, 255, 255, 0.05)",
+    },
+  },
+})(Tab);
+
+const TabPanel = (props) => {
+  const { children, value, index } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+    >
+      {value === index && <div>{children}</div>}
+    </div>
+  );
+};
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired,
+};
+
+const Header = (props) => {
   const classes = styles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const parsed = queryString.parse(location.search);
   // const [open, setOpen] = React.useState(false);
-  const userNameRed = useSelector((state) => state.globalReducer.whoAmI);
+  const [count, setCount] = React.useState(1);
+  const dataUser = useSelector((state) => state.globalReducer.whoAmI);
   const statusRed = useSelector((state) => state.globalReducer.status);
-  const userName = parsed ? parsed.u : null;
   const user = useSelector((state) => state.globalReducer.user);
   const [userNm, setUserNm] = useState("");
   const dispatch = useDispatch();
@@ -36,27 +79,173 @@ const HeaderHtml = (props) => {
   let dateExpired = localStorage.getItem("date")
     ? localStorage.getItem("date")
     : null;
-  const isMenuOpen = Boolean(anchorEl);
   const cookies = new Cookies();
-  // const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState(0);
+  const [id, setId] = React.useState("");
+  const [menuList, setMenuList] = React.useState([]);
 
-  const getCookie = (cname) => {
-    // let name = cname + "=";
-    // let decodedCookie = decodeURIComponent(document.cookie);
-    // let ca = decodedCookie.split(";");
-    // for (let i = 0; i < ca.length; i++) {
-    //   let c = ca[i];
-    //   while (c.charAt(0) == " ") {
-    //     c = c.substring(1);
-    //   }
-    //   if (c.indexOf(name) == 0) {
-    //     return c.substring(name.length, c.length);
-    //   }
-    // }
-    // return "";
-    let value = "";
-    value = cookies.get(cname);
-    return value;
+  useEffect(() => {
+    getListMenu();
+  }, []);
+
+  // ============= NOTE ===========================
+  // JIKA BELOM INTEGRASI DENGAN SSO
+  // untuk set username melalui localstorage
+  // buka inspec element -> application -> localstorage
+  // add new. isi key dengan usernameSie dan value sesuai keinginan.
+  // refresh halaman
+
+  const userName = useSelector((state) => state.globalReducer.whoAmI);
+
+  const getListMenu = () => {
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios({
+      method: "post",
+      url: `${url}ApiMenu/ByUsername`,
+      data: {
+        u: userName, //agung13
+      },
+    })
+      .then(function (response) {
+        const menuFromApi = _.get(response, "data.data", []) || [];
+        const copy_MENU_LIST = _.clone(MENU_LIST);
+        if (menuFromApi.length === 0) {
+          return setMenuList(copy_MENU_LIST);
+        } else {
+          // const selectedMenu = copy_MENU_LIST.reduce((accMenu, menu, idxMenu) => {
+          //   let idxMenuApi = menuFromApi.findIndex(
+          //     (e) => e.text.toLowerCase().search(menu.name.toLowerCase()) !== -1
+          //   );
+          //   if (idxMenu === 0) {
+          //     accMenu.push(menu);
+          //   } else if (idxMenuApi !== -1) {
+          //     menu.subMenus = menu.subMenus.reduce((accSubMenu, subMenu) => {
+          //       let idxSubMenuApi = menuFromApi[
+          //         idxMenuApi
+          //       ]?.listSubMenu.findIndex(
+          //         (e) =>
+          //           e.text.toLowerCase().search(subMenu.name.toLowerCase()) !== -1
+          //       );
+          //       if (idxSubMenuApi !== -1) {
+          //         accSubMenu.push(subMenu);
+          //       }
+          //       return accSubMenu;
+          //     }, []);
+          //     accMenu.push(menu);
+          //   }
+          //   return accMenu;
+          // }, []);
+          let selectedMenu = [];
+          menuFromApi && menuFromApi.length != 0
+            ? menuFromApi.map((menu, index) => {
+                let dataMenu = {
+                  name: "",
+                  icon: "",
+                  parentLink: "/404",
+                  id: "",
+                  subMenus: [],
+                };
+                let submenuItem = {
+                  icon: "",
+                  link: "/404",
+                  name: "",
+                };
+                let menuName =
+                  menu.text == "Program Strategis Nasional (PSN)"
+                    ? "PSN"
+                    : menu.text;
+                let idxMenuApi = copy_MENU_LIST.findIndex(
+                  (e) =>
+                    e.name.toLowerCase().search(menuName.toLowerCase()) !== -1
+                );
+                index == 0 ? selectedMenu.push(copy_MENU_LIST[0]) : null;
+                if (idxMenuApi !== -1) {
+                  dataMenu.icon = copy_MENU_LIST[idxMenuApi].icon;
+                  dataMenu.parentLink = copy_MENU_LIST[idxMenuApi].parentLink;
+                  dataMenu.id = copy_MENU_LIST[idxMenuApi].id;
+                  dataMenu.name =
+                    copy_MENU_LIST[idxMenuApi].name == "PSN"
+                      ? menu.text
+                      : copy_MENU_LIST[idxMenuApi].name;
+                  menu.listSubMenu && menu.listSubMenu.length != 0
+                    ? menu.listSubMenu.map((item, index) => {
+                        let idxSubMenuApi = copy_MENU_LIST[
+                          idxMenuApi
+                        ]?.subMenus.findIndex(
+                          (e) =>
+                            e.name
+                              .toLowerCase()
+                              .search(item.text.toLowerCase()) !== -1
+                        );
+                        if (idxSubMenuApi !== -1) {
+                          dataMenu.subMenus.push(
+                            copy_MENU_LIST[idxMenuApi]?.subMenus[idxSubMenuApi]
+                          );
+                        } else {
+                          submenuItem.name = item.text;
+                          submenuItem.link = `/${menu.text}/${item.text}`;
+                          dataMenu.subMenus.push(submenuItem);
+                        }
+                      })
+                    : null;
+                  selectedMenu.push(dataMenu);
+                } else {
+                  dataMenu.name = menu.text;
+                  dataMenu.link = `/${menu.text}`;
+                  dataMenu.parentLink = `/${menu.text}`;
+                  dataMenu.id = menu.id;
+                  menu.listSubMenu && menu.listSubMenu.length != 0
+                    ? menu.listSubMenu.map((item, index) => {
+                        submenuItem.name = item.text;
+                        submenuItem.link = `/${menu.text}/${item.text}`;
+                        dataMenu.subMenus.push(submenuItem);
+                      })
+                    : null;
+                  selectedMenu.push(dataMenu);
+                }
+              })
+            : null;
+          console.log(selectedMenu, "selectedMenu");
+          return setMenuList(selectedMenu);
+        }
+      })
+      .catch(function (error) {
+        // handle error
+        setMenuList(MENU_LIST);
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const a11yProps = (index, open) => {
+    return {
+      id: `simple-menu-${index}`,
+      "aria-controls": `simple-menu-${index}`,
+      "aria-haspopup": "true",
+    };
+  };
+
+  const history = useHistory();
+  const handleChangePage = (link) => {
+    history.push(link);
+  };
+
+  const handleOpenSubMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+    setId(event.currentTarget.id);
+  };
+  const handleCloseSubMenu = () => {
+    setAnchorEl(null);
+    setId(null);
   };
 
   const handleProfileMenuOpen = (event) => {
@@ -64,34 +253,37 @@ const HeaderHtml = (props) => {
   };
 
   useEffect(() => {
-    // let user = getCookie(".atrbpn2409");
     dispatch(getWhoami());
   }, []);
 
   useEffect(() => {
-    let dateTime = moment(new Date()).format("DD/MM/YYYY");
+    let dateTime = moment(new Date()).format("DD/MM/YYYY HH:mm");
     if (statusRed == "success") {
       dispatch(resetWhoami());
-      localStorage.setItem("user", userNameRed);
-      localStorage.setItem("date", dateTime);
-      setUserNm(userNameRed);
-      // userNameRed
-      //   ? null
-      //   : window.location.replace("https://sie.atrbpn.go.id/Auth/Login");
+      let expired =
+        dataUser && dataUser.expiredDate
+          ? moment(new Date(dataUser.expiredDate)).format("DD/MM/YYYY HH:mm")
+          : null;
+      localStorage.setItem("user", dataUser ? dataUser.nama : "");
+      localStorage.setItem("date", expired);
+      setUserNm(dataUser.nama);
+      dataUser.nama
+        ? dataUser.nama == "-" && dateTime <= dateExpired
+          ? setUserNm(userExpired)
+          : null
+        : window.location.replace("https://sie.atrbpn.go.id/Auth/Login");
     } else if (statusRed == "failed") {
-      dispatch(resetWhoami());
-      window.location.replace("https://sie.atrbpn.go.id/Auth/Login");
+      if (dateExpired && dateTime <= dateExpired) {
+        dispatch(resetWhoami());
+        setUserNm(userExpired);
+      } else if (count >= 3) {
+        dispatch(resetWhoami());
+        window.location.replace("https://sie.atrbpn.go.id/Auth/Login");
+      } else {
+        dispatch(getWhoami());
+        setCount(count + 1);
+      }
     }
-    // let dateTime = moment(new Date()).format("DD/MM/YYYY");
-    // if (userName) {
-    //   localStorage.setItem("user", userName);
-    //   localStorage.setItem("date", dateTime);
-    //   setUserNm(userName);
-    // } else if (dateTime <= dateExpired) {
-    //   setUserNm(userExpired);
-    // } else {
-    //   window.location.replace("https://sie.atrbpn.go.id/Auth/Login");
-    // }
   }, [statusRed]);
 
   const handleMobileMenuClose = () => {
@@ -110,358 +302,188 @@ const HeaderHtml = (props) => {
   const menuId = "primary-search-account-menu";
   const mobileMenuId = "primary-search-account-menu-mobile";
 
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
-
   return (
-    <AppBar position="static" className={classes.header}>
-      <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-without-dd-arrow navbar-static-top navbar-light navbar-brand-center">
-        <div class="navbar-wrapper border-bottom">
-          <div class="navbar-header">
-            <ul class="nav navbar-nav flex-row float-left">
-              <li class="nav-item mobile-menu d-md-none mr-auto flex-row">
-                <a class="navbar-brand" href="/Dashboard">
+    <div>
+      <AppBar position="static" className={classes.header}>
+        {isMobile ? (
+          <Toolbar>
+            <Grid container direction="row" spacing={2}>
+              <Grid item xs={6}>
+                <Grid container direction="row">
                   <img src={Logo} style={{ width: 35, height: 35 }}></img>
-                  <h3 class="brand-text  text-white">SIE ATR BPN</h3>
-                </a>
-              </li>
-            </ul>
-            <ul class="nav navbar-nav float-right">
-              <li class="dropdown dropdown-user nav-item">
-                <a
-                  class="dropdown-toggle nav-link dropdown-user-link"
-                  href="javascript:;"
-                  data-toggle="dropdown"
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    style={{ marginLeft: 10, color: "white", marginTop: 5 }}
+                  >
+                    SIE ATR BPN
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid
+                item
+                xs={6}
+                container
+                justifyContent="flex-end"
+                alignItems="flex-start"
+              >
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  href="https://sie.atrbpn.go.id/Auth/Login"
+                  onClick={() => {
+                    localStorage.setItem("user", "");
+                    localStorage.setItem("date", null);
+                  }}
                 >
-                  <span class="avatar avatar-online">
-                    <img
-                      src="app-assets/images/portrait/small/avatar-s-19.png"
-                      alt="avatar"
-                    />
-                    <i></i>
-                  </span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <a class="dropdown-item" href="login.html">
-                    <i class="ft-power"></i> Logout
-                  </a>
-                </div>
-              </li>
-            </ul>
-          </div>
-          <div class="navbar-container content">
-            <div class="collapse navbar-collapse" id="navbar-mobile">
-              <ul class="nav navbar-nav mr-auto float-left flex-row">
-                <li class="nav-item">
-                  <a class="navbar-brand" href="/Dashboard">
-                    <img src={Logo} style={{ width: 35, height: 35 }}></img>
-                    <h3 class="brand-text  text-white">SIE ATR BPN</h3>
-                  </a>
-                </li>
-              </ul>
-              <ul class="nav navbar-nav float-right">
-                <li class="dropdown dropdown-user nav-item">
-                  <a
-                    class="dropdown-toggle nav-link dropdown-user-link"
-                    href="#"
-                    data-toggle="dropdown"
-                  >
-                    <span class="mr-1 user-name text-bold-700 text-white">
-                      John Doe
-                    </span>
-                    <span class="avatar avatar-online">
-                      <img
-                        src="app-assets/images/portrait/small/avatar-s-19.png"
-                        alt="avatar"
-                      />
-                      <i></i>
-                    </span>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="login.html">
-                      <i class="ft-power"></i> Logout
-                    </a>
-                  </div>
-                </li>
-              </ul>
+                  <AiOutlineLogout />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Toolbar>
+        ) : (
+          <Toolbar>
+            <img src={Logo} style={{ width: 35, height: 35 }}></img>
+            <Typography
+              className={classes.title}
+              variant="h6"
+              noWrap
+              style={{ marginLeft: 10, color: "white" }}
+            >
+              SIE ATR BPN
+            </Typography>
+            <div className={classes.grow} />
+            <div className={classes.sectionDesktop}>
+              <div className={classes.search} style={{ marginRight: "40px" }}>
+                {/* <div className={classes.searchIcon}>
+              <Search />
+            </div> */}
+                {/* <InputBase
+              placeholder="Search…"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ 'aria-label': 'search' }}
+            /> */}
+              </div>
+              <Typography
+                variant="h6"
+                style={{
+                  fontSize: "16px",
+                  marginTop: "10px",
+                  margin: "10px",
+                  color: "white",
+                }}
+              >
+                {userNm}
+              </Typography>
+              <IconButton
+                edge="end"
+                color="inherit"
+                href="https://sie.atrbpn.go.id/Auth/Login"
+              >
+                <AiOutlineLogout />
+              </IconButton>
             </div>
-          </div>
-        </div>
-      </nav>
-
-      <div
-        class="header-navbar navbar-expand-sm navbar navbar-horizontal navbar-fixed navbar-dark navbar-without-dd-arrow navbar-shadow"
-        role="navigation"
-        data-menu="menu-wrapper"
-      >
-        <div
-          class="navbar-container main-menu-content w-100 text-center"
-          data-menu="menu-container"
-        >
-          <ul
-            class="nav navbar-nav"
-            id="main-menu-navigation"
-            data-menu="menu-navigation"
+            {/* <div className={classes.sectionMobile}>
+          <IconButton
+            aria-label="show more"
+            aria-controls={mobileMenuId}
+            aria-haspopup="true"
+            onClick={handleMobileMenuOpen}
+            color="inherit"
           >
-            <li class="nav-item menu-collapsed-open active">
-              <a class="nav-link" href="javascript:;">
-                <i class="la la-home"></i>
-                <span data-i18n="Dashboard">Dashboard</span>
-              </a>
-            </li>
-            <li class="dropdown nav-item" data-menu="dropdown">
-              <a
-                class="dropdown-toggle nav-link"
-                href="javascript:;"
-                data-toggle="dropdown"
+            <MoreVert />
+          </IconButton>
+        </div> */}
+          </Toolbar>
+        )}
+        <div
+          style={{
+            borderTop: "0.5px solid #fff ",
+          }}
+        />
+      </AppBar>
+      <StickyContainer style={{ height: "100%" }}>
+        <Sticky>
+          {({ style }) => (
+            <AppBar
+              className={classes.header}
+              color="primary"
+              position="sticky"
+              elevation={0}
+              component="nav"
+              variant="dense"
+            >
+              <Tabs
+                value={value}
+                textColor="inherit"
+                onChange={handleChange}
+                indicatorColor="transparent"
+                centered
+                variant={isMobile ? "scrollable" : "standard"}
+                scrollButtons="auto"
+                style={{ minWidth: 100, fontSize: 12 }}
               >
-                <i class="la la-money"></i>
-                <span data-i18n="Templates">Aset & Keuangan</span>
-              </a>
-              <ul class="dropdown-menu">
-                <li class="" data-menu="">
-                  <a
-                    class="dropdown-item"
-                    href="asetKeu-pnbp.html"
-                    data-toggle=""
-                  >
-                    <i class="la la-cc-paypal"></i>
-                    <span data-i18n="PNBP">PNBP</span>
-                  </a>
-                </li>
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-bold"></i>
-                    <span data-i18n="ToDo">BPHTB</span>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li class="dropdown nav-item" data-menu="dropdown">
-              <a
-                class="dropdown-toggle nav-link"
-                href="#"
-                data-toggle="dropdown"
-              >
-                <i class="la la-users"></i>
-                <span data-i18n="Kepegawaian">Kepegawaian</span>
-              </a>
-              <ul class="dropdown-menu">
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-users"></i>
-                    <span data-i18n="ToDo">Pegawai ATR/BPN</span>
-                  </a>
-                </li>
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-industry"></i>
-                    <span data-i18n="Contacts">Organisasi</span>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li class="dropdown nav-item" data-menu="dropdown">
-              <a
-                class="dropdown-toggle nav-link"
-                href="#"
-                data-toggle="dropdown"
-              >
-                <i class="la la-share-alt"></i>
-                <span data-i18n="Pages">Mitra</span>
-              </a>
-              <ul class="dropdown-menu">
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-bar-chart"></i>
-                    <span data-i18n="Statistik Kemitraan">
-                      Statistik Kemitraan
-                    </span>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li class="dropdown nav-item" data-menu="dropdown">
-              <a
-                class="dropdown-toggle nav-link"
-                href="#"
-                data-toggle="dropdown"
-              >
-                <i class="la la-area-chart"></i>
-                <span data-i18n="Pages">Kinerja Layanan</span>
-              </a>
-              <ul class="dropdown-menu">
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-newspaper-o"></i>
-                    <span data-i18n="Statistik Kemitraan">IKPA</span>
-                  </a>
-                </li>
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-share-alt"></i>
-                    <span data-i18n="Social Feed">IKK / IKU</span>
-                  </a>
-                </li>
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-user-plus"></i>
-                    <span data-i18n="Account Setting">Tunggakan</span>
-                  </a>
-                </li>
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-building"></i>
-                    <span data-i18n="Pricing">Layanan Umum</span>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li class="dropdown nav-item" data-menu="dropdown">
-              <a
-                class="dropdown-toggle nav-link"
-                href="#"
-                data-toggle="dropdown"
-              >
-                <i class="la la-briefcase"></i>
-                <span data-i18n="Pages">PSN</span>
-              </a>
-              <ul class="dropdown-menu">
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-newspaper-o"></i>
-                    <span data-i18n="Statistik Kemitraan">
-                      Percepatan Rencana Detail Tata Ruang
-                    </span>
-                  </a>
-                </li>
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-industry"></i>
-                    <span data-i18n="Social Feed">
-                      Pendaftaran Tanah Sistematis Lengkap
-                    </span>
-                  </a>
-                </li>
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-tablet"></i>
-                    <span data-i18n="Account Setting">Reforma Agraria</span>
-                  </a>
-                </li>
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-share-alt"></i>
-                    <span data-i18n="Pricing">Pengadaan Tanah</span>
-                  </a>
-                </li>
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-slack"></i>
-                    <span data-i18n="Checkout">
-                      Transformasi Digital & Layanan Elektronik
-                    </span>
-                  </a>
-                </li>
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-bar-chart"></i>
-                    <span data-i18n="FAQ">
-                      Pengendalian dan Penanganan Sengketa
-                    </span>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li class="dropdown nav-item" data-menu="dropdown">
-              <a
-                class="dropdown-toggle nav-link"
-                href="#"
-                data-toggle="dropdown"
-              >
-                <i class="la la-certificate"></i>
-                <span data-i18n="Pages">Sertifikasi</span>
-              </a>
-              <ul class="dropdown-menu">
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-database"></i>
-                    <span data-i18n="Knowledge Base">Statistik Sertifikat</span>
-                  </a>
-                </li>
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-newspaper-o"></i>
-                    <span data-i18n="Statistik Kemitraan">
-                      Tanah Aset Pemerintah
-                    </span>
-                  </a>
-                </li>
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-industry"></i>
-                    <span data-i18n="Social Feed">
-                      Hak Tanggungan Elektonik
-                    </span>
-                  </a>
-                </li>
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-map-pin"></i>
-                    <span data-i18n="Account Setting">
-                      Peta Pendaftaran Tanah
-                    </span>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li class="dropdown nav-item" data-menu="dropdown">
-              <a
-                class="dropdown-toggle nav-link"
-                href="#"
-                data-toggle="dropdown"
-              >
-                <i class="la la-globe"></i>
-                <span data-i18n="Pages">Info Geo-spasial</span>
-              </a>
-              <ul class="dropdown-menu">
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-share-alt"></i>
-                    <span data-i18n="Statistik Kemitraan">Tanah Terlantar</span>
-                  </a>
-                </li>
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-dollar"></i>
-                    <span data-i18n="Social Feed">Nilai Tanah</span>
-                  </a>
-                </li>
-                <li data-menu="">
-                  <a class="dropdown-item" href="" data-toggle="">
-                    <i class="la la-map"></i>
-                    <span data-i18n="Account Setting">Peta Lainnya</span>
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </AppBar>
+                {menuList.map((menu) => (
+                  <>
+                    <StyledTabs
+                      textColor="inherit"
+                      icon={menu.icon}
+                      label={menu.name}
+                      onClick={(event) =>
+                        menu.link
+                          ? handleChangePage(menu.link)
+                          : handleOpenSubMenu(event)
+                      }
+                      {...a11yProps(menu.id)}
+                      selected={
+                        location.pathname.search(menu.parentLink) !== -1
+                      }
+                    />
+                    {menu.subMenus && (
+                      <Menu
+                        id={id}
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={id === a11yProps(menu.id).id}
+                        onClose={handleCloseSubMenu}
+                        getContentAnchorEl={null}
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "center",
+                        }}
+                        transformOrigin={{
+                          vertical: "top",
+                          horizontal: "center",
+                        }}
+                      >
+                        {menu.subMenus.map((subMenu, idx) => (
+                          <MenuItem
+                            onClick={() => {
+                              subMenu.link && handleChangePage(subMenu.link);
+                              handleCloseSubMenu();
+                            }}
+                            key={idx}
+                          >
+                            {subMenu.icon}
+                            <span style={{ marginLeft: 10 }}>
+                              {subMenu.name}
+                            </span>
+                          </MenuItem>
+                        ))}
+                      </Menu>
+                    )}
+                  </>
+                ))}
+              </Tabs>
+            </AppBar>
+          )}
+        </Sticky>
+      </StickyContainer>
+    </div>
   );
 };
 
-export default HeaderHtml;
+export default Header;

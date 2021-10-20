@@ -123,8 +123,7 @@ export default function CenteredGrid() {
                             fontFamily: "Open Sans",
                           }}
                         >
-                          Jumlah tanah yang telah di Sertifikatkan pada tahun
-                          2000 hingga sekarang
+                          Sertipikat yang telah terbit
                         </span>
                       </div>
                     </div>

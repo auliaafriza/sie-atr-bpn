@@ -92,14 +92,20 @@ const dataTemp = [
 
 let nameColumn = [
   {
-    label: "Keterangan",
-    value: "keterangan",
+    label: "Tahun",
+    value: "tahun",
     isFixed: false,
     isLabel: true,
   },
   {
-    label: "Nilai",
-    value: "nilai",
+    label: "Kantah",
+    value: "aliaskantah",
+    isFixed: false,
+    isLabel: true,
+  },
+  {
+    label: "Nilai Tanah",
+    value: "nilai_tanah",
     isFixed: false,
     isLabel: true,
   },
@@ -205,7 +211,7 @@ const realisasiPenggunaan = () => {
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}ProgramStrategisNasional/PengadaanTanah/filter_aliaskantah?AliasKanwil=${data}`
+        `${url}ProgramStrategisNasional/indexTanah/sie_psn_index_pertumbuhan_nilai_tanah_filter_aliaskantah?AliasKanwil=${data}`
       )
       .then(function (response) {
         setKantahList(response.data.data);
@@ -221,7 +227,12 @@ const realisasiPenggunaan = () => {
   };
 
   const handleChangeFilter = (event) => {
-    event && event.aliaskanwil ? getKantah(event.aliaskanwil) : null;
+    event &&
+    event.aliaskanwil &&
+    event.aliaskanwil != "pilih semua" &&
+    event.aliaskanwil != "-"
+      ? getKantah(event.aliaskanwil)
+      : null;
     setDataFilterKantor([]);
     setDataFilter(event);
   };
@@ -235,21 +246,33 @@ const realisasiPenggunaan = () => {
     }
   };
 
+  const findAll = (data) => {
+    let found = data.find(
+      (element) => element.aliaskantah == "pilih semua" || element == "-"
+    );
+    return found ? false : true;
+  };
+
   const getData = () => {
     let temp = { aliaskantah: [], aliaskanwil: [] };
-    dataFilterKantor && dataFilterKantor.length != 0
+    let foundData =
+      dataFilterKantor && dataFilterKantor.length != 0
+        ? findAll(dataFilterKantor)
+        : false;
+    foundData
       ? dataFilterKantor.map((item) => temp.aliaskantah.push(item.aliaskantah))
       : [];
-    // dataFilter && dataFilter.length != 0
-    //   ? dataFilter.map((item) => temp.aliaskanwil.push(item.aliaskanwil))
-    //   : [];
-    temp.aliaskanwil.push(dataFilter.aliaskanwil);
+    dataFilter && dataFilter.aliaskanwil
+      ? dataFilter.aliaskanwil == "pilih semua" || dataFilter.aliaskanwil == "-"
+        ? []
+        : temp.aliaskanwil.push(dataFilter.aliaskanwil)
+      : [];
 
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}ProgramStrategisNasional/PengadaanTanah/sie_psn_index_nilai_tanah?tahunAwal=${years}&tahunAkhir=${yearsEnd}`,
+        `${url}ProgramStrategisNasional/indexTanah/sie_psn_pertumbuhan_nilai_tanah?tahunAkhir=${yearsEnd}&tahunAwal=${years}`,
         temp
       )
       .then(function (response) {
@@ -271,7 +294,9 @@ const realisasiPenggunaan = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .get(`${url}ProgramStrategisNasional/PengadaanTanah/filter_aliaskanwil`)
+      .get(
+        `${url}ProgramStrategisNasional/indexTanah/sie_psn_index_pertumbuhan_nilai_tanah_filter_aliaskanwil`
+      )
       .then(function (response) {
         setAliasList(response.data.data);
         console.log(response);
@@ -328,7 +353,7 @@ const realisasiPenggunaan = () => {
             <p
               className="desc"
               style={{ color: payload[0].color }}
-            >{`${label} : ${
+            >{`${label} : Nilai Tanah ${
               payload[0].value
                 ? payload[0].value
                     .toString()
@@ -355,7 +380,23 @@ const realisasiPenggunaan = () => {
           </IconButton>
         </TooltipMI>
       </Grid> */}
-
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        item
+        xs={10}
+      >
+        <Typography className={classes.isiContentTextStyle} variant="h2" wrap>
+          Nilai Tanah
+        </Typography>
+        <Typography className={classes.isiContentTextStyle} variant="h2" wrap>
+          di{" "}
+          {dataFilter && dataFilter.aliaskanwil ? dataFilter.aliaskanwil : ""}{" "}
+          Tahun {years} - {yearsEnd}
+        </Typography>
+      </Grid>
       <div className={classes.barChart}>
         {/* <img width={500} src={image} /> */}
         <ResponsiveContainer width="100%" height={250}>
@@ -371,10 +412,10 @@ const realisasiPenggunaan = () => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="keterangan" />
+            <XAxis dataKey="tahun" />
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Nilai Index"
+                value="Nilai"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
@@ -384,15 +425,9 @@ const realisasiPenggunaan = () => {
             <Legend />
             <Line
               type="monotone"
-              dataKey="nilai"
+              dataKey="nilai_tanah"
               stroke="#6EB5FF"
               activeDot={{ r: 8 }}
-              strokeWidth={3}
-            />
-            <Line
-              type="monotone"
-              dataKey="nilai"
-              stroke="#FCB9AA"
               strokeWidth={3}
             />
           </LineChart>
@@ -416,7 +451,7 @@ const realisasiPenggunaan = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="keterangan"
+              dataKey="aliaskantah"
               // angle={60}
               // interval={0}
               tick={{
@@ -431,7 +466,7 @@ const realisasiPenggunaan = () => {
             />
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Nilai Index"
+                value="Nilai"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
@@ -439,7 +474,7 @@ const realisasiPenggunaan = () => {
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
             {/* <Legend /> */}
-            <Bar dataKey="nilai" fill="#6EB5FF" />
+            <Bar dataKey="nilai_tanah" fill="#6EB5FF" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -462,7 +497,9 @@ const realisasiPenggunaan = () => {
               wrap
               style={{ margin: 5, fontSize: 14, color: "white" }}
             >
-              Rata-rata Pertumbuhan Nilai Tanah : {indexTanah}
+              Rata-rata Pertumbuhan Nilai Tanah:{" "}
+              {comment ? comment.pertumbuhan_dalam_persen : 0}% (
+              {comment && comment.naik ? "naikk" : "turun"})
             </Typography>
           </Card>
         </Grid>
@@ -478,7 +515,7 @@ const realisasiPenggunaan = () => {
               wrap
               style={{ margin: 5, fontSize: 14, color: "white" }}
             >
-              Kenaikan Terbesar Pada : {indexTanah}
+              Kenaikan Terbesar pada : {comment ? comment.kantahTertinggi : ""}{" "}
             </Typography>
           </Card>
         </Grid>
@@ -504,10 +541,13 @@ const realisasiPenggunaan = () => {
                   .map((row) => (
                     <StyledTableRow key={row.keterangan}>
                       <StyledTableCell align="left" component="th" scope="row">
-                        {row.keterangan}
+                        {row.tahun}
+                      </StyledTableCell>
+                      <StyledTableCell align="left" component="th" scope="row">
+                        {row.aliaskantah}
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        {row.nilai
+                        {row.nilai_tanah
                           .toString()
                           .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}
                       </StyledTableCell>
@@ -935,7 +975,7 @@ const realisasiPenggunaan = () => {
                             )
                           : "",
                       type: "Bar",
-                      nameColumn: ["Keterangan", "Nilai"],
+                      nameColumn: ["Tahun", "Kantah", "Nilai Tanah"],
                       listTop10Comment: comment.listTop10Comment,
                     })
                   }
@@ -1205,6 +1245,33 @@ const realisasiPenggunaan = () => {
             </div>
           </Grid>
           <Grid item xs={isMobile ? 12 : 8}>
+            <Grid
+              container
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+              item
+              xs={10}
+            >
+              <Typography
+                className={classes.isiContentTextStyle}
+                variant="h2"
+                wrap
+              >
+                Nilai Tanah
+              </Typography>
+              <Typography
+                className={classes.isiContentTextStyle}
+                variant="h2"
+                wrap
+              >
+                di{" "}
+                {dataFilter && dataFilter.aliaskanwil
+                  ? dataFilter.aliaskanwil
+                  : ""}{" "}
+                Tahun {years} - {yearsEnd}
+              </Typography>
+            </Grid>
             <Card className={classes.root} variant="outlined">
               <CardContent>
                 <div className={classes.barChart}>
@@ -1221,10 +1288,10 @@ const realisasiPenggunaan = () => {
                       }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="keterangan" />
+                      <XAxis dataKey="tahun" />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
-                          value="Nilai Index"
+                          value="Nilai"
                           angle={-90}
                           position="insideBottomLeft"
                           offset={-5}
@@ -1234,15 +1301,9 @@ const realisasiPenggunaan = () => {
                       <Legend />
                       <Line
                         type="monotone"
-                        dataKey="nilai"
+                        dataKey="nilai_tanah"
                         stroke="#6EB5FF"
                         activeDot={{ r: 8 }}
-                        strokeWidth={3}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="nilai"
-                        stroke="#FCB9AA"
                         strokeWidth={3}
                       />
                     </LineChart>
@@ -1271,7 +1332,7 @@ const realisasiPenggunaan = () => {
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis
-                        dataKey="keterangan"
+                        dataKey="aliaskantah"
                         // angle={60}
                         // interval={0}
                         tick={{
@@ -1286,7 +1347,7 @@ const realisasiPenggunaan = () => {
                       />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
-                          value="Nilai Index"
+                          value="Nilai"
                           angle={-90}
                           position="insideBottomLeft"
                           offset={-5}
@@ -1294,7 +1355,7 @@ const realisasiPenggunaan = () => {
                       </YAxis>
                       <Tooltip content={<CustomTooltip />} />
                       {/* <Legend /> */}
-                      <Bar dataKey="nilai" fill="#6EB5FF" />
+                      <Bar dataKey="nilai_tanah" fill="#6EB5FF" />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -1320,7 +1381,9 @@ const realisasiPenggunaan = () => {
                     wrap
                     style={{ margin: 5, fontSize: 14, color: "white" }}
                   >
-                    Rata-rata Pertumbuhan Nilai Tanah : {indexTanah}
+                    Rata-rata Pertumbuhan Nilai Tanah:{" "}
+                    {comment ? comment.pertumbuhan_dalam_persen : 0}% (
+                    {comment && comment.naik ? "naikk" : "turun"})
                   </Typography>
                 </Card>
               </Grid>
@@ -1336,7 +1399,8 @@ const realisasiPenggunaan = () => {
                     wrap
                     style={{ margin: 5, fontSize: 14, color: "white" }}
                   >
-                    Kenaikan Terbesar Pada : {indexTanah}
+                    Kenaikan Terbesar pada :{" "}
+                    {comment ? comment.kantahTertinggi : ""}{" "}
                   </Typography>
                 </Card>
               </Grid>
