@@ -305,7 +305,7 @@ const SieSertifikatLuasJumlah = () => {
     let temp = { kodeWilayah: [] };
     event && event.kode != "-" ? temp.kodeWilayah.push(event.kode) : null;
     getListKantor(temp);
-    setDataFilter(Event);
+    setDataFilter(event);
     setDataFilterKantor(null);
   };
 

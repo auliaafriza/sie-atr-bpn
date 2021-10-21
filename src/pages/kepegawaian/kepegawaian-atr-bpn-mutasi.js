@@ -259,7 +259,7 @@ const KepegawaianBpnMutasi = () => {
 
   const [hideText, setHideText] = useState(false);
   const [hideTextKantor, setHideTextKantor] = useState(false);
-
+  const [listKanwil, setListKanwil] = useState([]);
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -315,7 +315,9 @@ const KepegawaianBpnMutasi = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
-      .post(`${url}MasterData/filter_kantor`, temp)
+      .get(
+        `${url}Kepegawaian/Pegawai/sie_pegawai_pensiun_filter_kantah?kanwil=${temp}`
+      )
       .then(function (response) {
         setDataKantor(
           response.data.data && response.data.data.length != 0
@@ -333,14 +335,8 @@ const KepegawaianBpnMutasi = () => {
   };
 
   const handleChangeFilter = (event) => {
-    let temp = { kodeWilayah: [] };
-    event && event.kode
-      ? event.kode == "-"
-        ? null
-        : temp.kodeWilayah.push(event.kode)
-      : null;
-    getListKantor(temp);
-    setDataFilterKantor({});
+    getListKantor(event ? event.kanwil : "");
+    setDataFilterKantor(null);
     setDataFilter(event);
   };
 
@@ -363,11 +359,11 @@ const KepegawaianBpnMutasi = () => {
 
   const getData = () => {
     let temp = { kantah: [], kanwil: [] };
-    dataFilterKantor && dataFilterKantor.kantor
-      ? dataFilterKantor.kantor == "pilih semua" ||
-        dataFilterKantor.kantor == "-"
+    dataFilterKantor && dataFilterKantor.kantah
+      ? dataFilterKantor.kantah == "pilih semua" ||
+        dataFilterKantor.kantah == "-"
         ? []
-        : temp.kantah.push(dataFilterKantor.kantor)
+        : temp.kantah.push(dataFilterKantor.kantah)
       : [];
     dataFilter && dataFilter.kanwil
       ? dataFilter.kanwil == "pilih semua" || dataFilter.kanwil == "-"
@@ -376,10 +372,10 @@ const KepegawaianBpnMutasi = () => {
       : [];
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
-    let triwulanData = triwulan == 0 ? "" : triwulan;
+    // let triwulanData = triwulan == 0 ? "" : triwulan;
     axios
       .post(
-        `${url}Kepegawaian/Pegawai/sie_pegawai_pensiun?tahun=${years}&triwulan=${triwulanData}&berdasarkan=${berdasar}`,
+        `${url}Kepegawaian/Pegawai/sie_pegawai_pensiun?tahun=${years}&triwulan=${triwulan}&berdasarkan=${berdasar}`,
         temp
       )
       .then(function (response) {
@@ -413,6 +409,19 @@ const KepegawaianBpnMutasi = () => {
         // always executed
       });
     axios
+      .get(`${url}Kepegawaian/Pegawai/sie_pegawai_pensiun_filter_kanwil`)
+      .then(function (response) {
+        setListKanwil(response.data.data);
+        console.log(response);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+    axios
       .get(`${url}MasterData/filter_berdasarkan`)
       .then(function (response) {
         setDataBerdasar(response.data.data);
@@ -425,14 +434,14 @@ const KepegawaianBpnMutasi = () => {
       .then(function () {
         // always executed
       });
-    dispatch(getWilayahPNBP());
-    let temp = { kodeWilayah: [] };
-    dataFilter && dataFilter.kode
-      ? dataFilter.kode == "Semua"
-        ? []
-        : temp.kodeWilayah.push(dataFilter.kode)
-      : [];
-    getListKantor(temp);
+    // dispatch(getWilayahPNBP());
+    // let temp = { kodeWilayah: [] };
+    // dataFilter && dataFilter.kode
+    //   ? dataFilter.kode == "Semua"
+    //     ? []
+    //     : temp.kodeWilayah.push(dataFilter.kode)
+    //   : [];
+    getListKantor(dataFilter ? dataFilter.kanwil : "");
     getData();
   }, []);
 
@@ -1089,23 +1098,18 @@ const KepegawaianBpnMutasi = () => {
                   id="kantor"
                   name="kantor"
                   style={{ width: "100%", height: 50 }}
-                  options={berkasPnbpWilayah}
-                  // classes={{
-                  //   option: classes.option,
-                  // }}
+                  options={listKanwil}
+                  classes={{
+                    option: classes.option,
+                  }}
                   disableUnderline
                   className={classes.formControl}
-                  autoHighlight
                   onChange={(event, newValue) => {
                     handleChangeFilter(newValue);
                   }}
                   getOptionLabel={(option) => option.kanwil || ""}
                   renderOption={(option, { selected }) => (
-                    <React.Fragment>
-                      {option.kode}
-                      {"  "}
-                      {option.kanwil}
-                    </React.Fragment>
+                    <React.Fragment>{option.kanwil}</React.Fragment>
                   )}
                   value={dataFilter}
                   defaultValue={dataFilter}
@@ -1117,7 +1121,7 @@ const KepegawaianBpnMutasi = () => {
                         disableUnderline: true,
                       }}
                       style={{ marginTop: 5 }}
-                      placeholder={"Pilih Kanwil"}
+                      placeholder="Pilih Kanwil"
                     />
                   )}
                 />
@@ -1154,7 +1158,7 @@ const KepegawaianBpnMutasi = () => {
                   //     setHideTextKantor(false);
                   //   }
                   // }}
-                  getOptionLabel={(option) => option.kantor || ""}
+                  getOptionLabel={(option) => option.kantah || ""}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
                       {/* <Checkbox
@@ -1169,9 +1173,7 @@ const KepegawaianBpnMutasi = () => {
                             : false
                         }
                       /> */}
-                      {option.kode}
-                      {"  "}
-                      {option.kantor}
+                      {option.kantah}
                     </React.Fragment>
                   )}
                   // renderTags={(selected) => {

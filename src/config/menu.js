@@ -86,7 +86,7 @@ export const MENU_LIST = [
       {
         icon: <GoGraph size={24} />,
         name: "Landing Page Pegawai",
-        link: "/Kepegawaian/LandingPagePegawaiAtr",
+        link: "/Kepegawaian/LandingPagePegawai",
       },
       {
         icon: <MdPeople size={24} />,
@@ -100,7 +100,7 @@ export const MENU_LIST = [
       },
       {
         icon: <MdPeople size={24} />,
-        name: "PJumlah Pegawai per Jabatan",
+        name: "Jumlah Pegawai per Jabatan",
         link: "/Kepegawaian/JumlahPegawaperJabatanAtr",
       },
       {

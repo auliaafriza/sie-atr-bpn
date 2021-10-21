@@ -43,6 +43,7 @@ import {
   PegawaiAtrJK,
   PegawaiAtrPensiun,
   PegawaiAtrPendidikan,
+  LandingPagePegawai,
 } from "./pages/kepegawaian";
 import {
   StatistikSertifikat,
@@ -221,6 +222,9 @@ const Main = withRouter(({ location }) => {
         </Route>
         <Route path="/Kepegawaian/Organisasi/KepegawaianOrganisasi">
           <KepegawaianOrganisasi />
+        </Route>
+        <Route path="/Kepegawaian/LandingPagePegawai">
+          <LandingPagePegawai />
         </Route>
         {/* end route pegawai atr */}
         <Route path="/KinerjaLayanan/LayananUmum">

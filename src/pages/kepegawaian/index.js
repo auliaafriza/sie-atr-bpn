@@ -12,6 +12,7 @@ import PegawaiAtrJK from "./PegawaiAtrJK";
 import PegawaiAtrPendidikan from "./PegawaiAtrPendidikan";
 import PegawaiAtrPensiun from "./PegawaiAtrPensiun";
 import Organisasi from "./Organisasi";
+import LandingPagePegawai from "./landingPagePegawai";
 
 export {
   KepegawaianBPNGol,
@@ -28,4 +29,5 @@ export {
   PegawaiAtrPensiun,
   PegawaiAtrPendidikan,
   Organisasi,
+  LandingPagePegawai,
 };
