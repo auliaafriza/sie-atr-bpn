@@ -16,8 +16,24 @@ export const generateArrayOfYears = () => {
   return years;
 };
 
+export const generateArrayOfYearsV2 = () => {
+  let max = new Date().getFullYear();
+  let minYears = max - 10;
+  let years = [];
+  for (let i = minYears; i <= max; i++) {
+    let temp = { label: i.toString(), name: i };
+    years.push(temp);
+  }
+  for (let j = 1; j <= 10; j++) {
+    let tahun = max + j;
+    years.push({ label: tahun.toString(), name: tahun });
+  }
+  return years;
+};
+
 let temp = generateArrayOfYears();
 export const tahunData = temp;
+export const tahunDataV2 = generateArrayOfYearsV2();
 
 export const bulanDataNumberic = [
   { id: "01", value: "01", name: "Januari" },

@@ -107,14 +107,14 @@ const StyledTableRow = withStyles((theme) => ({
 
 const GraphLandingEselon = () => {
   const classes = styles();
-  const [dataEselon, setDataEselon] = useState([
+  const [dataGrowth, setDataGrowth] = useState([
     {
-      label: "I",
-      jumlah: 10,
+      tahunterbit: 2013,
+      growth: "16%",
     },
     {
-      label: "II",
-      jumlah: 20,
+      tahunterbit: 2014,
+      growth: "4%",
     },
   ]);
 
@@ -131,16 +131,29 @@ const GraphLandingEselon = () => {
     setPage(0);
   };
 
+  const convertData = (data) => {
+    let res = [];
+    data && data.length != 0
+      ? data.map((item, i) => {
+          let grow = item.growth ? item.growth.slice(0, -1) : item.growth;
+          item.growth
+            ? res.push({
+                tahunterbit: item.tahunterbit,
+                growth: grow ? parseInt(grow) : grow,
+              })
+            : null;
+        })
+      : null;
+    return res;
+  };
+
   useEffect(() => {
-    let temp = { kantah: [], kanwil: [] };
     axios
-      .post(
-        `${url}Kepegawaian/Pegawai/sie_pegawai_pensiun?tahun=${new Date().getFullYear()}&triwulan=0&berdasarkan=eselon`,
-        temp
-      )
+      .get(`${url}api/Dashboard/get_growth`)
       .then(function (response) {
-        setDataEselon(response.data.data);
-        console.log(response);
+        let resData = convertData(response.data.data);
+        // console.log("res", resData);
+        setDataGrowth(resData);
       })
       .catch(function (error) {
         // handle error
@@ -163,7 +176,7 @@ const GraphLandingEselon = () => {
                 ? payload[0].color
                 : payload[0].payload.fill,
             }}
-          >{`Jumlah Pensiun : ${payload[0].value}`}</p>
+          >{`Jumlah Growth : ${payload[0].value}`}</p>
         </div>
       );
     }
@@ -180,36 +193,13 @@ const GraphLandingEselon = () => {
             variant="outlined"
             style={{ backgroundColor: "rgba(255, 255, 255, 0.8)" }}
           >
-            <Grid
-              container
-              direction="column"
-              justifyContent="center"
-              alignItems="center"
-              item
-              xs={12}
-            >
-              <Typography
-                className={classes.isiContentTextStyle}
-                variant="h2"
-                wrap
-              >
-                Prediksi Pegawai Pensiun Berdasar Eselon
-              </Typography>
-              <Typography
-                className={classes.isiContentTextStyle}
-                variant="h2"
-                wrap
-              >
-                di Tahun {new Date().getFullYear()}
-              </Typography>
-            </Grid>
             <CardContent>
               <div className={classes.barChart}>
                 <ResponsiveContainer width="100%" height={250}>
                   <ComposedChart
                     width={500}
                     height={400}
-                    data={dataEselon}
+                    data={dataGrowth}
                     margin={{
                       top: 20,
                       right: 20,
@@ -218,17 +208,17 @@ const GraphLandingEselon = () => {
                     }}
                   >
                     <CartesianGrid stroke="#f5f5f5" />
-                    <XAxis dataKey="label" scale="band" />
+                    <XAxis dataKey="tahunterbit" scale="band" />
                     <YAxis />
                     <Tooltip content={<CustomTooltip />} />
-                    {/* <Area
+                    <Area
                       type="monotone"
-                      dataKey="jumlah"
+                      dataKey="growth"
                       fill="#8884d8"
                       stroke="#8884d8"
-                    /> */}
-                    <Bar dataKey="jumlah" barSize={20} fill="#413ea0" />
-                    <Line type="monotone" dataKey="jumlah" stroke="#ff7300" />
+                    />
+                    <Bar dataKey="growth" barSize={20} fill="#413ea0" />
+                    <Line type="monotone" dataKey="growth" stroke="#ff7300" />
                   </ComposedChart>
                 </ResponsiveContainer>
               </div>

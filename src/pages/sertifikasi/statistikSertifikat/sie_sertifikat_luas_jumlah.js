@@ -56,7 +56,7 @@ import styles from "./../styles";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
 import {
-  tahunData,
+  tahunDataV2,
   semesterData,
   bulanDataNumberic,
   deleteDuplicates,
@@ -128,8 +128,8 @@ const title = "Luas Bidang Berdasarkan Jenis Sertifikat";
 const SieSertifikatLuasJumlah = () => {
   const classes = styles();
   const dispatch = useDispatch();
-  const [years, setYears] = useState("2017");
-  const [tahunAkhir, setTahunAkhir] = useState("2019");
+  const [years, setYears] = useState({ label: "2017", name: 2017 });
+  const [tahunAkhir, setTahunAkhir] = useState({ label: "2019", name: 2019 });
 
   const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
   const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
@@ -154,6 +154,10 @@ const SieSertifikatLuasJumlah = () => {
   const [hideTextKantor, setHideTextKantor] = useState(false);
 
   const [comment, setComment] = useState("");
+  const [openWilayah, setOpenWilayah] = useState(false);
+  const [openKantah, setOpenKantah] = useState(false);
+  const [openTahunAkhir, setOpenTahunAkhir] = useState(false);
+  const [openTahun, setOpenTahun] = useState(false);
 
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
@@ -284,7 +288,9 @@ const SieSertifikatLuasJumlah = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_luas_jumlah?tahunAwal=${years}&tahunAkhir=${tahunAkhir}`,
+        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikat_luas_jumlah?tahunAwal=${
+          years ? years.name : ""
+        }&tahunAkhir=${tahunAkhir ? tahunAkhir.name : ""}`,
         temp
       )
       .then(function (response) {
@@ -312,11 +318,11 @@ const SieSertifikatLuasJumlah = () => {
   }, []);
 
   const handleChange = (event) => {
-    setYears(event.target.value);
+    setYears(event);
   };
 
   const handleChangeTahunAkhir = (event) => {
-    setTahunAkhir(event.target.value);
+    setTahunAkhir(event);
   };
 
   const DataFormater = (number) => {
@@ -905,7 +911,7 @@ const SieSertifikatLuasJumlah = () => {
         }}
       />
       <Grid container spacing={2} style={{ marginBottom: "10px" }}>
-        <Grid item xs={isMobile ? 12 : 4}>
+        <Grid item xs={isMobile ? 12 : 3}>
           <div style={{ margin: 10, marginRight: 25 }}>
             <Grid
               container
@@ -922,25 +928,52 @@ const SieSertifikatLuasJumlah = () => {
                 >
                   Tahun Awal
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={years}
-                    onChange={handleChange}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    {tahunData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="tahun"
+                  open={openTahun}
+                  onOpen={() => {
+                    setOpenTahun(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenTahun(false)
+                      : setOpenTahun(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 50 }}
+                  options={tahunDataV2}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChange(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenTahun(true);
+                    else {
+                      setOpenTahun(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.label || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.label}</React.Fragment>
+                  )}
+                  value={years}
+                  defaultValue={years}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Tahun"}
+                    />
+                  )}
+                />
               </Grid>
               <Grid item xs={isMobile ? 12 : 6}>
                 <Typography
@@ -950,25 +983,52 @@ const SieSertifikatLuasJumlah = () => {
                 >
                   Tahun Akhir
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={tahunAkhir}
-                    onChange={handleChangeTahunAkhir}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    {tahunData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="tahun"
+                  open={openTahunAkhir}
+                  onOpen={() => {
+                    setOpenTahunAkhir(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenTahunAkhir(false)
+                      : setOpenTahunAkhir(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 50 }}
+                  options={tahunDataV2}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChangeTahunAkhir(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenTahunAkhir(true);
+                    else {
+                      setOpenTahunAkhir(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.label || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.label}</React.Fragment>
+                  )}
+                  value={tahunAkhir}
+                  defaultValue={tahunAkhir}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Tahun"}
+                    />
+                  )}
+                />
               </Grid>
             </Grid>
             <Grid
@@ -978,7 +1038,7 @@ const SieSertifikatLuasJumlah = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={isMobile ? 12 : 5}>
+              <Grid item xs={isMobile ? 12 : 6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1004,9 +1064,21 @@ const SieSertifikatLuasJumlah = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilter(newValue);
                   }}
+                  open={openWilayah}
+                  onOpen={() => {
+                    setOpenWilayah(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenWilayah(false)
+                      : setOpenWilayah(true)
+                  }
                   onInputChange={(_event, value, reason) => {
-                    if (reason == "input") setHideText(true);
-                    else {
+                    if (reason == "input") {
+                      setOpenWilayah(true);
+                      setHideText(true);
+                    } else {
+                      setOpenWilayah(false);
                       setHideText(false);
                     }
                   }}
@@ -1054,7 +1126,7 @@ const SieSertifikatLuasJumlah = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={isMobile ? 12 : 5}>
+              <Grid item xs={isMobile ? 12 : 6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1080,9 +1152,21 @@ const SieSertifikatLuasJumlah = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilterKantor(newValue);
                   }}
+                  open={openKantah}
+                  onOpen={() => {
+                    setOpenKantah(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenKantah(false)
+                      : setOpenKantah(true)
+                  }
                   onInputChange={(_event, value, reason) => {
-                    if (reason == "input") setHideTextKantor(true);
-                    else {
+                    if (reason == "input") {
+                      setOpenKantah(true);
+                      setHideTextKantor(true);
+                    } else {
+                      setOpenKantah(false);
                       setHideTextKantor(false);
                     }
                   }}
@@ -1130,15 +1214,7 @@ const SieSertifikatLuasJumlah = () => {
                   )}
                 />
               </Grid>
-              <Grid
-                container
-                direction="row"
-                justifyContent="flex-start"
-                alignItems="center"
-                item
-                xs={isMobile ? 12 : 2}
-                style={{ paddingLeft: 20 }}
-              >
+              <Grid item xs={12} style={{ paddingLeft: 20 }}>
                 <Button
                   variant="contained"
                   color="primary"
@@ -1190,7 +1266,7 @@ const SieSertifikatLuasJumlah = () => {
             </Typography>
           </div>
         </Grid>
-        <Grid item xs={isMobile ? 12 : 8} style={{ margin: isMobile ? 20 : 0 }}>
+        <Grid item xs={isMobile ? 12 : 9} style={{ margin: isMobile ? 20 : 0 }}>
           <Card
             className={isMobile ? classes.rootMobile : classes.root}
             variant="outlined"

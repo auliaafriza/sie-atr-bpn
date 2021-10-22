@@ -178,6 +178,7 @@ const GraphLandingEselon = () => {
           <Card
             className={isMobile ? classes.rootMobile : classes.root}
             variant="outlined"
+            style={{ backgroundColor: "rgba(255, 255, 255, 0.8)" }}
           >
             <Grid
               container
@@ -199,7 +200,7 @@ const GraphLandingEselon = () => {
                 variant="h2"
                 wrap
               >
-                di Tahun {new Date().getFullYear()} pada Semua Triwulan
+                di Tahun {new Date().getFullYear()}
               </Typography>
             </Grid>
             <CardContent>

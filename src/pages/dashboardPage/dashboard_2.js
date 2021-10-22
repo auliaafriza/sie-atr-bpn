@@ -11,6 +11,7 @@ import { url } from "../../api/apiClient";
 import { isMobile } from "react-device-detect";
 import { FiMap, FiCheckCircle } from "react-icons/fi";
 import { BsListCheck } from "react-icons/bs";
+import Graph from "./graphLanding";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,6 +39,7 @@ export default function CenteredGrid() {
   const classes = useStyles();
   const [data, setData] = useState([]);
   const [dataMitra, setDataMitra] = useState([]);
+  const [dataGrowth, setDataGrowth] = useState([]);
 
   const groupBymitra = (data) => {
     let res = [];
@@ -71,13 +73,25 @@ export default function CenteredGrid() {
       .then(function () {
         // always executed
       });
+    axios
+      .get(`${url}api/Dashboard/get_growth`)
+      .then(function (response) {
+        setDataGrowth(response.data.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
   }, []);
 
   return (
     <div
       style={{
         backgroundImage: `url(${bgImg})`,
-        height: isMobile ? "100%" : "100vh",
+        height: isMobile ? "100%" : "100%",
         width: isMobile ? "100%" : "100wh",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
@@ -163,8 +177,7 @@ export default function CenteredGrid() {
                             fontFamily: "Open Sans",
                           }}
                         >
-                          Bidang tanah hasil retribusi tanah pada tahun 2000
-                          hingga sekarang
+                          Jumlah bidang tanah hasil retribusi tanah
                         </span>
                       </div>
                     </div>
@@ -191,10 +204,9 @@ export default function CenteredGrid() {
                         >
                           <FiMap size={isMobile ? 28 : 36} />{" "}
                           {data && data.length != 0
-                            ? data[2].value
-                                .toString()
-                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-                            : 0}
+                            ? ((data[2].value / data[0].value) * 100).toFixed(2)
+                            : 0}{" "}
+                          %
                         </h1>
                         <span
                           class="white"
@@ -204,11 +216,43 @@ export default function CenteredGrid() {
                             fontFamily: "Open Sans",
                           }}
                         >
-                          Tanah telah diukur dan dipetakan pada tahun 2000
-                          hingga sekarang
+                          Tanah telah diukur dan dipetakan dari total tanah yang
+                          terbit
                         </span>
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12 wow fadeInUp" data-wow-delay="0.3s">
+              <div
+                class="card pull-up bg-transparent shadow-none"
+                style={{
+                  borderWidth: 0,
+                  marginTop: 15,
+                  marginLeft: 100,
+                }}
+              >
+                <div class="card-content">
+                  <div class="row">
+                    <div class="col-12 card-gradient-md-border border-right-lighten-3">
+                      <div class="card-body text-center">
+                        <h1
+                          class="display-4 white"
+                          style={{
+                            fontSize: 28,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          Grafik Pertumbuhan Penerbitan Sertifikat
+                        </h1>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 pl-20 mb-10">
+                    <Graph />
                   </div>
                 </div>
               </div>
@@ -247,8 +291,7 @@ export default function CenteredGrid() {
                             fontFamily: "Open Sans",
                           }}
                         >
-                          Nilai hak tanggungan elektronik telah tercatat pada
-                          tahun 2000 hingga sekarang
+                          Nilai hak tanggungan elektronik telah tercatat
                         </span>
                       </div>
                     </div>
@@ -291,7 +334,7 @@ export default function CenteredGrid() {
                         >
                           Pemerintah daerah dan Dirjen Pajak yang telah
                           terintegrasi untuk validasi pajak dan BPHTB secara
-                          online pada tahun 2000 hingga sekarang
+                          online
                         </span>
                       </div>
                     </div>
@@ -316,11 +359,12 @@ export default function CenteredGrid() {
                       fontWeight: "bold",
                       textShadow: "1px 2px 2px #000",
                       fontFamily: "Open Sans",
+                      marginBottom: 20,
                     }}
                   >
                     - Menjalin Kemitraan Dengan -
                   </h3>
-                  <div class="row">
+                  <div class="row" style={{ marginBottom: 20 }}>
                     {dataMitra && dataMitra.length != 0
                       ? dataMitra.map((item, index) => {
                           return (
@@ -369,6 +413,67 @@ export default function CenteredGrid() {
               </div>
             </div>
           </div>
+          {/* <div class="row">
+            <div class="col-12 wow fadeInUp">
+              <div
+                class="card pull-up bg-transparent shadow-none"
+                style={{ borderWidth: 0 }}
+              >
+                <div class="card-content">
+                  <h3
+                    class="text-center p-1 mb-20 white"
+                    style={{
+                      fontSize: 26,
+                      marginTop: isMobile ? 10 : 40,
+                      fontWeight: "bold",
+                      textShadow: "1px 2px 2px #000",
+                      fontFamily: "Open Sans",
+                    }}
+                  >
+                    - Growth pertumbuhan sertipikat terbit -
+                  </h3>
+                  <div class="row">
+                    {dataGrowth && dataGrowth.length != 0
+                      ? dataGrowth.map((item, index) => {
+                          return (
+                            <div
+                              class={
+                                index != dataGrowth.length - 1
+                                  ? "col-lg-4 col-md-6 col-sm-12 card-gradient-md-border border-right-white border-right-lighten-3"
+                                  : "col-lg-3 col-md-6 col-sm-12"
+                              }
+                            >
+                              <div class="card-body text-center">
+                                <h1
+                                  class="white"
+                                  style={{
+                                    fontSize: 28,
+                                    textShadow: "1px 2px 2px #000",
+                                    fontFamily: "Open Sans",
+                                  }}
+                                >
+                                  {item.growth}
+                                </h1>
+                                <span
+                                  class="white"
+                                  style={{
+                                    fontSize: 14,
+                                    textShadow: "1px 2px 2px #000",
+                                    fontFamily: "Open Sans",
+                                  }}
+                                >
+                                  Tahun {item.tahunterbit}
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })
+                      : null}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> */}
         </div>
       </div>
     </div>

@@ -220,6 +220,8 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
   const [hideText, setHideText] = useState(false);
   const [hideTextKantor, setHideTextKantor] = useState(false);
 
+  const [openWilayah, setOpenWilayah] = useState(false);
+  const [openKantah, setOpenKantah] = useState(false);
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [open, setOpen] = useState(false);
@@ -956,7 +958,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
           }}
         />
         <Grid container spacing={2}>
-          <Grid item xs={isMobile ? 12 : 8}>
+          <Grid item xs={isMobile ? 12 : 9}>
             <Card className={classes.root} variant="outlined">
               <CardContent>
                 <div className={classes.barChart}>
@@ -1025,7 +1027,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={isMobile ? 12 : 4}>
+          <Grid item xs={isMobile ? 12 : 3}>
             <div style={{ margin: 10, marginRight: 25 }}>
               <Grid
                 container
@@ -1034,7 +1036,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={isMobile ? 12 : 5}>
+                <Grid item xs={12}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1060,9 +1062,21 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                     onChange={(event, newValue) => {
                       handleChangeFilter(newValue);
                     }}
+                    open={openWilayah}
+                    onOpen={() => {
+                      setOpenWilayah(true);
+                    }}
+                    onClose={(e, reason) =>
+                      reason == "escape" || reason == "blur"
+                        ? setOpenWilayah(false)
+                        : setOpenWilayah(true)
+                    }
                     onInputChange={(_event, value, reason) => {
-                      if (reason == "input") setHideText(true);
-                      else {
+                      if (reason == "input") {
+                        setOpenWilayah(true);
+                        setHideText(true);
+                      } else {
+                        setOpenWilayah(false);
                         setHideText(false);
                       }
                     }}
@@ -1110,7 +1124,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={isMobile ? 12 : 5}>
+                <Grid item xs={12}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1136,9 +1150,21 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                     onChange={(event, newValue) => {
                       handleChangeFilterKantor(newValue);
                     }}
+                    open={openKantah}
+                    onOpen={() => {
+                      setOpenKantah(true);
+                    }}
+                    onClose={(e, reason) =>
+                      reason == "escape" || reason == "blur"
+                        ? setOpenKantah(false)
+                        : setOpenKantah(true)
+                    }
                     onInputChange={(_event, value, reason) => {
-                      if (reason == "input") setHideTextKantor(true);
-                      else {
+                      if (reason == "input") {
+                        setOpenKantah(true);
+                        setHideTextKantor(true);
+                      } else {
+                        setOpenKantah(false);
                         setHideTextKantor(false);
                       }
                     }}
@@ -1186,15 +1212,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                     )}
                   />
                 </Grid>
-                <Grid
-                  container
-                  direction="row"
-                  justifyContent="flex-start"
-                  alignItems="center"
-                  item
-                  xs={isMobile ? 12 : 2}
-                  style={{ paddingLeft: 20 }}
-                >
+                <Grid item xs={12} style={{ paddingLeft: 10 }}>
                   <Button
                     variant="contained"
                     color="primary"
