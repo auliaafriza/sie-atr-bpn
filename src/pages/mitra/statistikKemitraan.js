@@ -56,7 +56,7 @@ import styles from "./styles";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
 import {
-  tahunData,
+  tahunDataV2,
   DataFormater,
   deleteDuplicates,
 } from "../../functionGlobal/globalDataAsset";
@@ -77,6 +77,13 @@ import { getTahun, getKantah, getKanwil } from "../../actions/mitraAction";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
+
+let dataGroup = [
+  { label: "PPAT", name: "PPAT" },
+  { label: "SURVEYOR", name: "Surveyor" },
+  { label: "BANK", name: "Jasa Keuangan" },
+  { label: "PEMILIK", name: "Pemilik" },
+];
 
 const dataTemp = [
   {
@@ -171,10 +178,10 @@ const KepegawaianOrganisasi = () => {
   const classes = styles();
 
   const dispatch = useDispatch();
-  const [years, setYears] = useState("2022");
+  const [years, setYears] = useState({ label: "2022", name: 2022 });
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
-  const [tahunAwal, setTahunAwal] = useState("2017");
+  const [tahunAwal, setTahunAwal] = useState({ label: "2017", name: 2017 });
   const [kanwil, setKanwil] = useState([
     { kanwil: "Kantor Wilayah Provinsi Bali" },
     { kanwil: "Kantor Wilayah Provinsi Sulawesi Tenggara" },
@@ -186,7 +193,12 @@ const KepegawaianOrganisasi = () => {
   const [kanwilDis, setKanwilDis] = useState("");
   const [kantorDis, setKantorDis] = useState("");
   const [satkerDis, setSatkerDis] = useState("");
-  const [jenis, setJenis] = useState("PPAT");
+  const [jenis, setJenis] = useState({ label: "PPAT", name: "PPAT" });
+  const [openWilayah, setOpenWilayah] = useState(false);
+  const [openKantah, setOpenKantah] = useState(false);
+  const [openTahunAkhir, setOpenTahunAkhir] = useState(false);
+  const [openTahun, setOpenTahun] = useState(false);
+  const [openTipe, setOpenTipe] = useState(false);
 
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
@@ -253,7 +265,11 @@ const KepegawaianOrganisasi = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}Mitra/StatistikKemitraan/sie_mitra_statistik_kemitraan?type=${jenis}&tahunAwal=${tahunAwal}&tahunAkhir=${years}`,
+        `${url}Mitra/StatistikKemitraan/sie_mitra_statistik_kemitraan?type=${
+          jenis ? jenis.name : ""
+        }&tahunAwal=${tahunAwal ? tahunAwal.name : ""}&tahunAkhir=${
+          years ? years.name : ""
+        }`,
         temp
       )
       .then(function (response) {
@@ -279,15 +295,15 @@ const KepegawaianOrganisasi = () => {
   }, []);
 
   const handleChange = (event) => {
-    setYears(event.target.value);
+    setYears(event);
   };
 
   const handleChangeAwal = (event) => {
-    setTahunAwal(event.target.value);
+    setTahunAwal(event);
   };
 
   const handleChangeTipe = (event) => {
-    setJenis(event.target.value);
+    setJenis(event);
   };
 
   const CustomTooltip = ({ active, payload, label }) => {
@@ -883,7 +899,7 @@ const KepegawaianOrganisasi = () => {
         }}
       />
       <Grid container spacing={2}>
-        <Grid item xs={isMobile ? 12 : 8}>
+        <Grid item xs={isMobile ? 12 : 9}>
           <Card className={classes.root} variant="outlined">
             <CardContent>
               <div className={classes.barChart}>
@@ -935,7 +951,7 @@ const KepegawaianOrganisasi = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={isMobile ? 12 : 4}>
+        <Grid item xs={isMobile ? 12 : 3}>
           <div style={{ margin: 10, marginRight: 25 }}>
             <Grid
               container
@@ -952,25 +968,52 @@ const KepegawaianOrganisasi = () => {
                 >
                   Tahun Awal
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={tahunAwal}
-                    onChange={handleChangeAwal}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    {tahunData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="tahun"
+                  open={openTahun}
+                  onOpen={() => {
+                    setOpenTahun(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenTahun(false)
+                      : setOpenTahun(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 50 }}
+                  options={tahunDataV2}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChangeAwal(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenTahun(true);
+                    else {
+                      setOpenTahun(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.label || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.label}</React.Fragment>
+                  )}
+                  value={tahunAwal}
+                  defaultValue={tahunAwal}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Tahun"}
+                    />
+                  )}
+                />
               </Grid>
               <Grid item xs={isMobile ? 12 : 6}>
                 <Typography
@@ -980,25 +1023,52 @@ const KepegawaianOrganisasi = () => {
                 >
                   Tahun Akhir
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={years}
-                    onChange={handleChange}
-                    label="Tahun Akhir"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    {tahunData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="tahun"
+                  open={openTahunAkhir}
+                  onOpen={() => {
+                    setOpenTahunAkhir(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenTahunAkhir(false)
+                      : setOpenTahunAkhir(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 50 }}
+                  options={tahunDataV2}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChange(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenTahunAkhir(true);
+                    else {
+                      setOpenTahunAkhir(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.label || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.label}</React.Fragment>
+                  )}
+                  value={years}
+                  defaultValue={years}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Tahun"}
+                    />
+                  )}
+                />
               </Grid>
             </Grid>
             <Grid
@@ -1049,10 +1119,22 @@ const KepegawaianOrganisasi = () => {
                       {option.kanwil}
                     </React.Fragment>
                   )}
+                  open={openWilayah}
+                  onOpen={() => {
+                    setOpenWilayah(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenWilayah(false)
+                      : setOpenWilayah(true)
+                  }
                   onInputChange={(_event, value, reason) => {
-                    if (reason == "input") setHideTextKantor(true);
-                    else {
-                      setHideTextKantor(false);
+                    if (reason == "input") {
+                      setOpenWilayah(true);
+                      setHideText(true);
+                    } else {
+                      setOpenWilayah(false);
+                      setHideText(false);
                     }
                   }}
                   renderTags={(selected) => {
@@ -1104,10 +1186,22 @@ const KepegawaianOrganisasi = () => {
                   onChange={(event, newValue) => {
                     handleChangeKantor(newValue);
                   }}
+                  open={openKantah}
+                  onOpen={() => {
+                    setOpenKantah(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenKantah(false)
+                      : setOpenKantah(true)
+                  }
                   onInputChange={(_event, value, reason) => {
-                    if (reason == "input") setHideText(true);
-                    else {
-                      setHideText(false);
+                    if (reason == "input") {
+                      setOpenKantah(true);
+                      setHideTextKantor(true);
+                    } else {
+                      setOpenKantah(false);
+                      setHideTextKantor(false);
                     }
                   }}
                   getOptionLabel={(option) => option.kantah || ""}
@@ -1169,22 +1263,53 @@ const KepegawaianOrganisasi = () => {
                 >
                   Pilih Jenis Statistik
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={jenis}
-                    onChange={handleChangeTipe}
-                    label="Jenis Statistik"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    <MenuItem value="PPAT">PPAT</MenuItem>
-                    <MenuItem value="SURVEYOR">Surveyor</MenuItem>
-                    <MenuItem value="BANK">Jasa Keuangan</MenuItem>
-                    <MenuItem value="PEMILIK">Pemilik</MenuItem>
-                  </Select>
-                </FormControl>
+
+                <Autocomplete
+                  id="tahun"
+                  open={openTipe}
+                  onOpen={() => {
+                    setOpenTipe(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenTipe(false)
+                      : setOpenTipe(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 50 }}
+                  options={dataGroup}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChangeTipe(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenTipe(true);
+                    else {
+                      setOpenTipe(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.label || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.label}</React.Fragment>
+                  )}
+                  value={jenis}
+                  defaultValue={jenis}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Jenis Statistik"}
+                    />
+                  )}
+                />
               </Grid>
 
               <Grid

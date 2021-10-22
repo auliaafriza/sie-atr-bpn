@@ -63,7 +63,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { generateOptions } from "../../../functionGlobal/generateOptionSelect";
 import { getKanwil, getTipeHak } from "../../../actions/sertifikasiAction";
 import {
-  tahunData,
+  tahunDataV2,
   deleteDuplicates,
 } from "../../../functionGlobal/globalDataAsset";
 
