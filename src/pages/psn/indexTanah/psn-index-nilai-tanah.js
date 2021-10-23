@@ -61,7 +61,7 @@ import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
 import {
-  tahunData,
+  tahunDataV2,
   deleteDuplicates,
 } from "../../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../../functionGlobal/exports";
@@ -141,8 +141,8 @@ const realisasiPenggunaan = () => {
   const dispatch = useDispatch();
   const [kantahList, setKantahList] = useState([]);
   const [aliasList, setAliasList] = useState([]);
-  const [years, setYears] = useState("2017");
-  const [yearsEnd, setYearsEnd] = useState("2021");
+  const [years, setYears] = useState({ label: "2017", name: 2017 });
+  const [yearsEnd, setYearsEnd] = useState({ label: "2021", name: 2021 });
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [bulan, setBulan] = useState("Jan");
@@ -156,6 +156,10 @@ const realisasiPenggunaan = () => {
     },
   ]);
 
+  const [openWilayah, setOpenWilayah] = useState(false);
+  const [openKantah, setOpenKantah] = useState(false);
+  const [openTahunAkhir, setOpenTahunAkhir] = useState(false);
+  const [openTahun, setOpenTahun] = useState(false);
   const [hideTextKantor, setHideTextKantor] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -266,7 +270,9 @@ const realisasiPenggunaan = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}ProgramStrategisNasional/indexTanah/sie_psn_index_pertumbuhan_nilai_tanah?tahunAkhir=${yearsEnd}&tahunAwal=${years}`,
+        `${url}ProgramStrategisNasional/indexTanah/sie_psn_index_pertumbuhan_nilai_tanah?tahunAkhir=${
+          yearsEnd ? yearsEnd.name : ""
+        }&tahunAwal=${years ? years.name : ""}`,
         temp
       )
       .then(function (response) {
@@ -307,11 +313,11 @@ const realisasiPenggunaan = () => {
   }, []);
 
   const handleChange = (event) => {
-    setYears(event.target.value);
+    setYears(event);
   };
 
   const handleChangeEnd = (event) => {
-    setYearsEnd(event.target.value);
+    setYearsEnd(event);
   };
 
   const handleChangeBulan = (event) => {
@@ -388,7 +394,7 @@ const realisasiPenggunaan = () => {
         <Typography className={classes.isiContentTextStyle} variant="h2" wrap>
           di{" "}
           {dataFilter && dataFilter.aliaskanwil ? dataFilter.aliaskanwil : ""}{" "}
-          Tahun {years} - {yearsEnd}
+          Tahun {years ? years.name : ""} - {yearsEnd ? yearsEnd.name : ""}
         </Typography>
       </Grid>
 
@@ -974,7 +980,7 @@ const realisasiPenggunaan = () => {
           }}
         />
         <Grid container spacing={2}>
-          <Grid item xs={isMobile ? 12 : 8}>
+          <Grid item xs={isMobile ? 12 : 9}>
             <Grid
               container
               direction="column"
@@ -999,7 +1005,8 @@ const realisasiPenggunaan = () => {
                 {dataFilter && dataFilter.aliaskanwil
                   ? dataFilter.aliaskanwil
                   : ""}{" "}
-                Tahun {years} - {yearsEnd}
+                Tahun {years ? yearsEnd.name : ""} -{" "}
+                {yearsEnd ? yearsEnd.name : ""}
               </Typography>
             </Grid>
             <Card className={classes.root} variant="outlined">
@@ -1096,7 +1103,7 @@ const realisasiPenggunaan = () => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={isMobile ? 12 : 4}>
+          <Grid item xs={isMobile ? 12 : 3}>
             <div style={{ margin: 10, marginRight: 25 }}>
               <Grid
                 container
@@ -1113,25 +1120,52 @@ const realisasiPenggunaan = () => {
                   >
                     Tahun Awal
                   </Typography>
-                  <FormControl className={classes.formControl}>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={years}
-                      onChange={handleChange}
-                      label="Tahun"
-                      className={classes.selectStyle}
-                      disableUnderline
-                    >
-                      {tahunData.map((item, i) => {
-                        return (
-                          <MenuItem value={item.id} key={i}>
-                            {item.value}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
+                  <Autocomplete
+                    id="tahun"
+                    open={openTahun}
+                    onOpen={() => {
+                      setOpenTahun(true);
+                    }}
+                    onClose={(e, reason) =>
+                      reason == "escape" || reason == "blur"
+                        ? setOpenTahun(false)
+                        : setOpenTahun(true)
+                    }
+                    name="tahun"
+                    style={{ width: "100%", height: 50 }}
+                    options={tahunDataV2}
+                    classes={{
+                      option: classes.option,
+                    }}
+                    disableUnderline
+                    className={classes.formControl}
+                    onChange={(event, newValue) => {
+                      handleChange(newValue);
+                    }}
+                    onInputChange={(_event, value, reason) => {
+                      if (reason == "input") setOpenTahun(true);
+                      else {
+                        setOpenTahun(false);
+                      }
+                    }}
+                    getOptionLabel={(option) => option.label || ""}
+                    renderOption={(option, { selected }) => (
+                      <React.Fragment>{option.label}</React.Fragment>
+                    )}
+                    value={years}
+                    defaultValue={years}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        InputProps={{
+                          ...params.InputProps,
+                          disableUnderline: true,
+                        }}
+                        style={{ marginTop: 5 }}
+                        placeholder={"Pilih Tahun"}
+                      />
+                    )}
+                  />
                 </Grid>
                 <Grid item xs={isMobile ? 12 : 6}>
                   <Typography
@@ -1141,25 +1175,52 @@ const realisasiPenggunaan = () => {
                   >
                     Tahun Akhir
                   </Typography>
-                  <FormControl className={classes.formControl}>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={yearsEnd}
-                      onChange={handleChangeEnd}
-                      label="Tahun"
-                      className={classes.selectStyle}
-                      disableUnderline
-                    >
-                      {tahunData.map((item, i) => {
-                        return (
-                          <MenuItem value={item.id} key={i}>
-                            {item.value}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
+                  <Autocomplete
+                    id="tahun"
+                    open={openTahunAkhir}
+                    onOpen={() => {
+                      setOpenTahunAkhir(true);
+                    }}
+                    onClose={(e, reason) =>
+                      reason == "escape" || reason == "blur"
+                        ? setOpenTahunAkhir(false)
+                        : setOpenTahunAkhir(true)
+                    }
+                    name="tahun"
+                    style={{ width: "100%", height: 50 }}
+                    options={tahunDataV2}
+                    classes={{
+                      option: classes.option,
+                    }}
+                    disableUnderline
+                    className={classes.formControl}
+                    onChange={(event, newValue) => {
+                      handleChangeEnd(newValue);
+                    }}
+                    onInputChange={(_event, value, reason) => {
+                      if (reason == "input") setOpenTahunAkhir(true);
+                      else {
+                        setOpenTahunAkhir(false);
+                      }
+                    }}
+                    getOptionLabel={(option) => option.label || ""}
+                    renderOption={(option, { selected }) => (
+                      <React.Fragment>{option.label}</React.Fragment>
+                    )}
+                    value={yearsEnd}
+                    defaultValue={yearsEnd}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        InputProps={{
+                          ...params.InputProps,
+                          disableUnderline: true,
+                        }}
+                        style={{ marginTop: 5 }}
+                        placeholder={"Pilih Tahun"}
+                      />
+                    )}
+                  />
                 </Grid>
               </Grid>
               <Grid
@@ -1169,7 +1230,7 @@ const realisasiPenggunaan = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={isMobile ? 12 : 5}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1191,6 +1252,22 @@ const realisasiPenggunaan = () => {
                     autoHighlight
                     onChange={(event, newValue) => {
                       handleChangeFilter(newValue);
+                    }}
+                    open={openWilayah}
+                    onOpen={() => {
+                      setOpenWilayah(true);
+                    }}
+                    onClose={(e, reason) =>
+                      reason == "escape" || reason == "blur"
+                        ? setOpenWilayah(false)
+                        : setOpenWilayah(true)
+                    }
+                    onInputChange={(_event, value, reason) => {
+                      if (reason == "input") {
+                        setOpenWilayah(true);
+                      } else {
+                        setOpenWilayah(false);
+                      }
                     }}
                     getOptionLabel={(option) => option.aliaskanwil || ""}
                     renderOption={(option, { selected }) => (
@@ -1227,7 +1304,7 @@ const realisasiPenggunaan = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={isMobile ? 12 : 5}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1268,11 +1345,22 @@ const realisasiPenggunaan = () => {
                         {option.aliaskantah}
                       </React.Fragment>
                     )}
+                    open={openKantah}
+                    onOpen={() => {
+                      setOpenKantah(true);
+                    }}
+                    onClose={(e, reason) =>
+                      reason == "escape" || reason == "blur"
+                        ? setOpenKantah(false)
+                        : setOpenKantah(true)
+                    }
                     onInputChange={(_event, value, reason) => {
                       if (reason == "input") {
+                        setOpenKantah(true);
                         setHideTextKantor(true);
                         setDataFilterKantor([]);
                       } else {
+                        setOpenKantah(false);
                         setHideTextKantor(false);
                       }
                     }}
@@ -1309,7 +1397,7 @@ const realisasiPenggunaan = () => {
                   justifyContent="flex-start"
                   alignItems="center"
                   item
-                  xs={isMobile ? 12 : 2}
+                  xs={12}
                   style={{ paddingLeft: 20 }}
                 >
                   <Button

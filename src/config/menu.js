@@ -82,6 +82,7 @@ export const MENU_LIST = [
     icon: <SupervisorAccount />,
     name: "Kepegawaian",
     parentLink: "/Kepegawaian",
+    link: "/Kepegawaian/LandingPagePegawai",
     subMenus: [
       {
         icon: <GoGraph size={24} />,

@@ -59,7 +59,7 @@ import { useScreenshot } from "use-react-screenshot";
 import html2canvas from "html2canvas";
 import moment from "moment";
 import {
-  tahunData,
+  tahunDataV2,
   deleteDuplicates,
 } from "../../../functionGlobal/globalDataAsset";
 import { fileExport } from "../../../functionGlobal/exports";
@@ -187,7 +187,7 @@ const PengadaanTanah = () => {
   const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
 
   const [years, setYears] = useState("2022");
-  const [tahunAwal, setTahunAwal] = useState("2017");
+  const [tahunAwal, setTahunAwal] = useState({ label: "2017", name: 2017 });
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [open, setOpen] = useState(false);
@@ -208,6 +208,9 @@ const PengadaanTanah = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dataKantor, setDataKantor] = useState([]);
+  const [openWilayah, setOpenWilayah] = useState(false);
+  const [openKantah, setOpenKantah] = useState(false);
+  const [openTahun, setOpenTahun] = useState(false);
   const [dataFilter, setDataFilter] = useState([
     {
       kode: "10",
@@ -307,7 +310,9 @@ const PengadaanTanah = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}ProgramStrategisNasional/PengadaanTanah/sie_psn_luas_pengadaan_tanah?tahun=${tahunAwal}`,
+        `${url}ProgramStrategisNasional/PengadaanTanah/sie_psn_luas_pengadaan_tanah?tahun=${
+          tahunAwal ? tahunAwal.name : ""
+        }`,
         temp
       )
       .then(function (response) {
@@ -339,7 +344,7 @@ const PengadaanTanah = () => {
   };
 
   const handleChangeTahunAwal = (event) => {
-    setTahunAwal(event.target.value);
+    setTahunAwal(event);
   };
 
   const DataFormater = (number) => {
@@ -908,7 +913,7 @@ const PengadaanTanah = () => {
         }}
       />
       <Grid container spacing={2} style={{ marginBottom: "10px" }}>
-        <Grid item xs={isMobile ? 12 : 4}>
+        <Grid item xs={isMobile ? 12 : 3}>
           <div style={{ margin: 10, marginRight: 25 }}>
             <Grid
               container
@@ -925,25 +930,52 @@ const PengadaanTanah = () => {
                 >
                   Tahun
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={tahunAwal}
-                    onChange={handleChangeTahunAwal}
-                    label="Tahun"
-                    disableUnderline
-                    className={classes.selectStyle}
-                  >
-                    {tahunData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="tahun"
+                  open={openTahun}
+                  onOpen={() => {
+                    setOpenTahun(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenTahun(false)
+                      : setOpenTahun(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 50 }}
+                  options={tahunDataV2}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChangeTahunAwal(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenTahun(true);
+                    else {
+                      setOpenTahun(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.label || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.label}</React.Fragment>
+                  )}
+                  value={tahunAwal}
+                  defaultValue={tahunAwal}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Tahun"}
+                    />
+                  )}
+                />
               </Grid>
               <Grid item xs={isMobile ? 12 : 6}>
                 <Typography
@@ -971,9 +1003,21 @@ const PengadaanTanah = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilter(newValue);
                   }}
+                  open={openWilayah}
+                  onOpen={() => {
+                    setOpenWilayah(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenWilayah(false)
+                      : setOpenWilayah(true)
+                  }
                   onInputChange={(_event, value, reason) => {
-                    if (reason == "input") setHideText(true);
-                    else {
+                    if (reason == "input") {
+                      setOpenWilayah(true);
+                      setHideText(true);
+                    } else {
+                      setOpenWilayah(false);
                       setHideText(false);
                     }
                   }}
@@ -1055,9 +1099,21 @@ const PengadaanTanah = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilterKantor(newValue);
                   }}
+                  open={openKantah}
+                  onOpen={() => {
+                    setOpenKantah(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenKantah(false)
+                      : setOpenKantah(true)
+                  }
                   onInputChange={(_event, value, reason) => {
-                    if (reason == "input") setHideTextKantor(true);
-                    else {
+                    if (reason == "input") {
+                      setOpenKantah(true);
+                      setHideTextKantor(true);
+                    } else {
+                      setOpenKantah(false);
                       setHideTextKantor(false);
                     }
                   }}
@@ -1171,7 +1227,7 @@ const PengadaanTanah = () => {
             </Typography>
           </div>
         </Grid>
-        <Grid item xs={isMobile ? 12 : 8}>
+        <Grid item xs={isMobile ? 12 : 9}>
           <Card className={classes.root} variant="outlined">
             <CardContent>
               <div className={classes.barChart}>

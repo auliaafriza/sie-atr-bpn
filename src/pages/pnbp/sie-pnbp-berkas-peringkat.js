@@ -60,7 +60,7 @@ import html2canvas from "html2canvas";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  tahunData,
+  tahunDataV2,
   bulanData,
   deleteDuplicates,
 } from "../../functionGlobal/globalDataAsset";
@@ -79,6 +79,11 @@ import { isMobile } from "react-device-detect";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
+
+let topData = [
+  { value: "wilayah", name: "PNBP per Wilayah" },
+  { value: "kantor", name: "PNBP per Kantor" },
+];
 
 const dataTemp = [
   {
@@ -126,11 +131,24 @@ const PnbpBerkasPeringkat = () => {
   const dispatch = useDispatch();
   const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
   const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
-  const [viewData, setViewData] = useState("wilayah");
-  const [years, setYears] = useState("2017");
+  const [viewData, setViewData] = useState({
+    value: "wilayah",
+    name: "PNBP per Wilayah",
+  });
+  const [years, setYears] = useState({ label: "2017", name: 2017 });
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
-  const [bulan, setBulan] = useState("Jan");
+  const [bulan, setBulan] = useState({
+    id: "Nov",
+    value: "Nov",
+    name: "November",
+  });
+
+  const [openWilayah, setOpenWilayah] = useState(false);
+  const [openKantah, setOpenKantah] = useState(false);
+  const [openBulan, setOpenBulan] = useState(false);
+  const [openTahun, setOpenTahun] = useState(false);
+  const [openTop, setOpenTop] = useState(false);
   const [open, setOpen] = useState(false);
   const [dataKantor, setDataKantor] = useState([]);
   const [dataModal, setDataModal] = useState({
@@ -257,7 +275,9 @@ const PnbpBerkasPeringkat = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_berkas_peringkat?jenisGroup=${viewData}&tahun=${years}&bulan=${bulan}`,
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_berkas_peringkat?jenisGroup=${
+          viewData ? viewData.value : ""
+        }&tahun=${years ? years.name : ""}&bulan=${bulan ? bulan.id : ""}`,
         temp
       )
       .then(function (response) {
@@ -286,15 +306,15 @@ const PnbpBerkasPeringkat = () => {
   }, []);
 
   const handleChange = (event) => {
-    setYears(event.target.value);
+    setYears(event);
   };
 
   const handleChangeBulan = (event) => {
-    setBulan(event.target.value);
+    setBulan(event);
   };
 
   const handleChangeView = (event) => {
-    setViewData(event.target.value);
+    setViewData(event);
   };
 
   const DataFormater = (number) => {
@@ -885,7 +905,7 @@ const PnbpBerkasPeringkat = () => {
         }}
       />
       <Grid container spacing={2}>
-        <Grid item xs={isMobile ? 12 : 4}>
+        <Grid item xs={isMobile ? 12 : 3}>
           <div style={{ margin: 10, marginRight: 25 }}>
             <Grid
               container
@@ -894,7 +914,7 @@ const PnbpBerkasPeringkat = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={isMobile ? 12 : 4}>
+              <Grid item xs={isMobile ? 12 : 6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -902,27 +922,54 @@ const PnbpBerkasPeringkat = () => {
                 >
                   Pilih Tahun
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={years}
-                    onChange={handleChange}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    {tahunData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="tahun"
+                  open={openTahun}
+                  onOpen={() => {
+                    setOpenTahun(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenTahun(false)
+                      : setOpenTahun(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 50 }}
+                  options={tahunDataV2}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChange(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenTahun(true);
+                    else {
+                      setOpenTahun(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.label || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.label}</React.Fragment>
+                  )}
+                  value={years}
+                  defaultValue={years}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Tahun"}
+                    />
+                  )}
+                />
               </Grid>
-              <Grid item xs={isMobile ? 12 : 4}>
+              <Grid item xs={isMobile ? 12 : 6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -930,28 +977,54 @@ const PnbpBerkasPeringkat = () => {
                 >
                   Pilih Bulan
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={bulan}
-                    onChange={handleChangeBulan}
-                    label="Bulan"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    <MenuItem value="all">Semua Bulan</MenuItem>
-                    {bulanData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="tahun"
+                  open={openBulan}
+                  onOpen={() => {
+                    setOpenBulan(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenBulan(false)
+                      : setOpenBulan(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 50 }}
+                  options={bulanData}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChangeBulan(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenBulan(true);
+                    else {
+                      setOpenBulan(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.name || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.name}</React.Fragment>
+                  )}
+                  value={bulan}
+                  defaultValue={bulan}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Tahun"}
+                    />
+                  )}
+                />
               </Grid>
-              <Grid item xs={isMobile ? 12 : 4}>
+              <Grid item xs={isMobile ? 12 : 6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -959,30 +1032,54 @@ const PnbpBerkasPeringkat = () => {
                 >
                   Pilih Top 5
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={viewData}
-                    onChange={handleChangeView}
-                    label="View Data"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    <MenuItem value="wilayah">PNBP per Wilayah</MenuItem>
-                    <MenuItem value="kantor">PNBP per Kantor</MenuItem>
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="tahun"
+                  open={openTop}
+                  onOpen={() => {
+                    setOpenTop(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenTop(false)
+                      : setOpenTop(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 50 }}
+                  options={topData}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChangeView(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenTop(true);
+                    else {
+                      setOpenTop(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.name || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.name}</React.Fragment>
+                  )}
+                  value={viewData}
+                  defaultValue={viewData}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Top 5"}
+                    />
+                  )}
+                />
               </Grid>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={isMobile ? 12 : 5}>
+              <Grid item xs={isMobile ? 12 : 6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1058,7 +1155,7 @@ const PnbpBerkasPeringkat = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={isMobile ? 12 : 5}>
+              <Grid item xs={isMobile ? 12 : 6}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1142,7 +1239,7 @@ const PnbpBerkasPeringkat = () => {
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={isMobile ? 12 : 2}
+                xs={isMobile ? 12 : 6}
                 style={{ paddingLeft: 20 }}
               >
                 <Button
@@ -1197,7 +1294,7 @@ const PnbpBerkasPeringkat = () => {
             </Typography>
           </div>
         </Grid>
-        <Grid item xs={isMobile ? 12 : 8} style={{ margin: isMobile ? 20 : 0 }}>
+        <Grid item xs={isMobile ? 12 : 9} style={{ margin: isMobile ? 20 : 0 }}>
           <Card
             className={isMobile ? classes.rootMobile : classes.root}
             variant="outlined"

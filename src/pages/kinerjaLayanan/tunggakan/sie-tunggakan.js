@@ -57,7 +57,7 @@ import styles from "../styles";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
 import {
-  tahunData,
+  tahunDataV2,
   DataFormater,
   deleteDuplicates,
 } from "../../../functionGlobal/globalDataAsset";
@@ -166,7 +166,7 @@ const KepegawaianBpnJabatan = () => {
   const [years, setYears] = useState("2022");
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
-  const [tahunAwal, setTahunAwal] = useState("2017");
+  const [tahunAwal, setTahunAwal] = useState({ label: "2017", name: 2017 });
   const [kanwil, setKanwil] = useState({ aliaskanwil: "Bali" });
   const [dataFilterKantor, setDataFilterKantor] = useState([
     { aliaskantah: "Kota Denpasar" },
@@ -174,6 +174,10 @@ const KepegawaianBpnJabatan = () => {
   const [listKanwil, setListKanwil] = useState([]);
   const [listKantor, setListKantor] = useState([]);
 
+  const [openWilayah, setOpenWilayah] = useState(false);
+  const [openKantah, setOpenKantah] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
+  const [openTahun, setOpenTahun] = useState(false);
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -262,7 +266,9 @@ const KepegawaianBpnJabatan = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}KinerjaLayanan/Tunggakan/Tunggakan?namaprofile=${dataFilter.namaprofile}&tahun=${tahunAwal}`,
+        `${url}KinerjaLayanan/Tunggakan/Tunggakan?namaprofile=${
+          dataFilter ? dataFilter.namaprofile : ""
+        }&tahun=${tahunAwal ? tahunAwal.name : ""}`,
         temp
       )
       .then(function (response) {
@@ -311,11 +317,11 @@ const KepegawaianBpnJabatan = () => {
   }, []);
 
   const handleChange = (event) => {
-    setYears(event.target.value);
+    setYears(event);
   };
 
   const handleChangeAwal = (event) => {
-    setTahunAwal(event.target.value);
+    setTahunAwal(event);
   };
 
   const CustomTooltip = ({ active, payload, label }) => {
@@ -886,25 +892,52 @@ const KepegawaianBpnJabatan = () => {
                 >
                   Pilih Tahun
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={tahunAwal}
-                    onChange={handleChangeAwal}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    {tahunData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="tahun"
+                  open={openTahun}
+                  onOpen={() => {
+                    setOpenTahun(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenTahun(false)
+                      : setOpenTahun(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 50 }}
+                  options={tahunDataV2}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChangeAwal(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenTahun(true);
+                    else {
+                      setOpenTahun(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.label || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.label}</React.Fragment>
+                  )}
+                  value={tahunAwal}
+                  defaultValue={tahunAwal}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Tahun"}
+                    />
+                  )}
+                />
               </Grid>
               <Grid item xs={isMobile ? 12 : 6}>
                 <Typography
@@ -927,6 +960,22 @@ const KepegawaianBpnJabatan = () => {
                   autoHighlight
                   onChange={(event, newValue) => {
                     handleChangeFilter(newValue);
+                  }}
+                  open={openProfile}
+                  onOpen={() => {
+                    setOpenProfile(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenProfile(false)
+                      : setOpenProfile(true)
+                  }
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") {
+                      setOpenProfile(true);
+                    } else {
+                      setOpenProfile(false);
+                    }
                   }}
                   getOptionLabel={(option) => option.namaprofile || ""}
                   renderOption={(option, { selected }) => (
@@ -972,6 +1021,22 @@ const KepegawaianBpnJabatan = () => {
                     option: classes.option,
                   }}
                   disableUnderline
+                  open={openWilayah}
+                  onOpen={() => {
+                    setOpenWilayah(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenWilayah(false)
+                      : setOpenWilayah(true)
+                  }
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") {
+                      setOpenWilayah(true);
+                    } else {
+                      setOpenWilayah(false);
+                    }
+                  }}
                   className={classes.formControl}
                   autoHighlight
                   onChange={(event, newValue) => {
@@ -1035,9 +1100,21 @@ const KepegawaianBpnJabatan = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilterKantor(newValue);
                   }}
+                  open={openKantah}
+                  onOpen={() => {
+                    setOpenKantah(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenKantah(false)
+                      : setOpenKantah(true)
+                  }
                   onInputChange={(_event, value, reason) => {
-                    if (reason == "input") setHideTextKantor(true);
-                    else {
+                    if (reason == "input") {
+                      setOpenKantah(true);
+                      setHideTextKantor(true);
+                    } else {
+                      setOpenKantah(false);
                       setHideTextKantor(false);
                     }
                   }}

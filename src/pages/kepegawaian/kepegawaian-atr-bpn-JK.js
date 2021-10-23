@@ -58,7 +58,7 @@ import styles from "./styles";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
 import {
-  tahunData,
+  tahunDataV2,
   DataFormater,
   deleteDuplicates,
 } from "../../functionGlobal/globalDataAsset";
@@ -179,14 +179,18 @@ const KepegawaianBpnJK = () => {
 
   const [hideText, setHideText] = useState(false);
   const [hideTextKantor, setHideTextKantor] = useState(false);
-  const [years, setYears] = useState("2022");
+  const [years, setYears] = useState({ label: "2022", name: 2022 });
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
-  const [tahunAwal, setTahunAwal] = useState("2017");
+  const [tahunAwal, setTahunAwal] = useState({ label: "2017", name: 2017 });
   const [kanwil, setKanwil] = useState({ kanwil: "" });
   const [kantor, setKantor] = useState({ kantor: "" });
   const [satker, setSatker] = useState({ satker: "" });
 
+  const [openWilayah, setOpenWilayah] = useState(false);
+  const [openKantah, setOpenKantah] = useState(false);
+  const [openTahunAkhir, setOpenTahunAkhir] = useState(false);
+  const [openTahun, setOpenTahun] = useState(false);
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -275,7 +279,9 @@ const KepegawaianBpnJK = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}Kepegawaian/Pegawai/sie_pegawai_atr_bpn_jns_kelamin?tahunAwal=${tahunAwal}&tahunAkhir=${years}`,
+        `${url}Kepegawaian/Pegawai/sie_pegawai_atr_bpn_jns_kelamin?tahunAwal=${
+          tahunAwal ? tahunAwal.name : ""
+        }&tahunAkhir=${years ? years.name : ""}`,
         temp
       )
       .then(function (response) {
@@ -304,11 +310,11 @@ const KepegawaianBpnJK = () => {
   }, []);
 
   const handleChange = (event) => {
-    setYears(event.target.value);
+    setYears(event);
   };
 
   const handleChangeAwal = (event) => {
-    setTahunAwal(event.target.value);
+    setTahunAwal(event);
   };
 
   const CustomTooltip = ({ active, payload, label }) => {
@@ -772,7 +778,6 @@ const KepegawaianBpnJK = () => {
       </Modal>
       <Box
         style={{
-          backgroundColor: "rgb(244, 245, 250)",
           marginTop: 20,
           paddingBottom: 20,
           paddingLeft: 20,
@@ -887,7 +892,7 @@ const KepegawaianBpnJK = () => {
           }}
         />
         <Grid container spacing={2}>
-          <Grid item xs={isMobile ? 12 : 8}>
+          <Grid item xs={isMobile ? 12 : 9}>
             <Card className={classes.root} variant="outlined">
               <CardContent>
                 <div className={classes.barChart}>
@@ -932,7 +937,7 @@ const KepegawaianBpnJK = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={isMobile ? 12 : 4}>
+          <Grid item xs={isMobile ? 12 : 3}>
             <div style={{ margin: 10, marginRight: 25 }}>
               <Grid
                 container
@@ -949,25 +954,52 @@ const KepegawaianBpnJK = () => {
                   >
                     Tahun Awal
                   </Typography>
-                  <FormControl className={classes.formControl}>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={tahunAwal}
-                      onChange={handleChangeAwal}
-                      label="Tahun"
-                      className={classes.selectStyle}
-                      disableUnderline
-                    >
-                      {tahunData.map((item, i) => {
-                        return (
-                          <MenuItem value={item.id} key={i}>
-                            {item.value}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
+                  <Autocomplete
+                    id="tahun"
+                    open={openTahun}
+                    onOpen={() => {
+                      setOpenTahun(true);
+                    }}
+                    onClose={(e, reason) =>
+                      reason == "escape" || reason == "blur"
+                        ? setOpenTahun(false)
+                        : setOpenTahun(true)
+                    }
+                    name="tahun"
+                    style={{ width: "100%", height: 50 }}
+                    options={tahunDataV2}
+                    classes={{
+                      option: classes.option,
+                    }}
+                    disableUnderline
+                    className={classes.formControl}
+                    onChange={(event, newValue) => {
+                      handleChangeAwal(newValue);
+                    }}
+                    onInputChange={(_event, value, reason) => {
+                      if (reason == "input") setOpenTahun(true);
+                      else {
+                        setOpenTahun(false);
+                      }
+                    }}
+                    getOptionLabel={(option) => option.label || ""}
+                    renderOption={(option, { selected }) => (
+                      <React.Fragment>{option.label}</React.Fragment>
+                    )}
+                    value={tahunAwal}
+                    defaultValue={tahunAwal}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        InputProps={{
+                          ...params.InputProps,
+                          disableUnderline: true,
+                        }}
+                        style={{ marginTop: 5 }}
+                        placeholder={"Pilih Tahun"}
+                      />
+                    )}
+                  />
                 </Grid>
                 <Grid item xs={isMobile ? 12 : 6}>
                   <Typography
@@ -977,25 +1009,52 @@ const KepegawaianBpnJK = () => {
                   >
                     Tahun Akhir
                   </Typography>
-                  <FormControl className={classes.formControl}>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={years}
-                      onChange={handleChange}
-                      label="Bulan"
-                      className={classes.selectStyle}
-                      disableUnderline
-                    >
-                      {tahunData.map((item, i) => {
-                        return (
-                          <MenuItem value={item.id} key={i}>
-                            {item.value}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
+                  <Autocomplete
+                    id="tahun"
+                    open={openTahunAkhir}
+                    onOpen={() => {
+                      setOpenTahunAkhir(true);
+                    }}
+                    onClose={(e, reason) =>
+                      reason == "escape" || reason == "blur"
+                        ? setOpenTahunAkhir(false)
+                        : setOpenTahunAkhir(true)
+                    }
+                    name="tahun"
+                    style={{ width: "100%", height: 50 }}
+                    options={tahunDataV2}
+                    classes={{
+                      option: classes.option,
+                    }}
+                    disableUnderline
+                    className={classes.formControl}
+                    onChange={(event, newValue) => {
+                      handleChange(newValue);
+                    }}
+                    onInputChange={(_event, value, reason) => {
+                      if (reason == "input") setOpenTahunAkhir(true);
+                      else {
+                        setOpenTahunAkhir(false);
+                      }
+                    }}
+                    getOptionLabel={(option) => option.label || ""}
+                    renderOption={(option, { selected }) => (
+                      <React.Fragment>{option.label}</React.Fragment>
+                    )}
+                    value={years}
+                    defaultValue={years}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        InputProps={{
+                          ...params.InputProps,
+                          disableUnderline: true,
+                        }}
+                        style={{ marginTop: 5 }}
+                        placeholder={"Pilih Tahun"}
+                      />
+                    )}
+                  />
                 </Grid>
                 {/* <Grid item xs={4}>
                   <Typography
@@ -1042,7 +1101,7 @@ const KepegawaianBpnJK = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={isMobile ? 12 : 5}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1068,9 +1127,21 @@ const KepegawaianBpnJK = () => {
                     onChange={(event, newValue) => {
                       handleChangeFilter(newValue);
                     }}
+                    open={openWilayah}
+                    onOpen={() => {
+                      setOpenWilayah(true);
+                    }}
+                    onClose={(e, reason) =>
+                      reason == "escape" || reason == "blur"
+                        ? setOpenWilayah(false)
+                        : setOpenWilayah(true)
+                    }
                     onInputChange={(_event, value, reason) => {
-                      if (reason == "input") setHideText(true);
-                      else {
+                      if (reason == "input") {
+                        setOpenWilayah(true);
+                        setHideText(true);
+                      } else {
+                        setOpenWilayah(false);
                         setHideText(false);
                       }
                     }}
@@ -1118,7 +1189,7 @@ const KepegawaianBpnJK = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={isMobile ? 12 : 5}>
+                <Grid item xs={isMobile ? 12 : 6}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1144,9 +1215,21 @@ const KepegawaianBpnJK = () => {
                     onChange={(event, newValue) => {
                       handleChangeFilterKantor(newValue);
                     }}
+                    open={openKantah}
+                    onOpen={() => {
+                      setOpenKantah(true);
+                    }}
+                    onClose={(e, reason) =>
+                      reason == "escape" || reason == "blur"
+                        ? setOpenKantah(false)
+                        : setOpenKantah(true)
+                    }
                     onInputChange={(_event, value, reason) => {
-                      if (reason == "input") setHideTextKantor(true);
-                      else {
+                      if (reason == "input") {
+                        setOpenKantah(true);
+                        setHideTextKantor(true);
+                      } else {
+                        setOpenKantah(false);
                         setHideTextKantor(false);
                       }
                     }}
@@ -1200,7 +1283,7 @@ const KepegawaianBpnJK = () => {
                   justifyContent="flex-start"
                   alignItems="center"
                   item
-                  xs={isMobile ? 12 : 2}
+                  xs={12}
                   style={{ paddingLeft: 20 }}
                 >
                   <Button

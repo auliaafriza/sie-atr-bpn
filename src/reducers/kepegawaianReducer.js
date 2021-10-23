@@ -21,9 +21,15 @@ const reducer = (state = initialstate, action) => {
       return { ...state, loading: true };
     }
     case GET_TAHUN_MUTASI_FULFILLED: {
+      let temp = [];
+      action.payload.data.data && action.payload.data.data.length != 0
+        ? action.payload.data.data.map((item) =>
+            temp.push({ tahun: item.tahun.toString() })
+          )
+        : [];
       return {
         ...state,
-        tahunMutasi: action.payload.data.data,
+        tahunMutasi: temp,
         loading: false,
       };
     }

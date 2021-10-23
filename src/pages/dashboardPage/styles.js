@@ -134,7 +134,7 @@ const styles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
   root: {
-    width: "93%",
+    width: "98%",
     padding: 20,
     border: "1px solid rgba(0, 0, 0, 0.06)",
     borderRadius: "10px",

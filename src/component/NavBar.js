@@ -153,6 +153,9 @@ const NavBar = (props) => {
                 if (idxMenuApi !== -1) {
                   dataMenu.icon = copy_MENU_LIST[idxMenuApi].icon;
                   dataMenu.parentLink = copy_MENU_LIST[idxMenuApi].parentLink;
+                  copy_MENU_LIST[idxMenuApi].link
+                    ? (dataMenu.link = copy_MENU_LIST[idxMenuApi].link)
+                    : null;
                   dataMenu.id = copy_MENU_LIST[idxMenuApi].id;
                   dataMenu.name =
                     copy_MENU_LIST[idxMenuApi].name == "PSN"

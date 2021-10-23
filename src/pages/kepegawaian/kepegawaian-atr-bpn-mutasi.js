@@ -57,7 +57,7 @@ import styles from "./styles";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
 import {
-  tahunData,
+  tahunDataV2,
   bulanData,
   DataFormater,
   deleteDuplicates,
@@ -237,19 +237,33 @@ class CustomizedContent extends PureComponent {
 
 const KepegawaianBpnMutasi = () => {
   const classes = styles();
-  const [years, setYears] = useState(new Date().getFullYear());
+  const [years, setYears] = useState({
+    tahun: new Date().getFullYear().toString(),
+  });
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [bulan, setBulan] = useState("Nov");
   const [dataTriwulan, setDataTriwulan] = useState([]);
   const [dataBerdasar, setDataBerdasar] = useState([]);
-  const [triwulan, setTriwulan] = useState(0);
-  const [berdasar, setBerdasar] = useState("eselon");
+  const [triwulan, setTriwulan] = useState({
+    key: "pilih semua",
+    value: 0,
+  });
+  const [berdasar, setBerdasar] = useState({
+    key: "eselon",
+    value: "eselon",
+  });
   const [dataTreeMap, setDataTreeMap] = useState([
     { name: "X", size: 2138 },
     { name: "Y", size: 3824 },
     { name: "Z", size: 1353 },
   ]);
+
+  const [openWilayah, setOpenWilayah] = useState(false);
+  const [openKantah, setOpenKantah] = useState(false);
+  const [openTriwulan, setOpenTriwulan] = useState(false);
+  const [openTahun, setOpenTahun] = useState(false);
+  const [openBerdasar, setOpenBerdasar] = useState(false);
 
   const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
   const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
@@ -375,7 +389,11 @@ const KepegawaianBpnMutasi = () => {
     // let triwulanData = triwulan == 0 ? "" : triwulan;
     axios
       .post(
-        `${url}Kepegawaian/Pegawai/sie_pegawai_pensiun?tahun=${years}&triwulan=${triwulan}&berdasarkan=${berdasar}`,
+        `${url}Kepegawaian/Pegawai/sie_pegawai_pensiun?tahun=${
+          years ? parseInt(years.tahun) : ""
+        }&triwulan=${triwulan ? triwulan.value : ""}&berdasarkan=${
+          berdasar ? berdasar.value : ""
+        }`,
         temp
       )
       .then(function (response) {
@@ -446,15 +464,15 @@ const KepegawaianBpnMutasi = () => {
   }, []);
 
   const handleChange = (event) => {
-    setYears(event.target.value);
+    setYears(event);
   };
 
   const handleChangeBerdasar = (event) => {
-    setBerdasar(event.target.value);
+    setBerdasar(event);
   };
 
   const handleChangeTriwulan = (event) => {
-    setTriwulan(event.target.value);
+    setTriwulan(event);
   };
 
   const CustomTooltip = ({ active, payload, label }) => {
@@ -479,7 +497,7 @@ const KepegawaianBpnMutasi = () => {
 
   let nameColumn = [
     {
-      label: berdasar,
+      label: berdasar ? berdasar.key : "",
       value: "label",
       isFixed: false,
       isLabel: false,
@@ -1013,7 +1031,7 @@ const KepegawaianBpnMutasi = () => {
         }}
       />
       <Grid container spacing={2}>
-        <Grid item xs={isMobile ? 12 : 4}>
+        <Grid item xs={isMobile ? 12 : 3}>
           <div style={{ margin: 10, marginRight: 25 }}>
             <Grid
               container
@@ -1030,25 +1048,52 @@ const KepegawaianBpnMutasi = () => {
                 >
                   Pilih Tahun
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={years}
-                    onChange={handleChange}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    {tahunMutasi.map((item, i) => {
-                      return (
-                        <MenuItem value={item.tahun} key={i}>
-                          {item.tahun}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="tahun"
+                  open={openTahun}
+                  onOpen={() => {
+                    setOpenTahun(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenTahun(false)
+                      : setOpenTahun(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 50 }}
+                  options={tahunMutasi}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChange(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenTahun(true);
+                    else {
+                      setOpenTahun(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.tahun || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.tahun}</React.Fragment>
+                  )}
+                  value={years}
+                  defaultValue={years}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Tahun"}
+                    />
+                  )}
+                />
               </Grid>
               <Grid item xs={isMobile ? 12 : 6}>
                 <Typography
@@ -1058,25 +1103,52 @@ const KepegawaianBpnMutasi = () => {
                 >
                   Pilih Triwulan
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={triwulan}
-                    onChange={handleChangeTriwulan}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    {dataTriwulan.map((item, i) => {
-                      return (
-                        <MenuItem value={item.value} key={i}>
-                          {item.key}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="tahun"
+                  open={openTriwulan}
+                  onOpen={() => {
+                    setOpenTriwulan(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenTriwulan(false)
+                      : setOpenTriwulan(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 50 }}
+                  options={dataTriwulan}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChangeTriwulan(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenTriwulan(true);
+                    else {
+                      setOpenTriwulan(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.key || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.key}</React.Fragment>
+                  )}
+                  value={triwulan}
+                  defaultValue={triwulan}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Triwulan"}
+                    />
+                  )}
+                />
               </Grid>
             </Grid>
             <Grid
@@ -1111,6 +1183,22 @@ const KepegawaianBpnMutasi = () => {
                   renderOption={(option, { selected }) => (
                     <React.Fragment>{option.kanwil}</React.Fragment>
                   )}
+                  open={openWilayah}
+                  onOpen={() => {
+                    setOpenWilayah(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenWilayah(false)
+                      : setOpenWilayah(true)
+                  }
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") {
+                      setOpenWilayah(true);
+                    } else {
+                      setOpenWilayah(false);
+                    }
+                  }}
                   value={dataFilter}
                   defaultValue={dataFilter}
                   renderInput={(params) => (
@@ -1145,6 +1233,22 @@ const KepegawaianBpnMutasi = () => {
                   options={dataKantor}
                   classes={{
                     option: classes.option,
+                  }}
+                  open={openKantah}
+                  onOpen={() => {
+                    setOpenKantah(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenKantah(false)
+                      : setOpenKantah(true)
+                  }
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") {
+                      setOpenKantah(true);
+                    } else {
+                      setOpenKantah(false);
+                    }
                   }}
                   disableUnderline
                   className={classes.formControl}
@@ -1214,25 +1318,52 @@ const KepegawaianBpnMutasi = () => {
                 >
                   Pilih Berdasar
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={berdasar}
-                    onChange={handleChangeBerdasar}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    {dataBerdasar.map((item, i) => {
-                      return (
-                        <MenuItem value={item.value} key={i}>
-                          {item.key}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="tahun"
+                  open={openBerdasar}
+                  onOpen={() => {
+                    setOpenBerdasar(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenBerdasar(false)
+                      : setOpenBerdasar(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 50 }}
+                  options={dataBerdasar}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChangeBerdasar(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenBerdasar(true);
+                    else {
+                      setOpenBerdasar(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.key || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.key}</React.Fragment>
+                  )}
+                  value={berdasar}
+                  defaultValue={berdasar}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Tahun"}
+                    />
+                  )}
+                />
               </Grid>
               <Grid
                 container
@@ -1255,7 +1386,7 @@ const KepegawaianBpnMutasi = () => {
             </Grid>
           </div>
         </Grid>
-        <Grid item xs={isMobile ? 12 : 8} style={{ margin: isMobile ? 20 : 0 }}>
+        <Grid item xs={isMobile ? 12 : 9} style={{ margin: isMobile ? 20 : 0 }}>
           <Grid
             container
             direction="column"
@@ -1269,7 +1400,7 @@ const KepegawaianBpnMutasi = () => {
               variant="h2"
               wrap
             >
-              Prediksi Pegawai Pensiun Berdasar {berdasar}
+              Prediksi Pegawai Pensiun Berdasar {berdasar ? berdasar.key : ""}
             </Typography>
             <Typography
               className={classes.isiContentTextStyle}
@@ -1282,8 +1413,13 @@ const KepegawaianBpnMutasi = () => {
                 : dataFilter && dataFilter.kanwil
                 ? dataFilter.kanwil
                 : ""}{" "}
-              Tahun {years} {triwulan == 0 ? "Semua Triwulan" : "Triwulan"}{" "}
-              {triwulan == 0 ? "" : triwulan}
+              Tahun {years ? years.tahun : ""}{" "}
+              {triwulan && triwulan.value == 0 ? "Semua Triwulan" : "Triwulan"}{" "}
+              {triwulan && triwulan.value == 0
+                ? ""
+                : triwulan
+                ? triwulan.key
+                : ""}
             </Typography>
           </Grid>
           <Card

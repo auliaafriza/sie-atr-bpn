@@ -59,7 +59,7 @@ import styles from "../dashboardPage/styles";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
 import {
-  tahunData,
+  tahunDataV2,
   deleteDuplicates,
 } from "../../functionGlobal/globalDataAsset";
 import moment from "moment";
@@ -181,11 +181,15 @@ const RealisasiAnggaran = () => {
   const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
   const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
 
-  const [years, setYears] = useState("2022");
+  const [years, setYears] = useState({ label: "2022", name: 2022 });
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
-  const [tahunAwal, setTahunAwal] = useState("2017");
+  const [tahunAwal, setTahunAwal] = useState({ label: "2017", name: 2017 });
   const [open, setOpen] = useState(false);
+  const [openWilayah, setOpenWilayah] = useState(false);
+  const [openKantah, setOpenKantah] = useState(false);
+  const [openTahunAkhir, setOpenTahunAkhir] = useState(false);
+  const [openTahun, setOpenTahun] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
     grafik: [],
@@ -287,7 +291,9 @@ const RealisasiAnggaran = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_realisasi_anggaran?tahunAwal=${tahunAwal}&tahunAkhir=${years}`,
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_realisasi_anggaran?tahunAwal=${
+          tahunAwal ? tahunAwal.name : ""
+        }&tahunAkhir=${years ? years.name : ""}`,
         temp
       )
       .then(function (response) {
@@ -316,11 +322,11 @@ const RealisasiAnggaran = () => {
   }, []);
 
   const handleChange = (event) => {
-    setYears(event.target.value);
+    setYears(event);
   };
 
   const handleChangeAwal = (event) => {
-    setTahunAwal(event.target.value);
+    setTahunAwal(event);
   };
 
   const DataFormater = (number) => {
@@ -925,7 +931,7 @@ const RealisasiAnggaran = () => {
           }}
         />
         <Grid container spacing={2}>
-          <Grid item xs={isMobile ? 12 : 8}>
+          <Grid item xs={isMobile ? 12 : 9}>
             <Card className={classes.root} variant="outlined">
               <CardContent>
                 <div className={classes.barChart}>
@@ -979,290 +985,366 @@ const RealisasiAnggaran = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={isMobile ? 12 : 4}>
-            <div style={{ margin: 10, marginRight: 25 }}>
-              <Grid
-                container
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                spacing={2}
-              >
-                <Grid item xs={isMobile ? 12 : 6}>
-                  <Typography
-                    className={classes.isiTextStyle}
-                    variant="h2"
-                    style={{ fontSize: 12 }}
-                  >
-                    Tahun Awal
-                  </Typography>
-                  <FormControl className={classes.formControl}>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={tahunAwal}
-                      onChange={handleChangeAwal}
-                      label="Tahun"
-                      className={classes.selectStyle}
-                      disableUnderline
-                    >
-                      {tahunData.map((item, i) => {
-                        return (
-                          <MenuItem value={item.id} key={i}>
-                            {item.value}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={isMobile ? 12 : 6}>
-                  <Typography
-                    className={classes.isiTextStyle}
-                    variant="h2"
-                    style={{ fontSize: 12 }}
-                  >
-                    Tahun Akhir
-                  </Typography>
-                  <FormControl className={classes.formControl}>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={years}
-                      onChange={handleChange}
-                      label="Tahun"
-                      className={classes.selectStyle}
-                      disableUnderline
-                    >
-                      {tahunData.map((item, i) => {
-                        return (
-                          <MenuItem value={item.id} key={i}>
-                            {item.value}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-              <Grid
-                container
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                spacing={2}
-              >
-                <Grid item xs={isMobile ? 12 : 5}>
-                  <Typography
-                    className={classes.isiTextStyle}
-                    variant="h2"
-                    style={{ fontSize: 12 }}
-                  >
-                    Pilih Wilayah
-                  </Typography>
-                  <Autocomplete
-                    multiple
-                    id="kantor"
-                    getOptionDisabled={(options) =>
-                      dataFilter.length >= 32 ? true : false
-                    }
-                    name="kantor"
-                    style={{ width: "100%", height: 50 }}
-                    options={berkasPnbpWilayah}
-                    classes={{
-                      option: classes.option,
-                    }}
-                    disableUnderline
-                    className={classes.formControl}
-                    autoHighlight
-                    onChange={(event, newValue) => {
-                      handleChangeFilter(newValue);
-                    }}
-                    onInputChange={(_event, value, reason) => {
-                      if (reason == "input") setHideText(true);
-                      else {
-                        setHideText(false);
-                      }
-                    }}
-                    getOptionLabel={(option) => option.kanwil || ""}
-                    renderOption={(option, { selected }) => (
-                      <React.Fragment>
-                        <Checkbox
-                          icon={icon}
-                          checkedIcon={checkedIcon}
-                          style={{ marginRight: 8 }}
-                          checked={
-                            dataFilter && dataFilter.length != 0
-                              ? dataFilter
-                                  .map((item) => item.kanwil)
-                                  .indexOf(option.kanwil) > -1
-                              : false
-                          }
-                        />
-                        {option.kode}
-                        {"  "}
-                        {option.kanwil}
-                      </React.Fragment>
-                    )}
-                    renderTags={(selected) => {
-                      return selected.length != 0
-                        ? hideText
-                          ? ""
-                          : `${selected.length} Terpilih`
-                        : "";
-                    }}
-                    value={dataFilter}
-                    defaultValue={dataFilter}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        InputProps={{
-                          ...params.InputProps,
-                          disableUnderline: true,
-                        }}
-                        style={{ marginTop: 5 }}
-                        placeholder={
-                          dataFilter.length != 0 ? "" : "Pilih Wilayah"
-                        }
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={isMobile ? 12 : 5}>
-                  <Typography
-                    className={classes.isiTextStyle}
-                    variant="h2"
-                    style={{ fontSize: 12 }}
-                  >
-                    Pilih Kantor
-                  </Typography>
-                  <Autocomplete
-                    multiple
-                    id="kantor"
-                    name="kantor"
-                    style={{ width: "100%", height: 50 }}
-                    getOptionDisabled={(options) =>
-                      dataFilterKantor.length >= 32 ? true : false
-                    }
-                    options={dataKantor}
-                    classes={{
-                      option: classes.option,
-                    }}
-                    disableUnderline
-                    className={classes.formControl}
-                    autoHighlight
-                    onChange={(event, newValue) => {
-                      handleChangeFilterKantor(newValue);
-                    }}
-                    onInputChange={(_event, value, reason) => {
-                      if (reason == "input") setHideTextKantor(true);
-                      else {
-                        setHideTextKantor(false);
-                      }
-                    }}
-                    getOptionLabel={(option) => option.kantor || ""}
-                    renderOption={(option, { selected }) => (
-                      <React.Fragment>
-                        <Checkbox
-                          icon={icon}
-                          checkedIcon={checkedIcon}
-                          style={{ marginRight: 8 }}
-                          checked={
-                            dataFilterKantor && dataFilterKantor.length != 0
-                              ? dataFilterKantor
-                                  .map((item) => item.kantor)
-                                  .indexOf(option.kantor) > -1
-                              : false
-                          }
-                        />
-                        {option.kode}
-                        {"  "}
-                        {option.kantor}
-                      </React.Fragment>
-                    )}
-                    renderTags={(selected) => {
-                      return selected.length != 0
-                        ? hideTextKantor
-                          ? ""
-                          : `${selected.length} Terpilih`
-                        : "";
-                    }}
-                    value={dataFilterKantor}
-                    defaultValue={dataFilterKantor}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        InputProps={{
-                          ...params.InputProps,
-                          disableUnderline: true,
-                        }}
-                        style={{ marginTop: 5 }}
-                        placeholder={
-                          dataFilterKantor.length != 0 ? "" : "Pilih Kantor"
-                        }
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid
-                  container
-                  direction="row"
-                  justifyContent="flex-start"
-                  alignItems="center"
-                  item
-                  xs={isMobile ? 12 : 2}
-                  style={{ paddingLeft: 20 }}
+          <Grid item xs={isMobile ? 12 : 3} style={{ paddingRight: 20 }}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={isMobile ? 12 : 6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
                 >
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => getData()}
-                    style={{ height: 57, width: "100%", fontSize: 12 }}
-                  >
-                    Submit
-                  </Button>
-                </Grid>
-              </Grid>
-
-              <Typography
-                className={classes.isiContentTextStyle}
-                variant="h2"
-                wrap
-              >
-                {comment && comment.lastComment
-                  ? comment.lastComment.analisisData
-                      .replace(/<[^>]+>|&amp|&amp!|&nbsp/g, "")
-                      .slice(0, 500)
-                  : ""}
-                {comment &&
-                comment.lastComment &&
-                comment.lastComment.analisisData.length > 500 ? (
-                  <Link
-                    href="#"
-                    onClick={() =>
-                      handleOpen({
-                        title: "Anggaran & Realisasi ",
-                        grafik: data,
-                        dataTable: "",
-                        analisis:
-                          comment && comment.lastComment
-                            ? comment.lastComment.analisisData.replace(
-                                /<[^>]+>/g,
-                                ""
-                              )
-                            : "",
-                        type: "Bar",
-                        listTop10Comment: comment.listTop10Comment,
-                      })
+                  Tahun Awal
+                </Typography>
+                <Autocomplete
+                  id="tahun"
+                  open={openTahun}
+                  onOpen={() => {
+                    setOpenTahun(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenTahun(false)
+                      : setOpenTahun(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 50 }}
+                  options={tahunDataV2}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChangeAwal(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenTahun(true);
+                    else {
+                      setOpenTahun(false);
                     }
-                    variant="body2"
-                  >
-                    {" "}
-                    More
-                  </Link>
-                ) : null}
-              </Typography>
-            </div>
+                  }}
+                  getOptionLabel={(option) => option.label || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.label}</React.Fragment>
+                  )}
+                  value={tahunAwal}
+                  defaultValue={tahunAwal}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Tahun"}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={isMobile ? 12 : 6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Tahun Akhir
+                </Typography>
+                <Autocomplete
+                  id="tahun"
+                  open={openTahunAkhir}
+                  onOpen={() => {
+                    setOpenTahunAkhir(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenTahunAkhir(false)
+                      : setOpenTahunAkhir(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 50 }}
+                  options={tahunDataV2}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChange(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenTahunAkhir(true);
+                    else {
+                      setOpenTahunAkhir(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.label || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.label}</React.Fragment>
+                  )}
+                  value={years}
+                  defaultValue={years}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Tahun"}
+                    />
+                  )}
+                />
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item xs={isMobile ? 12 : 6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Wilayah
+                </Typography>
+                <Autocomplete
+                  multiple
+                  id="kantor"
+                  getOptionDisabled={(options) =>
+                    dataFilter.length >= 32 ? true : false
+                  }
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  options={berkasPnbpWilayah}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilter(newValue);
+                  }}
+                  open={openWilayah}
+                  onOpen={() => {
+                    setOpenWilayah(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenWilayah(false)
+                      : setOpenWilayah(true)
+                  }
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") {
+                      setOpenWilayah(true);
+                      setHideText(true);
+                    } else {
+                      setOpenWilayah(false);
+                      setHideText(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.kanwil || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilter && dataFilter.length != 0
+                            ? dataFilter
+                                .map((item) => item.kanwil)
+                                .indexOf(option.kanwil) > -1
+                            : false
+                        }
+                      />
+                      {option.kode}
+                      {"  "}
+                      {option.kanwil}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return selected.length != 0
+                      ? hideText
+                        ? ""
+                        : `${selected.length} Terpilih`
+                      : "";
+                  }}
+                  value={dataFilter}
+                  defaultValue={dataFilter}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={
+                        dataFilter.length != 0 ? "" : "Pilih Wilayah"
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={isMobile ? 12 : 6}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Kantor
+                </Typography>
+                <Autocomplete
+                  multiple
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 50 }}
+                  getOptionDisabled={(options) =>
+                    dataFilterKantor.length >= 32 ? true : false
+                  }
+                  options={dataKantor}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilterKantor(newValue);
+                  }}
+                  open={openKantah}
+                  onOpen={() => {
+                    setOpenKantah(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenKantah(false)
+                      : setOpenKantah(true)
+                  }
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") {
+                      setOpenKantah(true);
+                      setHideTextKantor(true);
+                    } else {
+                      setOpenKantah(false);
+                      setHideTextKantor(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.kantor || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilterKantor && dataFilterKantor.length != 0
+                            ? dataFilterKantor
+                                .map((item) => item.kantor)
+                                .indexOf(option.kantor) > -1
+                            : false
+                        }
+                      />
+                      {option.kode}
+                      {"  "}
+                      {option.kantor}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return selected.length != 0
+                      ? hideTextKantor
+                        ? ""
+                        : `${selected.length} Terpilih`
+                      : "";
+                  }}
+                  value={dataFilterKantor}
+                  defaultValue={dataFilterKantor}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={
+                        dataFilterKantor.length != 0 ? "" : "Pilih Kantor"
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+                item
+                xs={12}
+                style={{ paddingLeft: 20 }}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => getData()}
+                  style={{ height: 57, width: "100%", fontSize: 12 }}
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
+
+            <Typography
+              className={classes.isiContentTextStyle}
+              variant="h2"
+              wrap
+            >
+              {comment && comment.lastComment
+                ? comment.lastComment.analisisData
+                    .replace(/<[^>]+>|&amp|&amp!|&nbsp/g, "")
+                    .slice(0, 500)
+                : ""}
+              {comment &&
+              comment.lastComment &&
+              comment.lastComment.analisisData.length > 500 ? (
+                <Link
+                  href="#"
+                  onClick={() =>
+                    handleOpen({
+                      title: "Anggaran & Realisasi ",
+                      grafik: data,
+                      dataTable: "",
+                      analisis:
+                        comment && comment.lastComment
+                          ? comment.lastComment.analisisData.replace(
+                              /<[^>]+>/g,
+                              ""
+                            )
+                          : "",
+                      type: "Bar",
+                      listTop10Comment: comment.listTop10Comment,
+                    })
+                  }
+                  variant="body2"
+                >
+                  {" "}
+                  More
+                </Link>
+              ) : null}
+            </Typography>
           </Grid>
         </Grid>
       </Box>

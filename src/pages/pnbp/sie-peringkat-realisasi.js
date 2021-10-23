@@ -71,7 +71,7 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { getKantorPNBP, getWilayahPNBP } from "../../actions/pnbpAction";
 import {
-  tahunData,
+  tahunDataV2,
   deleteDuplicates,
 } from "../../functionGlobal/globalDataAsset";
 import { isMobile } from "react-device-detect";
@@ -132,6 +132,14 @@ let nameColumn = [
   },
 ];
 
+let jenisData = [
+  {
+    label: "kanwil",
+    name: "kanwil",
+  },
+  { label: "kantor", name: "kantor" },
+];
+
 const PeringkatRealisasi = () => {
   const classes = styles();
   const dispatch = useDispatch();
@@ -149,9 +157,12 @@ const PeringkatRealisasi = () => {
   const [hideText, setHideText] = useState(false);
   const [hideTextKantor, setHideTextKantor] = useState(false);
   const [dataKantor, setDataKantor] = useState([]);
-  const [tahunAwal, setTahunAwal] = useState("2021");
-  const [jenisGroup, setJenisGroup] = useState("kanwil");
-  const [level, setLevel] = useState("Tertinggi");
+  const [tahunAwal, setTahunAwal] = useState({ label: "2021", name: 2021 });
+  const [jenisGroup, setJenisGroup] = useState({
+    label: "kanwil",
+    name: "kanwil",
+  });
+  const [level, setLevel] = useState({ id: "Tertinggi", value: "Tertinggi" });
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [bulan, setBulan] = useState("01");
@@ -173,17 +184,22 @@ const PeringkatRealisasi = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const [openWilayah, setOpenWilayah] = useState(false);
+  const [openKantah, setOpenKantah] = useState(false);
+  const [openTipe, setOpenTipe] = useState(false);
+  const [openJenis, setOpenJenis] = useState(false);
+  const [openTahun, setOpenTahun] = useState(false);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
   const handleChangeAwal = (event) => {
-    setTahunAwal(event.target.value);
+    setTahunAwal(event);
   };
 
   const handleChangeJenisGroup = (event) => {
-    setJenisGroup(event.target.value);
-    if (event.target.value == "kanwil") {
+    setJenisGroup(event);
+    if (event && event.name == "kanwil") {
       setDataFilterKantor([]);
     } else {
       setDataFilter([]);
@@ -256,7 +272,11 @@ const PeringkatRealisasi = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}Aset&Keuangan/PNBP/sie_pnbp_peringkat_realisasi?peringkat=${level}& tahun=${tahunAwal}&jenisGroup=${jenisGroup}`,
+        `${url}Aset&Keuangan/PNBP/sie_pnbp_peringkat_realisasi?peringkat=${
+          level ? level.id : ""
+        }& tahun=${tahunAwal ? tahunAwal.name : ""}&jenisGroup=${
+          jenisGroup ? jenisGroup.name : ""
+        }`,
         temp
       )
       .then(function (response) {
@@ -285,7 +305,7 @@ const PeringkatRealisasi = () => {
   }, []);
 
   const handleChange = (event) => {
-    setLevel(event.target.value);
+    setLevel(event);
   };
 
   const DataFormaterX = (value) => {
@@ -890,7 +910,7 @@ const PeringkatRealisasi = () => {
         }}
       />
       <Grid container spacing={2}>
-        <Grid item xs={isMobile ? 12 : 4}>
+        <Grid item xs={isMobile ? 12 : 3}>
           <div style={{ margin: 10, marginRight: 25 }}>
             <Grid
               container
@@ -907,25 +927,52 @@ const PeringkatRealisasi = () => {
                 >
                   Tahun
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={tahunAwal}
-                    onChange={handleChangeAwal}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    {tahunData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="tahun"
+                  open={openTahun}
+                  onOpen={() => {
+                    setOpenTahun(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenTahun(false)
+                      : setOpenTahun(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 50 }}
+                  options={tahunDataV2}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChangeAwal(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenTahun(true);
+                    else {
+                      setOpenTahun(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.label || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.label}</React.Fragment>
+                  )}
+                  value={tahunAwal}
+                  defaultValue={tahunAwal}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Tahun"}
+                    />
+                  )}
+                />
               </Grid>
               <Grid item xs={isMobile ? 12 : 6}>
                 <Typography
@@ -935,24 +982,52 @@ const PeringkatRealisasi = () => {
                 >
                   Jenis Group
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={jenisGroup}
-                    onChange={handleChangeJenisGroup}
-                    label="Jenis Group"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    <MenuItem value={"kanwil"} key={"kanwil"}>
-                      kanwil
-                    </MenuItem>
-                    <MenuItem value={"kantor"} key={"kantor"}>
-                      kantor
-                    </MenuItem>
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="tahun"
+                  open={openJenis}
+                  onOpen={() => {
+                    setOpenJenis(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenJenis(false)
+                      : setOpenJenis(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 50 }}
+                  options={jenisData}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChangeJenisGroup(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenJenis(true);
+                    else {
+                      setOpenJenis(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.label || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.label}</React.Fragment>
+                  )}
+                  value={jenisGroup}
+                  defaultValue={jenisGroup}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Tahun"}
+                    />
+                  )}
+                />
               </Grid>
             </Grid>
             <Grid
@@ -988,9 +1063,21 @@ const PeringkatRealisasi = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilter(newValue);
                   }}
+                  open={openWilayah}
+                  onOpen={() => {
+                    setOpenWilayah(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenWilayah(false)
+                      : setOpenWilayah(true)
+                  }
                   onInputChange={(_event, value, reason) => {
-                    if (reason == "input") setHideText(true);
-                    else {
+                    if (reason == "input") {
+                      setOpenWilayah(true);
+                      setHideText(true);
+                    } else {
+                      setOpenWilayah(false);
                       setHideText(false);
                     }
                   }}
@@ -1064,9 +1151,21 @@ const PeringkatRealisasi = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilterKantor(newValue);
                   }}
+                  open={openKantah}
+                  onOpen={() => {
+                    setOpenKantah(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenKantah(false)
+                      : setOpenKantah(true)
+                  }
                   onInputChange={(_event, value, reason) => {
-                    if (reason == "input") setHideTextKantor(true);
-                    else {
+                    if (reason == "input") {
+                      setOpenKantah(true);
+                      setHideTextKantor(true);
+                    } else {
+                      setOpenKantah(false);
                       setHideTextKantor(false);
                     }
                   }}
@@ -1131,25 +1230,52 @@ const PeringkatRealisasi = () => {
                 >
                   Pilih Urutan
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={level}
-                    onChange={handleChange}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    {levelData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="tahun"
+                  open={openTipe}
+                  onOpen={() => {
+                    setOpenTipe(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenTipe(false)
+                      : setOpenTipe(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 50 }}
+                  options={levelData}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChange(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenTipe(true);
+                    else {
+                      setOpenTipe(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.id || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.id}</React.Fragment>
+                  )}
+                  value={level}
+                  defaultValue={level}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Tahun"}
+                    />
+                  )}
+                />
               </Grid>
 
               <Grid
@@ -1213,7 +1339,7 @@ const PeringkatRealisasi = () => {
             </Typography>
           </div>
         </Grid>
-        <Grid item xs={isMobile ? 12 : 8} style={{ margin: isMobile ? 20 : 0 }}>
+        <Grid item xs={isMobile ? 12 : 9} style={{ margin: isMobile ? 20 : 0 }}>
           <Card
             className={isMobile ? classes.rootMobile : classes.root}
             variant="outlined"
