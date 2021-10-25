@@ -182,10 +182,7 @@ const KepegawaianOrganisasi = () => {
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [tahunAwal, setTahunAwal] = useState({ label: "2017", name: 2017 });
-  const [kanwil, setKanwil] = useState([
-    { kanwil: "Kantor Wilayah Provinsi Bali" },
-    { kanwil: "Kantor Wilayah Provinsi Sulawesi Tenggara" },
-  ]);
+  const [kanwil, setKanwil] = useState([]);
   const [hideText, setHideText] = useState(false);
   const [hideTextKantor, setHideTextKantor] = useState(false);
   const [kantor, setKantor] = useState([]);

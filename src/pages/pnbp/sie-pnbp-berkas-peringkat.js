@@ -165,16 +165,7 @@ const PnbpBerkasPeringkat = () => {
     type: "image/jpeg",
     quality: 1.0,
   });
-  const [dataFilter, setDataFilter] = useState([
-    {
-      kode: "01",
-      kanwil: "Kantor Wilayah Provinsi Aceh",
-    },
-    {
-      kode: "22",
-      kanwil: "Kantor Wilayah Provinsi Bali",
-    },
-  ]);
+  const [dataFilter, setDataFilter] = useState([]);
   const [dataFilterKantor, setDataFilterKantor] = useState([]);
   const [hideText, setHideText] = useState(false);
   const [hideTextKantor, setHideTextKantor] = useState(false);
@@ -232,28 +223,6 @@ const PnbpBerkasPeringkat = () => {
       });
   };
 
-  const handleChangeFilter = (event) => {
-    if (event.length != 0) {
-      let temp = { kodeWilayah: [] };
-      event.map((item) => temp.kodeWilayah.push(item.kode));
-      getListKantor(temp);
-      let res = deleteDuplicates(event, "kode");
-      setDataFilter(res);
-      setDataFilterKantor([]);
-    } else {
-      setDataFilter([]);
-    }
-  };
-
-  const handleChangeFilterKantor = (event) => {
-    if (event.length != 0) {
-      let res = deleteDuplicates(event, "kode");
-      setDataFilterKantor(res);
-    } else {
-      setDataFilterKantor([]);
-    }
-  };
-
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
@@ -263,13 +232,73 @@ const PnbpBerkasPeringkat = () => {
     );
   };
 
+  const findAll = (data, index) => {
+    let found = data.find(
+      (element) =>
+        element[index] &&
+        (element[index].toLowerCase() == "pilih semua" || element[index] == "-")
+    );
+    return found ? false : true;
+  };
+
+  const findIndex = (data, index) => {
+    let found =
+      data && data.length != 0
+        ? data.findIndex(
+            (element) =>
+              element[index] &&
+              (element[index].toLowerCase() == "pilih semua" ||
+                element[index] == "-")
+          )
+        : -1;
+    return found;
+  };
+
+  const handleChangeFilter = (event) => {
+    if (event.length != 0) {
+      let temp = { kodeWilayah: [] };
+      let findTemp =
+        event && event.length != 0 ? findAll(event, "kanwil") : false;
+      let indexTemp = findIndex(event, "kanwil");
+      findTemp
+        ? event.map((item) => temp.kodeWilayah.push(item.kode))
+        : temp.kodeWilayah.push(event[indexTemp]);
+      getListKantor(findTemp ? temp : []);
+      let res = findTemp ? deleteDuplicates(event, "kode") : [event[indexTemp]];
+      setDataFilter(res);
+      setDataFilterKantor([]);
+    } else {
+      setDataFilter([]);
+    }
+  };
+
+  const handleChangeFilterKantor = (event) => {
+    if (event.length != 0) {
+      let findTemp =
+        event && event.length != 0 ? findAll(event, "kantor") : false;
+      let indexTemp = findIndex(event, "kantor");
+      let res = findTemp ? deleteDuplicates(event, "kode") : [event[indexTemp]];
+      setDataFilterKantor(res);
+    } else {
+      setDataFilterKantor([]);
+    }
+  };
+
   const getData = () => {
-    let temp = { kantor: [], wilayah: [] };
-    dataFilterKantor && dataFilterKantor.length != 0
+    let temp = { kantor: [], kanwil: [] };
+    let foundData =
+      dataFilterKantor && dataFilterKantor.length != 0
+        ? findAll(dataFilterKantor, "kantor")
+        : false;
+    foundData
       ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
       : [];
-    dataFilter && dataFilter.length != 0
-      ? dataFilter.map((item) => temp.wilayah.push(item.kanwil))
+    let foundDataKanwil =
+      dataFilter && dataFilter.length != 0
+        ? findAll(dataFilter, "kanwil")
+        : false;
+    foundDataKanwil
+      ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
       : [];
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
@@ -1102,12 +1131,27 @@ const PnbpBerkasPeringkat = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilter(newValue);
                   }}
+                  open={openWilayah}
+                  onOpen={() => {
+                    setOpenWilayah(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenWilayah(false)
+                      : setOpenWilayah(true)
+                  }
                   onInputChange={(_event, value, reason) => {
-                    if (reason == "input") setHideText(true);
-                    else {
+                    if (reason == "input") {
+                      setOpenWilayah(true);
+                      setHideText(true);
+                    } else {
+                      setOpenWilayah(false);
                       setHideText(false);
                     }
                   }}
+                  getOptionDisabled={(options) =>
+                    dataFilter.length >= 32 ? true : false
+                  }
                   getOptionLabel={(option) => option.kanwil || ""}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
@@ -1117,9 +1161,11 @@ const PnbpBerkasPeringkat = () => {
                         style={{ marginRight: 8 }}
                         checked={
                           dataFilter && dataFilter.length != 0
-                            ? dataFilter
-                                .map((item) => item.kanwil)
-                                .indexOf(option.kanwil) > -1
+                            ? findAll(dataFilter, "kanwil")
+                              ? dataFilter
+                                  .map((item) => item.kanwil)
+                                  .indexOf(option.kanwil) > -1
+                              : true
                             : false
                         }
                       />
@@ -1132,13 +1178,12 @@ const PnbpBerkasPeringkat = () => {
                     return selected.length != 0
                       ? hideText
                         ? ""
-                        : `${selected.length} Terpilih`
+                        : findAll(selected, "kanwil")
+                        ? `${selected.length} Terpilih`
+                        : "Semua Terpilih"
                       : "";
                   }}
                   value={dataFilter}
-                  getOptionDisabled={(options) =>
-                    dataFilter.length >= 32 ? true : false
-                  }
                   defaultValue={dataFilter}
                   renderInput={(params) => (
                     <TextField
@@ -1178,14 +1223,27 @@ const PnbpBerkasPeringkat = () => {
                   onChange={(event, newValue) => {
                     handleChangeFilterKantor(newValue);
                   }}
+                  open={openKantah}
+                  onOpen={() => {
+                    setOpenKantah(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenKantah(false)
+                      : setOpenKantah(true)
+                  }
                   onInputChange={(_event, value, reason) => {
                     if (reason == "input") {
-                      setDataFilterKantor([]);
+                      setOpenKantah(true);
                       setHideTextKantor(true);
                     } else {
+                      setOpenKantah(false);
                       setHideTextKantor(false);
                     }
                   }}
+                  getOptionDisabled={(options) =>
+                    dataFilterKantor.length >= 32 ? true : false
+                  }
                   getOptionLabel={(option) => option.kantor || ""}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
@@ -1195,9 +1253,11 @@ const PnbpBerkasPeringkat = () => {
                         style={{ marginRight: 8 }}
                         checked={
                           dataFilterKantor && dataFilterKantor.length != 0
-                            ? dataFilterKantor
-                                .map((item) => item.kantor)
-                                .indexOf(option.kantor) > -1
+                            ? findAll(dataFilterKantor, "kantor")
+                              ? dataFilterKantor
+                                  .map((item) => item.kantor)
+                                  .indexOf(option.kantor) > -1
+                              : true
                             : false
                         }
                       />
@@ -1210,13 +1270,12 @@ const PnbpBerkasPeringkat = () => {
                     return selected.length != 0
                       ? hideTextKantor
                         ? ""
-                        : `${selected.length} Terpilih`
+                        : findAll(selected, "kantor")
+                        ? `${selected.length} Terpilih`
+                        : "Semua Terpilih"
                       : "";
                   }}
                   value={dataFilterKantor}
-                  getOptionDisabled={(options) =>
-                    dataFilterKantor.length >= 32 ? true : false
-                  }
                   defaultValue={dataFilterKantor}
                   renderInput={(params) => (
                     <TextField

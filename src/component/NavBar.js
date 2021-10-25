@@ -234,10 +234,20 @@ const NavBar = (props) => {
     setAnchorEl(event.currentTarget);
     setId(event.currentTarget.id);
   };
+
   const handleCloseSubMenu = () => {
     setAnchorEl(null);
     setId(null);
   };
+
+  const handleEvent = (event, menu) => {
+    if (event.type === "mouseenter") {
+      handleOpenSubMenu(event);
+    } else if (event.type === "click" && menu) {
+      handleChangePage(menu.link);
+    }
+  };
+
   return (
     <div>
       <AppBar
@@ -265,6 +275,8 @@ const NavBar = (props) => {
                 textColor="inherit"
                 icon={menu.icon}
                 label={menu.name}
+                // onClick={(event) => handleEvent(event, menu)}
+                // onMouseEnter={(event) => handleEvent(event)}
                 onClick={(event) =>
                   menu.link
                     ? handleChangePage(menu.link)
@@ -282,6 +294,7 @@ const NavBar = (props) => {
                   keepMounted
                   open={id === a11yProps(menu.id).id}
                   onClose={handleCloseSubMenu}
+                  // MenuListProps={{ onMouseLeave: handleCloseSubMenu() }}
                   getContentAnchorEl={null}
                   anchorOrigin={{
                     vertical: "bottom",

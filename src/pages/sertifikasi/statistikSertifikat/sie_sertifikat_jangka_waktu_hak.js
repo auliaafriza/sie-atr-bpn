@@ -209,12 +209,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
   const history = useHistory();
   const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
   const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
-  const [dataFilter, setDataFilter] = useState([
-    {
-      kode: "01",
-      kanwil: "Kantor Wilayah Provinsi Aceh",
-    },
-  ]);
+  const [dataFilter, setDataFilter] = useState([]);
   const [dataFilterKantor, setDataFilterKantor] = useState([]);
 
   const [hideText, setHideText] = useState(false);
@@ -284,12 +279,39 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
       });
   };
 
+  const findAll = (data, index) => {
+    let found = data.find(
+      (element) =>
+        element[index] &&
+        (element[index].toLowerCase() == "pilih semua" || element[index] == "-")
+    );
+    return found ? false : true;
+  };
+
+  const findIndex = (data, index) => {
+    let found =
+      data && data.length != 0
+        ? data.findIndex(
+            (element) =>
+              element[index] &&
+              (element[index].toLowerCase() == "pilih semua" ||
+                element[index] == "-")
+          )
+        : -1;
+    return found;
+  };
+
   const handleChangeFilter = (event) => {
     if (event.length != 0) {
       let temp = { kodeWilayah: [] };
-      event.map((item) => temp.kodeWilayah.push(item.kode));
-      getListKantor(temp);
-      let res = deleteDuplicates(event, "kode");
+      let findTemp =
+        event && event.length != 0 ? findAll(event, "kanwil") : false;
+      let indexTemp = findIndex(event, "kanwil");
+      findTemp
+        ? event.map((item) => temp.kodeWilayah.push(item.kode))
+        : temp.kodeWilayah.push(event[indexTemp]);
+      getListKantor(findTemp ? temp : []);
+      let res = findTemp ? deleteDuplicates(event, "kode") : [event[indexTemp]];
       setDataFilter(res);
       setDataFilterKantor([]);
     } else {
@@ -299,7 +321,10 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
 
   const handleChangeFilterKantor = (event) => {
     if (event.length != 0) {
-      let res = deleteDuplicates(event, "kode");
+      let findTemp =
+        event && event.length != 0 ? findAll(event, "kantor") : false;
+      let indexTemp = findIndex(event, "kantor");
+      let res = findTemp ? deleteDuplicates(event, "kode") : [event[indexTemp]];
       setDataFilterKantor(res);
     } else {
       setDataFilterKantor([]);
@@ -308,10 +333,18 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
 
   const getData = () => {
     let temp = { kantah: [], kanwil: [] };
-    dataFilterKantor && dataFilterKantor.length != 0
+    let foundData =
+      dataFilterKantor && dataFilterKantor.length != 0
+        ? findAll(dataFilterKantor, "kantor")
+        : false;
+    foundData
       ? dataFilterKantor.map((item) => temp.kantah.push(item.kantor))
       : [];
-    dataFilter && dataFilter.length != 0
+    let foundDataKanwil =
+      dataFilter && dataFilter.length != 0
+        ? findAll(dataFilter, "kanwil")
+        : false;
+    foundDataKanwil
       ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
       : [];
 
@@ -1089,9 +1122,11 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                           style={{ marginRight: 8 }}
                           checked={
                             dataFilter && dataFilter.length != 0
-                              ? dataFilter
-                                  .map((item) => item.kanwil)
-                                  .indexOf(option.kanwil) > -1
+                              ? findAll(dataFilter, "kanwil")
+                                ? dataFilter
+                                    .map((item) => item.kanwil)
+                                    .indexOf(option.kanwil) > -1
+                                : true
                               : false
                           }
                         />
@@ -1104,7 +1139,9 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                       return selected.length != 0
                         ? hideText
                           ? ""
-                          : `${selected.length} Terpilih`
+                          : findAll(selected, "kanwil")
+                          ? `${selected.length} Terpilih`
+                          : "Semua Terpilih"
                         : "";
                     }}
                     value={dataFilter}
@@ -1177,9 +1214,11 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                           style={{ marginRight: 8 }}
                           checked={
                             dataFilterKantor && dataFilterKantor.length != 0
-                              ? dataFilterKantor
-                                  .map((item) => item.kantor)
-                                  .indexOf(option.kantor) > -1
+                              ? findAll(dataFilterKantor, "kantor")
+                                ? dataFilterKantor
+                                    .map((item) => item.kantor)
+                                    .indexOf(option.kantor) > -1
+                                : true
                               : false
                           }
                         />
@@ -1192,7 +1231,9 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                       return selected.length != 0
                         ? hideTextKantor
                           ? ""
-                          : `${selected.length} Terpilih`
+                          : findAll(selected, "kantor")
+                          ? `${selected.length} Terpilih`
+                          : "Semua Terpilih"
                         : "";
                     }}
                     value={dataFilterKantor}

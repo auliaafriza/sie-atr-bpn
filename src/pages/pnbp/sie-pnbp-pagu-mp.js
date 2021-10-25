@@ -143,14 +143,8 @@ const PaguMp = () => {
   const dispatch = useDispatch();
   const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
   const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
-  const [dataFilter, setDataFilter] = useState({
-    kode: "09",
-    kanwil: "Kantor Wilayah Provinsi DKI Jakarta",
-  });
-  const [dataFilterKantor, setDataFilterKantor] = useState({
-    kode: "0903",
-    kantor: "Kantor Pertanahan Kota Administrasi Jakarta Barat",
-  });
+  const [dataFilter, setDataFilter] = useState({});
+  const [dataFilterKantor, setDataFilterKantor] = useState({});
   const [hideText, setHideText] = useState(false);
   const [hideTextKantor, setHideTextKantor] = useState(false);
   const [years, setYears] = useState({ label: "2021", name: 2021 });
@@ -206,7 +200,9 @@ const PaguMp = () => {
 
   const handleChangeFilter = (event) => {
     let temp = { kodeWilayah: [] };
-    event && event.kode ? temp.kodeWilayah.push(event.kode) : null;
+    event && event.kode && event.kode == "-"
+      ? temp.kodeWilayah.push(event.kode)
+      : null;
     dispatch(getKantorPNBP(temp));
     setDataFilterKantor({});
     setDataFilter(event);
@@ -234,12 +230,19 @@ const PaguMp = () => {
     //   setDataFilterKantor([]);
     // }
   };
+
   const getData = () => {
     let temp = { kantor: [], kanwil: [] };
-    dataFilterKantor && dataFilterKantor.kantor
+    dataFilterKantor &&
+    dataFilterKantor.kantor &&
+    (dataFilterKantor.kantor != "pilih semua" || dataFilterKantor.kantor != "-")
       ? temp.kantor.push(dataFilterKantor.kantor)
       : [];
-    dataFilter && dataFilter.kanwil ? temp.kanwil.push(dataFilter.kanwil) : [];
+    dataFilter &&
+    dataFilter.kanwil &&
+    (dataFilter.kanwil != "pilih semua" || dataFilter.kanwil != "-")
+      ? temp.kanwil.push(dataFilter.kanwil)
+      : [];
     // dataFilterKantor && dataFilterKantor.length != 0
     //   ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
     //   : [];

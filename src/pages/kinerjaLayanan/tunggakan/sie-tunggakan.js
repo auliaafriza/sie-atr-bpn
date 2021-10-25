@@ -167,10 +167,8 @@ const KepegawaianBpnJabatan = () => {
   const [data, setData] = useState(dataTemp);
   const [comment, setComment] = useState("");
   const [tahunAwal, setTahunAwal] = useState({ label: "2017", name: 2017 });
-  const [kanwil, setKanwil] = useState({ aliaskanwil: "Bali" });
-  const [dataFilterKantor, setDataFilterKantor] = useState([
-    { aliaskantah: "Kota Denpasar" },
-  ]);
+  const [kanwil, setKanwil] = useState({});
+  const [dataFilterKantor, setDataFilterKantor] = useState([]);
   const [listKanwil, setListKanwil] = useState([]);
   const [listKantor, setListKantor] = useState([]);
 
@@ -237,14 +235,47 @@ const KepegawaianBpnJabatan = () => {
   };
 
   const handleChangeFilterKanwil = (event) => {
-    getKantah(event ? event.aliaskanwil : "");
+    getKantah(
+      event
+        ? event.aliaskanwil == "pilih semua" || event.aliaskanwil == "-"
+          ? ""
+          : event.aliaskanwil
+        : ""
+    );
     setKanwil(event);
     setDataFilterKantor([]);
   };
 
+  const findAll = (data, index) => {
+    let found = data.find(
+      (element) =>
+        element[index] &&
+        (element[index].toLowerCase() == "pilih semua" || element[index] == "-")
+    );
+    return found ? false : true;
+  };
+
+  const findIndex = (data, index) => {
+    let found =
+      data && data.length != 0
+        ? data.findIndex(
+            (element) =>
+              element[index] &&
+              (element[index].toLowerCase() == "pilih semua" ||
+                element[index] == "-")
+          )
+        : -1;
+    return found;
+  };
+
   const handleChangeFilterKantor = (event) => {
     if (event.length != 0) {
-      let res = deleteDuplicates(event, "aliaskantah");
+      let findTemp =
+        event && event.length != 0 ? findAll(event, "aliaskantah") : false;
+      let indexTemp = findIndex(event, "aliaskantah");
+      let res = findTemp
+        ? deleteDuplicates(event, "aliaskantah")
+        : [event[indexTemp]];
       setDataFilterKantor(res);
     } else {
       setDataFilterKantor([]);
@@ -256,7 +287,11 @@ const KepegawaianBpnJabatan = () => {
       aliaskanwil: [],
       aliaskantah: [],
     };
-    kanwil && kanwil.aliaskanwil
+    kanwil &&
+    kanwil.aliaskanwil &&
+    kanwil.aliaskanwil != "-" &&
+    kanwil.aliaskanwil &&
+    kanwil.aliaskanwil != "pilih semua"
       ? temp.aliaskanwil.push(kanwil.aliaskanwil)
       : [];
     dataFilterKantor && dataFilterKantor.length != 0
@@ -1127,9 +1162,11 @@ const KepegawaianBpnJabatan = () => {
                         style={{ marginRight: 8 }}
                         checked={
                           dataFilterKantor && dataFilterKantor.length != 0
-                            ? dataFilterKantor
-                                .map((item) => item.aliaskantah)
-                                .indexOf(option.aliaskantah) > -1
+                            ? findAll(dataFilterKantor, "aliaskantah")
+                              ? dataFilterKantor
+                                  .map((item) => item.aliaskantah)
+                                  .indexOf(option.aliaskantah) > -1
+                              : true
                             : false
                         }
                       />
@@ -1140,7 +1177,9 @@ const KepegawaianBpnJabatan = () => {
                     return selected.length != 0
                       ? hideTextKantor
                         ? ""
-                        : `${selected.length} Terpilih`
+                        : findAll(selected, "aliaskantah")
+                        ? `${selected.length} Terpilih`
+                        : "Semua Terpilih"
                       : "";
                   }}
                   value={dataFilterKantor}

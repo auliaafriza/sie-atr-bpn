@@ -129,6 +129,12 @@ let nameColumn = [
     isLabel: false,
   },
   {
+    label: "Label",
+    value: "label",
+    isFixed: false,
+    isLabel: false,
+  },
+  {
     label: "Jumlah Pegawai",
     value: "jumlah",
     isFixed: false,
@@ -164,18 +170,8 @@ const KepegawaianBpnJK = () => {
   const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
   const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
   const dispatch = useDispatch();
-  const [dataFilter, setDataFilter] = useState([
-    {
-      kode: "02",
-      kanwil: "Kantor Wilayah Provinsi Sumatera Utara",
-    },
-  ]);
-  const [dataFilterKantor, setDataFilterKantor] = useState([
-    {
-      kode: "0201",
-      kantor: "Kantor Pertanahan Kota Medan",
-    },
-  ]);
+  const [dataFilter, setDataFilter] = useState([]);
+  const [dataFilterKantor, setDataFilterKantor] = useState([]);
 
   const [hideText, setHideText] = useState(false);
   const [hideTextKantor, setHideTextKantor] = useState(false);
@@ -245,12 +241,39 @@ const KepegawaianBpnJK = () => {
       });
   };
 
+  const findAll = (data, index) => {
+    let found = data.find(
+      (element) =>
+        element[index] &&
+        (element[index].toLowerCase() == "pilih semua" || element[index] == "-")
+    );
+    return found ? false : true;
+  };
+
+  const findIndex = (data, index) => {
+    let found =
+      data && data.length != 0
+        ? data.findIndex(
+            (element) =>
+              element[index] &&
+              (element[index].toLowerCase() == "pilih semua" ||
+                element[index] == "-")
+          )
+        : -1;
+    return found;
+  };
+
   const handleChangeFilter = (event) => {
     if (event.length != 0) {
       let temp = { kodeWilayah: [] };
-      event.map((item) => temp.kodeWilayah.push(item.kode));
-      getListKantor(temp);
-      let res = deleteDuplicates(event, "kode");
+      let findTemp =
+        event && event.length != 0 ? findAll(event, "kanwil") : false;
+      let indexTemp = findIndex(event, "kanwil");
+      findTemp
+        ? event.map((item) => temp.kodeWilayah.push(item.kode))
+        : temp.kodeWilayah.push(event[indexTemp]);
+      getListKantor(findTemp ? temp : []);
+      let res = findTemp ? deleteDuplicates(event, "kode") : [event[indexTemp]];
       setDataFilter(res);
       setDataFilterKantor([]);
     } else {
@@ -260,7 +283,10 @@ const KepegawaianBpnJK = () => {
 
   const handleChangeFilterKantor = (event) => {
     if (event.length != 0) {
-      let res = deleteDuplicates(event, "kode");
+      let findTemp =
+        event && event.length != 0 ? findAll(event, "kantor") : false;
+      let indexTemp = findIndex(event, "kantor");
+      let res = findTemp ? deleteDuplicates(event, "kode") : [event[indexTemp]];
       setDataFilterKantor(res);
     } else {
       setDataFilterKantor([]);
@@ -269,12 +295,21 @@ const KepegawaianBpnJK = () => {
 
   const getData = () => {
     let temp = { kantor: [], kanwil: [] };
-    dataFilterKantor && dataFilterKantor.length != 0
+    let foundData =
+      dataFilterKantor && dataFilterKantor.length != 0
+        ? findAll(dataFilterKantor, "kantor")
+        : false;
+    foundData
       ? dataFilterKantor.map((item) => temp.kantor.push(item.kantor))
       : [];
-    dataFilter && dataFilter.length != 0
+    let foundDataKanwil =
+      dataFilter && dataFilter.length != 0
+        ? findAll(dataFilter, "kanwil")
+        : false;
+    foundDataKanwil
       ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
       : [];
+
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
@@ -322,6 +357,7 @@ const KepegawaianBpnJK = () => {
       return (
         <div className={classes.tooltipCustom}>
           <p className="label">{label}</p>
+          <p className="label">{payload[0].payload.label}</p>
           <p
             className="desc"
             style={{ color: payload[0].color }}
@@ -429,6 +465,13 @@ const KepegawaianBpnJK = () => {
                         scope="row"
                       >
                         {row.jeniskelamin}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        align="center"
+                        component="th"
+                        scope="row"
+                      >
+                        {row.label}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {row.jumlah}
@@ -946,7 +989,7 @@ const KepegawaianBpnJK = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={isMobile ? 12 : 6}>
+                <Grid item xs={12}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1001,7 +1044,7 @@ const KepegawaianBpnJK = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={isMobile ? 12 : 6}>
+                <Grid item xs={12}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1056,52 +1099,7 @@ const KepegawaianBpnJK = () => {
                     )}
                   />
                 </Grid>
-                {/* <Grid item xs={4}>
-                  <Typography
-                    className={classes.isiTextStyle}
-                    variant="h2"
-                    style={{ fontSize: 12 }}
-                  >
-                    Pilih Satker
-                  </Typography>
-                  <Autocomplete
-                    id="satker"
-                    name="satker"
-                    style={{ width: "100%", height: 50 }}
-                    options={satkerRed}
-                    classes={{
-                      option: classes.option,
-                    }}
-                    disableUnderline
-                    className={classes.formControl}
-                    autoHighlight
-                    onChange={(event, newValue) => {
-                      handleChangeSatket(newValue);
-                    }}
-                    getOptionLabel={(option) => option.satker || ""}
-                    defaultValue={satker}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        InputProps={{
-                          ...params.InputProps,
-                          disableUnderline: true,
-                        }}
-                        style={{ marginTop: 5 }}
-                        placeholder={satker ? "" : "Satker"}
-                      />
-                    )}
-                  />
-                </Grid> */}
-              </Grid>
-              <Grid
-                container
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                spacing={2}
-              >
-                <Grid item xs={isMobile ? 12 : 6}>
+                <Grid item xs={12}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1111,9 +1109,6 @@ const KepegawaianBpnJK = () => {
                   </Typography>
                   <Autocomplete
                     multiple
-                    getOptionDisabled={(options) =>
-                      dataFilter.length >= 32 ? true : false
-                    }
                     id="kantor"
                     name="kantor"
                     style={{ width: "100%", height: 50 }}
@@ -1145,6 +1140,9 @@ const KepegawaianBpnJK = () => {
                         setHideText(false);
                       }
                     }}
+                    getOptionDisabled={(options) =>
+                      dataFilter.length >= 32 ? true : false
+                    }
                     getOptionLabel={(option) => option.kanwil || ""}
                     renderOption={(option, { selected }) => (
                       <React.Fragment>
@@ -1154,9 +1152,11 @@ const KepegawaianBpnJK = () => {
                           style={{ marginRight: 8 }}
                           checked={
                             dataFilter && dataFilter.length != 0
-                              ? dataFilter
-                                  .map((item) => item.kanwil)
-                                  .indexOf(option.kanwil) > -1
+                              ? findAll(dataFilter, "kanwil")
+                                ? dataFilter
+                                    .map((item) => item.kanwil)
+                                    .indexOf(option.kanwil) > -1
+                                : true
                               : false
                           }
                         />
@@ -1169,7 +1169,9 @@ const KepegawaianBpnJK = () => {
                       return selected.length != 0
                         ? hideText
                           ? ""
-                          : `${selected.length} Terpilih`
+                          : findAll(selected, "kanwil")
+                          ? `${selected.length} Terpilih`
+                          : "Semua Terpilih"
                         : "";
                     }}
                     value={dataFilter}
@@ -1189,7 +1191,7 @@ const KepegawaianBpnJK = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={isMobile ? 12 : 6}>
+                <Grid item xs={12}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1199,9 +1201,6 @@ const KepegawaianBpnJK = () => {
                   </Typography>
                   <Autocomplete
                     multiple
-                    getOptionDisabled={(options) =>
-                      dataFilterKantor.length >= 32 ? true : false
-                    }
                     id="kantor"
                     name="kantor"
                     style={{ width: "100%", height: 50 }}
@@ -1233,6 +1232,9 @@ const KepegawaianBpnJK = () => {
                         setHideTextKantor(false);
                       }
                     }}
+                    getOptionDisabled={(options) =>
+                      dataFilterKantor.length >= 32 ? true : false
+                    }
                     getOptionLabel={(option) => option.kantor || ""}
                     renderOption={(option, { selected }) => (
                       <React.Fragment>
@@ -1242,9 +1244,11 @@ const KepegawaianBpnJK = () => {
                           style={{ marginRight: 8 }}
                           checked={
                             dataFilterKantor && dataFilterKantor.length != 0
-                              ? dataFilterKantor
-                                  .map((item) => item.kantor)
-                                  .indexOf(option.kantor) > -1
+                              ? findAll(dataFilterKantor, "kantor")
+                                ? dataFilterKantor
+                                    .map((item) => item.kantor)
+                                    .indexOf(option.kantor) > -1
+                                : true
                               : false
                           }
                         />
@@ -1257,7 +1261,9 @@ const KepegawaianBpnJK = () => {
                       return selected.length != 0
                         ? hideTextKantor
                           ? ""
-                          : `${selected.length} Terpilih`
+                          : findAll(selected, "kantor")
+                          ? `${selected.length} Terpilih`
+                          : "Semua Terpilih"
                         : "";
                     }}
                     value={dataFilterKantor}

@@ -329,9 +329,13 @@ const BPHTBJumlahBerkas = () => {
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Realisasi : Rp ${payload[0].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+          >{`Realisasi : Rp ${
+            payload[0].value % 1 == 0
+              ? payload[0].value
+                  .toString()
+                  .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+              : payload[0].value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
+          }`}</p>
         </div>
       );
     }

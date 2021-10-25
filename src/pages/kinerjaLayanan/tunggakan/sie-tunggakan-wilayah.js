@@ -333,7 +333,12 @@ const KepegawaianBpnJabatan = () => {
     let temp = {
       kanwil: [],
     };
-    dataFilter && dataFilter.kanwil ? temp.kanwil.push(dataFilter.kanwil) : [];
+    dataFilter &&
+    dataFilter.kanwil &&
+    dataFilter.kanwil != "pilih semua" &&
+    dataFilter.kanwil != "-"
+      ? temp.kanwil.push(dataFilter.kanwil)
+      : [];
     // dataFilter && dataFilter.length != 0
     //   ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
     //   : [];
