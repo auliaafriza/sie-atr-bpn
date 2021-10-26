@@ -218,8 +218,23 @@ export const MENU_LIST = [
     subMenus: [
       {
         icon: <MdInsertChart size={24} />,
-        name: "Statistik Sertipikat",
-        link: "/Sertifikasi/StatistikSertifikat",
+        name: "Sertipikat Diagunkan",
+        link: "/Sertipikasi/SertipikatDiagunkan",
+      },
+      {
+        icon: <MdInsertChart size={24} />,
+        name: "Jumlah Sertipikat dan Luas",
+        link: "/Sertipikasi/JumlahSertipikasidanLuas",
+      },
+      {
+        icon: <MdInsertChart size={24} />,
+        name: "Jangka Waktu Hak Sertipikat",
+        link: "/Sertipikasi/JangkaWaktuHakSertipikasi",
+      },
+      {
+        icon: <MdInsertChart size={24} />,
+        name: "Luas Bidang Berdasarkan Jenis Sertipikat ",
+        link: "/Sertipikasi/LuasBidangSertipikasi",
       },
       {
         icon: <FaCertificate size={24} />,

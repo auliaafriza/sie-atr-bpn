@@ -49,6 +49,10 @@ import {
   StatistikSertifikat,
   HakTanggunganElektronik,
   TanahAssetPemerintah,
+  SertipikatDiagunkan,
+  LuasBidang,
+  JangkaWaktu,
+  JumlahSertifikat,
 } from "./pages/sertifikasi";
 import { LayananUmum, Tunggakan, PNBP } from "./pages/kinerjaLayanan";
 import {
@@ -116,6 +120,18 @@ const Main = withRouter(({ location }) => {
         </Route>
         <Route path="/Sertifikasi/TanahAssetPemerintah">
           <TanahAssetPemerintah />
+        </Route>
+        <Route path="/Sertipikasi/SertipikatDiagunkan">
+          <SertipikatDiagunkan />
+        </Route>
+        <Route path="/Sertipikasi/LuasBidangSertipikasi">
+          <LuasBidang />
+        </Route>
+        <Route path="/Sertipikasi/JangkaWaktuHakSertipikasi">
+          <JangkaWaktu />
+        </Route>
+        <Route path="/Sertipikasi/JumlahSertipikasidanLuas">
+          <JumlahSertifikat />
         </Route>
         {/* Start Route PNBP */}
         <Route path="/AssetKeuangan/PNBP/RealisasiAnggaran">

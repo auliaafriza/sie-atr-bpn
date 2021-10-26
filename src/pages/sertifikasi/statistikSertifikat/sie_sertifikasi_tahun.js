@@ -134,7 +134,7 @@ let nameColumn = [
     isLabel: false,
   },
   {
-    label: "Jumlah Sertifikat",
+    label: "Jumlah Sertipikat",
     value: "jumlah_sertifikat",
   },
   {
@@ -167,7 +167,7 @@ let grafikView = [
   {
     dataKey: "jumlah_sertifikat",
     fill: "#065535",
-    name: "Jumlah Sertifikat",
+    name: "Jumlah Sertipikat",
   },
   {
     dataKey: "luastertulis",
@@ -180,7 +180,7 @@ let axis = {
   xAxis: "nama_program",
   yAxis: "",
 };
-const title = "Jumlah Sertifikat dan Luas Berdasarkan Program";
+const title = "Jumlah Sertipikat dan Luas Berdasarkan Program";
 
 const SieSertifikatTahun = () => {
   const classes = styles();
@@ -384,7 +384,7 @@ const SieSertifikatTahun = () => {
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Jumlah Sertifikat : ${payload[0].value
+          >{`Jumlah Sertipikat : ${payload[0].value
             .toFixed(2)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
           <p

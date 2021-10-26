@@ -252,11 +252,11 @@ const SieSertifikatLuasJumlah = () => {
       value: "name",
       isLabel: false,
     },
-    { label: "Jumlah Sertifikat", isFixed: false, value: "value" },
+    { label: "Jumlah Sertipikat", isFixed: false, value: "value" },
   ];
 
   const grafikView = [
-    { dataKey: "value", name: "Jumlah Sertifikat", fill: "#8884d8" },
+    { dataKey: "value", name: "Jumlah Sertipikat", fill: "#8884d8" },
   ];
 
   const columnTable = [

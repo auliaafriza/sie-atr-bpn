@@ -123,7 +123,7 @@ let axis = {
   xAxis: "tipehak",
   yAxis: "Nilai",
 };
-const title = "Luas Bidang Berdasarkan Jenis Sertifikat";
+const title = "Luas Bidang Berdasarkan Jenis Sertipikat";
 
 const SieSertifikatLuasJumlah = () => {
   const classes = styles();
@@ -175,12 +175,12 @@ const SieSertifikatLuasJumlah = () => {
       value: "luas_bidang",
       isLabel: false,
     },
-    { label: "Jumlah Sertifikat", isFixed: false, value: "jml_srtifikat" },
+    { label: "Jumlah Sertipikat", isFixed: false, value: "jml_srtifikat" },
   ];
 
   const grafikView = [
     { dataKey: "luas_bidang", name: "Luas Bidang", fill: "#d53515" },
-    { dataKey: "jml_srtifikat", name: "Jumlah Sertifikat", fill: "#8884d8" },
+    { dataKey: "jml_srtifikat", name: "Jumlah Sertipikat", fill: "#8884d8" },
   ];
 
   const columnTable = [

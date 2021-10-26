@@ -169,7 +169,7 @@ let grafikView = [
 
 let axis = {
   xAxis: "tipehak",
-  yAxis: "Jumlah Sertifikat",
+  yAxis: "Jumlah Sertipikat",
 };
 
 const theme = createTheme({
@@ -202,7 +202,7 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-const title = "Jangka waktu hak sertifikat";
+const title = "Jangka waktu hak Sertipikat";
 const Sie_sertifikat_jangka_waktu_hak = () => {
   const classes = styles();
   const dispatch = useDispatch();
@@ -477,7 +477,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
             />
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Jumlah sertifikat"
+                value="Jumlah Sertipikat"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
@@ -1022,7 +1022,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                       />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
-                          value="Jumlah sertifikat"
+                          value="Jumlah Sertipikat"
                           angle={-90}
                           position="insideBottomLeft"
                           offset={-5}
