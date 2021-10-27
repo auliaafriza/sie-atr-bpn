@@ -968,7 +968,7 @@ const PaguMp = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={isMobile ? 12 : 6}>
+                <Grid item xs={12}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1023,7 +1023,7 @@ const PaguMp = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={isMobile ? 12 : 6}>
+                <Grid item xs={12}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1086,7 +1086,7 @@ const PaguMp = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={isMobile ? 12 : 6}>
+                <Grid item xs={12}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1176,7 +1176,7 @@ const PaguMp = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={isMobile ? 12 : 6}>
+                <Grid item xs={12}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"

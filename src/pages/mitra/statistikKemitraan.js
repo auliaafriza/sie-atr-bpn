@@ -957,7 +957,7 @@ const KepegawaianOrganisasi = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={isMobile ? 12 : 6}>
+              <Grid item xs={12}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1012,7 +1012,7 @@ const KepegawaianOrganisasi = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={isMobile ? 12 : 6}>
+              <Grid item xs={12}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1075,7 +1075,7 @@ const KepegawaianOrganisasi = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={isMobile ? 12 : 6}>
+              <Grid item xs={12}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1159,7 +1159,7 @@ const KepegawaianOrganisasi = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={isMobile ? 12 : 6}>
+              <Grid item xs={12}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1252,7 +1252,7 @@ const KepegawaianOrganisasi = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={isMobile ? 12 : 6}>
+              <Grid item xs={12}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1315,7 +1315,7 @@ const KepegawaianOrganisasi = () => {
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={isMobile ? 12 : 6}
+                xs={12}
                 style={{ paddingTop: 40, paddingLeft: 20 }}
               >
                 <Button

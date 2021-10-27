@@ -1112,7 +1112,7 @@ const realisasiPenggunaan = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={isMobile ? 12 : 6}>
+                <Grid item xs={12}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1167,7 +1167,7 @@ const realisasiPenggunaan = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={isMobile ? 12 : 6}>
+                <Grid item xs={12}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1230,7 +1230,7 @@ const realisasiPenggunaan = () => {
                 alignItems="center"
                 spacing={2}
               >
-                <Grid item xs={isMobile ? 12 : 6}>
+                <Grid item xs={12}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1304,7 +1304,7 @@ const realisasiPenggunaan = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={isMobile ? 12 : 6}>
+                <Grid item xs={12}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"

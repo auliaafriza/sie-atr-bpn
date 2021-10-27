@@ -958,7 +958,7 @@ const PnbpBerkasWilayah = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={12} sm={isMobile ? 12 : 6}>
+              <Grid item xs={12} sm={12}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1013,7 +1013,7 @@ const PnbpBerkasWilayah = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={isMobile ? 12 : 6}>
+              <Grid item xs={12} sm={12}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1068,7 +1068,7 @@ const PnbpBerkasWilayah = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={isMobile ? 12 : 6}>
+              <Grid item xs={12}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1124,7 +1124,7 @@ const PnbpBerkasWilayah = () => {
                 />
               </Grid>
 
-              <Grid item xs={isMobile ? 12 : 6}>
+              <Grid item xs={12}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1216,7 +1216,7 @@ const PnbpBerkasWilayah = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={isMobile ? 12 : 6}>
+              <Grid item xs={12}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1314,7 +1314,7 @@ const PnbpBerkasWilayah = () => {
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={isMobile ? 12 : 6}
+                xs={12}
                 style={{ paddingLeft: 20 }}
               >
                 <Button

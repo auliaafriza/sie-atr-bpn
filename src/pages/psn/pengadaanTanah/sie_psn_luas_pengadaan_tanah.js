@@ -942,7 +942,7 @@ const PengadaanTanah = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={isMobile ? 12 : 6}>
+              <Grid item xs={12}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -997,7 +997,7 @@ const PengadaanTanah = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={isMobile ? 12 : 6}>
+              <Grid item xs={12}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1089,7 +1089,7 @@ const PengadaanTanah = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={isMobile ? 12 : 6}>
+              <Grid item xs={12}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1187,7 +1187,7 @@ const PengadaanTanah = () => {
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={isMobile ? 12 : 6}
+                xs={12}
                 style={{ paddingLeft: 20 }}
               >
                 <Button
