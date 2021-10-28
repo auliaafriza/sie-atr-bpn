@@ -282,7 +282,7 @@ const NavBar = (props) => {
                     ? handleChangePage(menu.link)
                     : handleOpenSubMenu(event)
                 }
-                onMouseEnter={(event) => handleOpenSubMenu(event)}
+                // onMouseEnter={(event) => handleOpenSubMenu(event)}
                 // onMouseLeave={() => handleCloseSubMenu()}
                 {...a11yProps(menu.id)}
                 selected={location.pathname.search(menu.parentLink) !== -1}

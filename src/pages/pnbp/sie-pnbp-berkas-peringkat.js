@@ -941,9 +941,8 @@ const PnbpBerkasPeringkat = () => {
               direction="row"
               justifyContent="space-between"
               alignItems="center"
-              spacing={2}
             >
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -963,7 +962,7 @@ const PnbpBerkasPeringkat = () => {
                       : setOpenTahun(true)
                   }
                   name="tahun"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={tahunDataV2}
                   classes={{
                     option: classes.option,
@@ -998,7 +997,7 @@ const PnbpBerkasPeringkat = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1018,7 +1017,7 @@ const PnbpBerkasPeringkat = () => {
                       : setOpenBulan(true)
                   }
                   name="tahun"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={bulanData}
                   classes={{
                     option: classes.option,
@@ -1053,7 +1052,7 @@ const PnbpBerkasPeringkat = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1073,7 +1072,7 @@ const PnbpBerkasPeringkat = () => {
                       : setOpenTop(true)
                   }
                   name="tahun"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={topData}
                   classes={{
                     option: classes.option,
@@ -1108,7 +1107,7 @@ const PnbpBerkasPeringkat = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1120,7 +1119,7 @@ const PnbpBerkasPeringkat = () => {
                   multiple
                   id="kantor"
                   name="kantor"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={berkasPnbpWilayah}
                   classes={{
                     option: classes.option,
@@ -1200,7 +1199,7 @@ const PnbpBerkasPeringkat = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1212,7 +1211,7 @@ const PnbpBerkasPeringkat = () => {
                   multiple
                   id="kantor"
                   name="kantor"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={dataKantor}
                   classes={{
                     option: classes.option,
@@ -1299,13 +1298,13 @@ const PnbpBerkasPeringkat = () => {
                 alignItems="center"
                 item
                 xs={12}
-                style={{ paddingLeft: 20 }}
+                style={{ paddingLeft: 15, paddingTop: 5 }}
               >
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => getData()}
-                  style={{ height: 57, width: "100%", fontSize: 12 }}
+                  style={{ height: 35, width: "100%", fontSize: 12 }}
                 >
                   Submit
                 </Button>

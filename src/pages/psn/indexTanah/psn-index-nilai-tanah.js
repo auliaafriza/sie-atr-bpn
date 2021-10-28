@@ -147,14 +147,8 @@ const realisasiPenggunaan = () => {
   const [comment, setComment] = useState("");
   const [bulan, setBulan] = useState("Jan");
   const [open, setOpen] = useState(false);
-  const [dataFilter, setDataFilter] = useState({
-    aliaskanwil: "Aceh",
-  });
-  const [dataFilterKantor, setDataFilterKantor] = useState([
-    {
-      aliaskantah: "Kab. Aceh Barat",
-    },
-  ]);
+  const [dataFilter, setDataFilter] = useState();
+  const [dataFilterKantor, setDataFilterKantor] = useState([]);
 
   const [openWilayah, setOpenWilayah] = useState(false);
   const [openKantah, setOpenKantah] = useState(false);
@@ -308,7 +302,9 @@ const realisasiPenggunaan = () => {
       .then(function () {
         // always executed
       });
-    getKantah(dataFilter.aliaskanwil);
+    getKantah(
+      dataFilter && dataFilter.aliaskanwil ? dataFilter.aliaskanwil : ""
+    );
     getData();
   }, []);
 
@@ -1005,7 +1001,7 @@ const realisasiPenggunaan = () => {
                 {dataFilter && dataFilter.aliaskanwil
                   ? dataFilter.aliaskanwil
                   : ""}{" "}
-                Tahun {years ? yearsEnd.name : ""} -{" "}
+                Tahun {years ? years.name : ""} -{" "}
                 {yearsEnd ? yearsEnd.name : ""}
               </Typography>
             </Grid>
@@ -1110,9 +1106,8 @@ const realisasiPenggunaan = () => {
                 direction="row"
                 justifyContent="space-between"
                 alignItems="center"
-                spacing={2}
               >
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1132,7 +1127,7 @@ const realisasiPenggunaan = () => {
                         : setOpenTahun(true)
                     }
                     name="tahun"
-                    style={{ width: "100%", height: 50 }}
+                    style={{ width: "100%", height: 35 }}
                     options={tahunDataV2}
                     classes={{
                       option: classes.option,
@@ -1167,7 +1162,7 @@ const realisasiPenggunaan = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1187,7 +1182,7 @@ const realisasiPenggunaan = () => {
                         : setOpenTahunAkhir(true)
                     }
                     name="tahun"
-                    style={{ width: "100%", height: 50 }}
+                    style={{ width: "100%", height: 35 }}
                     options={tahunDataV2}
                     classes={{
                       option: classes.option,
@@ -1222,15 +1217,7 @@ const realisasiPenggunaan = () => {
                     )}
                   />
                 </Grid>
-              </Grid>
-              <Grid
-                container
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                spacing={2}
-              >
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1242,7 +1229,7 @@ const realisasiPenggunaan = () => {
                     // multiple
                     id="label"
                     name="label"
-                    style={{ width: "100%", height: 50 }}
+                    style={{ width: "100%", height: 35 }}
                     options={aliasList}
                     classes={{
                       option: classes.option,
@@ -1304,7 +1291,7 @@ const realisasiPenggunaan = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1316,7 +1303,7 @@ const realisasiPenggunaan = () => {
                     multiple
                     id="kantor"
                     name="kantor"
-                    style={{ width: "100%", height: 50 }}
+                    style={{ width: "100%", height: 35 }}
                     options={kantahList}
                     classes={{
                       option: classes.option,
@@ -1398,13 +1385,13 @@ const realisasiPenggunaan = () => {
                   alignItems="center"
                   item
                   xs={12}
-                  style={{ paddingLeft: 20 }}
+                  style={{ paddingLeft: 15, paddingTop: 5 }}
                 >
                   <Button
                     variant="contained"
                     color="primary"
                     onClick={() => getData()}
-                    style={{ height: 57, width: "100%", fontSize: 12 }}
+                    style={{ height: 35, width: "100%", fontSize: 12 }}
                   >
                     Submit
                   </Button>

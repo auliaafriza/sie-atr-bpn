@@ -56,7 +56,7 @@ import styles from "./../styles";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
 import {
-  tahunData,
+  tahunDataV2,
   semesterData,
   bulanDataNumberic,
   deleteDuplicates,
@@ -103,6 +103,16 @@ const theme = createTheme({
     ].join(","),
   },
 });
+
+const listJenis = [
+  { value: "kantah", label: "Kantah" },
+  { value: "kanwil", label: "Kanwil" },
+];
+
+const listGroup = [
+  { value: "Tanpa Berkas", label: "Tanpa Berkas" },
+  { value: "Dengan Berkas", label: "Dengan Berkas" },
+];
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -176,32 +186,25 @@ const SieHtJumlahKantorTahun = () => {
   const dispatch = useDispatch();
   const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
   const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
-  const [dataFilter, setDataFilter] = useState([
-    {
-      kode: "28",
-      kanwil: "Kantor Wilayah Provinsi Banten",
-    },
-    {
-      kode: "10",
-      kanwil: "Kantor Wilayah Provinsi Jawa Barat",
-    },
-  ]);
-  const [dataFilterKantor, setDataFilterKantor] = useState([
-    {
-      kode: "2801",
-      kantor: "Kantor Pertanahan Kabupaten Serang",
-    },
-  ]);
+  const [dataFilter, setDataFilter] = useState([]);
+  const [dataFilterKantor, setDataFilterKantor] = useState([]);
 
   const [hideText, setHideText] = useState(false);
   const [hideTextKantor, setHideTextKantor] = useState(false);
 
-  const [years, setYears] = useState("2021");
+  const [years, setYears] = useState({ label: "2021", name: 2021 });
   const [data, setData] = useState(dataTemp);
-  const [semester, setSemester] = useState("Tanpa Berkas");
-  const [bulan, setBulan] = useState("kantah");
+  const [semester, setSemester] = useState({
+    value: "Tanpa Berkas",
+    label: "Tanpa Berkas",
+  });
+  const [bulan, setBulan] = useState({ value: "kantah", label: "Kantah" });
   const [comment, setComment] = useState("");
   const [open, setOpen] = useState(false);
+
+  const [openTahun, setOpenTahun] = useState(false);
+  const [openJenis, setOpenJenis] = useState(false);
+  const [openGroup, setOpenGroup] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
     grafik: [],
@@ -286,7 +289,11 @@ const SieHtJumlahKantorTahun = () => {
       "application/x-www-form-urlencoded";
     axios
       .post(
-        `${url}Sertifikasi/HakTanggunganElektronik/sie_ht_jumlah_kantor_tahun?tahun=${years}&jenisGroup=${bulan}&grupBerkas=${semester}`,
+        `${url}Sertifikasi/HakTanggunganElektronik/sie_ht_jumlah_kantor_tahun?tahun=${
+          years ? years.name : ""
+        }&jenisGroup=${bulan ? bulan.balue : ""}&grupBerkas=${
+          semester ? semester.value : ""
+        }`,
         temp
       )
       .then(function (response) {
@@ -314,7 +321,7 @@ const SieHtJumlahKantorTahun = () => {
   }, []);
 
   const handleChange = (event) => {
-    setYears(event.target.value);
+    setYears(event);
   };
 
   const DataFormater = (number) => {
@@ -549,10 +556,10 @@ const SieHtJumlahKantorTahun = () => {
   }
 
   const handleChangeSemester = (event) => {
-    setSemester(event.target.value);
+    setSemester(event);
   };
   const handleChangeBulan = (event) => {
-    setBulan(event.target.value);
+    setBulan(event);
   };
 
   return (
@@ -912,9 +919,8 @@ const SieHtJumlahKantorTahun = () => {
               direction="row"
               justifyContent="space-between"
               alignItems="center"
-              spacing={2}
             >
-              <Grid item xs={isMobile ? 12 : 4}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -922,27 +928,54 @@ const SieHtJumlahKantorTahun = () => {
                 >
                   Pilih Tahun
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={years}
-                    onChange={handleChange}
-                    label="Tahun"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    {tahunData.map((item, i) => {
-                      return (
-                        <MenuItem value={item.id} key={i}>
-                          {item.value}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="tahun"
+                  open={openTahun}
+                  onOpen={() => {
+                    setOpenTahun(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenTahun(false)
+                      : setOpenTahun(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 35 }}
+                  options={tahunDataV2}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChange(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenTahun(true);
+                    else {
+                      setOpenTahun(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.label || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.label}</React.Fragment>
+                  )}
+                  value={years}
+                  defaultValue={years}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Tahun"}
+                    />
+                  )}
+                />
               </Grid>
-              <Grid item xs={isMobile ? 12 : 4}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -950,22 +983,54 @@ const SieHtJumlahKantorTahun = () => {
                 >
                   Pilih Jenis Group
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={bulan}
-                    onChange={handleChangeBulan}
-                    label="Jenis Group"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    <MenuItem value="kantah">Kantah</MenuItem>
-                    <MenuItem value="Kanwil">Kanwil</MenuItem>
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="tahun"
+                  open={openJenis}
+                  onOpen={() => {
+                    setOpenJenis(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenJenis(false)
+                      : setOpenJenis(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 35 }}
+                  options={listJenis}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChangeBulan(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenJenis(true);
+                    else {
+                      setOpenJenis(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.label || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.label}</React.Fragment>
+                  )}
+                  value={bulan}
+                  defaultValue={bulan}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Jenis Group"}
+                    />
+                  )}
+                />
               </Grid>
-              <Grid item xs={isMobile ? 12 : 4}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -973,30 +1038,55 @@ const SieHtJumlahKantorTahun = () => {
                 >
                   Pilih Group Berkas
                 </Typography>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={semester}
-                    onChange={handleChangeSemester}
-                    label="Group Berkas"
-                    className={classes.selectStyle}
-                    disableUnderline
-                  >
-                    <MenuItem value="Tanpa Berkas">Tanpa Berkas</MenuItem>
-                    <MenuItem value="Dengan Berkas">Dengan Berkas</MenuItem>
-                  </Select>
-                </FormControl>
+                <Autocomplete
+                  id="tahun"
+                  open={openGroup}
+                  onOpen={() => {
+                    setOpenGroup(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenGroup(false)
+                      : setOpenGroup(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 35 }}
+                  options={listGroup}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChangeSemester(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") setOpenGroup(true);
+                    else {
+                      setOpenGroup(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.label || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>{option.label}</React.Fragment>
+                  )}
+                  value={semester}
+                  defaultValue={semester}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={"Pilih Group Berkas"}
+                    />
+                  )}
+                />
               </Grid>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={isMobile ? 12 : 5}>
+
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1006,12 +1096,13 @@ const SieHtJumlahKantorTahun = () => {
                 </Typography>
                 <Autocomplete
                   multiple
+                  disableCloseOnSelect
                   id="kantor"
                   getOptionDisabled={(options) =>
                     dataFilter.length >= 32 ? true : false
                   }
                   name="kantor"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={berkasPnbpWilayah}
                   classes={{
                     option: classes.option,
@@ -1072,7 +1163,7 @@ const SieHtJumlahKantorTahun = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={isMobile ? 12 : 5}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1082,9 +1173,10 @@ const SieHtJumlahKantorTahun = () => {
                 </Typography>
                 <Autocomplete
                   multiple
+                  disableCloseOnSelect
                   id="kantor"
                   name="kantor"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   getOptionDisabled={(options) =>
                     dataFilterKantor.length >= 32 ? true : false
                   }
@@ -1154,14 +1246,14 @@ const SieHtJumlahKantorTahun = () => {
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={isMobile ? 12 : 2}
-                style={{ paddingLeft: 20 }}
+                xs={12}
+                style={{ paddingLeft: 15, paddingTop: 5 }}
               >
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => getData()}
-                  style={{ height: 57, width: "100%", fontSize: 12 }}
+                  style={{ height: 35, width: "100%", fontSize: 12 }}
                 >
                   Submit
                 </Button>

@@ -1038,9 +1038,8 @@ const KepegawaianBpnMutasi = () => {
               direction="row"
               justifyContent="space-between"
               alignItems="center"
-              spacing={2}
             >
-              <Grid item xs={isMobile ? 12 : 6}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1060,7 +1059,7 @@ const KepegawaianBpnMutasi = () => {
                       : setOpenTahun(true)
                   }
                   name="tahun"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={tahunMutasi}
                   classes={{
                     option: classes.option,
@@ -1095,7 +1094,7 @@ const KepegawaianBpnMutasi = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={isMobile ? 12 : 6}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1115,7 +1114,7 @@ const KepegawaianBpnMutasi = () => {
                       : setOpenTriwulan(true)
                   }
                   name="tahun"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={dataTriwulan}
                   classes={{
                     option: classes.option,
@@ -1150,15 +1149,7 @@ const KepegawaianBpnMutasi = () => {
                   )}
                 />
               </Grid>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={isMobile ? 12 : 6}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1169,7 +1160,7 @@ const KepegawaianBpnMutasi = () => {
                 <Autocomplete
                   id="kantor"
                   name="kantor"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={listKanwil}
                   classes={{
                     option: classes.option,
@@ -1214,7 +1205,7 @@ const KepegawaianBpnMutasi = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={isMobile ? 12 : 6}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1229,7 +1220,7 @@ const KepegawaianBpnMutasi = () => {
                   // }
                   id="kantor"
                   name="kantor"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={dataKantor}
                   classes={{
                     option: classes.option,
@@ -1302,15 +1293,7 @@ const KepegawaianBpnMutasi = () => {
                   )}
                 />
               </Grid>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={isMobile ? 12 : 6}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1330,7 +1313,7 @@ const KepegawaianBpnMutasi = () => {
                       : setOpenBerdasar(true)
                   }
                   name="tahun"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={dataBerdasar}
                   classes={{
                     option: classes.option,
@@ -1371,14 +1354,14 @@ const KepegawaianBpnMutasi = () => {
                 justifyContent="flex-start"
                 alignItems="center"
                 item
-                xs={isMobile ? 12 : 6}
-                style={{ paddingLeft: 20 }}
+                xs={12}
+                style={{ paddingLeft: 10, paddingTop: 5 }}
               >
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => getData()}
-                  style={{ height: 57, width: "100%", fontSize: 12 }}
+                  style={{ height: 35, width: "100%", fontSize: 12 }}
                 >
                   Submit
                 </Button>
@@ -1414,7 +1397,7 @@ const KepegawaianBpnMutasi = () => {
                 ? dataFilter.kanwil
                 : ""}{" "}
               Tahun {years ? years.tahun : ""}{" "}
-              {triwulan && triwulan.value == 0 ? "Semua Triwulan" : "Triwulan"}{" "}
+              {triwulan && triwulan.value == 0 ? "" : "Triwulan"}{" "}
               {triwulan && triwulan.value == 0
                 ? ""
                 : triwulan

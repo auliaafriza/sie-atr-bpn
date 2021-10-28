@@ -125,7 +125,7 @@ const styles = makeStyles((theme) => ({
     margin: 10,
     letterSpacing: 1,
     color: "#6b6f82",
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "500",
   },
   formControl: {
@@ -135,6 +135,7 @@ const styles = makeStyles((theme) => ({
     borderRadius: "5px",
     borderWidth: 1,
     paddingLeft: 5,
+    backgroundColor: "white",
   },
   selectStyle: {
     height: 57,
@@ -146,7 +147,7 @@ const styles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
   root: {
-    width: "93%",
+    width: "98%",
     padding: 20,
     border: "1px solid rgba(0, 0, 0, 0.06)",
     borderRadius: "10px",
@@ -156,6 +157,7 @@ const styles = makeStyles((theme) => ({
     "&:hover": {
       boxShadow: "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
     },
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
   rootOdd: {
     width: "90%",

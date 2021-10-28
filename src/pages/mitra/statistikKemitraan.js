@@ -955,9 +955,8 @@ const KepegawaianOrganisasi = () => {
               direction="row"
               justifyContent="space-between"
               alignItems="center"
-              spacing={2}
             >
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -977,7 +976,7 @@ const KepegawaianOrganisasi = () => {
                       : setOpenTahun(true)
                   }
                   name="tahun"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={tahunDataV2}
                   classes={{
                     option: classes.option,
@@ -1012,7 +1011,7 @@ const KepegawaianOrganisasi = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1032,7 +1031,7 @@ const KepegawaianOrganisasi = () => {
                       : setOpenTahunAkhir(true)
                   }
                   name="tahun"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={tahunDataV2}
                   classes={{
                     option: classes.option,
@@ -1067,15 +1066,7 @@ const KepegawaianOrganisasi = () => {
                   )}
                 />
               </Grid>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1087,7 +1078,7 @@ const KepegawaianOrganisasi = () => {
                   multiple
                   id="kanwil"
                   name="kanwil"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={kanwilRed}
                   classes={{
                     option: classes.option,
@@ -1159,7 +1150,7 @@ const KepegawaianOrganisasi = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1172,7 +1163,7 @@ const KepegawaianOrganisasi = () => {
                   multiple
                   id="kantor"
                   name="kantor"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={kantahRed}
                   classes={{
                     option: classes.option,
@@ -1244,15 +1235,7 @@ const KepegawaianOrganisasi = () => {
                   )}
                 />
               </Grid>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1273,7 +1256,7 @@ const KepegawaianOrganisasi = () => {
                       : setOpenTipe(true)
                   }
                   name="tahun"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={dataGroup}
                   classes={{
                     option: classes.option,
@@ -1316,13 +1299,13 @@ const KepegawaianOrganisasi = () => {
                 alignItems="center"
                 item
                 xs={12}
-                style={{ paddingTop: 40, paddingLeft: 20 }}
+                style={{ paddingTop: 5, paddingLeft: 15 }}
               >
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => getData()}
-                  style={{ height: 57, width: "100%" }}
+                  style={{ height: 35, width: "100%" }}
                 >
                   Submit
                 </Button>

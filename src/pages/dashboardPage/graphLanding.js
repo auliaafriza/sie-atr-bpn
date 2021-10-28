@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  Label,
 } from "recharts";
 import {
   Typography,
@@ -176,7 +177,7 @@ const GraphLandingEselon = () => {
                 ? payload[0].color
                 : payload[0].payload.fill,
             }}
-          >{`Jumlah Growth : ${payload[0].value}`}</p>
+          >{`Pertumbuhan : ${payload[0].value}%`}</p>
         </div>
       );
     }
@@ -208,8 +209,17 @@ const GraphLandingEselon = () => {
                     }}
                   >
                     <CartesianGrid stroke="#f5f5f5" />
-                    <XAxis dataKey="tahunterbit" scale="band" />
-                    <YAxis />
+                    <XAxis dataKey="tahunterbit" scale="band">
+                      <Label value="Tahun" offset={5} position="bottom" />
+                    </XAxis>
+                    <YAxis>
+                      <Label
+                        value="Presentase"
+                        angle={-90}
+                        position="left"
+                        offset={5}
+                      />
+                    </YAxis>
                     <Tooltip content={<CustomTooltip />} />
                     <Area
                       type="monotone"

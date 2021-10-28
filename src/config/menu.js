@@ -82,12 +82,12 @@ export const MENU_LIST = [
     icon: <SupervisorAccount />,
     name: "Kepegawaian",
     parentLink: "/Kepegawaian",
-    link: "/Kepegawaian/LandingPagePegawai",
+    // link: "/Kepegawaian/LandingPagePegawai",
     subMenus: [
       {
         icon: <GoGraph size={24} />,
-        name: "Landing Page Pegawai",
-        link: "/Kepegawaian/LandingPagePegawai",
+        name: "Dashboard pegawai",
+        link: "/Kepegawaian/DashboardKepegawaian",
       },
       {
         icon: <MdPeople size={24} />,
@@ -216,6 +216,11 @@ export const MENU_LIST = [
     name: "Sertifikasi",
     parentLink: "/Sertifikasi",
     subMenus: [
+      {
+        icon: <MdInsertChart size={24} />,
+        name: "Statistik Sertipikat",
+        link: "/Sertipikasi/StatistikSertipikat",
+      },
       {
         icon: <MdInsertChart size={24} />,
         name: "Sertipikat Diagunkan",

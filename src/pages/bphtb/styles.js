@@ -144,6 +144,7 @@ const styles = makeStyles((theme) => ({
     "&:hover": {
       boxShadow: "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
     },
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
   rootOdd: {
     width: "90%",

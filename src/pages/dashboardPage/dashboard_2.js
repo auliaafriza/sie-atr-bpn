@@ -55,6 +55,19 @@ export default function CenteredGrid() {
     return res;
   };
 
+  const spliDataMitra = (data) => {
+    let res = [];
+    data && data.length != 0
+      ? data.map((item) =>
+          item.label.indexOf("Menjalin Kemitraan Dengan") > -1
+            ? null
+            : res.push(item)
+        )
+      : null;
+
+    return res;
+  };
+
   useEffect(() => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
@@ -62,8 +75,9 @@ export default function CenteredGrid() {
       .get(`${url}api/Dashboard/get_dashboard`)
       .then(function (response) {
         setData(response.data.data);
-        let dataTemp = groupBymitra(response.data.data);
-        setDataMitra(dataTemp);
+        // setData(spliDataMitra(response.data.data));
+        // let dataTemp = groupBymitra(response.data.data);
+        // setDataMitra(dataTemp);
         console.log(response);
       })
       .catch(function (error) {
@@ -123,11 +137,14 @@ export default function CenteredGrid() {
                           }}
                         >
                           <FiMap size={isMobile ? 28 : 36} />{" "}
-                          {data && data.length != 0
-                            ? data[0].value
+                          {data && data.sertipikat_telah_terbit
+                            ? data.sertipikat_telah_terbit.value
                                 .toString()
                                 .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
                             : 0}
+                          {data && data.sertipikat_telah_terbit
+                            ? data && data.sertipikat_telah_terbit.satuan
+                            : ""}
                         </h1>
                         <span
                           class="white"
@@ -137,7 +154,9 @@ export default function CenteredGrid() {
                             fontFamily: "Open Sans",
                           }}
                         >
-                          Sertipikat yang telah terbit
+                          {data && data.sertipikat_telah_terbit
+                            ? data.sertipikat_telah_terbit.label
+                            : "Sertipikat yang telah terbit"}
                         </span>
                       </div>
                     </div>
@@ -163,11 +182,14 @@ export default function CenteredGrid() {
                           }}
                         >
                           <FiMap size={isMobile ? 28 : 36} />{" "}
-                          {data && data.length != 0
-                            ? data[1].value
+                          {data && data.jumlah_bidang_tanah
+                            ? data.jumlah_bidang_tanah.value
                                 .toString()
                                 .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
                             : 0}
+                          {data && data.jumlah_bidang_tanah
+                            ? data && data.jumlah_bidang_tanah.satuan
+                            : ""}
                         </h1>
                         <span
                           class="white"
@@ -177,7 +199,9 @@ export default function CenteredGrid() {
                             fontFamily: "Open Sans",
                           }}
                         >
-                          Jumlah bidang tanah hasil retribusi tanah
+                          {data && data.jumlah_bidang_tanah
+                            ? data.jumlah_bidang_tanah.label
+                            : "Jumlah bidang tanah hasil retribusi tanah"}
                         </span>
                       </div>
                     </div>
@@ -203,10 +227,12 @@ export default function CenteredGrid() {
                           }}
                         >
                           <FiMap size={isMobile ? 28 : 36} />{" "}
-                          {data && data.length != 0
-                            ? ((data[2].value / data[0].value) * 100).toFixed(2)
+                          {data && data.tanah_telah_diukur
+                            ? data.tanah_telah_diukur.value
                             : 0}{" "}
-                          %
+                          {data && data.tanah_telah_diukur
+                            ? data.tanah_telah_diukur.satuan
+                            : ""}
                         </h1>
                         <span
                           class="white"
@@ -216,8 +242,9 @@ export default function CenteredGrid() {
                             fontFamily: "Open Sans",
                           }}
                         >
-                          Tanah telah diukur dan dipetakan dari total tanah yang
-                          terbit
+                          {data && data.tanah_telah_diukur
+                            ? data.tanah_telah_diukur.label
+                            : "Tanah telah diukur dan dipetakan dari total tanah yang terbit"}
                         </span>
                       </div>
                     </div>
@@ -276,12 +303,18 @@ export default function CenteredGrid() {
                           }}
                         >
                           <BsListCheck size={isMobile ? 28 : 36} /> Rp{" "}
-                          {data && data.length != 0
-                            ? data[3].value
+                          {data &&
+                          data.nilai_hak_tanggungan_elektronik_telah_tercatat
+                            ? data.nilai_hak_tanggungan_elektronik_telah_tercatat.value
                                 .toString()
                                 .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
                             : 0}{" "}
-                          Triliun
+                          {data &&
+                          data.nilai_hak_tanggungan_elektronik_telah_tercatat
+                            ? data
+                                .nilai_hak_tanggungan_elektronik_telah_tercatat
+                                .satuan
+                            : ""}
                         </h1>
                         <span
                           class="white"
@@ -291,7 +324,12 @@ export default function CenteredGrid() {
                             fontFamily: "Open Sans",
                           }}
                         >
-                          Nilai hak tanggungan elektronik telah tercatat
+                          {data &&
+                          data.nilai_hak_tanggungan_elektronik_telah_tercatat
+                            ? data
+                                .nilai_hak_tanggungan_elektronik_telah_tercatat
+                                .label
+                            : "Nilai hak tanggungan elektronik telah tercatat"}
                         </span>
                       </div>
                     </div>
@@ -318,11 +356,18 @@ export default function CenteredGrid() {
                           }}
                         >
                           <FiCheckCircle size={isMobile ? 28 : 36} />{" "}
-                          {data && data.length != 0
-                            ? data[4].value
+                          {data &&
+                          data.pemerintah_daerah_dirjen_pajak_telah_terintegrasi
+                            ? data.pemerintah_daerah_dirjen_pajak_telah_terintegrasi.value
                                 .toString()
                                 .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
                             : 0}
+                          {data &&
+                          data.pemerintah_daerah_dirjen_pajak_telah_terintegrasi
+                            ? data
+                                .pemerintah_daerah_dirjen_pajak_telah_terintegrasi
+                                .satuan
+                            : ""}
                         </h1>
                         <span
                           class="white"
@@ -332,9 +377,12 @@ export default function CenteredGrid() {
                             fontFamily: "Open Sans",
                           }}
                         >
-                          Pemerintah daerah dan Dirjen Pajak yang telah
-                          terintegrasi untuk validasi pajak dan BPHTB secara
-                          online
+                          {data &&
+                          data.pemerintah_daerah_dirjen_pajak_telah_terintegrasi
+                            ? data
+                                .pemerintah_daerah_dirjen_pajak_telah_terintegrasi
+                                .label
+                            : "Pemerintah daerah dan Dirjen Pajak yang telah terintegrasi untuk validasi pajak dan BPHTB secara online"}
                         </span>
                       </div>
                     </div>
@@ -365,49 +413,105 @@ export default function CenteredGrid() {
                     - Menjalin Kemitraan Dengan -
                   </h3>
                   <div class="row" style={{ marginBottom: 20 }}>
-                    {dataMitra && dataMitra.length != 0
-                      ? dataMitra.map((item, index) => {
-                          return (
-                            <div
-                              class={
-                                index != dataMitra.length - 1
-                                  ? "col-lg-4 col-md-6 col-sm-12 card-gradient-md-border border-right-white border-right-lighten-3"
-                                  : "col-lg-3 col-md-6 col-sm-12"
-                              }
-                            >
-                              <div class="card-body text-center">
-                                <h1
-                                  class="white"
-                                  style={{
-                                    fontSize: 28,
-                                    textShadow: "1px 2px 2px #000",
-                                    fontFamily: "Open Sans",
-                                  }}
-                                >
-                                  {item.value
-                                    ? item.value
-                                        .toString()
-                                        .replace(
-                                          /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
-                                          ","
-                                        )
-                                    : 0}
-                                </h1>
-                                <span
-                                  class="white"
-                                  style={{
-                                    fontSize: 14,
-                                    textShadow: "1px 2px 2px #000",
-                                    fontFamily: "Open Sans",
-                                  }}
-                                >
-                                  {item.label}
-                                </span>
-                              </div>
-                            </div>
-                          );
-                        })
-                      : null}
+                    <div
+                      class={
+                        "col-lg-4 col-md-6 col-sm-12 card-gradient-md-border border-right-white border-right-lighten-3"
+                      }
+                    >
+                      <div class="card-body text-center">
+                        <h1
+                          class="white"
+                          style={{
+                            fontSize: 28,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          {data && data.jasa_keuangan
+                            ? data.jasa_keuangan.value
+                                .toString()
+                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                            : 0}
+                          {data && data.jasa_keuangan
+                            ? data.jasa_keuangan.satuan
+                            : ""}
+                        </h1>
+                        <span
+                          class="white"
+                          style={{
+                            fontSize: 14,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          {data && data.jasa_keuangan
+                            ? data.jasa_keuangan.label
+                            : ""}
+                        </span>
+                      </div>
+                    </div>
+                    <div
+                      class={
+                        "col-lg-4 col-md-6 col-sm-12 card-gradient-md-border border-right-white border-right-lighten-3"
+                      }
+                    >
+                      <div class="card-body text-center">
+                        <h1
+                          class="white"
+                          style={{
+                            fontSize: 28,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          {data && data.ppat
+                            ? data.ppat.value
+                                .toString()
+                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                            : 0}
+                          {data && data.ppat ? data.ppat.satuan : ""}
+                        </h1>
+                        <span
+                          class="white"
+                          style={{
+                            fontSize: 14,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          {data && data.ppat ? data.ppat.label : ""}
+                        </span>
+                      </div>
+                    </div>
+                    <div class={"col-lg-3 col-md-6 col-sm-12"}>
+                      <div class="card-body text-center">
+                        <h1
+                          class="white"
+                          style={{
+                            fontSize: 28,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          {data && data.surveyor
+                            ? data.surveyor.value
+                                .toString()
+                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                            : 0}
+                          {data && data.surveyor ? data.surveyor.satuan : ""}
+                        </h1>
+                        <span
+                          class="white"
+                          style={{
+                            fontSize: 14,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          {data && data.surveyor ? data.surveyor.label : ""}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -32,6 +32,7 @@ const PegawaiAtr = () => {
         paddingTop: 20,
         paddingBottom: 20,
         width: "100%",
+        // height: "100%",
         height: isMobile ? "100%" : "100vh",
       }}
     >

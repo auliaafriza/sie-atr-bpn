@@ -932,9 +932,8 @@ const KepegawaianBpnJabatan = () => {
               direction="row"
               justifyContent="space-between"
               alignItems="center"
-              spacing={2}
             >
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -954,7 +953,7 @@ const KepegawaianBpnJabatan = () => {
                       : setOpenTahun(true)
                   }
                   name="tahun"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={tahunDataV2}
                   classes={{
                     option: classes.option,
@@ -989,7 +988,7 @@ const KepegawaianBpnJabatan = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1009,7 +1008,7 @@ const KepegawaianBpnJabatan = () => {
                       : setOpenTahunAkhir(true)
                   }
                   name="tahun"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={tahunDataV2}
                   classes={{
                     option: classes.option,
@@ -1055,7 +1054,7 @@ const KepegawaianBpnJabatan = () => {
                 <Autocomplete
                   id="satker"
                   name="satker"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35  }}
                   options={satkerRed}
                   classes={{
                     option: classes.option,
@@ -1081,7 +1080,7 @@ const KepegawaianBpnJabatan = () => {
                   )}
                 />
               </Grid> */}
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1093,7 +1092,7 @@ const KepegawaianBpnJabatan = () => {
                   multiple
                   id="kantor"
                   name="kantor"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={berkasPnbpWilayah}
                   classes={{
                     option: classes.option,
@@ -1173,7 +1172,7 @@ const KepegawaianBpnJabatan = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1185,7 +1184,7 @@ const KepegawaianBpnJabatan = () => {
                   multiple
                   id="kantor"
                   name="kantor"
-                  style={{ width: "100%", height: 50 }}
+                  style={{ width: "100%", height: 35 }}
                   options={dataKantor}
                   classes={{
                     option: classes.option,
@@ -1272,57 +1271,18 @@ const KepegawaianBpnJabatan = () => {
                 alignItems="center"
                 item
                 xs={12}
-                style={{ paddingLeft: 20 }}
+                style={{ paddingLeft: 10, paddingTop: 5 }}
               >
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => getData()}
-                  style={{ height: 57, width: "100%", fontSize: 12 }}
+                  style={{ height: 35, width: "100%", fontSize: 12 }}
                 >
                   Submit
                 </Button>
               </Grid>
             </Grid>
-
-            <Typography
-              className={classes.isiContentTextStyle}
-              variant="h2"
-              wrap
-            >
-              {comment && comment.lastComment
-                ? comment.lastComment.analisisData
-                    .replace(/<[^>]+>|&amp|&amp!|&nbsp/g, "")
-                    .slice(0, 500)
-                : ""}
-              {comment &&
-              comment.lastComment &&
-              comment.lastComment.analisisData.length > 100 ? (
-                <Link
-                  href="#"
-                  onClick={() =>
-                    handleOpen({
-                      title: "Jumlah Pegawai berdasarkan Jabatan ",
-                      grafik: data,
-                      dataTable: "",
-                      analisis:
-                        comment && comment.lastComment
-                          ? comment.lastComment.analisisData.replace(
-                              /<[^>]+>/g,
-                              ""
-                            )
-                          : "",
-                      type: "Bar",
-                      listTop10Comment: comment.listTop10Comment,
-                    })
-                  }
-                  variant="body2"
-                >
-                  {" "}
-                  More
-                </Link>
-              ) : null}
-            </Typography>
           </div>
         </Grid>
         <Grid item xs={isMobile ? 12 : 9} style={{ margin: isMobile ? 20 : 0 }}>
@@ -1385,6 +1345,37 @@ const KepegawaianBpnJabatan = () => {
           </Card>
         </Grid>
       </Grid>
+      <Typography className={classes.isiContentTextStyle} variant="h2" wrap>
+        {comment && comment.lastComment
+          ? comment.lastComment.analisisData
+              .replace(/<[^>]+>|&amp|&amp!|&nbsp/g, "")
+              .slice(0, 500)
+          : ""}
+        {comment &&
+        comment.lastComment &&
+        comment.lastComment.analisisData.length > 100 ? (
+          <Link
+            href="#"
+            onClick={() =>
+              handleOpen({
+                title: "Jumlah Pegawai berdasarkan Jabatan ",
+                grafik: data,
+                dataTable: "",
+                analisis:
+                  comment && comment.lastComment
+                    ? comment.lastComment.analisisData.replace(/<[^>]+>/g, "")
+                    : "",
+                type: "Bar",
+                listTop10Comment: comment.listTop10Comment,
+              })
+            }
+            variant="body2"
+          >
+            {" "}
+            More
+          </Link>
+        ) : null}
+      </Typography>
     </div>
   );
 };

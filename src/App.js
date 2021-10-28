@@ -112,7 +112,7 @@ const Main = withRouter(({ location }) => {
         <Route path="/PSN/RDTR">
           <RDTR />
         </Route>
-        <Route path="/Sertifikasi/StatistikSertifikat">
+        <Route path="/Sertipikasi/StatistikSertipikat">
           <StatistikSertifikat />
         </Route>
         <Route path="/Sertifikasi/HakTanggunganElektronik">
@@ -239,7 +239,7 @@ const Main = withRouter(({ location }) => {
         <Route path="/Kepegawaian/Organisasi/KepegawaianOrganisasi">
           <KepegawaianOrganisasi />
         </Route>
-        <Route path="/Kepegawaian/LandingPagePegawai">
+        <Route path="/Kepegawaian/DashboardKepegawaian">
           <LandingPagePegawai />
         </Route>
         {/* end route pegawai atr */}

@@ -1067,9 +1067,8 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                 direction="row"
                 justifyContent="space-between"
                 alignItems="center"
-                spacing={2}
               >
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1084,7 +1083,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                       dataFilter.length >= 32 ? true : false
                     }
                     name="kantor"
-                    style={{ width: "100%", height: 50 }}
+                    style={{ width: "100%", height: 35 }}
                     options={berkasPnbpWilayah}
                     classes={{
                       option: classes.option,
@@ -1161,7 +1160,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                   <Typography
                     className={classes.isiTextStyle}
                     variant="h2"
@@ -1173,7 +1172,7 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                     multiple
                     id="kantor"
                     name="kantor"
-                    style={{ width: "100%", height: 50 }}
+                    style={{ width: "100%", height: 35 }}
                     getOptionDisabled={(options) =>
                       dataFilterKantor.length >= 32 ? true : false
                     }
@@ -1253,12 +1252,12 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={12} style={{ paddingLeft: 10 }}>
+                <Grid item xs={12} style={{ paddingLeft: 15, paddingTop: 5 }}>
                   <Button
                     variant="contained"
                     color="primary"
                     onClick={() => getData()}
-                    style={{ height: 57, width: "100%", fontSize: 12 }}
+                    style={{ height: 35, width: "100%", fontSize: 12 }}
                   >
                     Submit
                   </Button>
