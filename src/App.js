@@ -197,25 +197,13 @@ const Main = withRouter(({ location }) => {
         </Route>
         {/* End Route BPHTB */}
         {/* start route pegawai atr */}
-        <Route path="/Kepegawaian/PegawaiAtr/KepegawaianBPNPendidikan">
-          <BPHTBPage />
-        </Route>
-        <Route path="/Kepegawaian/PegawaiAtr/KepegawaianBPNUsia">
-          <BPHTBPage />
-        </Route>
-        <Route path="/Kepegawaian/PegawaiAtr/KepegawaianBPNJK">
-          <BPHTBPage />
-        </Route>
-        <Route path="/Kepegawaian/PegawaiAtr/KepegawaianBPNGol">
-          <BPHTBPage />
-        </Route>
         <Route path="/Kepegawaian/PegawaiAtr/KepegawaianBPNJabatan">
           <KepegawaianBPNJabatan />
         </Route>
         <Route path="/Kepegawaian/PegawaiAtr/KepegawaianBPNMutasi">
           <KepegawaianBPNMutasi />
         </Route>
-        <Route path="/Kepegawaian/PegawaiAtr">
+        <Route path="/Kepegawaian/StatistikPegawai">
           <PegawaiAtr />
         </Route>
         <Route path="/Kepegawaian/JumlahPegawaperPendidikanAtr">
@@ -243,7 +231,7 @@ const Main = withRouter(({ location }) => {
           <LandingPagePegawai />
         </Route>
         {/* end route pegawai atr */}
-        <Route path="/KinerjaLayanan/LayananUmum">
+        <Route path="/KinerjaLayanan/PenyelesaianBerkas">
           <LayananUmum />
         </Route>
         <Route path="/KinerjaLayanan/Tunggakan">

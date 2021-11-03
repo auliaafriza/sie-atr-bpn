@@ -142,7 +142,8 @@ const NavBar = (props) => {
                   name: "",
                 };
                 let menuName =
-                  menu.text == "Program Strategis Nasional (PSN)"
+                  menu.text == "Program Strategis Nasional (PSN)" ||
+                  menu.text == "Program Strategis Nasional"
                     ? "PSN"
                     : menu.text;
                 let idxMenuApi = copy_MENU_LIST.findIndex(

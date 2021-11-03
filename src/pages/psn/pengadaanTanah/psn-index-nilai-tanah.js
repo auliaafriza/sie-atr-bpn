@@ -332,7 +332,7 @@ const realisasiPenggunaan = () => {
               payload[0].value
                 ? payload[0].value
                     .toString()
-                    .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                    .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
                 : 0
             }`}</p>
           ) : null}

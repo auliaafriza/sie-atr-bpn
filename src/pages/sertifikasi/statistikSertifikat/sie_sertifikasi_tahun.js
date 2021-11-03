@@ -385,14 +385,14 @@ const SieSertifikatTahun = () => {
             className="desc"
             style={{ color: payload[0].color }}
           >{`Jumlah Sertipikat : ${payload[0].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+            .toString()
+            .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}`}</p>
           <p
             className="desc"
             style={{ color: payload[1].color }}
           >{`Luas Tertulis : ${payload[1].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+            .toString()
+            .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}`}</p>
         </div>
       );
     }

@@ -55,5 +55,7 @@ export const BASE_URL = {
     sie_psn_nilai_ht: "sie-psn-nilai-ht",
     sie_psn_nilai_jual_beli: "sie-psn-nilai-jual-beli",
     sie_psn_nilai_tanah_per_kantah: "sie-psn-nilai-tanah-perkantah",
+    sie_dashboard_pegawai: "sie-dashboard-pegawai",
+    sie_statistik_pegawai: "sie-statistik-pegawai",
   },
 };

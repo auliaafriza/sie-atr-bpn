@@ -105,7 +105,7 @@ export default function CenteredGrid() {
     <div
       style={{
         backgroundImage: `url(${bgImg})`,
-        height: isMobile ? "100%" : "100%",
+        height: "100%",
         width: isMobile ? "100%" : "100wh",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
@@ -119,7 +119,14 @@ export default function CenteredGrid() {
         <div class="content-header row"></div>
         <div class="content-body px-md-3">
           <div class="row">
-            <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
+            <div
+              class={
+                data && data.jumlah_bidang_tanah
+                  ? "col-lg-4 wow fadeInUp"
+                  : "col-lg-6 wow fadeInUp"
+              }
+              data-wow-delay="0.1s"
+            >
               <div
                 class="card pull-up bg-transparent shadow-none"
                 style={{ borderWidth: 0 }}
@@ -140,7 +147,7 @@ export default function CenteredGrid() {
                           {data && data.sertipikat_telah_terbit
                             ? data.sertipikat_telah_terbit.value
                                 .toString()
-                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
                             : 0}
                           {data && data.sertipikat_telah_terbit
                             ? data && data.sertipikat_telah_terbit.satuan
@@ -164,52 +171,64 @@ export default function CenteredGrid() {
                 </div>
               </div>
             </div>
-            <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.2s">
-              <div
-                class="card pull-up bg-transparent shadow-none"
-                style={{ borderWidth: 0 }}
-              >
-                <div class="card-content">
-                  <div class="row">
-                    <div class="col-12 card-gradient-md-border border-right-lighten-3">
-                      <div class="card-body text-center">
-                        <h1
-                          class="display-4 white"
-                          style={{
-                            fontSize: isMobile ? 28 : 36,
-                            textShadow: "1px 2px 2px #000",
-                            fontFamily: "Open Sans",
-                          }}
-                        >
-                          <FiMap size={isMobile ? 28 : 36} />{" "}
-                          {data && data.jumlah_bidang_tanah
-                            ? data.jumlah_bidang_tanah.value
-                                .toString()
-                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-                            : 0}
-                          {data && data.jumlah_bidang_tanah
-                            ? data && data.jumlah_bidang_tanah.satuan
-                            : ""}
-                        </h1>
-                        <span
-                          class="white"
-                          style={{
-                            fontSize: 14,
-                            textShadow: "1px 2px 2px #000",
-                            fontFamily: "Open Sans",
-                          }}
-                        >
-                          {data && data.jumlah_bidang_tanah
-                            ? data.jumlah_bidang_tanah.label
-                            : "Jumlah bidang tanah hasil retribusi tanah"}
-                        </span>
+            {data && data.jumlah_bidang_tanah ? (
+              <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.2s">
+                <div
+                  class="card pull-up bg-transparent shadow-none"
+                  style={{ borderWidth: 0 }}
+                >
+                  <div class="card-content">
+                    <div class="row">
+                      <div class="col-12 card-gradient-md-border border-right-lighten-3">
+                        <div class="card-body text-center">
+                          <h1
+                            class="display-4 white"
+                            style={{
+                              fontSize: isMobile ? 28 : 36,
+                              textShadow: "1px 2px 2px #000",
+                              fontFamily: "Open Sans",
+                            }}
+                          >
+                            <FiMap size={isMobile ? 28 : 36} />{" "}
+                            {data && data.jumlah_bidang_tanah
+                              ? data.jumlah_bidang_tanah.value
+                                  .toString()
+                                  .replace(
+                                    /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
+                                    "."
+                                  )
+                              : 0}
+                            {data && data.jumlah_bidang_tanah
+                              ? data && data.jumlah_bidang_tanah.satuan
+                              : ""}
+                          </h1>
+                          <span
+                            class="white"
+                            style={{
+                              fontSize: 14,
+                              textShadow: "1px 2px 2px #000",
+                              fontFamily: "Open Sans",
+                            }}
+                          >
+                            {data && data.jumlah_bidang_tanah
+                              ? data.jumlah_bidang_tanah.label
+                              : "Jumlah bidang tanah hasil retribusi tanah"}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
+            ) : null}
+            <div
+              class={
+                data && data.jumlah_bidang_tanah
+                  ? "col-lg-4 wow fadeInUp"
+                  : "col-lg-6 wow fadeInUp"
+              }
+              data-wow-delay="0.3s"
+            >
               <div
                 class="card pull-up bg-transparent shadow-none"
                 style={{ borderWidth: 0 }}
@@ -305,9 +324,9 @@ export default function CenteredGrid() {
                           <BsListCheck size={isMobile ? 28 : 36} /> Rp{" "}
                           {data &&
                           data.nilai_hak_tanggungan_elektronik_telah_tercatat
-                            ? data.nilai_hak_tanggungan_elektronik_telah_tercatat.value
-                                .toString()
-                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                            ? data
+                                .nilai_hak_tanggungan_elektronik_telah_tercatat
+                                .value
                             : 0}{" "}
                           {data &&
                           data.nilai_hak_tanggungan_elektronik_telah_tercatat
@@ -360,7 +379,7 @@ export default function CenteredGrid() {
                           data.pemerintah_daerah_dirjen_pajak_telah_terintegrasi
                             ? data.pemerintah_daerah_dirjen_pajak_telah_terintegrasi.value
                                 .toString()
-                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
                             : 0}
                           {data &&
                           data.pemerintah_daerah_dirjen_pajak_telah_terintegrasi
@@ -430,7 +449,7 @@ export default function CenteredGrid() {
                           {data && data.jasa_keuangan
                             ? data.jasa_keuangan.value
                                 .toString()
-                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
                             : 0}
                           {data && data.jasa_keuangan
                             ? data.jasa_keuangan.satuan
@@ -467,7 +486,7 @@ export default function CenteredGrid() {
                           {data && data.ppat
                             ? data.ppat.value
                                 .toString()
-                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
                             : 0}
                           {data && data.ppat ? data.ppat.satuan : ""}
                         </h1>
@@ -496,7 +515,7 @@ export default function CenteredGrid() {
                           {data && data.surveyor
                             ? data.surveyor.value
                                 .toString()
-                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
                             : 0}
                           {data && data.surveyor ? data.surveyor.satuan : ""}
                         </h1>

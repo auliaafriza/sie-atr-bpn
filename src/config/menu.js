@@ -19,7 +19,7 @@ import {
 } from "react-icons/md";
 import { GiOrganigram, GiMoneyStack, GiEarthAsiaOceania } from "react-icons/gi";
 import { GoGraph } from "react-icons/go";
-import { BsNewspaper } from "react-icons/bs";
+import { BsNewspaper, BsArchiveFill } from "react-icons/bs";
 import { FcDebt } from "react-icons/fc";
 import { IoMdMap } from "react-icons/io";
 
@@ -91,6 +91,11 @@ export const MENU_LIST = [
       },
       {
         icon: <MdPeople size={24} />,
+        name: "Statistik Pegawai",
+        link: "/Kepegawaian/StatistikPegawai",
+      },
+      {
+        icon: <MdPeople size={24} />,
         name: "Jumlah Pegawai per Golongan",
         link: "/Kepegawaian/JumlahPegawaperGolonganAtr",
       },
@@ -155,6 +160,11 @@ export const MENU_LIST = [
       //   name: "PNBP",
       //   link: "/KinerjaLayanan/PNBP",
       // },
+      {
+        icon: <BsArchiveFill size={24} />,
+        name: "Penyelesaian Berkas",
+        link: "/KinerjaLayanan/PenyelesaianBerkas",
+      },
       {
         icon: <FcDebt size={24} />,
         name: "Tunggakan",
@@ -342,6 +352,8 @@ export const HIDE_HEADER = [
   "/embed/sie-psn-nilai-ht",
   "/embed/sie-psn-nilai-jual-beli",
   "/embed/sie-psn-nilai-tanah-perkantah",
+  "/embed/sie-dashboard-pegawai",
+  "/embed/sie-statistik-pegawai",
 ];
 
 // *****************************************************
@@ -402,4 +414,6 @@ export const HIDE_FOOTER = [
   "/embed/sie-psn-nilai-ht",
   "/embed/sie-psn-nilai-jual-beli",
   "/embed/sie-psn-nilai-tanah-perkantah",
+  "/embed/sie-dashboard-pegawai",
+  "/embed/sie-statistik-pegawai",
 ];

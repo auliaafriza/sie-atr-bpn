@@ -12,7 +12,7 @@ import {
 import { useDispatch } from "react-redux";
 import SieTunggakan from "./sie-tunggakan";
 import SieTunggakanWilayah from "./sie-tunggakan-wilayah";
-import bgImg from "../../../assets/img/kinerja.jpg";
+import bgImg from "../../../assets/img/kinerjaV2.jpg";
 
 const LayananUmum = () => {
   const dispatch = useDispatch();

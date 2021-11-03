@@ -73,7 +73,7 @@ export default function CenteredGrid() {
     <div
       style={{
         backgroundImage: `url(${bgImg})`,
-        height: isMobile ? "100%" : "100vh",
+        height: isMobile ? "100%" : "100%",
         width: isMobile ? "100%" : "100wh",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
@@ -108,7 +108,7 @@ export default function CenteredGrid() {
                           {data && data.length != 0
                             ? data[0].jumlah
                                 .toString()
-                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
                             : 0}
                         </h1>
                         <span
@@ -148,7 +148,7 @@ export default function CenteredGrid() {
                           {data && data.length != 0
                             ? data[1].jumlah
                                 .toString()
-                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
                             : 0}
                         </h1>
                         <span
@@ -189,7 +189,7 @@ export default function CenteredGrid() {
                           {data && data.length != 0
                             ? data[2].jumlah
                                 .toString()
-                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
                             : 0}
                         </h1>
                         <span

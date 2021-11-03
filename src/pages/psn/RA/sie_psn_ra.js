@@ -283,8 +283,8 @@ const PSNRa = () => {
             className="desc"
             style={{ color: payload[0].color }}
           >{`Realisasi : Rp ${payload[0].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+            .toString()
+            .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}`}</p>
         </div>
       );
     }

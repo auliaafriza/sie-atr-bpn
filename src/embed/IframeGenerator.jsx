@@ -50,6 +50,8 @@ import SiePSNNilaiPNBP from "../pages/kinerjaLayanan/PNBP/sie_psn_nilai_pnbp";
 import SiePSNNilaiHt from "../pages/psn/PTSL/sie_psn_nilai_ht";
 import SiePSNNilaiJualBeli from "../pages/psn/PTSL/sie_psn_nilai_jual_beli";
 import SiePSNNilaiTanahPerKantah from "../pages/psn/PTSL/sie_psn_nilai_tanah_perkantah";
+import LandingPagePegawai from "../pages/kepegawaian/landingPagePegawai";
+import SieStatistikPegawai from "../pages/kepegawaian/kepegawaian-atr-bpn";
 import { Provider } from "react-redux";
 import store from "../config/store";
 
@@ -445,6 +447,22 @@ class IframeGenerator extends React.Component {
         ReactDOM.render(
           <Provider store={store}>
             <SiePSNNilaiTanahPerKantah />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-dashboard-pegawai":
+        ReactDOM.render(
+          <Provider store={store}>
+            <LandingPagePegawai />
+          </Provider>,
+          document.getElementById("replace-tag")
+        );
+        break;
+      case "sie-statistik-pegawai":
+        ReactDOM.render(
+          <Provider store={store}>
+            <SieStatistikPegawai />
           </Provider>,
           document.getElementById("replace-tag")
         );

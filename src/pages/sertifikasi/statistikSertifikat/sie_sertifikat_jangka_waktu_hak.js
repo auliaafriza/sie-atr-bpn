@@ -399,20 +399,20 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
             className="desc"
             style={{ color: payload[0].color }}
           >{`Kurang dari 1 tahun : ${payload[0].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+            .toString()
+            .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}`}</p>
           <p
             className="desc"
             style={{ color: payload[1].color }}
           >{`1 sampai 3 tahun : ${payload[1].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+            .toString()
+            .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}`}</p>
           <p
             className="desc"
             style={{ color: payload[2].color }}
           >{`lebih dari 3 tahun : ${payload[2].value
-            .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+            .toString()
+            .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}`}</p>
         </div>
       );
     }

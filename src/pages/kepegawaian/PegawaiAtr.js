@@ -5,6 +5,7 @@ import KepegawaianBPNUsia from "./kepegawaian-atr-bpn-usia";
 import KepegawaianBPNPendidikan from "./kepegawaian-atr-bpn-pendidikan";
 import KepegawaianBPNJabatan from "./kepegawaian-atr-bpn-jabatan";
 import KepegawaianBPNMutasi from "./kepegawaian-atr-bpn-mutasi";
+import KepegawaianBPN from "./kepegawaian-atr-bpn";
 import { getSatker, getKantor, getKanwil } from "../../actions/globalActions";
 import { getTahunMutasi } from "../../actions/kepegawaianAction";
 import { useDispatch } from "react-redux";
@@ -27,25 +28,18 @@ const PegawaiAtr = () => {
   }, []);
 
   return (
-    <div style={{ marginBottom: 20 }}>
-      <div
-        style={{
-          backgroundImage: `url(${bgImg})`,
-          height: "100%",
-          width: "100wh",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          zIndex: 1,
-          paddingTop: 20,
-        }}
-      >
-        <KepegawaianBPNGol />
-        <KepegawaianBPNPendidikan />
-      </div>
-      <KepegawaianBPNJabatan />
-      <KepegawaianBPNJK />
-      <KepegawaianBPNUsia />
-      <KepegawaianBPNMutasi />
+    <div
+      style={{
+        backgroundImage: `url(${bgImg})`,
+        height: "100%",
+        width: "100wh",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        zIndex: 1,
+        paddingTop: 20,
+      }}
+    >
+      <KepegawaianBPN />
     </div>
   );
 };

@@ -276,7 +276,9 @@ const TerbitTanpaPeriksa = () => {
           <p
             className="desc"
             style={{ color: payload[0].color }}
-          >{`Jumlah : ${payload[0].value}`}</p>
+          >{`Jumlah : ${payload[0].value
+            .toString()
+            .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}`}</p>
         </div>
       );
     }

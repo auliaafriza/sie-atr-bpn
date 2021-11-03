@@ -333,8 +333,8 @@ const BPHTBJumlahBerkas = () => {
             payload[0].value % 1 == 0
               ? payload[0].value
                   .toString()
-                  .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-              : payload[0].value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
+                  .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
+              : payload[0].value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&.")
           }`}</p>
         </div>
       );

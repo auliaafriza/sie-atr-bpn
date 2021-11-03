@@ -312,7 +312,7 @@ const SieLayananJumlahPerjenis = () => {
             style={{ color: payload[0].color }}
           >{`Jumlah Layanan : ${payload[0].value
             .toFixed(2)
-            .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}</p>
+            .replace(/\d(?=(\d{3})+\.)/g, "$&.")}`}</p>
         </div>
       );
     }

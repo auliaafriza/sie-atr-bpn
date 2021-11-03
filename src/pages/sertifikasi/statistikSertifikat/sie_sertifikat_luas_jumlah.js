@@ -366,10 +366,11 @@ const SieSertifikatLuasJumlah = () => {
         <div className={classes.tooltipCustom}>
           <p className="label">{label}</p>
           {grafikView.map((e, i) => (
-            <p
-              className="desc"
-              style={{ color: payload[i].color }}
-            >{`${e.name} : ${payload[i].value}`}</p>
+            <p className="desc" style={{ color: payload[i].color }}>{`${
+              e.name
+            } : ${payload[i].value
+              .toString()
+              .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}`}</p>
           ))}
         </div>
       );
@@ -1326,23 +1327,40 @@ const SieSertifikatLuasJumlah = () => {
                       }}
                       height={100}
                     ></XAxis>
-                    <YAxis tickFormatter={DataFormater}>
+                    {/* <YAxis tickFormatter={DataFormater}>
                       <Label
                         value={axis.yAxis}
                         angle={-90}
                         position="insideBottomLeft"
                         offset={-5}
                       />
-                    </YAxis>
+                    </YAxis> */}
+                    <YAxis
+                      yAxisId="left"
+                      orientation="left"
+                      stroke="#d53515"
+                      tickFormatter={DataFormater}
+                    />
+                    <YAxis
+                      yAxisId="right"
+                      orientation="right"
+                      stroke="#8884d8"
+                      tickFormatter={DataFormater}
+                    />
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    {grafikView.map((e) => (
-                      <Bar
-                        dataKey={e.dataKey}
-                        fill={e.fill}
-                        name={e.name}
-                      ></Bar>
-                    ))}
+                    <Bar
+                      dataKey="luas_bidang"
+                      fill="#d53515"
+                      name="Luas Bidang"
+                      yAxisId="left"
+                    />
+                    <Bar
+                      dataKey="jml_srtifikat"
+                      fill="#8884d8"
+                      name="Jumlah Sertipikat"
+                      yAxisId="right"
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
