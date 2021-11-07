@@ -13,6 +13,8 @@ import {
   Label,
   Treemap,
 } from "recharts";
+import moment from "moment";
+import { format } from "date-fns";
 import {
   Typography,
   Grid,
@@ -62,7 +64,6 @@ import {
   DataFormater,
   deleteDuplicates,
 } from "../../functionGlobal/globalDataAsset";
-import moment from "moment";
 import { fileExport } from "../../functionGlobal/exports";
 import { loadDataColumnTable } from "../../functionGlobal/fileExports";
 import { useHistory } from "react-router-dom";
@@ -77,6 +78,7 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { getKantorPNBP, getWilayahPNBP } from "../../actions/pnbpAction";
 import { isMobile } from "react-device-detect";
+import DatePickerRange from "./DateRange";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -258,7 +260,17 @@ const KepegawaianBpnMutasi = () => {
     { name: "Y", size: 3824 },
     { name: "Z", size: 1353 },
   ]);
-
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [rangeDate, setRangeDate] = useState([
+    {
+      startDate: new Date(),
+      endDate: null,
+      key: "selection",
+    },
+  ]);
+  const [placeHolder, setPlaceHolder] = useState("Rentang Tanggal");
+  const [color, setColor] = useState("#a9acaf");
   const [openWilayah, setOpenWilayah] = useState(false);
   const [openKantah, setOpenKantah] = useState(false);
   const [openTriwulan, setOpenTriwulan] = useState(false);
@@ -389,9 +401,7 @@ const KepegawaianBpnMutasi = () => {
     // let triwulanData = triwulan == 0 ? "" : triwulan;
     axios
       .post(
-        `${url}Kepegawaian/Pegawai/sie_pegawai_pensiun?tahun=${
-          years ? parseInt(years.tahun) : ""
-        }&triwulan=${triwulan ? triwulan.value : ""}&berdasarkan=${
+        `${url}Kepegawaian/Pegawai/sie_pegawai_pensiun?tglAwal=${startDate}&tglAkhir=${endDate}&berdasarkan=${
           berdasar ? berdasar.value : ""
         }`,
         temp
@@ -475,6 +485,32 @@ const KepegawaianBpnMutasi = () => {
     setTriwulan(event);
   };
 
+  const handleOnChange = (item) => {
+    const str = `${format(item.selection.startDate, "yyyy-MM-dd")} ~ ${format(
+      item.selection.endDate,
+      "yyyy-MM-dd"
+    )}`;
+    setPlaceHolder(str);
+    setRangeDate([item.selection]);
+    setColor("#252525");
+    setStartDate(format(item.selection.startDate, "yyyy-MM-dd"));
+    setEndDate(format(item.selection.endDate, "yyyy-MM-dd"));
+  };
+
+  const handleOnClear = () => {
+    setPlaceHolder("Rentang Tanggal");
+    setColor("#a9acaf");
+    setRangeDate([
+      {
+        startDate: new Date(),
+        endDate: new Date(),
+        key: "selection",
+      },
+    ]);
+    setStartDate("");
+    setEndDate("");
+  };
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
@@ -513,7 +549,7 @@ const KepegawaianBpnMutasi = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Prediksi Pegawai Pensiun",
+      "Jumlah pegawai yang akan pensiun",
       data,
       ".xlsx"
     );
@@ -933,7 +969,7 @@ const KepegawaianBpnMutasi = () => {
       >
         <Grid item xs={isMobile ? 12 : 6}>
           <Typography className={classes.titleSection} variant="h2">
-            Prediksi Pegawai Pensiun
+            Jumlah pegawai yang akan pensiun
           </Typography>
         </Grid>
         <Grid
@@ -968,7 +1004,7 @@ const KepegawaianBpnMutasi = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Prediksi Pegawai Pensiun",
+                    title: "Jumlah pegawai yang akan pensiun",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -1000,7 +1036,7 @@ const KepegawaianBpnMutasi = () => {
               title="Print Data"
               placement="top"
               onClick={() =>
-                handlePrintData("Prediksi Pegawai Pensiun", columnTable)
+                handlePrintData("Jumlah pegawai yang akan pensiun", columnTable)
               }
             >
               <IconButton aria-label="delete" size="small">
@@ -1045,9 +1081,16 @@ const KepegawaianBpnMutasi = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Tahun
+                  Pilih Rentang Tanggal
                 </Typography>
-                <Autocomplete
+                <DatePickerRange
+                  ranges={rangeDate}
+                  color={color}
+                  onSelectDate={(item) => handleOnChange(item)}
+                  placeholder={placeHolder}
+                  onClear={() => handleOnClear()}
+                />
+                {/* <Autocomplete
                   id="tahun"
                   open={openTahun}
                   onOpen={() => {
@@ -1092,9 +1135,9 @@ const KepegawaianBpnMutasi = () => {
                       placeholder={"Pilih Tahun"}
                     />
                   )}
-                />
+                /> */}
               </Grid>
-              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
+              {/* <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1148,7 +1191,7 @@ const KepegawaianBpnMutasi = () => {
                     />
                   )}
                 />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
@@ -1383,26 +1426,23 @@ const KepegawaianBpnMutasi = () => {
               variant="h2"
               wrap
             >
-              Prediksi Pegawai Pensiun Berdasar {berdasar ? berdasar.key : ""}
+              Jumlah pegawai yang akan pensiun Berdasar{" "}
+              {berdasar ? berdasar.key : ""}
             </Typography>
             <Typography
               className={classes.isiContentTextStyle}
               variant="h2"
               wrap
+              style={{ marginBottom: 20 }}
             >
-              di{" "}
+              {" "}
               {dataFilterKantor && dataFilterKantor.kantor
-                ? dataFilterKantor.kantor
+                ? `di ${dataFilterKantor.kantor}`
                 : dataFilter && dataFilter.kanwil
-                ? dataFilter.kanwil
+                ? `di ${dataFilter.kanwil}`
                 : ""}{" "}
-              Tahun {years ? years.tahun : ""}{" "}
-              {triwulan && triwulan.value == 0 ? "" : "Triwulan"}{" "}
-              {triwulan && triwulan.value == 0
-                ? ""
-                : triwulan
-                ? triwulan.key
-                : ""}
+              {startDate && endDate ? "pada Tanggal" : ""} {startDate}
+              {startDate && endDate ? " sampai dengan" : ""} {endDate}
             </Typography>
           </Grid>
           <Card

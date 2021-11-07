@@ -525,7 +525,7 @@ const KepegawaianBpnMutasi = () => {
     data && data.length != 0
       ? data.map((item, i) => {
           res.push({
-            name: item.label,
+            name: item.golongan,
             size: item.jumlah,
           });
         })
@@ -570,12 +570,7 @@ const KepegawaianBpnMutasi = () => {
       "application/x-www-form-urlencoded";
     // let triwulanData = triwulan == 0 ? "" : triwulan;
     axios
-      .post(
-        `${url}Kepegawaian/Pegawai/sie_pegawai_atr_bpn_golongan?tahun=${
-          years ? parseInt(years.tahun) : ""
-        }`,
-        temp
-      )
+      .post(`${url}Kepegawaian/Pegawai/sie_pegawai_atr_bpn_golongan`, temp)
       .then(function (response) {
         setData(response.data.data);
         setComment(response.data);
@@ -591,12 +586,7 @@ const KepegawaianBpnMutasi = () => {
         // always executed
       });
     axios
-      .post(
-        `${url}Kepegawaian/Pegawai/sie_pegawai_atr_bpn_jns_kelamin?tahun=${
-          years ? parseInt(years.tahun) : ""
-        }`,
-        temp
-      )
+      .post(`${url}Kepegawaian/Pegawai/sie_pegawai_atr_bpn_jns_kelamin`, temp)
       .then(function (response) {
         setDataJK(convertDataPie(response.data.data));
         setCommentJK(response.data);
@@ -611,12 +601,7 @@ const KepegawaianBpnMutasi = () => {
         // always executed
       });
     axios
-      .post(
-        `${url}Kepegawaian/Pegawai/sie_pegawai_atr_bpn_pendidikan?tahun=${
-          years ? parseInt(years.tahun) : ""
-        }`,
-        temp
-      )
+      .post(`${url}Kepegawaian/Pegawai/sie_pegawai_atr_bpn_pendidikan`, temp)
       .then(function (response) {
         setDataPendidikan(response.data.data);
         setCommentPendidikan(response.data);
@@ -632,11 +617,19 @@ const KepegawaianBpnMutasi = () => {
       });
   };
 
+  const convertTahun = (data) => {
+    let res = [];
+    data && data.length != 0
+      ? data.map((item) => res.push({ tahun: item.tahun.toString() }))
+      : null;
+    return res;
+  };
+
   useEffect(() => {
     axios
       .get(`${url}Kepegawaian/Pegawai/get_tahun`)
       .then(function (response) {
-        setTahunMutasi(response.data.data);
+        setTahunMutasi(convertTahun(response.data.data));
         console.log(response);
       })
       .catch(function (error) {
@@ -1551,7 +1544,7 @@ const KepegawaianBpnMutasi = () => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
+              {/* <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
                   className={classes.isiTextStyle}
                   variant="h2"
@@ -1605,7 +1598,7 @@ const KepegawaianBpnMutasi = () => {
                     />
                   )}
                 />
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
                 <Typography
@@ -1801,7 +1794,6 @@ const KepegawaianBpnMutasi = () => {
                 : dataFilter && dataFilter.kanwil
                 ? dataFilter.kanwil
                 : ""}{" "}
-              Tahun {years ? years.tahun : ""}{" "}
             </Typography>
           </Grid>
           <Card
@@ -1859,7 +1851,6 @@ const KepegawaianBpnMutasi = () => {
                 : dataFilter && dataFilter.kanwil
                 ? dataFilter.kanwil
                 : ""}{" "}
-              Tahun {years ? years.tahun : ""}{" "}
             </Typography>
           </Grid>
           <Card className={classes.root} variant="outlined">
@@ -1923,7 +1914,6 @@ const KepegawaianBpnMutasi = () => {
                 : dataFilter && dataFilter.kanwil
                 ? dataFilter.kanwil
                 : ""}{" "}
-              Tahun {years ? years.tahun : ""}{" "}
             </Typography>
           </Grid>
           <Card

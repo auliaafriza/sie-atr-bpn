@@ -121,7 +121,7 @@ export default function CenteredGrid() {
           <div class="row">
             <div
               class={
-                data && data.jumlah_bidang_tanah
+                data && data.bidang_tanah_merupakan_hasil_redistribusi_tanah
                   ? "col-lg-4 wow fadeInUp"
                   : "col-lg-6 wow fadeInUp"
               }
@@ -171,7 +171,7 @@ export default function CenteredGrid() {
                 </div>
               </div>
             </div>
-            {data && data.jumlah_bidang_tanah ? (
+            {data && data.bidang_tanah_merupakan_hasil_redistribusi_tanah ? (
               <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.2s">
                 <div
                   class="card pull-up bg-transparent shadow-none"
@@ -190,16 +190,21 @@ export default function CenteredGrid() {
                             }}
                           >
                             <FiMap size={isMobile ? 28 : 36} />{" "}
-                            {data && data.jumlah_bidang_tanah
-                              ? data.jumlah_bidang_tanah.value
+                            {data &&
+                            data.bidang_tanah_merupakan_hasil_redistribusi_tanah
+                              ? data.bidang_tanah_merupakan_hasil_redistribusi_tanah.value
                                   .toString()
                                   .replace(
                                     /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
                                     "."
                                   )
                               : 0}
-                            {data && data.jumlah_bidang_tanah
-                              ? data && data.jumlah_bidang_tanah.satuan
+                            {data &&
+                            data.bidang_tanah_merupakan_hasil_redistribusi_tanah
+                              ? data &&
+                                data
+                                  .bidang_tanah_merupakan_hasil_redistribusi_tanah
+                                  .satuan
                               : ""}
                           </h1>
                           <span
@@ -210,8 +215,11 @@ export default function CenteredGrid() {
                               fontFamily: "Open Sans",
                             }}
                           >
-                            {data && data.jumlah_bidang_tanah
-                              ? data.jumlah_bidang_tanah.label
+                            {data &&
+                            data.bidang_tanah_merupakan_hasil_redistribusi_tanah
+                              ? data
+                                  .bidang_tanah_merupakan_hasil_redistribusi_tanah
+                                  .label
                               : "Jumlah bidang tanah hasil retribusi tanah"}
                           </span>
                         </div>
@@ -223,7 +231,7 @@ export default function CenteredGrid() {
             ) : null}
             <div
               class={
-                data && data.jumlah_bidang_tanah
+                data && data.bidang_tanah_merupakan_hasil_redistribusi_tanah
                   ? "col-lg-4 wow fadeInUp"
                   : "col-lg-6 wow fadeInUp"
               }
