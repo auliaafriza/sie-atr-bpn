@@ -116,7 +116,7 @@ export const MENU_LIST = [
       },
       {
         icon: <MdPeople size={24} />,
-        name: "Prediksi Pegawai Pensiun",
+        name: "Jumlah Pegawai yang akan Pensiun",
         link: "/Kepegawaian/PrediksiPegawaiAtrPensiun",
       },
       // {

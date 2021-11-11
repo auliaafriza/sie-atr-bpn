@@ -193,7 +193,7 @@ const GraphLandingEselon = () => {
                 variant="h2"
                 wrap
               >
-                Prediksi Pegawai Pensiun Berdasar Eselon
+                Jumlah Pegawai yang akan Pensiun Berdasar Eselon
               </Typography>
               <Typography
                 className={classes.isiContentTextStyle}
