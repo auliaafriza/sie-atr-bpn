@@ -354,6 +354,7 @@ export const HIDE_HEADER = [
   "/embed/sie-psn-nilai-tanah-perkantah",
   "/embed/sie-dashboard-pegawai",
   "/embed/sie-statistik-pegawai",
+  "/embed/sie-statistik-pegawai2",
 ];
 
 // *****************************************************
@@ -416,4 +417,5 @@ export const HIDE_FOOTER = [
   "/embed/sie-psn-nilai-tanah-perkantah",
   "/embed/sie-dashboard-pegawai",
   "/embed/sie-statistik-pegawai",
+  "/embed/sie-statistik-pegawai2",
 ];

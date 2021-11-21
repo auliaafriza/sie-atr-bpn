@@ -185,8 +185,8 @@ const title = "Jumlah Sertipikat dan Luas Berdasarkan Program";
 const SieSertifikatTahun = () => {
   const classes = styles();
   const dispatch = useDispatch();
-  const [years, setYears] = useState({ label: "2017", name: 2017 });
-  const [tahunAkhir, setTahunAkhir] = useState({ label: "2019", name: 2019 });
+  const [years, setYears] = useState({ tahun: "2019" });
+  const [tahunAkhir, setTahunAkhir] = useState({ tahun: "2021" });
 
   const berkasPnbpWilayah = useSelector((state) => state.pnbp.wilayahPnbp);
   const berkasPnbpKantor = useSelector((state) => state.pnbp.kantorPnbp);
@@ -195,6 +195,7 @@ const SieSertifikatTahun = () => {
 
   const [hideText, setHideText] = useState(false);
   const [hideTextKantor, setHideTextKantor] = useState(false);
+  const [hideTextProgram, setHideTextProgram] = useState(false);
 
   const [comment, setComment] = useState("");
 
@@ -216,6 +217,18 @@ const SieSertifikatTahun = () => {
   const [openKantah, setOpenKantah] = useState(false);
   const [openTahunAkhir, setOpenTahunAkhir] = useState(false);
   const [openTahun, setOpenTahun] = useState(false);
+
+  //nama program
+  const [openProgram, setOpenProgram] = useState(false);
+  const [program, setProgram] = useState([
+    {
+      nama_program:
+        "Kegiatan Pendaftaran Tanah Sistematis Lengkap (PTSL) Tahun 2019",
+    },
+    { nama_program: "LEGASET NELAYAN 2019" },
+  ]);
+  const [programList, setProgramList] = useState([]);
+  const [tahunList, setTahunList] = useState([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -307,7 +320,7 @@ const SieSertifikatTahun = () => {
   };
 
   const getData = () => {
-    let temp = { kantah: [], kanwil: [] };
+    let temp = { kantah: [], wilayah: [], nama_program: [] };
     let foundData =
       dataFilterKantor && dataFilterKantor.length != 0
         ? findAll(dataFilterKantor, "kantor")
@@ -320,16 +333,18 @@ const SieSertifikatTahun = () => {
         ? findAll(dataFilter, "kanwil")
         : false;
     foundDataKanwil
-      ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
+      ? dataFilter.map((item) => temp.wilayah.push(item.kanwil))
       : [];
-
+    program && program.length != 0
+      ? program.map((item) => temp.nama_program.push(item.nama_program))
+      : [];
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
       .post(
         `${url}Sertifikasi/StatistikSertifikat/sie_sertifikasi_tahun?tahunAwal=${
-          years ? years.name : ""
-        }&tahunAkhir=${tahunAkhir ? tahunAkhir.name : ""}`,
+          years ? parseInt(years.tahun) : ""
+        }&tahunAkhir=${tahunAkhir ? parseInt(tahunAkhir.tahun) : ""}`,
         temp
       )
       .then(function (response) {
@@ -346,6 +361,14 @@ const SieSertifikatTahun = () => {
       });
   };
 
+  const convertTahun = (data) => {
+    let res = [];
+    data && data.length != 0
+      ? data.map((item) => res.push({ tahun: item.tahun.toString() }))
+      : [];
+    return res;
+  };
+
   useEffect(() => {
     dispatch(getWilayahPNBP());
     let temp = { kodeWilayah: [] };
@@ -353,6 +376,37 @@ const SieSertifikatTahun = () => {
       dataFilter.length &&
       dataFilter.map((item) => temp.kodeWilayah.push(item.kode));
     getListKantor(temp);
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .get(
+        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikasi_tahun_filter_nama_program`
+      )
+      .then(function (response) {
+        setProgramList(response.data.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+    axios
+      .get(
+        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikasi_tahun_filter_tahun`
+      )
+      .then(function (response) {
+        setTahunList(convertTahun(response.data.data));
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+
     getData();
   }, []);
 
@@ -600,6 +654,20 @@ const SieSertifikatTahun = () => {
     // alert(e.target.value + "");
     setIframeWidth(e.target.value);
   }
+
+  const handleChangeProgram = (event) => {
+    if (event.length != 0) {
+      let findTemp =
+        event && event.length != 0 ? findAll(event, "nama_program") : false;
+      let indexTemp = findIndex(event, "nama_program");
+      let res = findTemp
+        ? deleteDuplicates(event, "nama_program")
+        : [event[indexTemp]];
+      setProgram(res);
+    } else {
+      setProgram([]);
+    }
+  };
 
   return (
     <div style={{ marginBottom: "10px" }}>
@@ -982,7 +1050,7 @@ const SieSertifikatTahun = () => {
                   }
                   name="tahun"
                   style={{ width: "100%", height: 35 }}
-                  options={tahunDataV2}
+                  options={tahunList}
                   classes={{
                     option: classes.option,
                   }}
@@ -997,9 +1065,9 @@ const SieSertifikatTahun = () => {
                       setOpenTahun(false);
                     }
                   }}
-                  getOptionLabel={(option) => option.label || ""}
+                  getOptionLabel={(option) => option.tahun || ""}
                   renderOption={(option, { selected }) => (
-                    <React.Fragment>{option.label}</React.Fragment>
+                    <React.Fragment>{option.tahun}</React.Fragment>
                   )}
                   value={years}
                   defaultValue={years}
@@ -1037,7 +1105,7 @@ const SieSertifikatTahun = () => {
                   }
                   name="tahun"
                   style={{ width: "100%", height: 35 }}
-                  options={tahunDataV2}
+                  options={tahunList}
                   classes={{
                     option: classes.option,
                   }}
@@ -1052,9 +1120,9 @@ const SieSertifikatTahun = () => {
                       setOpenTahunAkhir(false);
                     }
                   }}
-                  getOptionLabel={(option) => option.label || ""}
+                  getOptionLabel={(option) => option.tahun || ""}
                   renderOption={(option, { selected }) => (
-                    <React.Fragment>{option.label}</React.Fragment>
+                    <React.Fragment>{option.tahun}</React.Fragment>
                   )}
                   value={tahunAkhir}
                   defaultValue={tahunAkhir}
@@ -1080,7 +1148,7 @@ const SieSertifikatTahun = () => {
                     className={classes.selectStyle}
                     disableUnderline
                   >
-                    {tahunDataV2.map((item, i) => {
+                    {tahunList.map((item, i) => {
                       return (
                         <MenuItem value={item.id} key={i}>
                           {item.value}
@@ -1269,6 +1337,92 @@ const SieSertifikatTahun = () => {
                       style={{ marginTop: 5 }}
                       placeholder={
                         dataFilterKantor.length != 0 ? "" : "Pilih Kantah"
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Nama Program
+                </Typography>
+                <Autocomplete
+                  id="program"
+                  multiple
+                  open={openProgram}
+                  onOpen={() => {
+                    setOpenProgram(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenProgram(false)
+                      : setOpenProgram(true)
+                  }
+                  name="tahun"
+                  style={{ width: "100%", height: 35 }}
+                  options={programList}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  onChange={(event, newValue) => {
+                    handleChangeProgram(newValue);
+                  }}
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") {
+                      setOpenProgram(true);
+                      setHideTextProgram(true);
+                    } else {
+                      setOpenProgram(false);
+                      setHideTextProgram(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.nama_program || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          program && program.length != 0
+                            ? findAll(program, "nama_program")
+                              ? program
+                                  .map((item) => item.nama_program)
+                                  .indexOf(option.nama_program) > -1
+                              : true
+                            : false
+                        }
+                      />
+                      {option.nama_program}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return selected.length != 0
+                      ? hideTextProgram
+                        ? ""
+                        : findAll(selected, "nama_program")
+                        ? `${selected.length} Terpilih`
+                        : "Semua Terpilih"
+                      : "";
+                  }}
+                  value={program}
+                  defaultValue={program}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={
+                        program.length != 0 ? "" : "Pilih Nama Program"
                       }
                     />
                   )}

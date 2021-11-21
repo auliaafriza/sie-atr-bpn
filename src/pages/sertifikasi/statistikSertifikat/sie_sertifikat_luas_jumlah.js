@@ -145,11 +145,6 @@ const SieSertifikatLuasJumlah = () => {
   const [openTahunAkhir, setOpenTahunAkhir] = useState(false);
   const [openTahun, setOpenTahun] = useState(false);
 
-  //nama program
-  const [openProgram, setOpenProgram] = useState(false);
-  const [program, setProgram] = useState("");
-  const [programList, setProgramList] = useState([]);
-
   const [open, setOpen] = useState(false);
   const [dataModal, setDataModal] = useState({
     title: "",
@@ -351,10 +346,6 @@ const SieSertifikatLuasJumlah = () => {
 
   const handleChangeTahunAkhir = (event) => {
     setTahunAkhir(event);
-  };
-
-  const handleChangeProgram = (event) => {
-    setProgram(event);
   };
 
   const DataFormater = (number) => {
@@ -1246,61 +1237,7 @@ const SieSertifikatLuasJumlah = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
-                <Typography
-                  className={classes.isiTextStyle}
-                  variant="h2"
-                  style={{ fontSize: 12 }}
-                >
-                  Nama Program
-                </Typography>
-                <Autocomplete
-                  id="tahun"
-                  open={openProgram}
-                  onOpen={() => {
-                    setOpenProgram(true);
-                  }}
-                  onClose={(e, reason) =>
-                    reason == "escape" || reason == "blur"
-                      ? setOpenProgram(false)
-                      : setOpenProgram(true)
-                  }
-                  name="tahun"
-                  style={{ width: "100%", height: 35 }}
-                  options={tahunDataV2}
-                  classes={{
-                    option: classes.option,
-                  }}
-                  disableUnderline
-                  className={classes.formControl}
-                  onChange={(event, newValue) => {
-                    handleChangeProgram(newValue);
-                  }}
-                  onInputChange={(_event, value, reason) => {
-                    if (reason == "input") setOpenProgram(true);
-                    else {
-                      setOpenProgram(false);
-                    }
-                  }}
-                  getOptionLabel={(option) => option.label || ""}
-                  renderOption={(option, { selected }) => (
-                    <React.Fragment>{option.label}</React.Fragment>
-                  )}
-                  value={program}
-                  defaultValue={program}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      InputProps={{
-                        ...params.InputProps,
-                        disableUnderline: true,
-                      }}
-                      style={{ marginTop: 5 }}
-                      placeholder={"Pilih Tahun"}
-                    />
-                  )}
-                />
-              </Grid>
+
               <Grid item xs={12} style={{ paddingLeft: 15, paddingTop: 5 }}>
                 <Button
                   variant="contained"

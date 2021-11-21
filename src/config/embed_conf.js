@@ -57,5 +57,6 @@ export const BASE_URL = {
     sie_psn_nilai_tanah_per_kantah: "sie-psn-nilai-tanah-perkantah",
     sie_dashboard_pegawai: "sie-dashboard-pegawai",
     sie_statistik_pegawai: "sie-statistik-pegawai",
+    sie_statistik_pegawai2: "sie-statistik-pegawai2",
   },
 };
