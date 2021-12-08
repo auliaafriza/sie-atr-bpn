@@ -54,11 +54,11 @@ const PnbpPage = () => {
         <PnbpBerkasPeringkat />
       </div>
       <RealisasiAnggaran />
-      <RealisasiPenggunaan />
+      {/* <RealisasiPenggunaan /> */}
       {/* <PersentaseRealisasiBelanja /> */}
       {/* <RealisasiPenerimaan /> */}
       {/* <RealisasiTargetPenerimaan /> */}
-      <PaguMp />
+      {/* <PaguMp /> */}
       <PaguMpOpsNon />
       {/* <AlokasiAnggaran /> */}
       <PeringkatRealisasi />

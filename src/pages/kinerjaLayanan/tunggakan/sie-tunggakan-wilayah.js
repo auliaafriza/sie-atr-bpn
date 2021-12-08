@@ -393,11 +393,20 @@ const KepegawaianBpnJabatan = () => {
     setTahunAwal(event);
   };
 
+  const convertLabelTooltip = (label) => {
+    let data = label.split(/(\d+)/);
+    return data[0] == "p"
+      ? `Penyelesaian ${data[1]}`
+      : `Penyelesaian ${data[0]}`;
+  };
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          <p className="label">Tahun {label}</p>
+          <p className="label">
+            Tahun {label ? convertLabelTooltip(label) : label}
+          </p>
           {payload && payload.length != 0
             ? payload.map((item, i) => (
                 <p

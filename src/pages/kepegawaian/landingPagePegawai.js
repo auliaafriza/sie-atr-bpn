@@ -226,7 +226,7 @@ export default function CenteredGrid() {
                             fontFamily: "Open Sans",
                           }}
                         >
-                          Jumlah Pegawai yang akan Pensiun berdasar Eselon
+                          Jumlah Pegawai yang Pensiun berdasar Eselon
                         </h1>
                       </div>
                     </div>
@@ -252,7 +252,7 @@ export default function CenteredGrid() {
                             fontFamily: "Open Sans",
                           }}
                         >
-                          Jumlah Pegawai yang akan Pensiun berdasar Golongan
+                          Jumlah Pegawai yang Pensiun berdasar Golongan
                         </h1>
                       </div>
                     </div>

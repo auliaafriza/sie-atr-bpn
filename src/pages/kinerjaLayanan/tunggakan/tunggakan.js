@@ -39,8 +39,8 @@ const LayananUmum = () => {
         zIndex: 1,
       }}
     >
-      <SieTunggakan />
       <SieTunggakanWilayah />
+      <SieTunggakan />
     </div>
   );
 };

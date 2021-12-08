@@ -378,7 +378,7 @@ const KepegawaianBpnJabatan = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Data Tunggakan per Jabatan per Jabatan",
+      "Data Tunggakan per Jabatan",
       data,
       ".xlsx"
     );
@@ -1252,6 +1252,32 @@ const KepegawaianBpnJabatan = () => {
           </div>
         </Grid>
         <Grid item xs={isMobile ? 12 : 9} style={{ margin: isMobile ? 20 : 0 }}>
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            item
+            xs={10}
+          >
+            <Typography
+              className={classes.isiContentTextStyle}
+              variant="h2"
+              wrap
+              style={{ marginTop: 10 }}
+            >
+              Data Tunggakan per Jabatan Berdasar{" "}
+              {dataFilter ? dataFilter.namaprofile : ""}
+            </Typography>
+            <Typography
+              className={classes.isiContentTextStyle}
+              variant="h2"
+              wrap
+              style={{ marginBottom: 15 }}
+            >
+              {kanwil && kanwil.aliaskanwil ? `di ${kanwil.aliaskanwil}` : ""}{" "}
+            </Typography>
+          </Grid>
           <Card
             className={isMobile ? classes.rootMobile : classes.root}
             variant="outlined"

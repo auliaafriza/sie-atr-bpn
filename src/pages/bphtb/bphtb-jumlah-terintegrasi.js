@@ -123,7 +123,7 @@ let grafikView = [
   },
   {
     dataKey: "kum_jumlah_daerah_terintegrasi",
-    fill: "#ffc658",
+    fill: "#8FBC8F",
   },
 ];
 
@@ -343,7 +343,7 @@ const BPHTBDaerahTerintegrasi = () => {
             <Tooltip content={<CustomTooltip />} />
             <Legend />
             <Bar dataKey="jumlah_daerah_terintegrasi" fill="#C71585" />
-            <Bar dataKey="kum_jumlah_daerah_terintegrasi" fill="#ffc658" />
+            <Bar dataKey="kum_jumlah_daerah_terintegrasi" fill="#8FBC8F" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -834,7 +834,7 @@ const BPHTBDaerahTerintegrasi = () => {
                       />
                       <Bar
                         dataKey="kum_jumlah_daerah_terintegrasi"
-                        fill="#ffc658"
+                        fill="#8FBC8F"
                       />
                     </BarChart>
                   </ResponsiveContainer>

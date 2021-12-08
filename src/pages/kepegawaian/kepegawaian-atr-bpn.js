@@ -1788,11 +1788,10 @@ const KepegawaianBpnMutasi = () => {
               wrap
               style={{ marginBottom: 15 }}
             >
-              di{" "}
               {dataFilterKantor && dataFilterKantor.kantor
-                ? dataFilterKantor.kantor
+                ? `di ${dataFilterKantor.kantor}`
                 : dataFilter && dataFilter.kanwil
-                ? dataFilter.kanwil
+                ? `di ${dataFilter.kanwil}`
                 : ""}{" "}
             </Typography>
           </Grid>
@@ -1845,11 +1844,10 @@ const KepegawaianBpnMutasi = () => {
               wrap
               style={{ marginBottom: 15 }}
             >
-              di{" "}
               {dataFilterKantor && dataFilterKantor.kantor
-                ? dataFilterKantor.kantor
+                ? `di ${dataFilterKantor.kantor}`
                 : dataFilter && dataFilter.kanwil
-                ? dataFilter.kanwil
+                ? `di ${dataFilter.kanwil}`
                 : ""}{" "}
             </Typography>
           </Grid>
@@ -1908,11 +1906,10 @@ const KepegawaianBpnMutasi = () => {
               wrap
               style={{ marginBottom: 15 }}
             >
-              di{" "}
               {dataFilterKantor && dataFilterKantor.kantor
-                ? dataFilterKantor.kantor
+                ? `di ${dataFilterKantor.kantor}`
                 : dataFilter && dataFilter.kanwil
-                ? dataFilter.kanwil
+                ? `di ${dataFilter.kanwil}`
                 : ""}{" "}
             </Typography>
           </Grid>

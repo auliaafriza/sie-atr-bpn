@@ -964,6 +964,32 @@ const AssetPemerintah = () => {
         />
         <Grid container spacing={2}>
           <Grid item xs={isMobile ? 12 : 9}>
+            <Grid
+              container
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+              item
+              xs={10}
+            >
+              <Typography
+                className={classes.isiContentText}
+                variant="h2"
+                wrap
+                style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}
+              >
+                Tanah Asset Pemerintah
+              </Typography>
+              <Typography
+                className={classes.isiContentText}
+                variant="h2"
+                wrap
+                style={{ marginBottom: 20, marginLeft: 10, marginRight: 10 }}
+              >
+                Tahun {tahunAwal ? tahunAwal.name : ""} -{" "}
+                {years ? years.name : ""}
+              </Typography>
+            </Grid>
             <Card className={classes.root} variant="outlined">
               <CardContent>
                 <div className={classes.barChart}>

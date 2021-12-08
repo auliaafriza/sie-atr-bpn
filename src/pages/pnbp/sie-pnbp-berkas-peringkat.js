@@ -226,7 +226,7 @@ const PnbpBerkasPeringkat = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Top 5 penerimaan PNBP",
+      "Top 5 Penerimaan PNBP",
       data,
       ".xlsx"
     );
@@ -565,7 +565,7 @@ const PnbpBerkasPeringkat = () => {
     xAxis: viewData,
     yAxis: "Nilai",
   };
-  const title = "Top 5 penerimaan PNBP " + viewData;
+  const title = "Top 5 Penerimaan PNBP " + viewData;
   const handlePrint = () => {
     history.push({
       pathname: "/PrintData",
@@ -854,7 +854,7 @@ const PnbpBerkasPeringkat = () => {
       >
         <Grid item xs={isMobile ? 12 : 6}>
           <Typography className={classes.titleSection} variant="h2">
-            Top 5 penerimaan PNBP
+            Top 5 Penerimaan PNBP
           </Typography>
         </Grid>
 
@@ -886,7 +886,7 @@ const PnbpBerkasPeringkat = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Top 5 penerimaan PNBP",
+                    title: "Top 5 Penerimaan PNBP",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -1311,7 +1311,7 @@ const PnbpBerkasPeringkat = () => {
               </Grid>
             </Grid>
 
-            <Typography
+            {/* <Typography
               className={classes.isiContentTextStyle}
               variant="h2"
               wrap
@@ -1328,7 +1328,7 @@ const PnbpBerkasPeringkat = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "Top 5 penerimaan PNBP",
+                      title: "Top 5 Penerimaan PNBP",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -1349,7 +1349,7 @@ const PnbpBerkasPeringkat = () => {
                   More
                 </Link>
               ) : null}
-            </Typography>
+            </Typography> */}
           </div>
         </Grid>
         <Grid item xs={isMobile ? 12 : 9} style={{ margin: isMobile ? 20 : 0 }}>

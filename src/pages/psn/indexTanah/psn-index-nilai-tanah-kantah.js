@@ -1142,7 +1142,7 @@ const realisasiPenggunaan = () => {
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
-                    Pilih Alias Kanwil
+                    Pilih Kanwil
                   </Typography>
                   <Autocomplete
                     // multiple
@@ -1458,7 +1458,7 @@ const realisasiPenggunaan = () => {
                   >
                     Rata-rata Pertumbuhan Nilai Tanah:{" "}
                     {comment ? comment.pertumbuhan_dalam_persen : 0}% (
-                    {comment && comment.naik ? "naikk" : "turun"})
+                    {comment && comment.naik ? "naik" : "turun"})
                   </Typography>
                 </Card>
               </Grid>

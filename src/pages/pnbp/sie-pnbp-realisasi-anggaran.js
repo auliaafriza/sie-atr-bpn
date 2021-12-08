@@ -1331,7 +1331,7 @@ const RealisasiAnggaran = () => {
               </Grid>
             </Grid>
 
-            <Typography
+            {/* <Typography
               className={classes.isiContentTextStyle}
               variant="h2"
               wrap
@@ -1368,7 +1368,7 @@ const RealisasiAnggaran = () => {
                   More
                 </Link>
               ) : null}
-            </Typography>
+            </Typography> */}
           </Grid>
         </Grid>
       </Box>

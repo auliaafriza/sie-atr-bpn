@@ -180,7 +180,7 @@ let axis = {
   xAxis: "nama_program",
   yAxis: "",
 };
-const title = "Jumlah Sertipikat dan Luas Berdasarkan Program";
+const title = "Jumlah Sertipikat dan Luas Berdasar Produk";
 
 const SieSertifikatTahun = () => {
   const classes = styles();
@@ -222,10 +222,8 @@ const SieSertifikatTahun = () => {
   const [openProgram, setOpenProgram] = useState(false);
   const [program, setProgram] = useState([
     {
-      nama_program:
-        "Kegiatan Pendaftaran Tanah Sistematis Lengkap (PTSL) Tahun 2019",
+      tipe_produk: "PTSL Nelayan Tangkap",
     },
-    { nama_program: "LEGASET NELAYAN 2019" },
   ]);
   const [programList, setProgramList] = useState([]);
   const [tahunList, setTahunList] = useState([]);
@@ -320,7 +318,7 @@ const SieSertifikatTahun = () => {
   };
 
   const getData = () => {
-    let temp = { kantah: [], wilayah: [], nama_program: [] };
+    let temp = { kantah: [], wilayah: [], tipeproduk: [] };
     let foundData =
       dataFilterKantor && dataFilterKantor.length != 0
         ? findAll(dataFilterKantor, "kantor")
@@ -336,7 +334,7 @@ const SieSertifikatTahun = () => {
       ? dataFilter.map((item) => temp.wilayah.push(item.kanwil))
       : [];
     program && program.length != 0
-      ? program.map((item) => temp.nama_program.push(item.nama_program))
+      ? program.map((item) => temp.tipeproduk.push(item.tipe_produk))
       : [];
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
@@ -369,18 +367,14 @@ const SieSertifikatTahun = () => {
     return res;
   };
 
-  useEffect(() => {
-    dispatch(getWilayahPNBP());
-    let temp = { kodeWilayah: [] };
-    dataFilter &&
-      dataFilter.length &&
-      dataFilter.map((item) => temp.kodeWilayah.push(item.kode));
-    getListKantor(temp);
+  const getProduk = () => {
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
       .get(
-        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikasi_tahun_filter_nama_program`
+        `${url}Sertifikasi/StatistikSertifikat/sie_sertifikasi_tahun_filter_tipe_produk?tahunAwal=${
+          years ? parseInt(years.tahun) : ""
+        }&tahunAkhir=${tahunAkhir ? parseInt(tahunAkhir.tahun) : ""}`
       )
       .then(function (response) {
         setProgramList(response.data.data);
@@ -392,6 +386,16 @@ const SieSertifikatTahun = () => {
       .then(function () {
         // always executed
       });
+  };
+
+  useEffect(() => {
+    dispatch(getWilayahPNBP());
+    let temp = { kodeWilayah: [] };
+    dataFilter &&
+      dataFilter.length &&
+      dataFilter.map((item) => temp.kodeWilayah.push(item.kode));
+    getListKantor(temp);
+    getProduk();
     axios
       .get(
         `${url}Sertifikasi/StatistikSertifikat/sie_sertifikasi_tahun_filter_tahun`
@@ -412,10 +416,12 @@ const SieSertifikatTahun = () => {
 
   const handleChange = (event) => {
     setYears(event);
+    getProduk();
   };
 
   const handleChangeTahunAkhir = (event) => {
     setTahunAkhir(event);
+    getProduk();
   };
 
   const DataFormater = (number) => {
@@ -658,10 +664,10 @@ const SieSertifikatTahun = () => {
   const handleChangeProgram = (event) => {
     if (event.length != 0) {
       let findTemp =
-        event && event.length != 0 ? findAll(event, "nama_program") : false;
-      let indexTemp = findIndex(event, "nama_program");
+        event && event.length != 0 ? findAll(event, "tipe_produk") : false;
+      let indexTemp = findIndex(event, "tipe_produk");
       let res = findTemp
-        ? deleteDuplicates(event, "nama_program")
+        ? deleteDuplicates(event, "tipe_produk")
         : [event[indexTemp]];
       setProgram(res);
     } else {
@@ -1348,7 +1354,7 @@ const SieSertifikatTahun = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Nama Program
+                  Kegiatan
                 </Typography>
                 <Autocomplete
                   id="program"
@@ -1382,7 +1388,7 @@ const SieSertifikatTahun = () => {
                       setHideTextProgram(false);
                     }
                   }}
-                  getOptionLabel={(option) => option.nama_program || ""}
+                  getOptionLabel={(option) => option.tipe_produk || ""}
                   renderOption={(option, { selected }) => (
                     <React.Fragment>
                       <Checkbox
@@ -1391,22 +1397,22 @@ const SieSertifikatTahun = () => {
                         style={{ marginRight: 8 }}
                         checked={
                           program && program.length != 0
-                            ? findAll(program, "nama_program")
+                            ? findAll(program, "tipe_produk")
                               ? program
-                                  .map((item) => item.nama_program)
-                                  .indexOf(option.nama_program) > -1
+                                  .map((item) => item.tipe_produk)
+                                  .indexOf(option.tipe_produk) > -1
                               : true
                             : false
                         }
                       />
-                      {option.nama_program}
+                      {option.tipe_produk}
                     </React.Fragment>
                   )}
                   renderTags={(selected) => {
                     return selected.length != 0
                       ? hideTextProgram
                         ? ""
-                        : findAll(selected, "nama_program")
+                        : findAll(selected, "tipe_produk")
                         ? `${selected.length} Terpilih`
                         : "Semua Terpilih"
                       : "";
@@ -1422,7 +1428,7 @@ const SieSertifikatTahun = () => {
                       }}
                       style={{ marginTop: 5 }}
                       placeholder={
-                        program.length != 0 ? "" : "Pilih Nama Program"
+                        program.length != 0 ? "" : "Pilih Nama Produk"
                       }
                     />
                   )}
@@ -1481,6 +1487,32 @@ const SieSertifikatTahun = () => {
           </div>
         </Grid>
         <Grid item xs={isMobile ? 12 : 9} style={{ margin: isMobile ? 20 : 0 }}>
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            item
+            xs={10}
+          >
+            <Typography
+              className={classes.isiContentText}
+              variant="h2"
+              wrap
+              style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}
+            >
+              Jumlah Sertipikat dan Luas Berdasar Produk
+            </Typography>
+            <Typography
+              className={classes.isiContentText}
+              variant="h2"
+              wrap
+              style={{ marginBottom: 20, marginLeft: 10, marginRight: 10 }}
+            >
+              Tahun {years ? years.tahun : ""} -{" "}
+              {tahunAkhir ? tahunAkhir.tahun : ""}
+            </Typography>
+          </Grid>
           <Card
             className={isMobile ? classes.rootMobile : classes.root}
             variant="outlined"

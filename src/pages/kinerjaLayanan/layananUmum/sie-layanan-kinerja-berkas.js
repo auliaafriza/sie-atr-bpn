@@ -1348,7 +1348,7 @@ const realisasiPenggunaan = () => {
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
-                    Pilih Alias Kanwil
+                    Pilih Kanwil
                   </Typography>
                   <Autocomplete
                     // multiple

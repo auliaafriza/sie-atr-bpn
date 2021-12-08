@@ -134,10 +134,10 @@ let nameColumn = [
 
 let jenisData = [
   {
-    label: "kanwil",
+    label: "Kanwil",
     name: "kanwil",
   },
-  { label: "kantor", name: "kantor" },
+  { label: "Kantor", name: "kantor" },
 ];
 
 const PeringkatRealisasi = () => {
@@ -386,7 +386,7 @@ const PeringkatRealisasi = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "top 10 satker dengan realisasi belanja",
+      "Top 10 Satker dengan Realisasi Belanja",
       data,
       ".xlsx"
     );
@@ -576,7 +576,7 @@ const PeringkatRealisasi = () => {
     xAxis: "nama_satker",
     yAxis: "Realisasi",
   };
-  const title = "   Top 10 satker dengan realisasi belanja";
+  const title = "   Top 10 Satker dengan Realisasi Belanja";
   const handlePrint = () => {
     history.push({
       pathname: "/PrintData",
@@ -863,7 +863,7 @@ const PeringkatRealisasi = () => {
       >
         <Grid item xs={isMobile ? 12 : 6}>
           <Typography className={classes.titleSection} variant="h2">
-            Top 10 satker dengan realisasi belanja
+            Top 10 Satker dengan Realisasi Belanja
           </Typography>
         </Grid>
 
@@ -895,7 +895,7 @@ const PeringkatRealisasi = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "top 10 satker dengan realisasi belanja",
+                    title: "Top 10 Satker dengan Realisasi Belanja",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -1056,7 +1056,7 @@ const PeringkatRealisasi = () => {
                         disableUnderline: true,
                       }}
                       style={{ marginTop: 5 }}
-                      placeholder={"Pilih Tahun"}
+                      placeholder={"Pilih Jenis Group"}
                     />
                   )}
                 />
@@ -1296,7 +1296,7 @@ const PeringkatRealisasi = () => {
                         disableUnderline: true,
                       }}
                       style={{ marginTop: 5 }}
-                      placeholder={"Pilih Tahun"}
+                      placeholder={"Pilih Urutan"}
                     />
                   )}
                 />
@@ -1339,7 +1339,7 @@ const PeringkatRealisasi = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "top 10 satker dengan realisasi belanja",
+                      title: "Top 10 Satker dengan Realisasi Belanja",
                       grafik: data,
                       dataTable: "",
                       analisis:

@@ -126,7 +126,7 @@ let axis = {
   xAxis: "name",
   yAxis: "Nilai",
 };
-const title = "Sertipikat Diagunkan";
+const title = "Jumlah Hak Tanggungan";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
@@ -1228,7 +1228,7 @@ const SieSertifikatLuasJumlah = () => {
               variant="h2"
               wrap
             >
-              Sertipikat diagunkan
+              Jumlah Hak Tanggungan
             </Typography>
             <Typography
               className={classes.isiContentTextStyle}

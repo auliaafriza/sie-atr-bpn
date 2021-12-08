@@ -347,7 +347,7 @@ const PaguMpOpsNon = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Perbandingan Pagu vs MP OPS DAN NON OPS",
+      "Perbandingan Pagu vs MP OPS dan NON OPS",
       data,
       ".xlsx"
     );
@@ -548,7 +548,7 @@ const PaguMpOpsNon = () => {
     xAxis: data,
     yAxis: "Alokasi Anggaran",
   };
-  const title = "Perbandingan Pagu vs MP OPS DAN NON OPS";
+  const title = "Perbandingan Pagu vs MP OPS dan NON OPS";
   const handlePrint = () => {
     history.push({
       pathname: "/PrintData",
@@ -877,7 +877,7 @@ const PaguMpOpsNon = () => {
                   size="small"
                   onClick={() =>
                     handleOpen({
-                      title: "Perbandingan Pagu vs MP OPS DAN NON OPS",
+                      title: "Perbandingan Pagu vs MP OPS dan NON OPS",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -1379,7 +1379,7 @@ const PaguMpOpsNon = () => {
                     href="#"
                     onClick={() =>
                       handleOpen({
-                        title: "Perbandingan Pagu vs MP OPS DAN NON OPS",
+                        title: "Perbandingan Pagu vs MP OPS dan NON OPS",
                         grafik: data,
                         dataTable: "",
                         analisis:

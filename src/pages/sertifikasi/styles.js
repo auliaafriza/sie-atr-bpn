@@ -124,8 +124,14 @@ const styles = makeStyles((theme) => ({
     margin: 10,
     letterSpacing: 1,
     color: "#6b6f82",
-    fontSize: 16,
-    fontWeight: "500",
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+  isiContentText: {
+    letterSpacing: 1,
+    color: "#6b6f82",
+    fontSize: 14,
+    fontWeight: "bold",
   },
   formControl: {
     margin: theme.spacing(1),

@@ -216,7 +216,7 @@ const PnbpBerkasWilayah = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "PNBP dan jumlah berkas layanan",
+      "PNBP dan Jumlah Berkas Layanan",
       data,
       ".xlsx"
     );
@@ -582,7 +582,7 @@ const PnbpBerkasWilayah = () => {
     xAxis: "wilayah",
     yAxis: "Jumlah Nilai PNBP dan berkas",
   };
-  const title = " PNBP dan jumlah berkas layanan";
+  const title = " PNBP dan Jumlah Berkas Layanan";
   const handlePrint = () => {
     history.push({
       pathname: "/PrintData",
@@ -869,7 +869,7 @@ const PnbpBerkasWilayah = () => {
       >
         <Grid item xs={isMobile ? 12 : 6}>
           <Typography className={classes.titleSection} variant="h2">
-            PNBP dan jumlah berkas layanan
+            PNBP dan Jumlah Berkas Layanan
           </Typography>
         </Grid>
 
@@ -901,7 +901,7 @@ const PnbpBerkasWilayah = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "PNBP dan jumlah berkas layanan",
+                    title: "PNBP dan Jumlah Berkas Layanan",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -1354,7 +1354,7 @@ const PnbpBerkasWilayah = () => {
                   href="#"
                   onClick={() =>
                     handleOpen({
-                      title: "PNBP dan jumlah berkas layanan",
+                      title: "PNBP dan Jumlah Berkas Layanan",
                       grafik: data,
                       dataTable: "",
                       analisis:

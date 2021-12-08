@@ -549,7 +549,7 @@ const KepegawaianBpnMutasi = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Jumlah pegawai yang akan pensiun",
+      "Jumlah Pegawai yang akan Pensiun",
       data,
       ".xlsx"
     );
@@ -969,7 +969,7 @@ const KepegawaianBpnMutasi = () => {
       >
         <Grid item xs={isMobile ? 12 : 6}>
           <Typography className={classes.titleSection} variant="h2">
-            Jumlah pegawai yang akan pensiun
+            Jumlah Pegawai yang akan Pensiun
           </Typography>
         </Grid>
         <Grid
@@ -1004,7 +1004,7 @@ const KepegawaianBpnMutasi = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Jumlah pegawai yang akan pensiun",
+                    title: "Jumlah Pegawai yang akan Pensiun",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -1036,7 +1036,7 @@ const KepegawaianBpnMutasi = () => {
               title="Print Data"
               placement="top"
               onClick={() =>
-                handlePrintData("Jumlah pegawai yang akan pensiun", columnTable)
+                handlePrintData("Jumlah Pegawai yang akan Pensiun", columnTable)
               }
             >
               <IconButton aria-label="delete" size="small">
@@ -1426,7 +1426,7 @@ const KepegawaianBpnMutasi = () => {
               variant="h2"
               wrap
             >
-              Jumlah pegawai yang akan pensiun Berdasar{" "}
+              Jumlah Pegawai yang akan Pensiun Berdasar{" "}
               {berdasar ? berdasar.key : ""}
             </Typography>
             <Typography
