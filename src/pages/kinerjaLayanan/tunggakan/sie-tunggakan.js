@@ -1266,7 +1266,7 @@ const KepegawaianBpnJabatan = () => {
               wrap
               style={{ marginTop: 10 }}
             >
-              Data Tunggakan per Jabatan Berdasar{" "}
+              Data Tunggakan per Jabatan berdasar{" "}
               {dataFilter ? dataFilter.namaprofile : ""}
             </Typography>
             <Typography

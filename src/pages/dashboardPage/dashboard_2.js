@@ -119,7 +119,7 @@ export default function CenteredGrid() {
         <div class="content-header row"></div>
         <div class="content-body px-md-3">
           <div class="row">
-            <div class={"col-lg-6 wow fadeInUp"} data-wow-delay="0.1s">
+            <div class={"col-lg-4 wow fadeInUp"} data-wow-delay="0.1s">
               <div
                 class="card pull-up bg-transparent shadow-none"
                 style={{ borderWidth: 0 }}
@@ -164,7 +164,7 @@ export default function CenteredGrid() {
                 </div>
               </div>
             </div>
-            <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.2s">
+            <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.2s">
               <div
                 class="card pull-up bg-transparent shadow-none"
                 style={{ borderWidth: 0 }}
@@ -217,7 +217,7 @@ export default function CenteredGrid() {
                 </div>
               </div>
             </div>
-            <div class={"col-lg-6 wow fadeInUp"} data-wow-delay="0.3s">
+            <div class={"col-lg-4 wow fadeInUp"} data-wow-delay="0.3s">
               <div
                 class="card pull-up bg-transparent shadow-none"
                 style={{ borderWidth: 0 }}
@@ -253,49 +253,6 @@ export default function CenteredGrid() {
                           {data && data.tanah_telah_diukur
                             ? data.tanah_telah_diukur.label
                             : "Tanah telah diukur dan dipetakan dari total tanah yang terbit"}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class={"col-lg-6 wow fadeInUp"} data-wow-delay="0.3s">
-              <div
-                class="card pull-up bg-transparent shadow-none"
-                style={{ borderWidth: 0 }}
-              >
-                <div class="card-content">
-                  <div class="row">
-                    <div class="col-12 card-gradient-md-border border-right-lighten-3">
-                      <div class="card-body text-center">
-                        <h1
-                          class="display-4 white"
-                          style={{
-                            fontSize: isMobile ? 28 : 36,
-                            textShadow: "1px 2px 2px #000",
-                            fontFamily: "Open Sans",
-                          }}
-                        >
-                          <FiMap size={isMobile ? 28 : 36} />{" "}
-                          {data && data.penilaian_tanah
-                            ? data.penilaian_tanah.value
-                            : 0}{" "}
-                          {data && data.penilaian_tanah
-                            ? data.penilaian_tanah.satuan
-                            : ""}
-                        </h1>
-                        <span
-                          class="white"
-                          style={{
-                            fontSize: 14,
-                            textShadow: "1px 2px 2px #000",
-                            fontFamily: "Open Sans",
-                          }}
-                        >
-                          {data && data.penilaian_tanah
-                            ? data.penilaian_tanah.label
-                            : "Penilaian Tanah"}
                         </span>
                       </div>
                     </div>
@@ -466,7 +423,7 @@ export default function CenteredGrid() {
                   <div class="row" style={{ marginBottom: 20 }}>
                     <div
                       class={
-                        "col-lg-4 col-md-6 col-sm-12 card-gradient-md-border border-right-white border-right-lighten-3"
+                        "col-lg-3 col-md-6 col-sm-12 card-gradient-md-border border-right-white border-right-lighten-3"
                       }
                     >
                       <div class="card-body text-center">
@@ -503,7 +460,7 @@ export default function CenteredGrid() {
                     </div>
                     <div
                       class={
-                        "col-lg-4 col-md-6 col-sm-12 card-gradient-md-border border-right-white border-right-lighten-3"
+                        "col-lg-3 col-md-6 col-sm-12 card-gradient-md-border border-right-white border-right-lighten-3"
                       }
                     >
                       <div class="card-body text-center">
@@ -534,7 +491,11 @@ export default function CenteredGrid() {
                         </span>
                       </div>
                     </div>
-                    <div class={"col-lg-3 col-md-6 col-sm-12"}>
+                    <div
+                      class={
+                        "col-lg-3 col-md-6 col-sm-12 card-gradient-md-border border-right-white border-right-lighten-3"
+                      }
+                    >
                       <div class="card-body text-center">
                         <h1
                           class="white"
@@ -560,6 +521,42 @@ export default function CenteredGrid() {
                           }}
                         >
                           {data && data.surveyor ? data.surveyor.label : ""}
+                        </span>
+                      </div>
+                    </div>
+                    <div
+                      class={"col-lg-3 col-md-6 col-sm-12"}
+                      data-wow-delay="0.3s"
+                    >
+                      <div class="card-body text-center">
+                        <h1
+                          class="white"
+                          style={{
+                            fontSize: 28,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          {data && data.surveyor
+                            ? data.surveyor.value
+                                .toString()
+                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
+                            : 0}
+                          {data && data.penilaian_tanah
+                            ? data.penilaian_tanah.satuan
+                            : ""}
+                        </h1>
+                        <span
+                          class="white"
+                          style={{
+                            fontSize: 14,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          {data && data.penilaian_tanah
+                            ? data.penilaian_tanah.label
+                            : ""}
                         </span>
                       </div>
                     </div>

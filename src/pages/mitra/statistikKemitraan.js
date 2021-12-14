@@ -82,7 +82,7 @@ let dataGroup = [
   { label: "PPAT", name: "PPAT" },
   { label: "SURVEYOR", name: "Surveyor" },
   { label: "BANK", name: "Jasa Keuangan" },
-  { label: "PEMILIK", name: "Pemilik" },
+  { label: "PENILAI PERTANAHAN", name: "Penilai Pertanahan" },
 ];
 
 const dataTemp = [
@@ -392,7 +392,7 @@ const KepegawaianOrganisasi = () => {
             />
             <YAxis tickFormatter={DataFormater}>
               <Label
-                value="Nilai Satuan 1 Juta"
+                value="Jumlah"
                 angle={-90}
                 position="insideBottomLeft"
                 offset={-5}
@@ -793,8 +793,8 @@ const KepegawaianOrganisasi = () => {
       >
         <Grid item xs={isMobile ? 12 : 9}>
           <Typography className={classes.titleSection} variant="h2">
-            Statistik: jenis (ppat, surveryor berlisensi (mitra), Pemilik dan
-            jasa keuangan)
+            Statistik: Jenis (PPAT, Surveryor, Jasa Keuangan, dan Penilai
+            Pertanahan)
           </Typography>
         </Grid>
         <Grid
@@ -830,7 +830,7 @@ const KepegawaianOrganisasi = () => {
                 onClick={() =>
                   handleOpen({
                     title:
-                      "Statistik: jenis (ppat, surveryor berlisensi (mitra), Pemilik dan jasa keuangan)",
+                      "Statistik: Jenis (PPAT, Surveryor, Jasa Keuangan, dan Penilai Pertanahan)",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -863,7 +863,7 @@ const KepegawaianOrganisasi = () => {
               placement="top"
               onClick={() =>
                 handlePrintData(
-                  "Statistik: jenis (ppat, surveryor berlisensi (mitra), Pemilik dan jasa keuangan)",
+                  "Statistik: Jenis (PPAT, Surveryor, Jasa Keuangan, dan Penilai Pertanahan)",
                   columnTable
                 )
               }
@@ -933,7 +933,7 @@ const KepegawaianOrganisasi = () => {
                     />
                     <YAxis tickFormatter={DataFormater}>
                       <Label
-                        value="Nilai Satuan 1 Juta"
+                        value="Jumlah"
                         angle={-90}
                         position="insideBottomLeft"
                         offset={-5}
@@ -1328,7 +1328,7 @@ const KepegawaianOrganisasi = () => {
             onClick={() =>
               handleOpen({
                 title:
-                  "Statistik: jenis (ppat, surveryor berlisensi (mitra), Pemilik dan jasa keuangan)",
+                  "Statistik: Jenis (PPAT, Surveryor, Jasa Keuangan, dan Penilai Pertanahan)",
                 grafik: data,
                 dataTable: "",
                 analisis:

@@ -123,7 +123,7 @@ let axis = {
   xAxis: "tipehak",
   yAxis: "Nilai",
 };
-const title = "Luas Bidang Berdasarkan Jenis Sertipikat";
+const title = "Luas Bidang berdasarkan Jenis Sertipikat";
 
 const SieSertifikatLuasJumlah = () => {
   const classes = styles();
@@ -1291,6 +1291,30 @@ const SieSertifikatLuasJumlah = () => {
           </div>
         </Grid>
         <Grid item xs={isMobile ? 12 : 9} style={{ margin: isMobile ? 20 : 0 }}>
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            item
+            xs={12}
+          >
+            <Typography
+              className={classes.isiContentTextStyle}
+              variant="h2"
+              wrap
+            >
+              Luas Bidang berdasarkan Jenis Sertipikat
+            </Typography>
+            <Typography
+              className={classes.isiContentTextStyle}
+              variant="h2"
+              wrap
+            >
+              pada Tahun {years ? years.name : ""}-
+              {tahunAkhir ? tahunAkhir.name : ""}
+            </Typography>
+          </Grid>
           <Card
             className={isMobile ? classes.rootMobile : classes.root}
             variant="outlined"

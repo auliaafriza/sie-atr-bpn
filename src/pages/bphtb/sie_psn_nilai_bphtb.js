@@ -1023,7 +1023,7 @@ const realisasiPenggunaan = () => {
                     variant="h2"
                     style={{ fontSize: 12 }}
                   >
-                    Pilih Alias Kanwil
+                    Pilih Kanwil
                   </Typography>
                   <Autocomplete
                     // multiple
@@ -1070,7 +1070,7 @@ const realisasiPenggunaan = () => {
                           disableUnderline: true,
                         }}
                         style={{ marginTop: 5 }}
-                        placeholder={dataFilter ? "" : "Alias Kanwil"}
+                        placeholder={dataFilter ? "" : "Pilih Kanwil"}
                       />
                     )}
                   />

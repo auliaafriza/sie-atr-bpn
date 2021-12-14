@@ -1411,7 +1411,7 @@ const realisasiPenggunaan = () => {
                           disableUnderline: true,
                         }}
                         style={{ marginTop: 5 }}
-                        placeholder={dataFilter ? "" : "Alias Kanwil"}
+                        placeholder={dataFilter ? "" : "Pilih Kanwil"}
                       />
                     )}
                   />
@@ -1596,7 +1596,7 @@ const realisasiPenggunaan = () => {
                 wrap
                 style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}
               >
-                Kinerja Penyelesaian Berkas per Tipe Produk
+                Kinerja Penyelesaian Berkas per Jenis kegiatan
               </Typography>
               <Typography
                 className={classes.isiContentText}
@@ -1670,7 +1670,7 @@ const realisasiPenggunaan = () => {
                 wrap
                 style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}
               >
-                Kinerja Penyelesaian Berkas per Tipe Produk
+                Kinerja Penyelesaian Berkas per Jenis kegiatan
               </Typography>
               <Typography
                 className={classes.isiContentText}
@@ -1770,7 +1770,7 @@ const realisasiPenggunaan = () => {
                   variant="h2"
                   style={{ fontSize: 12 }}
                 >
-                  Pilih Tipe Produk
+                  Pilih Jenis kegiatan
                 </Typography>
                 <Autocomplete
                   // multiple
@@ -1844,7 +1844,7 @@ const realisasiPenggunaan = () => {
                         disableUnderline: true,
                       }}
                       style={{ marginTop: 5 }}
-                      placeholder={"Pilih Tipe Produk"}
+                      placeholder={"Pilih Jenis kegiatan"}
                     />
                   )}
                 />

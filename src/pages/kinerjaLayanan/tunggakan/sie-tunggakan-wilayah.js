@@ -1255,11 +1255,42 @@ const KepegawaianBpnJabatan = () => {
           </div>
         </Grid>
         <Grid item xs={isMobile ? 12 : 9} style={{ margin: isMobile ? 20 : 0 }}>
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            item
+            xs={10}
+          >
+            <Typography
+              className={classes.isiContentTextStyle}
+              variant="h2"
+              wrap
+              style={{ marginTop: 10 }}
+            >
+              Data Tunggakan per Wilayah berdasar{" "}
+              {dataFilter &&
+              dataFilter.kanwil &&
+              dataFilter.kanwil != "pilih semua" &&
+              dataFilter.kanwil != "-"
+                ? dataFilter.kanwil
+                : ""}
+            </Typography>
+            <Typography
+              className={classes.isiContentTextStyle}
+              variant="h2"
+              wrap
+              style={{ marginBottom: 15 }}
+            >
+              pada Tahun {tahunAwal ? tahunAwal.name : ""}-
+              {years ? years.name : ""}
+            </Typography>
+          </Grid>
           <Card
             className={isMobile ? classes.rootMobile : classes.root}
             variant="outlined"
           >
-            {" "}
             <CardContent>
               <div className={classes.barChart}>
                 <ResponsiveContainer width="100%" height={250}>

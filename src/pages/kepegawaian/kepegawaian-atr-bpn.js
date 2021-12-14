@@ -411,8 +411,8 @@ const KepegawaianBpnMutasi = () => {
     value: 0,
   });
   const [berdasar, setBerdasar] = useState({
-    key: "golongan",
-    value: "golongan",
+    key: "Golongan",
+    value: "Golongan",
   });
   const [dataTreeMap, setDataTreeMap] = useState([
     { name: "X", size: 2138 },
@@ -719,19 +719,19 @@ const KepegawaianBpnMutasi = () => {
   const exportData = () => {
     fileExport(
       loadDataColumnTable(nameColumn),
-      "Jumlah Pegawai Berdasar golongan",
+      "Jumlah Pegawai berdasar golongan",
       data,
       ".xlsx"
     );
     fileExport(
       loadDataColumnTable(nameColumnJK),
-      "Jumlah Pegawai Berdasar Jenis Kelamin",
+      "Jumlah Pegawai berdasar Jenis Kelamin",
       dataJK,
       ".xlsx"
     );
     fileExport(
       loadDataColumnTable(nameColumnPendidikan),
-      "Jumlah Pegawai Berdasar Pendidikan",
+      "Jumlah Pegawai berdasar Pendidikan",
       dataPendidikan,
       ".xlsx"
     );
@@ -878,7 +878,7 @@ const KepegawaianBpnMutasi = () => {
       </List>
       <Divider />
       <h2 id="simple-modal-title" style={{ paddingBottom: 20, marginTop: 20 }}>
-        Jumlah Pegawai Berdasar Jenis Kelamin
+        Jumlah Pegawai berdasar Jenis Kelamin
       </h2>
       <div className={classes.barChart}>
         <ResponsiveContainer width="100%" height={250}>
@@ -1018,7 +1018,7 @@ const KepegawaianBpnMutasi = () => {
       </List>
       <Divider />
       <h2 id="simple-modal-title" style={{ paddingBottom: 20, marginTop: 20 }}>
-        Jumlah Pegawai Berdasar Pendidikan
+        Jumlah Pegawai berdasar Pendidikan
       </h2>
       <div className={classes.barChart}>
         <ResponsiveContainer width="100%" height={250}>
@@ -1475,7 +1475,7 @@ const KepegawaianBpnMutasi = () => {
                 size="small"
                 onClick={() =>
                   handleOpen({
-                    title: "Jumlah Pegawai Berdasar Golongan",
+                    title: "Jumlah Pegawai berdasar Golongan",
                     grafik: data,
                     dataTable: "",
                     analisis:
@@ -1780,7 +1780,7 @@ const KepegawaianBpnMutasi = () => {
               wrap
               style={{ marginTop: 10 }}
             >
-              Jumlah Pegawai Berdasar {berdasar ? berdasar.key : ""}
+              Jumlah Pegawai berdasar {berdasar ? berdasar.key : ""}
             </Typography>
             <Typography
               className={classes.isiContentTextStyle}
@@ -1836,7 +1836,7 @@ const KepegawaianBpnMutasi = () => {
               wrap
               style={{ marginTop: 10 }}
             >
-              Jumlah Pegawai Berdasar Jenis Kelamin
+              Jumlah Pegawai berdasar Jenis Kelamin
             </Typography>
             <Typography
               className={classes.isiContentTextStyle}
@@ -1898,7 +1898,7 @@ const KepegawaianBpnMutasi = () => {
               wrap
               style={{ marginTop: 10 }}
             >
-              Jumlah Pegawai Berdasar Pendidikan
+              Jumlah Pegawai berdasar Pendidikan
             </Typography>
             <Typography
               className={classes.isiContentTextStyle}

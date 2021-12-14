@@ -202,7 +202,7 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-const title = "Jangka waktu hak Sertipikat";
+const title = "Jangka Waktu Hak Sertipikat";
 const Sie_sertifikat_jangka_waktu_hak = () => {
   const classes = styles();
   const dispatch = useDispatch();
@@ -992,6 +992,22 @@ const Sie_sertifikat_jangka_waktu_hak = () => {
         />
         <Grid container spacing={2}>
           <Grid item xs={isMobile ? 12 : 9}>
+            <Grid
+              container
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+              item
+              xs={12}
+            >
+              <Typography
+                className={classes.isiContentTextStyle}
+                variant="h2"
+                wrap
+              >
+                Jangka Waktu Hak Sertipikat
+              </Typography>
+            </Grid>
             <Card className={classes.root} variant="outlined">
               <CardContent>
                 <div className={classes.barChart}>

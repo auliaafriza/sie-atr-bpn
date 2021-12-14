@@ -1426,7 +1426,7 @@ const KepegawaianBpnMutasi = () => {
               variant="h2"
               wrap
             >
-              Jumlah Pegawai yang akan Pensiun Berdasar{" "}
+              Jumlah Pegawai yang akan Pensiun berdasar{" "}
               {berdasar ? berdasar.key : ""}
             </Typography>
             <Typography

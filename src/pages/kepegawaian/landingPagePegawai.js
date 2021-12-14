@@ -87,7 +87,7 @@ export default function CenteredGrid() {
         <div class="content-header row"></div>
         <div class="content-body px-md-3">
           <div class="row">
-            <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
+            <div class="col-lg-3 wow fadeInUp" data-wow-delay="0.1s">
               <div
                 class="card pull-up bg-transparent shadow-none"
                 style={{ borderWidth: 0 }}
@@ -127,7 +127,7 @@ export default function CenteredGrid() {
                 </div>
               </div>
             </div>
-            <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.2s">
+            <div class="col-lg-3 wow fadeInUp" data-wow-delay="0.2s">
               <div
                 class="card pull-up bg-transparent shadow-none"
                 style={{ borderWidth: 0 }}
@@ -168,7 +168,7 @@ export default function CenteredGrid() {
                 </div>
               </div>
             </div>
-            <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
+            <div class="col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
               <div
                 class="card pull-up bg-transparent shadow-none"
                 style={{ borderWidth: 0 }}
@@ -202,6 +202,47 @@ export default function CenteredGrid() {
                         >
                           Jumlah Pegawai Pensiun Tahun{" "}
                           {new Date().getFullYear() + 1}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
+              <div
+                class="card pull-up bg-transparent shadow-none"
+                style={{ borderWidth: 0 }}
+              >
+                <div class="card-content">
+                  <div class="row">
+                    <div class="col-12 card-gradient-md-border border-right-lighten-3">
+                      <div class="card-body text-center">
+                        <h1
+                          class="display-4 white"
+                          style={{
+                            fontSize: isMobile ? 28 : 36,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          <IoPeopleCircleOutline size={isMobile ? 28 : 36} />{" "}
+                          {data && data.length != 0
+                            ? data[3].jumlah
+                                .toString()
+                                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
+                            : 0}
+                        </h1>
+                        <span
+                          class="white"
+                          style={{
+                            fontSize: 16,
+                            textShadow: "1px 2px 2px #000",
+                            fontFamily: "Open Sans",
+                          }}
+                        >
+                          Jumlah Pegawai Pensiun Tahun{" "}
+                          {new Date().getFullYear() + 2}
                         </span>
                       </div>
                     </div>

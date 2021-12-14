@@ -341,7 +341,22 @@ const BPHTBDaerahTerintegrasi = () => {
               />
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
+            <Legend
+              payload={[
+                {
+                  value: "jumlah daerah terintegrasi",
+                  type: "square",
+                  id: "ID01",
+                  color: "#C71585",
+                },
+                {
+                  value: "kum jumlah daerah terintegrasi",
+                  type: "square",
+                  id: "ID02",
+                  color: "#8FBC8F",
+                },
+              ]}
+            />
             <Bar dataKey="jumlah_daerah_terintegrasi" fill="#C71585" />
             <Bar dataKey="kum_jumlah_daerah_terintegrasi" fill="#8FBC8F" />
           </BarChart>
@@ -708,7 +723,7 @@ const BPHTBDaerahTerintegrasi = () => {
         >
           <Grid item xs={isMobile ? 12 : 9}>
             <Typography className={classes.titleSection} variant="h2">
-              Jumlah daerah terintegrasi
+              Jumlah Daerah Terintegrasi
             </Typography>
           </Grid>
 
@@ -740,7 +755,7 @@ const BPHTBDaerahTerintegrasi = () => {
                   size="small"
                   onClick={() =>
                     handleOpen({
-                      title: "Jumlah daerah terintegrasi",
+                      title: "Jumlah Daerah Terintegrasi",
                       grafik: data,
                       dataTable: "",
                       analisis:
@@ -763,7 +778,7 @@ const BPHTBDaerahTerintegrasi = () => {
                 title="Print Data"
                 placement="top"
                 onClick={() =>
-                  handlePrintData("Jumlah daerah terintegrasi", columnTable)
+                  handlePrintData("Jumlah Daerah Terintegrasi", columnTable)
                 }
               >
                 <IconButton aria-label="delete" size="small">
@@ -827,7 +842,22 @@ const BPHTBDaerahTerintegrasi = () => {
                         />
                       </YAxis>
                       <Tooltip content={<CustomTooltip />} />
-                      <Legend />
+                      <Legend
+                        payload={[
+                          {
+                            value: "Jumlah Daerah Terintegrasi",
+                            type: "square",
+                            id: "ID01",
+                            color: "#C71585",
+                          },
+                          {
+                            value: "Total Akumulasi",
+                            type: "square",
+                            id: "ID02",
+                            color: "#8FBC8F",
+                          },
+                        ]}
+                      />
                       <Bar
                         dataKey="jumlah_daerah_terintegrasi"
                         fill="#C71585"
@@ -891,7 +921,7 @@ const BPHTBDaerahTerintegrasi = () => {
                     href="#"
                     onClick={() =>
                       handleOpen({
-                        title: "Jumlah daerah terintegrasi",
+                        title: "Jumlah Daerah Terintegrasi",
                         grafik: data,
                         dataTable: "",
                         analisis:

@@ -387,7 +387,9 @@ const AssetPemerintah = () => {
               <p
                 className="desc"
                 style={{ color: payload[0].color }}
-              >{`Jumlah Luas : ${payload[0].value}`}</p>
+              >{`Jumlah Luas : ${payload[0].value
+                .toString()
+                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}`}</p>
               <p
                 className="desc"
                 style={{ color: payload[1].color }}
@@ -398,8 +400,12 @@ const AssetPemerintah = () => {
           ) : (
             <p className="desc" style={{ color: payload[0].fill }}>
               {payload[0].name == "jml_luas"
-                ? `Jumlah Luas : ${payload[0].value}`
-                : `Jumlah Sertifikat : ${payload[0].value}`}
+                ? `Jumlah Luas : ${payload[0].value
+                    .toString()
+                    .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}`
+                : `Jumlah Sertifikat : ${payload[0].value
+                    .toString()
+                    .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}`}
             </p>
           )}
         </div>

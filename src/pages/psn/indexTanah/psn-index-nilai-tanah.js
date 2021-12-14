@@ -442,7 +442,7 @@ const realisasiPenggunaan = () => {
           <Card
             className={classes.root}
             variant="outlined"
-            style={{ backgroundColor: "#A9A9A9" }}
+            style={{ backgroundColor: "rgb(20, 27, 46)" }}
           >
             <Typography
               className={classes.isiContentTextStyle}
@@ -463,7 +463,7 @@ const realisasiPenggunaan = () => {
           <Card
             className={classes.root}
             variant="outlined"
-            style={{ backgroundColor: "#A9A9A9" }}
+            style={{ backgroundColor: "rgb(20, 27, 46)" }}
           >
             <Typography
               className={classes.isiContentTextStyle}
@@ -1056,7 +1056,7 @@ const realisasiPenggunaan = () => {
                 <Card
                   className={classes.root}
                   variant="outlined"
-                  style={{ backgroundColor: "#A9A9A9" }}
+                  style={{ backgroundColor: "rgb(20, 27, 46)" }}
                 >
                   <Typography
                     className={classes.isiContentTextStyle}
@@ -1077,7 +1077,7 @@ const realisasiPenggunaan = () => {
                 <Card
                   className={classes.root}
                   variant="outlined"
-                  style={{ backgroundColor: "#A9A9A9" }}
+                  style={{ backgroundColor: "rgb(20, 27, 46)" }}
                 >
                   <Typography
                     className={classes.isiContentTextStyle}
@@ -1286,7 +1286,7 @@ const realisasiPenggunaan = () => {
                           disableUnderline: true,
                         }}
                         style={{ marginTop: 5 }}
-                        placeholder={dataFilter ? "" : "Alias Kanwil"}
+                        placeholder={dataFilter ? "" : "Pilih Kanwil"}
                       />
                     )}
                   />
