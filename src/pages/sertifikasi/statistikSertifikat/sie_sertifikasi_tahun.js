@@ -447,12 +447,11 @@ const SieSertifikatTahun = () => {
           >{`Jumlah Sertipikat : ${payload[0].value
             .toString()
             .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}`}</p>
-          <p
-            className="desc"
-            style={{ color: payload[1].color }}
-          >{`Luas Tertulis : ${payload[1].value
-            .toString()
-            .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}`}</p>
+          <p className="desc" style={{ color: payload[1].color }}>
+            {`Luas Tertulis : ${payload[1].value
+              .toString()
+              .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")} m\u00B2`}
+          </p>
         </div>
       );
     }

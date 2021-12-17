@@ -389,7 +389,7 @@ const AssetPemerintah = () => {
                 style={{ color: payload[0].color }}
               >{`Jumlah Luas : ${payload[0].value
                 .toString()
-                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}`}</p>
+                .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")} m\u00B2`}</p>
               <p
                 className="desc"
                 style={{ color: payload[1].color }}
@@ -402,7 +402,7 @@ const AssetPemerintah = () => {
               {payload[0].name == "jml_luas"
                 ? `Jumlah Luas : ${payload[0].value
                     .toString()
-                    .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}`
+                    .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")} m\u00B2`
                 : `Jumlah Sertifikat : ${payload[0].value
                     .toString()
                     .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}`}

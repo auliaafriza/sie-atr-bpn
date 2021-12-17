@@ -366,11 +366,15 @@ const SieSertifikatLuasJumlah = () => {
         <div className={classes.tooltipCustom}>
           <p className="label">{label}</p>
           {grafikView.map((e, i) => (
-            <p className="desc" style={{ color: payload[i].color }}>{`${
-              e.name
-            } : ${payload[i].value
-              .toString()
-              .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}`}</p>
+            <p className="desc" style={{ color: payload[i].color }}>
+              {e.dataKey == "luas_bidang"
+                ? `${e.name} : ${payload[i].value
+                    .toString()
+                    .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")} m\u00B2`
+                : `${e.name} : ${payload[i].value
+                    .toString()
+                    .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}`}
+            </p>
           ))}
         </div>
       );

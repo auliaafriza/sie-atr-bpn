@@ -219,7 +219,7 @@ const SieSertifikatLuasJumlah = () => {
   const [inputValueTahun, setInputValueTahun] = useState("");
 
   const [dataFilter, setDataFilter] = useState({
-    kanwil: "Aceh",
+    kanwil: "Kantor Wilayah Provinsi Jateng",
   });
   const [dataFilterKantor, setDataFilterKantor] = useState();
   const [kanwilList, setAliasList] = useState([]);

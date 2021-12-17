@@ -897,6 +897,33 @@ const KepegawaianOrganisasi = () => {
       />
       <Grid container spacing={2}>
         <Grid item xs={isMobile ? 12 : 9}>
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            item
+            xs={10}
+          >
+            <Typography
+              className={classes.isiContentTextStyle}
+              variant="h2"
+              wrap
+              style={{ marginTop: 10 }}
+            >
+              Statistik
+              {jenis ? ` berdasar Jenis ${jenis.name}` : ""}
+            </Typography>
+            <Typography
+              className={classes.isiContentTextStyle}
+              variant="h2"
+              wrap
+              style={{ marginBottom: 15 }}
+            >
+              pada Tahun {tahunAwal ? tahunAwal.name : ""}-
+              {years ? years.name : ""}
+            </Typography>
+          </Grid>
           <Card className={classes.root} variant="outlined">
             <CardContent>
               <div className={classes.barChart}>

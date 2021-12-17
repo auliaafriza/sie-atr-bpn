@@ -59,6 +59,7 @@ import { useReactToPrint } from "react-to-print";
 import {
   tahunDataV2,
   DataFormater,
+  deleteDuplicates,
 } from "../../../functionGlobal/globalDataAsset";
 import moment from "moment";
 import { fileExport } from "../../../functionGlobal/exports";
@@ -189,8 +190,12 @@ const KepegawaianBpnJabatan = () => {
   const [columnTable, setColumnTable] = useState([]);
   const [nameColumn, setNameColumn] = useState([]);
   const [open, setOpen] = useState(false);
+  const [dataFilterKantor, setDataFilterKantor] = useState([]);
+  const [listKantor, setListKantor] = useState([]);
 
+  const [hideTextKantor, setHideTextKantor] = useState(false);
   const [openWilayah, setOpenWilayah] = useState(false);
+  const [openKantah, setOpenKantah] = useState(false);
   const [openTahunAkhir, setOpenTahunAkhir] = useState(false);
   const [openTahun, setOpenTahun] = useState(false);
   const [dataModal, setDataModal] = useState({
@@ -234,7 +239,51 @@ const KepegawaianBpnJabatan = () => {
     // } else {
     //   setDataFilter([]);
     // }
+    getKantah(
+      event
+        ? event.aliaskanwil == "pilih semua" || event.aliaskanwil == "-"
+          ? ""
+          : event.aliaskanwil
+        : ""
+    );
     setDataFilter(event);
+    setDataFilterKantor([]);
+  };
+
+  const findAll = (data, index) => {
+    let found = data.find(
+      (element) =>
+        element[index] &&
+        (element[index].toLowerCase() == "pilih semua" || element[index] == "-")
+    );
+    return found ? false : true;
+  };
+
+  const findIndex = (data, index) => {
+    let found =
+      data && data.length != 0
+        ? data.findIndex(
+            (element) =>
+              element[index] &&
+              (element[index].toLowerCase() == "pilih semua" ||
+                element[index] == "-")
+          )
+        : -1;
+    return found;
+  };
+
+  const handleChangeFilterKantor = (event) => {
+    if (event.length != 0) {
+      let findTemp =
+        event && event.length != 0 ? findAll(event, "aliaskantah") : false;
+      let indexTemp = findIndex(event, "aliaskantah");
+      let res = findTemp
+        ? deleteDuplicates(event, "aliaskantah")
+        : [event[indexTemp]];
+      setDataFilterKantor(res);
+    } else {
+      setDataFilterKantor([]);
+    }
   };
 
   const chunkArrayInGroups = (arr, size) => {
@@ -329,9 +378,29 @@ const KepegawaianBpnJabatan = () => {
     setNameColumn(name);
   };
 
+  const getKantah = (data) => {
+    axios.defaults.headers.post["Content-Type"] =
+      "application/x-www-form-urlencoded";
+    axios
+      .get(
+        `${url}KinerjaLayanan/Tunggakan/filter_aliaskantah?aliaskanwil=${data}`
+      )
+      .then(function (response) {
+        setListKantor(response.data.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  };
+
   const getData = () => {
     let temp = {
       kanwil: [],
+      kantah: [],
     };
     dataFilter &&
     dataFilter.kanwil &&
@@ -342,6 +411,9 @@ const KepegawaianBpnJabatan = () => {
     // dataFilter && dataFilter.length != 0
     //   ? dataFilter.map((item) => temp.kanwil.push(item.kanwil))
     //   : [];
+    dataFilterKantor && dataFilterKantor.length != 0
+      ? dataFilterKantor.map((item) => temp.kantah.push(item.aliaskantah))
+      : [];
     axios.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded";
     axios
@@ -381,7 +453,7 @@ const KepegawaianBpnJabatan = () => {
       .then(function () {
         // always executed
       });
-
+    getKantah(dataFilter ? dataFilter.kanwil : "");
     getData();
   }, []);
 
@@ -1190,6 +1262,96 @@ const KepegawaianBpnJabatan = () => {
                       }}
                       style={{ marginTop: 5 }}
                       placeholder={"Pilih Wilayah"}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} style={{ paddingLeft: 8, paddingRight: 8 }}>
+                <Typography
+                  className={classes.isiTextStyle}
+                  variant="h2"
+                  style={{ fontSize: 12 }}
+                >
+                  Pilih Kantah
+                </Typography>
+                <Autocomplete
+                  multiple
+                  getOptionDisabled={(options) =>
+                    dataFilterKantor.length >= 32 ? true : false
+                  }
+                  id="kantor"
+                  name="kantor"
+                  style={{ width: "100%", height: 35 }}
+                  options={listKantor}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  disableUnderline
+                  className={classes.formControl}
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    handleChangeFilterKantor(newValue);
+                  }}
+                  open={openKantah}
+                  onOpen={() => {
+                    setOpenKantah(true);
+                  }}
+                  onClose={(e, reason) =>
+                    reason == "escape" || reason == "blur"
+                      ? setOpenKantah(false)
+                      : setOpenKantah(true)
+                  }
+                  onInputChange={(_event, value, reason) => {
+                    if (reason == "input") {
+                      setOpenKantah(true);
+                      setHideTextKantor(true);
+                    } else {
+                      setOpenKantah(false);
+                      setHideTextKantor(false);
+                    }
+                  }}
+                  getOptionLabel={(option) => option.aliaskantah || ""}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={
+                          dataFilterKantor && dataFilterKantor.length != 0
+                            ? findAll(dataFilterKantor, "aliaskantah")
+                              ? dataFilterKantor
+                                  .map((item) => item.aliaskantah)
+                                  .indexOf(option.aliaskantah) > -1
+                              : true
+                            : false
+                        }
+                      />
+                      {option.aliaskantah}
+                    </React.Fragment>
+                  )}
+                  renderTags={(selected) => {
+                    return selected.length != 0
+                      ? hideTextKantor
+                        ? ""
+                        : findAll(selected, "aliaskantah")
+                        ? `${selected.length} Terpilih`
+                        : "Semua Terpilih"
+                      : "";
+                  }}
+                  value={dataFilterKantor}
+                  defaultValue={dataFilterKantor}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputProps={{
+                        ...params.InputProps,
+                        disableUnderline: true,
+                      }}
+                      style={{ marginTop: 5 }}
+                      placeholder={
+                        dataFilterKantor.length != 0 ? "" : "Pilih Kantah"
+                      }
                     />
                   )}
                 />

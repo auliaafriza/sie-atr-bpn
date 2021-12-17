@@ -472,7 +472,10 @@ const realisasiPenggunaan = () => {
               style={{ margin: 5, fontSize: 14, color: "white" }}
             >
               Terjadi{" "}
-              {comment && comment.pertumbuhan ? "Kenaikan" : "Penurunan"} :{" "}
+              {comment && comment.pertumbuhan && comment.pertumbuhan > 0
+                ? "Kenaikan"
+                : "Penurunan"}{" "}
+              :{" "}
               {comment
                 ? comment.pertumbuhan
                     .toFixed(2)
@@ -1086,7 +1089,9 @@ const realisasiPenggunaan = () => {
                     style={{ margin: 5, fontSize: 14, color: "white" }}
                   >
                     Terjadi{" "}
-                    {comment && comment.pertumbuhan ? "Kenaikan" : "Penurunan"}{" "}
+                    {comment && comment.pertumbuhan && comment.pertumbuhan > 0
+                      ? "Kenaikan"
+                      : "Penurunan"}{" "}
                     :{" "}
                     {comment
                       ? comment.pertumbuhan

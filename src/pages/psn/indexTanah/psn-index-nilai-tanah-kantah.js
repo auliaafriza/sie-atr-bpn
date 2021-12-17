@@ -79,6 +79,24 @@ import { isMobile } from "react-device-detect";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
+let colors = [
+  "#8884d8",
+  "#82ca9d",
+  "#ffc658",
+  "#800000",
+  "#00CED1",
+  "#C71585",
+  "#B0C4DE",
+  "#FA8072",
+  "#808000",
+  "#006400",
+  "#2F4F4F",
+  "#6495ED",
+  "#4B0082",
+  "#FFB6C1",
+  "#BC8F8F",
+];
+
 const dataTemp = [
   {
     keterangan: "Keterangan",
@@ -153,8 +171,16 @@ const realisasiPenggunaan = () => {
   const [comment, setComment] = useState("");
   const [bulan, setBulan] = useState("Jan");
   const [open, setOpen] = useState(false);
-  const [dataFilter, setDataFilter] = useState();
-  const [dataFilterKantor, setDataFilterKantor] = useState([]);
+  const [dataFilter, setDataFilter] = useState({
+    aliaskanwil: "Kantor Wilayah Provinsi DKI Jakarta",
+  });
+  const [dataFilterKantor, setDataFilterKantor] = useState([
+    { aliaskantah: "Kantor Pertanahan Kota Administrasi Jakarta Selatan" },
+    { aliaskantah: "Kantor Pertanahan Kota Administrasi Jakarta Utara" },
+  ]);
+  const [dataMulti, setMultiData] = useState([]);
+  const [dataBar, setDataBar] = useState([]);
+  const [dataObject, setDataObject] = useState([]);
 
   const [openWilayah, setOpenWilayah] = useState(false);
   const [openKantah, setOpenKantah] = useState(false);
@@ -197,11 +223,20 @@ const realisasiPenggunaan = () => {
     setOpen(false);
   };
 
-  const DataFormaterX = (value) => {
-    return (
-      value.replace("Kantor Pertanahan ", "") ||
-      value.replace("Kantor Wilayah ", "")
-    );
+  const DataFormaterX = (val) => {
+    return val && val.indexOf("Kantor Pertanahan Kota Administrasi") > -1
+      ? val.replace("Kantor Pertanahan Kota Administrasi ", "Adm ")
+      : val && val.indexOf("Kantor Pertanahan Kota") > -1
+      ? val.replace("Kantor Pertanahan Kota ", "")
+      : val && val.indexOf("Kantor Pertanahan Kabupaten Administrasi") > -1
+      ? val.replace("Kantor Pertanahan Kabupaten Administrasi ", "Kab Adm")
+      : val && val.indexOf("Kantor Pertanahan Kabupaten") > -1
+      ? val.replace("Kantor Pertanahan Kabupaten ", "Kab ")
+      : val && val.indexOf("Kantor Pertanahan") > -1
+      ? val.replace("Kantor Pertanahan ", "")
+      : val && val.indexOf("Kantor Wilayah Provinsi") > -1
+      ? val.replace("Kantor Wilayah Provinsi ", "")
+      : val;
   };
 
   const getKantah = (data) => {
@@ -251,6 +286,49 @@ const realisasiPenggunaan = () => {
     return found ? false : true;
   };
 
+  const groupBy = (items, key) =>
+    items.reduce(
+      (result, item) => ({
+        ...result,
+        [item[key]]: [...(result[item[key]] || []), item],
+      }),
+      {}
+    );
+
+  // const convertDataNew = (data) => {
+  //   let resData = groupBy(data, "tahun");
+  //   let key = Object.keys(resData);
+  //   let res = [];
+  //   key &&
+  //     key.length != 0 &&
+  //     key.map((item) => {
+  //       let z = { tahun: item };
+  //       resData[item].map((x, y) => {
+  //         let keyString = x.aliaskantah.split(" ").join("_");
+  //         z[keyString] = x.nilai_tanah;
+  //       });
+  //       res.push(z);
+  //     });
+  //   return res;
+  // };
+
+  const convertDatabar = (data) => {
+    let resData = groupBy(data, "aliaskantah");
+    let key = Object.keys(resData);
+    let res = [];
+    key &&
+      key.length != 0 &&
+      key.map((item) => {
+        let z = { name: item };
+        resData[item].map((x, y) => {
+          let keyString = x.tahun;
+          z[keyString] = x.nilai_tanah;
+        });
+        res.push(z);
+      });
+    return res;
+  };
+
   const getData = () => {
     let temp = { aliaskantah: [], aliaskanwil: [] };
     let foundData =
@@ -279,6 +357,15 @@ const realisasiPenggunaan = () => {
         setData(response.data.data);
         setComment(response.data);
         setIndexTanah(response.data.indexNilaiTanah);
+        setMultiData(response.data.dataMultiChart);
+        let temp =
+          response.data && response.data.data && response.data.data.length != 0
+            ? convertDatabar(response.data.data)
+            : [];
+        setDataBar(temp);
+        let key = Object.keys(temp[0]);
+        setDataObject(key);
+
         console.log(response);
       })
       .catch(function (error) {
@@ -351,18 +438,56 @@ const realisasiPenggunaan = () => {
     if (active && payload && payload.length) {
       return (
         <div className={classes.tooltipCustom}>
-          {payload && payload.length != 0 ? (
-            <p
-              className="desc"
-              style={{ color: payload[0].color }}
-            >{`${label} : Nilai Tanah ${
-              payload[0].value
-                ? payload[0].value
-                    .toString()
-                    .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
-                : 0
-            }`}</p>
-          ) : null}
+          <p className="desc" style={{ color: "black" }}>
+            {label}
+          </p>
+          {payload && payload.length != 0
+            ? payload.map((item, i) => (
+                <p className="desc" style={{ color: item.color }}>{`${
+                  item.payload.aliaskantah
+                } : Nilai Tanah ${
+                  item.value
+                    ? item.value
+                        .toString()
+                        .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
+                    : 0
+                }`}</p>
+              ))
+            : null}
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  const CustomTooltipBar = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className={classes.tooltipCustom}>
+          <p className="desc" style={{ color: "black" }}>
+            {label.split("_").join(" ")}
+          </p>
+          {payload && payload.length != 0
+            ? payload.map((item, i) => (
+                <>
+                  <p
+                    className="desc"
+                    style={{ color: item.color }}
+                  >{`Tahun ${item.name.split("_").join(" ")}`}</p>
+                  <p
+                    className="desc"
+                    style={{ color: item.color }}
+                  >{`Nilai Tanah : ${
+                    item.value
+                      ? item.value
+                          .toString()
+                          .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
+                      : 0
+                  }`}</p>
+                </>
+              ))
+            : null}
         </div>
       );
     }
@@ -405,7 +530,7 @@ const realisasiPenggunaan = () => {
           <LineChart
             width={500}
             height={300}
-            data={data}
+            // data={data}
             margin={{
               top: 5,
               right: 30,
@@ -415,7 +540,12 @@ const realisasiPenggunaan = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="tahun" />
-            <YAxis tickFormatter={DataFormater}>
+            <YAxis
+              tickFormatter={DataFormater}
+              dataKey="nilai_tanah"
+              type="category"
+              allowDuplicatedCategory={false}
+            >
               <Label
                 value="Nilai"
                 angle={-90}
@@ -424,14 +554,23 @@ const realisasiPenggunaan = () => {
               />
             </YAxis>
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="nilai_tanah"
-              stroke="#6EB5FF"
-              activeDot={{ r: 8 }}
-              strokeWidth={3}
-            />
+            {/* <Legend /> */}
+            {dataMulti.length != 0 &&
+              dataMulti.map((s) => (
+                <Line
+                  dataKey="nilai_tanah"
+                  data={s.data}
+                  name={s.name}
+                  key={s.name}
+                />
+              ))}
+            {/* <Line
+                        type="monotone"
+                        dataKey="nilai_tanah"
+                        stroke="#6EB5FF"
+                        activeDot={{ r: 8 }}
+                        strokeWidth={3}
+                      /> */}
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -443,7 +582,7 @@ const realisasiPenggunaan = () => {
           <BarChart
             width={500}
             height={800}
-            data={data}
+            data={dataBar}
             margin={{
               top: 5,
               right: 30,
@@ -453,18 +592,18 @@ const realisasiPenggunaan = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="aliaskantah"
-              // angle={60}
+              dataKey="name"
+              angle={60}
               // interval={0}
               tick={{
                 // angle: 90,
-                // transform: "rotate(-35)",
-                // textAnchor: "start",
-                // dominantBaseline: "ideographic",
+                transform: "rotate(-35)",
+                textAnchor: "start",
+                dominantBaseline: "ideographic",
                 fontSize: 8,
               }}
               height={100}
-              // tickFormatter={DataFormaterX}
+              tickFormatter={DataFormaterX}
             />
             <YAxis tickFormatter={DataFormater}>
               <Label
@@ -474,9 +613,14 @@ const realisasiPenggunaan = () => {
                 offset={-5}
               />
             </YAxis>
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltipBar />} />
             {/* <Legend /> */}
-            <Bar dataKey="nilai_tanah" fill="#6EB5FF" />
+            {dataObject && dataObject.length != 0
+              ? dataObject.map(
+                  (item, i) =>
+                    item != "name" && <Bar dataKey={item} fill={colors[i]} />
+                )
+              : null}
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -1311,6 +1455,13 @@ const realisasiPenggunaan = () => {
                     color="primary"
                     onClick={() => getData()}
                     style={{ height: 35, width: "100%", fontSize: 12 }}
+                    disabled={
+                      dataFilter &&
+                      dataFilter.aliaskanwil &&
+                      dataFilterKantor.length != 0
+                        ? false
+                        : true
+                    }
                   >
                     Submit
                   </Button>
@@ -1354,7 +1505,7 @@ const realisasiPenggunaan = () => {
                     <LineChart
                       width={500}
                       height={300}
-                      data={data}
+                      // data={data}
                       margin={{
                         top: 5,
                         right: 30,
@@ -1364,7 +1515,12 @@ const realisasiPenggunaan = () => {
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="tahun" />
-                      <YAxis tickFormatter={DataFormater}>
+                      <YAxis
+                        tickFormatter={DataFormater}
+                        dataKey="nilai_tanah"
+                        type="category"
+                        allowDuplicatedCategory={false}
+                      >
                         <Label
                           value="Nilai"
                           angle={-90}
@@ -1373,14 +1529,23 @@ const realisasiPenggunaan = () => {
                         />
                       </YAxis>
                       <Tooltip content={<CustomTooltip />} />
-                      <Legend />
-                      <Line
+                      {/* <Legend /> */}
+                      {dataMulti.length != 0 &&
+                        dataMulti.map((s) => (
+                          <Line
+                            dataKey="nilai_tanah"
+                            data={s.data}
+                            name={s.name}
+                            key={s.name}
+                          />
+                        ))}
+                      {/* <Line
                         type="monotone"
                         dataKey="nilai_tanah"
                         stroke="#6EB5FF"
                         activeDot={{ r: 8 }}
                         strokeWidth={3}
-                      />
+                      /> */}
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -1393,11 +1558,12 @@ const realisasiPenggunaan = () => {
             >
               <CardContent>
                 <div className={classes.barChart}>
+                  {/* dataBar && dataBar.length != 0 ?  */}
                   <ResponsiveContainer width="100%" height={250}>
                     <BarChart
                       width={500}
                       height={800}
-                      data={data}
+                      data={dataBar}
                       margin={{
                         top: 5,
                         right: 30,
@@ -1407,18 +1573,18 @@ const realisasiPenggunaan = () => {
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis
-                        dataKey="aliaskantah"
-                        // angle={60}
+                        dataKey="name"
+                        angle={60}
                         // interval={0}
                         tick={{
                           // angle: 90,
-                          // transform: "rotate(-35)",
-                          // textAnchor: "start",
-                          // dominantBaseline: "ideographic",
+                          transform: "rotate(-35)",
+                          textAnchor: "start",
+                          dominantBaseline: "ideographic",
                           fontSize: 8,
                         }}
                         height={100}
-                        // tickFormatter={DataFormaterX}
+                        tickFormatter={DataFormaterX}
                       />
                       <YAxis tickFormatter={DataFormater}>
                         <Label
@@ -1428,9 +1594,16 @@ const realisasiPenggunaan = () => {
                           offset={-5}
                         />
                       </YAxis>
-                      <Tooltip content={<CustomTooltip />} />
+                      <Tooltip content={<CustomTooltipBar />} />
                       {/* <Legend /> */}
-                      <Bar dataKey="nilai_tanah" fill="#6EB5FF" />
+                      {dataObject && dataObject.length != 0
+                        ? dataObject.map(
+                            (item, i) =>
+                              item != "name" && (
+                                <Bar dataKey={item} fill={colors[i]} />
+                              )
+                          )
+                        : null}
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
