@@ -97,19 +97,19 @@ const Main = withRouter(({ location }) => {
         <Route path="/PrintData">
           <PrintData />
         </Route>
-        <Route path="/PSN/PengadaanTanah">
+        <Route path="/InformasiNilaiTanah/PengadaanTanah">
           <PengadaanTanah />
         </Route>
-        <Route path="/PSN/IndexTanah">
+        <Route path="/InformasiNilaiTanah/IndexTanah">
           <IndexTanah />
         </Route>
-        <Route path="/PSN/PTSL">
+        <Route path="/InformasiNilaiTanah/PTSL">
           <PTSL />
         </Route>
-        <Route path="/PSN/RA">
+        <Route path="/InformasiNilaiTanah/RA">
           <RA />
         </Route>
-        <Route path="/PSN/RDTR">
+        <Route path="/InformasiNilaiTanah/RDTR">
           <RDTR />
         </Route>
         <Route path="/Sertipikasi/StatistikSertipikat">

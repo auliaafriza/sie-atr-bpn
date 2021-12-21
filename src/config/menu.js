@@ -180,8 +180,8 @@ export const MENU_LIST = [
   {
     id: 5,
     icon: <BiBriefcase size={24} />,
-    name: "PSN",
-    parentLink: "/PSN",
+    name: "Informasi Nilai Tanah",
+    parentLink: "/InformasiNilaiTanah",
     subMenus: [
       // {
       //   icon: <FaCalendarCheck size={22} />,
@@ -201,12 +201,12 @@ export const MENU_LIST = [
       {
         icon: <MdAddShoppingCart size={24} />,
         name: "Pengadaan Tanah",
-        link: "/PSN/PengadaanTanah",
+        link: "/InformasiNilaiTanah/PengadaanTanah",
       },
       {
         icon: <MdLandscape size={24} />,
         name: "Index Tanah",
-        link: "/PSN/IndexTanah",
+        link: "/InformasiNilaiTanah/IndexTanah",
       },
       // {
       //   icon: <MdTransform size={24} />,
