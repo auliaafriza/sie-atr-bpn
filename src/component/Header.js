@@ -60,8 +60,8 @@ const Header = (props) => {
           : null;
       localStorage.setItem("user", dataUser ? dataUser.nama : "");
       localStorage.setItem("date", expired);
-      setUserNm(dataUser.nama);
-      dataUser.nama
+      setUserNm(dataUser ? dataUser.nama : "");
+      dataUser && dataUser.nama
         ? dataUser.nama == "-" && dateTime <= dateExpired
           ? setUserNm(userExpired)
           : null
@@ -70,12 +70,9 @@ const Header = (props) => {
       if (dateExpired && dateTime <= dateExpired) {
         dispatch(resetWhoami());
         setUserNm(userExpired);
-      } else if (count >= 3) {
+      } else {
         dispatch(resetWhoami());
         window.location.replace("https://sie.atrbpn.go.id/Auth/Login");
-      } else {
-        dispatch(getWhoami());
-        setCount(count + 1);
       }
     }
   }, [statusRed]);
@@ -190,6 +187,10 @@ const Header = (props) => {
               edge="end"
               color="inherit"
               href="https://sie.atrbpn.go.id/Auth/Login"
+              onClick={() => {
+                localStorage.setItem("user", "");
+                localStorage.setItem("date", null);
+              }}
             >
               <AiOutlineLogout />
             </IconButton>
